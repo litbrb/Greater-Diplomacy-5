@@ -176,50 +176,58 @@ class Map(GameState):
     def update(self):
         self.camera.update(self, SCREEN_HEIGHT)
         
-        # 1. Start by hiding everything
+        # 1. Reset all elements to hidden every frame
         for el in self.elements:
             el.visible = False
 
-        # 2. Check if we have a province selected
+        # 2. Basic state check
         is_sel = bool(self.selected_province)
         
-        # 3. Handle Country Selection Mode (Early Exit)
+        # 3. Early Exit for Country Selection Mode (Scenario Start)
         if self.selection_mode:
-            # Only the Exit button should be visible during scenario selection
             self.btn_exit_to_menu.visible = True
+            # We don't show map buttons or province buttons yet
             return
 
-        # 4. STANDARD GAME UI LOGIC (Only runs if selection_mode is False)
-        
-        # A. Show Persistent Map Buttons (Terrain, Political, Next Turn, etc.)
-        # These are the first 7 buttons we created in render_buttons()
+        # 4. Show Persistent Map Buttons (Terrain, Political, Next Turn, etc.)
+        # These are the first 7 buttons defined in buttons.render_buttons()
         for i in range(min(7, len(self.elements))):
             self.elements[i].visible = True
 
-        # B. Conditional Visibility based on selection
+        # 5. Handle Global Exit Button
+        # Only visible if no province is selected (menu is closed)
         self.btn_exit_to_menu.visible = not is_sel
-        self.btn_conquer.visible = is_sel
-        self.btn_close_info.visible = is_sel
 
+        # 6. Province Selection UI Logic
         if is_sel:
+            self.btn_close_info.visible = True
+            
             owner = self.selected_province.get("owner", "empty")
             player_data = self.nation_data.get(self.player_country, {})
             pending = player_data.get("pending_diplomacy", {})
             
-            # Relationships logic
-            at_war = owner in player_data.get("at_war_with", [])
-            allied = owner in player_data.get("allied_with", [])
+            # Logic check: Do we have units here?
+            has_player_units = any(u['owner'] == self.player_country for u in self.selected_province.get("units", []))
 
-            if owner == self.player_country:
-                # Internal management buttons
+            # --- BRANCH A: PLAYER INTERACTION (OWNED OR OCCUPIED) ---
+            if owner == self.player_country or has_player_units:
+                # You can always give orders if you have units or own the land
                 self.btn_go_orders.visible = True
-                terrain = self.selected_province.get("terrain", "")
-                is_land = terrain not in ["ocean", "coastal_sea", "inland_sea", "lakes"]
-                self.btn_go_recruit.visible = is_land
-                self.btn_go_navy.visible = is_land and self.selected_province.get("is_coastal", False)
-            
+                
+                # ONLY allow recruitment/navy if you are the actual OWNER
+                if owner == self.player_country:
+                    self.btn_conquer.visible = True # Debug tool, can keep or remove
+                    terrain = self.selected_province.get("terrain", "")
+                    is_land = terrain not in ["ocean", "coastal_sea", "inland_sea", "lakes"]
+                    
+                    self.btn_go_recruit.visible = is_land
+                    self.btn_go_navy.visible = is_land and self.selected_province.get("is_coastal", False)
+
+            # --- BRANCH B: DIPLOMACY INTERACTION (FOREIGN LAND) ---
             elif owner in self.nation_data and self.nation_data[owner].get("is_playable"):
-                # Diplomacy logic buttons
+                at_war = owner in player_data.get("at_war_with", [])
+                allied = owner in player_data.get("allied_with", [])
+
                 if at_war:
                     self.btn_declare_war.visible = True
                     self.btn_declare_war.text = "UNDO CEASEFIRE" if pending.get(owner) == "CEASEFIRE" else "CEASEFIRE"
@@ -227,7 +235,7 @@ class Map(GameState):
                     self.btn_form_alliance.visible = True
                     self.btn_form_alliance.text = "UNDO BREAK" if pending.get(owner) == "BREAK_ALLIANCE" else "BREAK ALLIANCE"
                 else:
-                    # Neutral state buttons
+                    # Neutral
                     self.btn_declare_war.visible = True
                     self.btn_declare_war.text = "DECLARING..." if pending.get(owner) == "WAR_DECLARATION" else "DECLARE WAR"
                     self.btn_form_alliance.visible = True

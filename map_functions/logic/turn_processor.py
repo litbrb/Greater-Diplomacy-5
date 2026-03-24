@@ -40,7 +40,19 @@ def process_movement(self):
     for unit, target_id in moves_to_execute:
         target_province = self.id_to_province.get(target_id)
         if target_province:
+            # Re-check logic here if you want to be strict, 
+            # otherwise units just teleport to the new list:
             target_province["units"].append(unit)
+            
+            # Simple occupancy logic: If land unit moves into empty land, it takes it
+            if "boat" not in unit["type"].lower() and "frigate" not in unit["type"].lower():
+                WATER_TYPES = ["ocean", "coastal_sea", "inland_sea", "lakes"]
+                if target_province.get("terrain") not in WATER_TYPES:
+                    # If empty or at war, take the province
+                    old_owner = target_province.get("owner", "empty")
+                    player_data = self.nation_data.get(unit["owner"], {})
+                    if old_owner == "empty" or old_owner in player_data.get("at_war_with", []):
+                        target_province["owner"] = unit["owner"]
 
 def process_economy(self):
     """Calculates income for ALL countries based on the provinces they own."""

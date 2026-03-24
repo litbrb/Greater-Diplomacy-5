@@ -22,8 +22,12 @@ class Orders_Screen(GameState):
         # Clear elements and start with Back button
         self.elements = [Button(50, 50, "small", "red", "Back", self.exit_to_map)]
         
+        # Only allow selecting units that belong to the player
         units = self.target_province.get("units", [])
         for i, unit in enumerate(units):
+            if unit.get("owner") != self.map_screen.player_country:
+                continue
+                
             color = "blue" if self.selected_unit_index == i else "grey"
             unit_name = unit["type"].split(" ")[-1]
             
@@ -58,12 +62,44 @@ class Orders_Screen(GameState):
 
     def additional_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.selected_unit_index is not None:
-            clicked_province = self.get_clicked_province(event.pos)
+            dest = self.get_clicked_province(event.pos)
             
-            if clicked_province and clicked_province["id"] in self.target_province["neighbors"]:
+            if dest and dest["id"] in self.target_province["neighbors"]:
                 unit = self.target_province["units"][self.selected_unit_index]
-                unit["order"] = {"type": "MOVE", "target_id": clicked_province["id"]}
-                self.map_screen.show_feedback(f"Move to {clicked_province['id']}")
+                
+                # 1. Terrain Check
+                WATER_TYPES = ["ocean", "coastal_sea", "inland_sea", "lakes"]
+                dest_is_water = dest.get("terrain") in WATER_TYPES
+                
+                # Land units can't enter water
+                if "hilux" in unit["type"].lower() or "t-55" in unit["type"].lower():
+                    if dest_is_water:
+                        self.map_screen.show_feedback("Land units cannot enter deep water!")
+                        return
+                
+                # Sea units can't enter land (unless coastal)
+                if "boat" in unit["type"].lower() or "frigate" in unit["type"].lower():
+                    if not dest_is_water and not dest.get("is_coastal"):
+                        self.map_screen.show_feedback("Sea units must stay in water or coastal tiles!")
+                        return
+
+                # 2. Diplomatic Check
+                dest_owner = dest.get("owner", "empty")
+                player_country = self.map_screen.player_country
+                
+                if dest_owner not in ["empty", "None", player_country]:
+                    player_data = self.map_screen.nation_data.get(player_country, {})
+                    is_at_war = dest_owner in player_data.get("at_war_with", [])
+                    is_allied = dest_owner in player_data.get("allied_with", [])
+                    
+                    # Cannot enter neutral territory (must be at war or allied)
+                    if not (is_at_war or is_allied):
+                        self.map_screen.show_feedback(f"Cannot enter neutral {dest_owner} territory!")
+                        return
+
+                # If all checks pass, set order
+                unit["order"] = {"type": "MOVE", "target_id": dest["id"]}
+                self.map_screen.show_feedback(f"Move to {dest['id']} ordered")
                 self.selected_unit_index = None 
                 self.refresh_ui()
 
@@ -100,23 +136,26 @@ class Orders_Screen(GameState):
         for i, unit in enumerate(units):
             y_pos = 150 + (i * 60)
             
-            # Show order text next to the unit button
-            if "order" in unit:
-                dest_id = unit["order"]["target_id"]
-                txt = small_font.render(f"MOVING TO: {dest_id}", True, (255, 255, 0))
-                surface.blit(txt, (310, y_pos + 15))
+            # --- FIX: Use .get() or check for keys before accessing ---
+            current_order = unit.get("order", {})
+            if current_order and current_order.get("type") == "MOVE":
+                dest_id = current_order.get("target_id")
                 
-                # Draw the individual Cancel "X" button
-                cancel_rect = pygame.Rect(500, y_pos + 10, 30, 30)
-                pygame.draw.rect(surface, (150, 0, 0), cancel_rect)
-                x_label = small_font.render("X", True, (255, 255, 255))
-                surface.blit(x_label, x_label.get_rect(center=cancel_rect.center))
-                self.cancel_rects.append((cancel_rect, i))
-                
-                # Also draw the map arrow
-                target_obj = self.map_screen.id_to_province.get(dest_id)
-                if target_obj:
-                    overlay_renderer.draw_movement_arrow(surface, self.map_screen, self.target_province, target_obj)
+                if dest_id is not None:
+                    txt = small_font.render(f"MOVING TO: {dest_id}", True, (255, 255, 0))
+                    surface.blit(txt, (310, y_pos + 15))
+                    
+                    # Draw the individual Cancel "X" button
+                    cancel_rect = pygame.Rect(500, y_pos + 10, 30, 30)
+                    pygame.draw.rect(surface, (150, 0, 0), cancel_rect)
+                    x_label = small_font.render("X", True, (255, 255, 255))
+                    surface.blit(x_label, x_label.get_rect(center=cancel_rect.center))
+                    self.cancel_rects.append((cancel_rect, i))
+                    
+                    # Also draw the map arrow
+                    target_obj = self.map_screen.id_to_province.get(dest_id)
+                    if target_obj:
+                        overlay_renderer.draw_movement_arrow(surface, self.map_screen, self.target_province, target_obj)
 
         # 2. Draw Hover Preview Arrow
         if self.selected_unit_index is not None:

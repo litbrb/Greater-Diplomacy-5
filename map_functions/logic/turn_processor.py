@@ -19,11 +19,11 @@ def process_next_turn(self):
 
 def process_movement(self):
     moving_units = []
+    # 1. Clear units from map and store those with orders
     for province in self.map_data.values():
         units_to_keep = []
         for unit in province.get("units", []):
             order = unit.get("order")
-            # We now check for a 'path' list
             if order and order.get("type") == "MOVE" and order.get("path"):
                 unit["_current_province_id"] = province["id"]
                 moving_units.append(unit)
@@ -31,58 +31,69 @@ def process_movement(self):
                 units_to_keep.append(unit)
         province["units"] = units_to_keep
 
-    if not moving_units:
-        return
+    if not moving_units: return
 
-    # Ensure every moving unit has a valid speed stat, in case a unit somehow loses it's speed stat
-    max_speed = 0
-    if moving_units:
-        max_speed = max(unit.get("speed", 1) for unit in moving_units)
+    max_speed = max(unit.get("speed", 1) for unit in moving_units)
 
+    # 2. Process steps
     for step in range(max_speed):
         for unit in moving_units:
             order = unit.get("order")
-            # If the path is empty, they are done for the turn
-            if not order or not order.get("path"):
-                continue
+            if not order or not order.get("path"): continue
 
-            # Units move 1 tile per step. Take the first tile from the path.
             target_id = order["path"][0]
             target_prov = self.id_to_province.get(target_id)
+            if not target_prov: continue
 
-            if not target_prov:
-                order["path"] = [] # Error fallback
-                continue
-
-            # Collision/Ownership logic
-            old_owner = target_prov.get("owner", "empty")
             player_data = self.nation_data.get(unit["owner"], {})
-            at_war = old_owner in player_data.get("at_war_with", [])
-            is_allied = old_owner in player_data.get("allied_with", [])
-            is_self = old_owner == unit["owner"]
-            is_empty = old_owner == "empty"
-            enemy_present = any(u["owner"] in player_data.get("at_war_with", []) for u in target_prov.get("units", []))
-
-            can_enter = is_empty or is_self or at_war or is_allied
+            dest_owner = target_prov.get("owner", "empty")
             
-            if can_enter and not enemy_present:
+            at_war = dest_owner in player_data.get("at_war_with", [])
+            is_allied = dest_owner in player_data.get("allied_with", [])
+            is_self = dest_owner == unit["owner"]
+            is_empty = dest_owner == "empty"
+
+            # COMBAT CHECK: Is an enemy unit physically present right now?
+            # We check both stationary units and units that already moved this step
+            enemy_unit_present = any(u["owner"] in player_data.get("at_war_with", []) 
+                                   for u in target_prov.get("units", []))
+
+            # Logic: Can enter if empty, allied, self, or at war.
+            can_enter_territory = is_empty or is_self or at_war or is_allied
+            
+            if can_enter_territory:
+                # Move unit logically
                 unit["_current_province_id"] = target_id
-                # Remove the tile we just moved to from the remaining path
                 order["path"].pop(0)
-                
+
+                # Capture logic
                 if is_empty or at_war:
                     from map_functions.logic import edit_province_ownership
                     edit_province_ownership.conquer_province(self, target_prov, unit["owner"])
+
+                # STOP LOGIC: If we moved onto a tile with an enemy unit, 
+                # we MUST stop here to fight, regardless of remaining speed/path.
+                if enemy_unit_present:
+                    order["path"] = [] 
             else:
-                # BLOCKED: Stop and cancel the rest of the path
+                # BLOCKED by neutral/non-allied borders
                 order["path"] = []
 
-    # Finalize positions
+        # 3. CRITICAL: Place units back into provinces briefly after each sub-step
+        # This ensures that units moving later in the same "step" see units that moved earlier
+        for unit in moving_units:
+            prov = self.id_to_province.get(unit["_current_province_id"])
+            if unit not in prov["units"]:
+                prov["units"].append(unit)
+        
+        # Now clear them again for the next sub-step (except those who finished)
+        if step < max_speed - 1:
+            for province in self.map_data.values():
+                province["units"] = [u for u in province["units"] if u not in moving_units]
+
+    # Final cleanup of temp variables
     for unit in moving_units:
-        final_prov = self.id_to_province.get(unit["_current_province_id"])
-        if "_current_province_id" in unit:
-            del unit["_current_province_id"]
-        final_prov["units"].append(unit)
+        if "_current_province_id" in unit: del unit["_current_province_id"]
 
 def process_economy(self):
     """Calculates income for ALL countries based on the provinces they own."""

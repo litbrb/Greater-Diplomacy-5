@@ -21,7 +21,7 @@ def render_buttons(self):
     self.elements.append(self.btn_go_navy)
 
     # --- Contextual Buttons (Visible when province selected) ---
-    self.btn_conquer = Button(20, 240, "small", "red", "Conquer", self.conquer_province)
+    self.btn_conquer = Button(20, 440, "small", "red", "Conquer", self.conquer_province)
     self.btn_conquer.visible = False 
     self.elements.append(self.btn_conquer)
 

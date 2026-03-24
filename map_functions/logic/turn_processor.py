@@ -18,83 +18,66 @@ def process_next_turn(self):
     process_recruitment(self, days_to_advance)
 
 def process_movement(self):
-    # 1. Collect all units that have movement orders
     moving_units = []
     for province in self.map_data.values():
         units_to_keep = []
         for unit in province.get("units", []):
             order = unit.get("order")
-            if order and order.get("type") == "MOVE":
-                # Inject the current location so we know where they start
+            # We now check for a 'path' list
+            if order and order.get("type") == "MOVE" and order.get("path"):
                 unit["_current_province_id"] = province["id"]
-                # Look up speed from unit_data if not already in the unit dict
-                # (You may want to ensure speed is added during recruitment)
                 moving_units.append(unit)
             else:
                 units_to_keep.append(unit)
         province["units"] = units_to_keep
 
-    # 2. Determine the maximum speed among all moving units
-    # This tells us how many "sub-steps" the turn has
     if not moving_units:
         return
 
-    # We'll use 1 as a floor, but your JSON says 2 or 3 for Hilux/Tanks
-    max_speed = max(unit.get("speed", 1) for unit in moving_units)
+    # Ensure every moving unit has a valid speed stat, in case a unit somehow loses it's speed stat
+    max_speed = 0
+    if moving_units:
+        max_speed = max(unit.get("speed", 1) for unit in moving_units)
 
-    # 3. Process steps one by one
     for step in range(max_speed):
         for unit in moving_units:
-            # Skip if unit finished its moves or its order was cancelled/stopped
-            unit_speed = unit.get("speed", 1)
             order = unit.get("order")
-            
-            if step >= unit_speed or not order:
+            # If the path is empty, they are done for the turn
+            if not order or not order.get("path"):
                 continue
 
-            current_prov = self.id_to_province.get(unit["_current_province_id"])
-            target_id = order.get("target_id")
+            # Units move 1 tile per step. Take the first tile from the path.
+            target_id = order["path"][0]
             target_prov = self.id_to_province.get(target_id)
 
             if not target_prov:
+                order["path"] = [] # Error fallback
                 continue
 
-            # --- THE "STOP" LOGIC ---
-            # Check if we can enter the target tile
+            # Collision/Ownership logic
             old_owner = target_prov.get("owner", "empty")
             player_data = self.nation_data.get(unit["owner"], {})
             at_war = old_owner in player_data.get("at_war_with", [])
             is_allied = old_owner in player_data.get("allied_with", [])
             is_self = old_owner == unit["owner"]
             is_empty = old_owner == "empty"
-
-            # Check if tile is occupied by an enemy unit (even if owner is empty/neutral)
             enemy_present = any(u["owner"] in player_data.get("at_war_with", []) for u in target_prov.get("units", []))
 
-            # Rule: Stop if tile is owned by someone else NOT at war and NOT allied
-            # or if there is an enemy unit there.
             can_enter = is_empty or is_self or at_war or is_allied
             
             if can_enter and not enemy_present:
-                # Execute the step
                 unit["_current_province_id"] = target_id
+                # Remove the tile we just moved to from the remaining path
+                order["path"].pop(0)
                 
-                # If we move onto an empty/enemy province, conquer it
                 if is_empty or at_war:
                     from map_functions.logic import edit_province_ownership
                     edit_province_ownership.conquer_province(self, target_prov, unit["owner"])
-                
-                # In your request: "if speed is 2, move to a tile, then move to another"
-                # Currently, orders only have ONE target_id. 
-                # To support speed 3 properly, your Order Screen needs to allow 
-                # a list of IDs. For now, this logic handles "Move 1 tile per step".
-                # If the unit reaches its target, we clear the order.
-                unit["order"] = {} 
             else:
-                # BLOCKED: Stop and cancel all future moves for this turn
-                unit["order"] = {}
+                # BLOCKED: Stop and cancel the rest of the path
+                order["path"] = []
 
-    # 4. Finalize: Put units back into their final province lists
+    # Finalize positions
     for unit in moving_units:
         final_prov = self.id_to_province.get(unit["_current_province_id"])
         if "_current_province_id" in unit:

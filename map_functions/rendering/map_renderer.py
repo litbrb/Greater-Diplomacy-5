@@ -46,10 +46,16 @@ def draw_map_screen(self, surface):
         for unit in province.get("units", []):
             order = unit.get("order")
             if order and order.get("type") == "MOVE":
-                target_province = self.id_to_province.get(order["target_id"])
-                if target_province:
-                    overlay_renderer.draw_movement_arrow(surface, self, province, target_province)
-
+                path = order.get("path", [])
+                if path:
+                    # Draw the arrow chain from the current province through the path
+                    prev_node = province
+                    for step_id in path:
+                        target_node = self.id_to_province.get(step_id)
+                        if target_node:
+                            overlay_renderer.draw_movement_arrow(surface, self, prev_node, target_node)
+                            prev_node = target_node
+                            
     # --- LAYER 4: UI BARS & HUD ---
 
     # these are the ui bars. i don't care if you're selecting a country or not, SHOW THESE

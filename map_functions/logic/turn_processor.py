@@ -15,6 +15,9 @@ def process_next_turn(self):
     
     # 3. Process Combat (New: Damage calculations)
     process_combat(self)
+
+    # 4. NEW: Check if winners of a battle should flip the province ownership
+    check_for_post_combat_captures(self)
     
     # 4. Process Economy
     process_economy(self)
@@ -57,6 +60,37 @@ def process_combat(self):
         # Remove dead units (HP <= 0)
         province["units"] = [u for u in units if u.get("health", 0) > 0]
 
+def check_for_post_combat_captures(self):
+    """Assigns province ownership to units standing in an undefended enemy province."""
+    from map_functions.logic import edit_province_ownership
+    
+    for province in self.map_data.values():
+        units = province.get("units", [])
+        if not units:
+            continue
+            
+        current_owner = province.get("owner", "empty")
+        
+        # Get a list of unique owners of units currently in the tile
+        unit_owners = list(set(u["owner"] for u in units))
+        
+        # If there's more than one owner present, it's still a contested combat zone
+        if len(unit_owners) > 1:
+            continue
+            
+        # There is exactly one nation with units here
+        occupier = unit_owners[0]
+        
+        # If the occupier doesn't own the tile
+        if occupier != current_owner:
+            player_data = self.nation_data.get(occupier, {})
+            at_war = current_owner in player_data.get("at_war_with", [])
+            is_empty = current_owner in ["empty", "None", ""]
+            
+            # Flip ownership if the tile is empty or if they are at war with the owner
+            if is_empty or at_war:
+                edit_province_ownership.conquer_province(self, province, occupier)
+                
 def apply_group_damage(total_atk, target_units):
     """Distributes total attack among target units, reduced by their individual defense."""
     if not target_units: return

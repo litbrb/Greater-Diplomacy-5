@@ -133,6 +133,7 @@ def run_generator(progress_var, root):
             "units": [],
             "deployment_queue": [],
             "orders": [],
+            "buildings": [],
             "resources": []
         }
 

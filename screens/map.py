@@ -213,7 +213,9 @@ class Map(GameState):
             self.btn_exit_to_menu.visible = True
             return
 
-        for i in range(min(7, len(self.elements))): self.elements[i].visible = True
+        # funny, a hardcoded numner
+        # this will be a problem later if more than 8 buttons are ever added
+        for i in range(min(8, len(self.elements))): self.elements[i].visible = True
         self.btn_exit_to_menu.visible = not is_sel
         self.btn_close_info.visible = is_sel
 

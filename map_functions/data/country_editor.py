@@ -11,6 +11,10 @@ class CountryEditor:
         self.root.title("Country Data Editor")
         self.data = self.load_data()
 
+        # Add a preview box
+        self.color_preview = tk.Canvas(root, width=50, height=25, bg="grey")
+        self.color_preview.grid(row=2, column=2, padx=5)
+
         # UI Elements
         tk.Label(root, text="Country Name:").grid(row=0, column=0)
         self.name_ent = tk.Entry(root)
@@ -36,8 +40,10 @@ class CountryEditor:
         return {}
 
     def pick_color(self):
-        color = colorchooser.askcolor(title="Choose Country Color")[0]
-        if color: self.current_color = [int(c) for c in color]
+        color = colorchooser.askcolor(title="Choose Country Color")
+        if color[0]: 
+            self.current_color = [int(c) for c in color[0]]
+            self.color_preview.config(bg=color[1]) # Update the preview box
 
     def save_country(self):
         name = self.name_ent.get().strip()
@@ -45,8 +51,10 @@ class CountryEditor:
         
         self.data[name] = {
             "color": self.current_color,
-            "money": int(self.money_ent.get() or 0),
+            "money": 0,
             "manpower": 0,
+            "materials": 0, 
+            "fuel": 0,      
             "is_playable": True,
             "at_war_with": [],
             "allied_with": []

@@ -84,6 +84,18 @@ class Map(GameState):
         if self.player_country in self.nation_data:
             self.nation_data[self.player_country]["manpower"] = value
 
+    @property
+    def player_materials(self):
+        if self.player_country in self.nation_data:
+            return self.nation_data[self.player_country].get("materials", 0)
+        return 0
+
+    @property
+    def player_fuel(self):
+        if self.player_country in self.nation_data:
+            return self.nation_data[self.player_country].get("fuel", 0)
+        return 0
+
     # --- Logic Methods ---
     def cycle_secondary_mode(self):
         self.sec_idx = (self.sec_idx + 1) % len(self.secondary_modes)

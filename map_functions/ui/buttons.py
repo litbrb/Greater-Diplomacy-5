@@ -3,21 +3,28 @@ from ui_elements import Button
 from gameState import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def render_buttons(self):
-    # --- Persistent Map Buttons ---
     if not self.selection_mode:
+        # Standard Left Side Buttons
         self.elements = [
             Button(20, SCREEN_HEIGHT - 50, "small", "green", "Terrain", self.set_terrain),
             Button(130, SCREEN_HEIGHT - 50, "small", "blue", "Political", self.set_political),
             Button(240, SCREEN_HEIGHT - 50, "small", "grey", "Reset", self.reset_view),
-            Button(360, SCREEN_HEIGHT - 50, "small", "grey", "Full Refresh", self.refresh_political_map),
-            Button(480, SCREEN_HEIGHT - 50, "small", "grey", "Save Map", self.save_map_data),
-
-            # NEW: Persistent Research Button (placed next to Save Map)
-            Button(590, SCREEN_HEIGHT - 50, "small", "blue", "Research", self.open_research),
-
-            Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "green", "Next Turn", self.advance_time),
-            Button(SCREEN_WIDTH - 230, SCREEN_HEIGHT - 50, "small", "grey", "View Mode", self.cycle_secondary_mode),
         ]
+
+        if self.is_editor:
+            # EDITOR SPECIFIC BUTTONS (Right Side)
+            self.elements.extend([
+                Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "blue", "Save", self.save_map_data),
+                Button(SCREEN_WIDTH - 230, SCREEN_HEIGHT - 50, "small", "blue", "Load", self.editor_load_map),
+                Button(SCREEN_WIDTH - 340, SCREEN_HEIGHT - 50, "small", "grey", "Brush", self.cycle_brush_nation)
+            ])
+        else:
+            # GAME SPECIFIC BUTTONS (Right Side)
+            self.elements.extend([
+                Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "green", "Next Turn", self.advance_time),
+                Button(SCREEN_WIDTH - 230, SCREEN_HEIGHT - 50, "small", "blue", "Research", self.open_research),
+                Button(SCREEN_WIDTH - 340, SCREEN_HEIGHT - 50, "small", "grey", "Save Game", self.save_map_data)
+            ])
     
     # Add this to your contextual buttons
     self.btn_go_navy = Button(1390, 490, "medium", "blue", "Navy Menu", self.open_navy)

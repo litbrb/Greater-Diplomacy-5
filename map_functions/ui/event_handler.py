@@ -4,10 +4,18 @@ from map_functions.logic import map_utils
 
 def handle_map_events(self, event):
     mx, my = pygame.mouse.get_pos()
-    
+
     # 1. UI Check: Are we over the bars?
-    on_ui = (self.top_bar_rect.collidepoint(mx, my) or 
-            self.bot_bar_rect.collidepoint(mx, my))
+    on_ui = (self.top_bar_rect.collidepoint(mx, my) or self.bot_bar_rect.collidepoint(mx, my))
+
+    # --- EDITOR PAINTING LOGIC ---
+    if getattr(self, 'is_editor', False) and not on_ui:
+        # Check if left click is held down
+        if pygame.mouse.get_pressed()[0]: 
+            if self.hovered_province:
+                from map_functions.logic import edit_province_ownership
+                # Paint the province with the current brush nation
+                edit_province_ownership.conquer_province(self, self.hovered_province, self.brush_nation)
 
     # 2. Camera Controls: Always allow Panning/Zooming
     # This lets the player look around before picking a country

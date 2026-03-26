@@ -26,6 +26,14 @@ class Map(GameState):
         self.base_layer = "POLITICAL" 
         self.load_path = load_path
 
+        self.is_editor = (self.load_path is None and not is_scenario) 
+        if self.is_editor:
+            self.player_country = "Editor"
+            self.selection_mode = False # No need to pick a country in editor
+            
+        self.painting_active = False # New state for drag-to-paint
+        self.brush_nation = "Unclaimed" # The nation we are currently 'painting'
+        
         # --- 2. Data Loading ---
         # This call now handles images, province JSON, AND nation_data logic
         load_map.load_map_assets(self, load_path)
@@ -95,6 +103,30 @@ class Map(GameState):
         if self.player_country in self.nation_data:
             return self.nation_data[self.player_country].get("fuel", 0)
         return 0
+    
+    def cycle_brush_nation(self):
+        """Cycles through available nations in the JSON to use as a paint brush."""
+        nations = list(self.nation_data.keys())
+        current_idx = nations.index(self.brush_nation) if self.brush_nation in nations else 0
+        next_idx = (current_idx + 1) % len(nations)
+        self.brush_nation = nations[next_idx]
+        self.show_feedback(f"Brush: {self.brush_nation}")
+
+    def editor_load_map(self):
+        """Opens a file dialog to load a map folder directly into the editor."""
+        import tkinter as tk
+        from tkinter import filedialog
+        root = tk.Tk()
+        root.withdraw()
+        path = filedialog.askdirectory(initialdir="saves", title="Select Map Folder to Edit")
+        root.destroy()
+    
+        if path:
+            # Re-run asset loader on this instance
+            from map_functions.data import load_map
+            load_map.load_map_assets(self, path)
+            self.refresh_political_map()
+            self.show_feedback("Map Loaded into Editor")
 
     # --- Logic Methods ---
     def cycle_secondary_mode(self):
@@ -208,12 +240,19 @@ class Map(GameState):
         self.camera.update(self, SCREEN_HEIGHT)
         for el in self.elements: el.visible = False
 
+        if self.is_editor:
+            # Only show basic map buttons in Editor mode
+            for el in self.elements:
+                if el.text in ["Terrain", "Political", "Reset", "Save", "Load", "Brush"]:
+                    el.visible = True
+            return # Skip the rest of the game UI logic (recruit, orders, etc.)
+
         is_sel = bool(self.selected_province)
         if self.selection_mode:
             self.btn_exit_to_menu.visible = True
             return
 
-        # funny, a hardcoded numner
+        # funny, a hardcoded number
         # this will be a problem later if more than 8 buttons are ever added
         for i in range(min(8, len(self.elements))): self.elements[i].visible = True
         self.btn_exit_to_menu.visible = not is_sel

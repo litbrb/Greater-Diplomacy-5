@@ -29,11 +29,9 @@ def process_next_turn(self):
     process_national_research(self, days_to_advance)
 
 def process_national_research(self, days_passed):
-    """Progresses all active research for all nations simultaneously."""
     for country_name, country_data in self.nation_data.items():
         queue = country_data.get("research_queue", [])
-        if not queue:
-            continue
+        if not queue: continue
 
         # We iterate backwards through the queue so we can safely remove items
         for i in range(len(queue) - 1, -1, -1):
@@ -42,14 +40,12 @@ def process_national_research(self, days_passed):
 
             if project["days_remaining"] <= 0:
                 tech_key = project["tech_name"]
-                
-                # Logic update: Increment the actual level
-                if "research" not in country_data:
-                    country_data["research"] = {}
-                
                 country_data["research"][tech_key] = country_data["research"].get(tech_key, 0) + 1
                 
-                # Notify player
+                # CLEANUP: Remove from progress cache if it was there
+                if "research_progress" in country_data:
+                    country_data["research_progress"].pop(tech_key, None)
+                
                 if country_name == self.player_country:
                     self.show_feedback(f"TECH FINISHED: {tech_key.replace('_', ' ').title()}")
                 

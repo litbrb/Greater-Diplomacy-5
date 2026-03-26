@@ -44,6 +44,7 @@ class Recruit_Screen(GameState):
         # Define buttons specifically for this screen
         self.elements = [
             Button(50, 50, "small", "red", "Back", self.exit_to_map),
+            Button(300, 200, "large", "green", "Recruit Infantry (50g)", self.buy_infantry), # Added this
             Button(300, 300, "large", "green", "Recruit Hilux (100g)", self.buy_toyota),
             Button(300, 400, "large", "blue", "Recruit T-55 (300g)", self.buy_tank),
             Button(300, 500, "large", "blue", "Recruit Main Battle Tank (300g)", self.buy_MBT)
@@ -66,6 +67,13 @@ class Recruit_Screen(GameState):
             order = {"unit_type": "Main Battle Tank", "days_remaining": 10}
             self.target_province["deployment_queue"].append(order)
             self.map_screen.show_feedback("MBT Ordered!")
+
+    def buy_infantry(self):
+        if self.target_province:
+            # Use exactly "Infantry" so the turn_processor math triggers
+            order = {"unit_type": "Infantry", "days_remaining": 5} 
+            self.target_province["deployment_queue"].append(order)
+            self.map_screen.show_feedback("Infantry Division Ordered!")
 
     """def additional_draw(self, surface):
         if self.target_province:

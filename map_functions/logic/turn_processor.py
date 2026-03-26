@@ -1,5 +1,6 @@
 import json
 import os
+import math
 from map_functions.logic import diplomacy_logic
 from map_functions.logic import edit_province_ownership
 
@@ -217,9 +218,7 @@ def process_economy(self):
     return player_earned
 
 def process_recruitment(self, days_passed):
-    """Handles the deployment of units from the queue to the field."""
-    
-    # --- Load Unit Data for Stats Lookup ---
+    """Handles the deployment of units from the queue to the field with dynamic scaling."""
     unit_stats_path = 'map_functions/data/unit_data.json'
     unit_library = {}
     
@@ -229,44 +228,54 @@ def process_recruitment(self, days_passed):
 
     for province in self.map_data.values():
         queue = province.get("deployment_queue", [])
-        if not queue:
-            continue
+        if not queue: continue
             
-        # We use a list comprehension to find what's finished 
-        # and keep what's still cooking
         still_deploying = []
-        
         for item in queue:
-            # Each 'Next Turn' represents 5 days
             item["days_remaining"] -= days_passed
             
             if item["days_remaining"] <= 0:
-                # 1. Identify owner at time of deployment
                 current_owner = province.get("owner", "None")
                 unit_type = item["unit_type"]
                 
-                # 2. Look up starting health from unit_data.json
-                # Default to 100 if the unit type isn't found in the JSON
+                # 1. Get Base Stats from Library
                 stats = unit_library.get(unit_type, {})
-                max_health = stats.get("health", 100)
-                unit_speed = stats.get("speed", 1) # <--- GET SPEED HERE
                 
-                # 3. Create the unified Unit JSON object
+                # 2. Dynamic Scaling for Infantry
+                if unit_type == "Infantry":
+                    # Get research level for this country (Default to 1800)
+                    owner_data = self.nation_data.get(current_owner, {})
+                    inf_level = owner_data.get("research", {}).get("infantry", 1800)
+                    
+                    n = inf_level - 1800
+                    # HP = 1000 * 1.01^n
+                    max_health = int(1000 * math.pow(1.01, n))
+                    # ATK = 100 * 1.01^n
+                    attack = int(100 * math.pow(1.01, n))
+                    defense = stats.get("defense", 0) # Keep base defense or scale if desired
+                    speed = stats.get("speed", 1)
+                else:
+                    # Standard logic for manually defined units (Cavalry I, etc.)
+                    max_health = stats.get("health", 100)
+                    attack = stats.get("attack", 5)
+                    defense = stats.get("defense", 0)
+                    speed = stats.get("speed", 1)
+
+                # 3. Create the Unit object
                 new_unit_data = {
                     "type": unit_type,
                     "owner": current_owner,
                     "health": max_health,
-                    "max_health": max_health, # Useful for showing health bars later
-                    "speed": unit_speed, # <--- ADD SPEED HERE
-                    "attack": stats.get("attack", 5),   # ADDED
-                    "defense": stats.get("defense", 0), # ADDED
-                    "order": {"type": "MOVE", "path": []} # Initialize with an empty path list
+                    "max_health": max_health,
+                    "speed": speed,
+                    "attack": attack,
+                    "defense": defense,
+                    "level": inf_level if unit_type == "Infantry" else 0, # Tag with level
+                    "order": {"type": "MOVE", "path": []}
                 }
                 
                 province["units"].append(new_unit_data)
             else:
-                # Keep in queue
                 still_deploying.append(item)
         
-        # Update the province queue with only the remaining items
         province["deployment_queue"] = still_deploying

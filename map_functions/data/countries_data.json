@@ -132,5 +132,173 @@
         "is_playable": true,
         "at_war_with": [],
         "allied_with": []
+    },
+    "France": {
+        "name": "France",
+        "color": [
+            0,
+            0,
+            255
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Vichy France": {
+        "name": "Vichy France",
+        "color": [
+            0,
+            128,
+            192
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "United States of America": {
+        "name": "United States of America",
+        "color": [
+            0,
+            80,
+            255
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "German Reich": {
+        "name": "German Reich",
+        "color": [
+            64,
+            0,
+            128
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Austria-Hungary": {
+        "name": "Austria-Hungary",
+        "color": [
+            128,
+            0,
+            128
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Austria": {
+        "name": "Austria",
+        "color": [
+            255,
+            180,
+            255
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "German Empire": {
+        "name": "German Empire",
+        "color": [
+            80,
+            80,
+            160
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Weimar Republic": {
+        "name": "Weimar Republic",
+        "color": [
+            100,
+            0,
+            200
+        ],
+        "research": {
+            "cavalry": 0,
+            "destroyer": 0,
+            "armored_car": 0,
+            "infantry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
     }
 }

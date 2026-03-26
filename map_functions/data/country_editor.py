@@ -2,36 +2,55 @@ import tkinter as tk
 from tkinter import messagebox, colorchooser
 import json
 import os
+import colorsys # Useful for sorting colors naturally
 
 PATH = "map_functions/data/countries_data.json"
 
 class CountryEditor:
     def __init__(self, root):
         self.root = root
-        self.root.title("Country Data Editor")
+        self.root.title("Greater Diplomacy - Country Editor")
         self.data = self.load_data()
+        self.sort_mode = "NAME" # Options: "NAME", "COLOR"
 
         # --- Editor UI (Top) ---
-        editor_frame = tk.LabelFrame(root, text="Editor", padx=10, pady=10)
+        editor_frame = tk.LabelFrame(root, text="Country Details", padx=10, pady=10)
         editor_frame.pack(fill="x", padx=10, pady=5)
 
         self.color_preview = tk.Canvas(editor_frame, width=50, height=25, bg="grey", highlightthickness=1)
         self.color_preview.grid(row=0, column=2, padx=5)
 
-        tk.Label(editor_frame, text="Country Name:").grid(row=0, column=0, sticky="w")
+        tk.Label(editor_frame, text="Internal ID:").grid(row=0, column=0, sticky="w")
+        self.id_ent = tk.Entry(editor_frame)
+        self.id_ent.grid(row=0, column=1, sticky="we")
+
+        tk.Label(editor_frame, text="Display Name:").grid(row=1, column=0, sticky="w")
         self.name_ent = tk.Entry(editor_frame)
-        self.name_ent.grid(row=0, column=1, sticky="we")
+        self.name_ent.grid(row=1, column=1, sticky="we")
 
         self.color_btn = tk.Button(editor_frame, text="Pick Color", command=self.pick_color)
-        self.color_btn.grid(row=1, column=0, columnspan=2, sticky="we", pady=5)
+        self.color_btn.grid(row=2, column=0, columnspan=2, sticky="we", pady=5)
         self.current_color = [150, 150, 150]
 
         tk.Button(editor_frame, text="Save/Update Country", bg="#4CAF50", fg="white", 
-                  command=self.save_country).grid(row=2, column=0, columnspan=3, sticky="we")
+                  command=self.save_country).grid(row=3, column=0, columnspan=3, sticky="we")
+
+        # --- Control Bar (Middle) ---
+        controls_frame = tk.Frame(root, padx=10)
+        controls_frame.pack(fill="x", pady=5)
+
+        # Search
+        tk.Label(controls_frame, text="Search:").pack(side="left")
+        self.search_var = tk.StringVar()
+        self.search_var.trace_add("write", lambda *args: self.refresh_list())
+        self.search_ent = tk.Entry(controls_frame, textvariable=self.search_var)
+        self.search_ent.pack(side="left", fill="x", expand=True, padx=5)
+
+        # Sort Toggle
+        self.btn_sort = tk.Button(controls_frame, text="Sort: Name", width=12, command=self.toggle_sort)
+        self.btn_sort.pack(side="right")
 
         # --- Country List UI (Bottom) ---
-        tk.Label(root, text="Registered Countries:").pack(pady=(10, 0))
-        
         list_container = tk.Frame(root)
         list_container.pack(fill="both", expand=True, padx=10, pady=10)
 
@@ -46,13 +65,20 @@ class CountryEditor:
 
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(yscrollcommand=scrollbar.set)
-
-        # Mouse wheel binding for convenience
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
 
         self.canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
+        self.refresh_list()
+
+    def toggle_sort(self):
+        if self.sort_mode == "NAME":
+            self.sort_mode = "COLOR"
+            self.btn_sort.config(text="Sort: Color")
+        else:
+            self.sort_mode = "NAME"
+            self.btn_sort.config(text="Sort: Name")
         self.refresh_list()
 
     def _on_mousewheel(self, event):
@@ -73,71 +99,91 @@ class CountryEditor:
             self.color_preview.config(bg=hex_color)
 
     def save_country(self):
-        name = self.name_ent.get().strip()
-        if not name: 
-            messagebox.showwarning("Error", "Name cannot be empty")
+        int_id = self.id_ent.get().strip()
+        disp_name = self.name_ent.get().strip() or int_id
+        
+        if not int_id: 
+            messagebox.showwarning("Error", "Internal ID cannot be empty")
             return
         
-        if name in self.data:
-            self.data[name]["color"] = self.current_color
+        if int_id in self.data:
+            self.data[int_id]["name"] = disp_name
+            self.data[int_id]["color"] = self.current_color
         else:
-            self.data[name] = {
+            self.data[int_id] = {
+                "name": disp_name,
                 "color": self.current_color,
                 "research": {"cavalry": 0, "destroyer": 0, "armored_car": 0, "infantry": 1800},
-                "money": 0,
-                "manpower": 0,
-                "materials": 0, 
-                "fuel": 0,      
+                "money": 0, "manpower": 0, "materials": 0, "fuel": 0,      
                 "is_playable": True,
-                "at_war_with": [],
-                "allied_with": []
+                "at_war_with": [], "allied_with": []
             }
         
-        self.write_to_file()
-        self.refresh_list()
-
-    def delete_country(self, name):
-        if messagebox.askyesno("Confirm", f"Delete {name}?"):
-            del self.data[name]
-            self.write_to_file()
-            self.refresh_list()
-
-    def write_to_file(self):
         with open(PATH, "w") as f:
             json.dump(self.data, f, indent=4)
-
-    def load_into_editor(self, name):
-        country = self.data[name]
+        
+        self.refresh_list()
+        # Optional: clear entries after save
+        self.id_ent.delete(0, tk.END)
         self.name_ent.delete(0, tk.END)
-        self.name_ent.insert(0, name)
+
+    def delete_country(self, int_id):
+        if messagebox.askyesno("Confirm", f"Delete {int_id}?"):
+            del self.data[int_id]
+            with open(PATH, "w") as f:
+                json.dump(self.data, f, indent=4)
+            self.refresh_list()
+
+    def load_into_editor(self, int_id):
+        country = self.data[int_id]
+        self.id_ent.delete(0, tk.END)
+        self.id_ent.insert(0, int_id)
+        self.name_ent.delete(0, tk.END)
+        self.name_ent.insert(0, country.get("name", int_id))
         self.current_color = country.get("color", [150, 150, 150])
         hex_color = '#%02x%02x%02x' % tuple(self.current_color)
         self.color_preview.config(bg=hex_color)
+
+    def get_sort_key(self, int_id):
+        if self.sort_mode == "NAME":
+            return int_id.lower()
+        else:
+            # Sort by HSV (Hue, Saturation, Value) for a natural rainbow look
+            rgb = self.data[int_id].get("color", [0, 0, 0])
+            # Normalize to 0-1 for colorsys
+            return colorsys.rgb_to_hsv(rgb[0]/255, rgb[1]/255, rgb[2]/255)
 
     def refresh_list(self):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
 
-        for name in sorted(self.data.keys()):
+        search_query = self.search_var.get().lower()
+        
+        # Determine sorted order
+        sorted_keys = sorted(self.data.keys(), key=self.get_sort_key)
+
+        for int_id in sorted_keys:
+            disp_name = self.data[int_id].get("name", int_id)
+            if search_query and search_query not in int_id.lower() and search_query not in disp_name.lower():
+                continue
+
             country_row = tk.Frame(self.scrollable_frame, pady=2, padx=5)
             country_row.pack(fill="x", expand=True)
 
-            rgb = self.data[name].get("color", [150, 150, 150])
+            rgb = self.data[int_id].get("color", [150, 150, 150])
             hex_color = '#%02x%02x%02x' % tuple(rgb)
 
-            # Color Box
-            tk.Label(country_row, bg=hex_color, width=4, relief="ridge").pack(side="left")
-            # Name Label
-            tk.Label(country_row, text=name, width=20, anchor="w", font=("Arial", 10)).pack(side="left", padx=5)
+            tk.Label(country_row, bg=hex_color, width=3, relief="ridge").pack(side="left")
+            list_txt = f"{int_id} ({disp_name})" if int_id != disp_name else int_id
+            tk.Label(country_row, text=list_txt, width=30, anchor="w").pack(side="left", padx=5)
             
-            # Action Buttons (Delete first so Edit is in a consistent spot)
-            tk.Button(country_row, text="Del", fg="red", width=4, 
-                      command=lambda n=name: self.delete_country(n)).pack(side="right", padx=2)
-            tk.Button(country_row, text="Edit", width=6, 
-                      command=lambda n=name: self.load_into_editor(n)).pack(side="right", padx=2)
+            tk.Button(country_row, text="Del", fg="red", width=3, 
+                      command=lambda i=int_id: self.delete_country(i)).pack(side="right", padx=2)
+            tk.Button(country_row, text="Edit", width=4, 
+                      command=lambda i=int_id: self.load_into_editor(i)).pack(side="right", padx=2)
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("450x650")
+    root.geometry("500x750")
     CountryEditor(root)
     root.mainloop()

@@ -2,6 +2,9 @@ import pygame
 from gameState import GameState, SCREEN_WIDTH, SCREEN_HEIGHT
 from ui_elements import Button
 
+# Configuration for how long levels take (e.g., Level 1 = 20 days, Level 2 = 40 days)
+RESEARCH_BASE_TIME = 20 
+
 class Research_Screen(GameState):
     def __init__(self):
         super().__init__()
@@ -9,7 +12,6 @@ class Research_Screen(GameState):
         self.map_screen = None
 
     def start_research(self, map_ref):
-        """Standard handoff for national-level menus."""
         self.map_screen = map_ref
         self.refresh_ui()
 
@@ -21,29 +23,59 @@ class Research_Screen(GameState):
         player = self.map_screen.player_country
         country_data = self.map_screen.nation_data.get(player, {})
         
-        # Ensure the research dict exists
+        # Ensure data structures exist
         if "research" not in country_data:
             country_data["research"] = {"cavalry": 0, "destroyer": 0, "armored_car": 0}
+        if "research_queue" not in country_data:
+            country_data["research_queue"] = []
         
         res = country_data["research"]
+        queue = country_data["research_queue"]
 
-        # Build buttons dynamically
-        y_pos = 200
+        y_pos = 150
         for tech, level in res.items():
-            txt = f"{tech.replace('_', ' ').title()}: Level {level}"
-            # Using t=tech to preserve scope in the lambda
-            btn = Button("centered", y_pos, "large", "blue", txt, lambda t=tech: self.upgrade_tech(t))
+            # Check if this tech is already being researched
+            queued_item = next((item for item in queue if item["tech_name"] == tech), None)
+            
+            if queued_item:
+                status_text = f"{tech.title()}: Researching... ({queued_item['days_remaining']} days)"
+                color = "grey"
+                callback = lambda: None # Do nothing if already researching
+            else:
+                status_text = f"Research {tech.title()} (Level {level} -> {level+1})"
+                color = "blue"
+                callback = lambda t=tech: self.add_to_research_queue(t)
+
+            btn = Button("centered", y_pos, "large", color, status_text, callback)
             self.elements.append(btn)
             y_pos += 90
 
-    def upgrade_tech(self, tech_name):
+    def add_to_research_queue(self, tech_name):
         player = self.map_screen.player_country
-        self.map_screen.nation_data[player]["research"][tech_name] += 1
+        country_data = self.map_screen.nation_data[player]
+        
+        # Determine duration based on current level (it gets harder)
+        current_level = country_data["research"].get(tech_name, 0)
+        duration = (current_level + 1) * RESEARCH_BASE_TIME
+        
+        new_project = {
+            "tech_name": tech_name,
+            "days_remaining": duration,
+            "target_level": current_level + 1
+        }
+        
+        country_data["research_queue"].append(new_project)
+        self.map_screen.show_feedback(f"Started research on {tech_name.title()}")
         self.refresh_ui()
 
     def exit_to_map(self):
         self.next_state = "MAP"
         self.done = True
-    
+
+    def additional_draw(self, surface):
+        font = pygame.font.SysFont("Arial", 32)
+        title = font.render(f"NATIONAL RESEARCH - {self.map_screen.player_country.upper()}", True, (255, 255, 255))
+        surface.blit(title, (SCREEN_WIDTH//2 - title.get_width()//2, 50))
+
     def handle_back_key(self):
         self.exit_to_map()

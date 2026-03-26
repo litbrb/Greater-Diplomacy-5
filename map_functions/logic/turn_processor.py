@@ -25,6 +25,31 @@ def process_next_turn(self):
     # 5. Process Recruitment
     process_recruitment(self, days_to_advance)
 
+    # 6. Process National Research
+    process_national_research(self, days_to_advance)
+
+def process_national_research(self, days_passed):
+    """Progresses research for all nations."""
+    for country_name, country_data in self.nation_data.items():
+        queue = country_data.get("research_queue", [])
+        if not queue:
+            continue
+
+        # Process the first item in the queue (Sequential research)
+        current_project = queue[0]
+        current_project["days_remaining"] -= days_passed
+
+        if current_project["days_remaining"] <= 0:
+            tech_key = current_project["tech_name"]
+            # Complete research: increment level
+            country_data["research"][tech_key] += 1
+            
+            # Remove from queue
+            queue.pop(0)
+            
+            if country_name == self.player_country:
+                self.show_feedback(f"RESEARCH COMPLETE: {tech_key.replace('_', ' ').title()} Level {country_data['research'][tech_key]}")
+                
 def process_combat(self):
     """Calculates turn-based damage for units sharing a province."""
     for province in self.map_data.values():

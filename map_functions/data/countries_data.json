@@ -13,7 +13,7 @@
         "manpower": 0,
         "materials": 0,
         "fuel": 0,
-        "is_playable": true,
+        "is_playable": false,
         "at_war_with": [],
         "allied_with": []
     },
@@ -31,7 +31,7 @@
         "manpower": 0,
         "materials": 0,
         "fuel": 0,
-        "is_playable": true,
+        "is_playable": false,
         "at_war_with": [],
         "allied_with": []
     },
@@ -49,7 +49,7 @@
         "manpower": 0,
         "materials": 0,
         "fuel": 0,
-        "is_playable": true,
+        "is_playable": false,
         "at_war_with": [],
         "allied_with": []
     },

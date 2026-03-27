@@ -61,9 +61,32 @@ def draw_overlay_content(self, surface):
 
                 # --- ECONOMY VIEW ---
                 elif self.secondary_mode == "ECONOMY":
-                    # Future: draw factories or resource icons
+                    # Draw standard resources first (your existing logic)
                     if province.get("resources"):
-                        pygame.draw.rect(surface, (255, 215, 0), (sx-5, sy-5, 10, 10))
+                        pygame.draw.rect(surface, (255, 215, 0), (sx-15, sy-15, 10, 10))
+                    
+                    # Draw Buildings
+                    buildings = province.get("buildings", [])
+                    for i, b_name in enumerate(buildings):
+                        # Offset building icons so they don't stack perfectly
+                        offset_x = (i % 2) * 20
+                        offset_y = (i // 2) * 20
+                        
+                        # Try to load a symbol (e.g., "workshop_icon") or use a colored square
+                        sym_name = b_name.lower().replace(" ", "_")
+                        symbol = symbol_loader.get_symbol(sym_name, self.camera.zoom * 0.8)
+                        
+                        if symbol:
+                            surface.blit(symbol, (sx + offset_x, sy + offset_y))
+                        else:
+                            # Fallback colored squares for different types
+                            color = (150, 150, 150) # Grey for workshop
+                            if "Factory" in b_name: color = (100, 100, 200) # Blue-ish for factory
+                            if "Refinery" in b_name: color = (200, 100, 100) # Red-ish for refinery
+                            
+                            rect = pygame.Rect(sx + offset_x, sy + offset_y, 12 * self.camera.zoom, 12 * self.camera.zoom)
+                            pygame.draw.rect(surface, color, rect)
+                            pygame.draw.rect(surface, (255, 255, 255), rect, 1) # Border
 
                 # --- MILITARY VIEW ---
                 elif self.secondary_mode == "MILITARY":

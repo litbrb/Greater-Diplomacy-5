@@ -16,6 +16,10 @@ class Map(GameState):
     def __init__(self, load_path=None, is_scenario=False):
         super().__init__()
 
+        # Add these to Map.__init__ in screens/map.py
+        self.brush_building = "None" 
+        self.editor_mode = "NATION" # Toggle between painting nations and buildings
+
         # --- 1. Basic State Variables ---
         self.selection_mode = is_scenario
         self.pending_selection = None 
@@ -105,63 +109,6 @@ class Map(GameState):
         if self.player_country in self.nation_data:
             return self.nation_data[self.player_country].get("fuel", 0)
         return 0
-    
-    def select_brush_nation(self):
-        """Opens a Tkinter selection window with a graceful exit to prevent TclErrors."""
-        import tkinter as tk
-        
-        root = tk.Tk()
-        root.title("Select Nation")
-        root.geometry("300x450")
-        root.attributes("-topmost", True)
-        
-        # We use a flag to track if the window is still active
-        self.menu_active = True
-
-        def on_select(event=None):
-            selection = lb.curselection()
-            if selection:
-                self.brush_nation = lb.get(selection[0])
-                self.show_feedback(f"Brush: {self.brush_nation}")
-            close_menu()
-
-        def close_menu():
-            self.menu_active = False
-            root.destroy()
-
-        # Intercept the 'X' button in the corner to close safely
-        root.protocol("WM_DELETE_WINDOW", close_menu)
-
-        tk.Label(root, text="Select Paint Nation:", font=("Arial", 12)).pack(pady=10)
-        
-        frame = tk.Frame(root)
-        frame.pack(fill="both", expand=True, padx=10)
-        
-        scrollbar = tk.Scrollbar(frame)
-        scrollbar.pack(side="right", fill="y")
-        
-        nations = sorted(list(self.nation_data.keys()))
-        lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
-        for n in nations:
-            # do not add ocean or lake as a selectable country
-            if (n != "Ocean") and (n != "Lakes"):
-                lb.insert(tk.END, n)
-        lb.pack(side="left", fill="both", expand=True)
-        scrollbar.config(command=lb.yview)
-        
-        tk.Button(root, text="Confirm Selection", command=on_select, 
-                bg="#4CAF50", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
-
-        lb.bind('<Double-1>', on_select)
-
-        # Manual loop that won't crash when root is destroyed
-        while self.menu_active:
-            try:
-                root.update()
-                pygame.event.pump()
-            except (tk.TclError, Exception):
-                # If the window is closed/destroyed, just break the loop
-                break
 
     def editor_load_map(self):
         """Opens a file dialog to load a map folder directly into the editor."""
@@ -287,6 +234,124 @@ class Map(GameState):
             self.next_state = "NAVY"
             self.done = True
 
+    def select_brush_nation(self):
+        """Opens a Tkinter selection window and sets mode to NATION."""
+        import tkinter as tk
+        
+        root = tk.Tk()
+        root.title("Select Nation")
+        root.geometry("300x450")
+        root.attributes("-topmost", True)
+        self.menu_active = True
+
+        def on_select(event=None):
+            selection = lb.curselection()
+            if selection:
+                self.brush_nation = lb.get(selection[0])
+                # Ensure the editor knows we are now painting countries
+                self.editor_mode = "NATION" 
+                self.show_feedback(f"Brush: {self.brush_nation}")
+            close_menu()
+
+        def close_menu():
+            self.menu_active = False
+            root.destroy()
+
+        root.protocol("WM_DELETE_WINDOW", close_menu)
+        tk.Label(root, text="Select Paint Nation:", font=("Arial", 12)).pack(pady=10)
+        
+        frame = tk.Frame(root)
+        frame.pack(fill="both", expand=True, padx=10)
+        scrollbar = tk.Scrollbar(frame)
+        scrollbar.pack(side="right", fill="y")
+        
+        # Sort and filter out utility 'countries'
+        nations = sorted(list(self.nation_data.keys()))
+        lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
+        for n in nations:
+            if n not in ["Ocean", "Lakes"]:
+                lb.insert(tk.END, n)
+        lb.pack(side="left", fill="both", expand=True)
+        scrollbar.config(command=lb.yview)
+        
+        tk.Button(root, text="Confirm Selection", command=on_select, 
+                  bg="#4CAF50", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
+
+        lb.bind('<Double-1>', on_select)
+
+        while self.menu_active:
+            try:
+                root.update()
+                pygame.event.pump()
+            except (tk.TclError, Exception):
+                break
+
+    def select_building_brush(self):
+        """Opens a selection window for building types and sets mode to BUILDING."""
+        import tkinter as tk
+        
+        root = tk.Tk()
+        root.title("Select Building")
+        root.geometry("300x400")
+        root.attributes("-topmost", True)
+        self.menu_active = True
+
+        buildings = [
+            "None",
+            "Workshop Lvl 1", "Workshop Lvl 2", "Workshop Lvl 3", "Workshop Lvl 4", "Workshop Lvl 5",
+            "Basic Factory",
+            "Factory Lvl 1", "Factory Lvl 2", "Factory Lvl 3", "Factory Lvl 4", "Factory Lvl 5",
+            "Synthetic Refinery Lvl 1", "Synthetic Refinery Lvl 2", "Synthetic Refinery Lvl 3"
+        ]
+
+        def on_select(event=None):
+            selection = lb.curselection()
+            if selection:
+                self.brush_building = lb.get(selection[0])
+                # Ensure the editor knows we are now placing buildings
+                self.editor_mode = "BUILDING"
+                self.show_feedback(f"Brush: {self.brush_building}")
+            close_menu()
+
+        def close_menu():
+            self.menu_active = False
+            root.destroy()
+
+        root.protocol("WM_DELETE_WINDOW", close_menu)
+        tk.Label(root, text="Select Building to Place:", font=("Arial", 12)).pack(pady=10)
+        
+        frame = tk.Frame(root)
+        frame.pack(fill="both", expand=True, padx=10)
+        scrollbar = tk.Scrollbar(frame)
+        scrollbar.pack(side="right", fill="y")
+        
+        lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
+        for b in buildings:
+            lb.insert(tk.END, b)
+        lb.pack(side="left", fill="both", expand=True)
+        scrollbar.config(command=lb.yview)
+        
+        tk.Button(root, text="Confirm Selection", command=on_select, 
+                  bg="#2196F3", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
+
+        lb.bind('<Double-1>', on_select)
+
+        while self.menu_active:
+            try:
+                root.update()
+                pygame.event.pump()
+            except (tk.TclError, Exception):
+                break
+
+    # Update the toggle method to switch modes
+    def toggle_editor_brush_type(self):
+        if self.editor_mode == "NATION":
+            self.editor_mode = "BUILDING"
+            self.show_feedback("Editor: Building Placement")
+        else:
+            self.editor_mode = "NATION"
+            self.show_feedback("Editor: Nation Painting")
+            
     def update(self):
         self.camera.update(self, SCREEN_HEIGHT)
         for el in self.elements: el.visible = False
@@ -294,7 +359,7 @@ class Map(GameState):
         if self.is_editor:
             # Only show basic map buttons in Editor mode
             for el in self.elements:
-                if el.text in ["Terrain", "Political", "Reset", "Save", "Load", "Brush", "Full Refresh", "Exit", "View Mode"]:
+                if el.text in ["Terrain", "Political", "Reset", "Save", "Load", "Nation", "Building", "Full Refresh", "Exit", "View Mode"]:
                     el.visible = True
             return # Skip the rest of the game UI logic (recruit, orders, etc.)
 

@@ -50,37 +50,52 @@ class Recruit_Screen(GameState):
 
     def refresh_ui(self):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
+        player_research = self.map_screen.nation_data[self.map_screen.player_country].get("research", {})
         
-        # 1. Map units to their groups while preserving JSON order
-        grouped_units = {group: [] for group in self.ordered_groups}
+        # 1. Logic to find the 'highest version' available
+        available_units = {} # {base_name: (full_name, stats)}
+        
         for name, stats in self.unit_library.items():
-            if stats.get("naval_unit", False) == self.is_naval:
-                base = self.get_group_name(name)
-                grouped_units[base].append((name, stats))
+            if stats.get("naval_unit", False) != self.is_naval: continue
+            
+            base_name = self.get_group_name(name)
+            # Roman numeral to Int converter for comparison
+            level = self.roman_to_int(name.replace(base_name, "").strip())
+            
+            # Check research: "cavalry": 5 in research means Cavalry V is available
+            # Note: tech keys in research template are lowercase
+            researched_level = player_research.get(base_name.lower().replace(" ", "_"), 0)
+            
+            if level <= researched_level or level == 0: # 0 is for units without numerals
+                # If we find a higher level version of the same series, overwrite
+                if base_name not in available_units or level > available_units[base_name][2]:
+                    available_units[base_name] = (name, stats, level)
 
-        # 2. Render rows based on the order of self.ordered_groups
+        # 2. Render only the best versions
         y_offset = 120
-        row_height = 60
-        btn_width = 110 
-        
-        for group_name in self.ordered_groups:
-            units = grouped_units[group_name]
-            # No sorting here; we want JSON order within the row too
+        for base_name, (full_name, stats, lvl) in available_units.items():
+            cost_str = f"{stats.get('cost_money', 0)}M"
+            btn = Button(250, y_offset, "small", "blue" if self.is_naval else "green", 
+                        full_name, lambda n=full_name: self.buy_unit(n))
+            btn.internal_unit_name = full_name
+            self.elements.append(btn)
             
-            x_offset = 250 
-            for name, stats in units:
-                display_label = name.replace(group_name, "").strip() or group_name
-                
-                btn = Button(x_offset, y_offset, "small", "blue" if self.is_naval else "green", 
-                             display_label, lambda n=name: self.buy_unit(n))
-                
-                # Attach the full name to the button object for tooltip detection
-                btn.internal_unit_name = name 
-                self.elements.append(btn)
-                x_offset += btn_width + 10
-            
-            y_offset += row_height
+            # Draw the label next to the button
+            # (This is handled in additional_draw using available_units keys)
+            y_offset += 60
 
+    def roman_to_int(self, s):
+        if not s: return 0
+        rom_val = {'I': 1, 'V': 5, 'X': 10}
+        res, i = 0, 0
+        while i < len(s):
+            s1 = rom_val.get(s[i], 0)
+            if i + 1 < len(s):
+                s2 = rom_val.get(s[i+1], 0)
+                if s1 >= s2: res += s1; i += 1
+                else: res += s2 - s1; i += 2
+            else: res += s1; i += 1
+        return res
     def buy_unit(self, unit_name):
         stats = self.unit_library.get(unit_name)
         if not stats or not self.map_screen: return

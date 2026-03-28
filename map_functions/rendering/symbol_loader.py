@@ -1,5 +1,6 @@
 import pygame
 import os
+import re
 
 SYMBOLS = {}
 
@@ -20,10 +21,20 @@ def load_symbols():
             SYMBOLS[name] = img
 
 def get_symbol(name, zoom):
-    """Returns a scaled version of the requested icon."""
+    """Returns scaled icon. Falls back to base name if Roman Numeral version is missing."""
+    # 1. Try exact match
     if name in SYMBOLS:
-        base_img = SYMBOLS[name]
-        size = int(32 * zoom)
-        if size < 8: size = 8 # Don't let it disappear
-        return pygame.transform.scale(base_img, (size, size))
+        return _scale_img(SYMBOLS[name], zoom)
+
+    # 2. Try falling back (stripping I, II, III... XX)
+    # Regex looks for space followed by Roman Numerals at the end of the string
+    base_name = re.sub(r'\s+(X{0,1}V{0,1}I{0,3}|X{0,2}|I[VX]|VI{0,3})$', '', name).strip()
+    
+    if base_name in SYMBOLS:
+        return _scale_img(SYMBOLS[base_name], zoom)
+    
     return None
+
+def _scale_img(img, zoom):
+    size = max(8, int(32 * zoom))
+    return pygame.transform.scale(img, (size, size))

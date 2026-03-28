@@ -229,32 +229,51 @@ def process_movement(self):
                 province["units"] = [u for u in province["units"] if u not in moving_units]
 
 def process_economy(self):
-    """Calculates income for ALL countries based on the provinces they own."""
-    # the values 
-    YIELD_MONEY = 500
-    YIELD_MANPOWER = 50
-    YIELD_MATERIALS = 100
-    YIELD_FUEL = 1
+    """Calculates income and deducts unit upkeep for ALL countries."""
+    YIELD_MONEY = 999500
+    YIELD_MANPOWER = 99950
+    YIELD_MATERIALS = 999100
+    YIELD_FUEL = 9991
+    UPKEEP_MODIFIER = 0.05
 
-    # 1. Tracker for this turn's earnings
-    turn_counts = {name: 0 for name in self.nation_data.keys()}
+    # 1. Load Unit Library for cost reference
+    unit_stats_path = 'map_functions/data/unit_data.json'
+    with open(unit_stats_path, 'r') as f:
+        unit_library = json.load(f)
 
-    # 2. Count provinces per owner
+    # 2. Trackers
+    turn_data = {name: {"inc": 0, "upkeep": {"money":0, "manpower":0, "materials":0, "fuel":0}} 
+                 for name in self.nation_data.keys()}
+
+    # 3. Sum Province Income
     for province in self.map_data.values():
         owner = province.get("owner")
-        if owner in turn_counts and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
-            turn_counts[owner] += 1
+        if owner in turn_data and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
+            turn_data[owner]["inc"] += 1
 
-    # 3. Update the actual data
-    for country_name, count in turn_counts.items():
-        if country_name in self.nation_data:
-            stats = self.nation_data[country_name]
-            stats["money"] += count * YIELD_MONEY
-            stats["manpower"] = stats.get("manpower", 0) + (count * YIELD_MANPOWER)
-            stats["materials"] = stats.get("materials", 0) + (count * YIELD_MATERIALS)
-            stats["fuel"] = stats.get("fuel", 0) + (count * YIELD_FUEL)
+    # 4. Calculate Upkeep
+    for province in self.map_data.values():
+        for unit in province.get("units", []):
+            owner = unit["owner"]
+            stats = unit_library.get(unit["type"])
+            if owner in turn_data and stats:
+                turn_data[owner]["upkeep"]["money"] += stats.get("cost_money", 0) * UPKEEP_MODIFIER
+                turn_data[owner]["upkeep"]["manpower"] += stats.get("cost_manpower", 0) * UPKEEP_MODIFIER
+                turn_data[owner]["upkeep"]["materials"] += stats.get("cost_materials", 0) * UPKEEP_MODIFIER
+                turn_data[owner]["upkeep"]["fuel"] += stats.get("cost_fuel", 0) * UPKEEP_MODIFIER
 
-    # Return player's total money for feedback if needed
+    # 5. Apply to Nation Data
+    for name, data in turn_data.items():
+        stats = self.nation_data[name]
+        stats["money"] += (data["inc"] * YIELD_MONEY) - data["upkeep"]["money"]
+        stats["manpower"] += (data["inc"] * YIELD_MANPOWER) - data["upkeep"]["manpower"]
+        stats["materials"] += (data["inc"] * YIELD_MATERIALS) - data["upkeep"]["materials"]
+        stats["fuel"] += (data["inc"] * YIELD_FUEL) - data["upkeep"]["fuel"]
+
+        # Clamp resources at 0 so they don't go negative
+        for res in ["money", "manpower", "materials", "fuel"]:
+            stats[res] = max(0, stats[res])
+
     return self.nation_data.get(self.player_country, {}).get("money", 0)
 
 def process_recruitment(self, days_passed):

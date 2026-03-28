@@ -15,6 +15,10 @@ SIZES = {
     "large": (300, 80)
 }
 
+# Global sound variables to be loaded in main.py
+click_sound = None
+slider_sound = None
+
 def parse_pos(val, limit, size):
     """
     Handles 'centered', 'centered + 100', or raw numbers.
@@ -108,8 +112,12 @@ class Button:
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if self.is_pressed:
                 self.is_pressed = False
-                # Final check: only trigger if mouse is released while still over the button
                 if self.rect.collidepoint(event.pos):
+                    # --- PLAY CLICK SOUND ---
+                    if click_sound:
+                        # Get volume from the active state (which inherits from GameState)
+                        # This assumes 'self' is in a state with access to volume
+                        click_sound.play()
                     self.callback()
 
 class Slider:

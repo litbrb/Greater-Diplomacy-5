@@ -1,4 +1,5 @@
 import pygame
+import ui_elements
 from gameState import GameState
 from ui_elements import Button, Slider
 from map_functions.data import keybind_io
@@ -71,3 +72,8 @@ class Settings(GameState):
 
     def set_volume(self, val):
         self.volume = val
+        # Update the global GameState variable
+        self.master_volume = val 
+        # Update the actual mixer volume
+        if ui_elements.click_sound:
+            ui_elements.click_sound.set_volume(val)

@@ -1,4 +1,5 @@
 import pygame
+import ui_elements
 import gameState as g
 from screens.load_game import Load_Game
 from screens.map import Map
@@ -17,6 +18,14 @@ pygame.display.set_caption("Greater Diplomacy Pygame Edition")
 class Controller:
     def __init__(self):
         pygame.init() # Ensure pygame is init before accessing K_ constants
+        pygame.mixer.init() # Initialize sound engine
+        self.screen = pygame.display.set_mode((g.SCREEN_WIDTH, g.SCREEN_HEIGHT))
+        
+        # Load the sound into the ui_elements module
+        try:
+            ui_elements.click_sound = pygame.mixer.Sound("assets/click.mp3")
+        except:
+            print("Warning: click.mp3 not found in assets folder")
         self.screen = pygame.display.set_mode((g.SCREEN_WIDTH, g.SCREEN_HEIGHT))
         
         # 0. Load symbols

@@ -66,11 +66,17 @@ def draw_map_screen(self, surface):
         date_surf = self.font.render(self.time_manager.get_date_string(), True, (255, 255, 255))
         surface.blit(date_surf, (surface.get_width() // 2 - date_surf.get_width() // 2, 20))
         
-        gold_surf = self.font.render(f"Gold: {self.player_money}g", True, (255, 215, 0))
-        surface.blit(gold_surf, (120, 20))
+        money_surf = self.font.render(f"Money: {self.player_money}", True, (255, 215, 0))
+        surface.blit(money_surf, (100, 20))
         
         manpower_surf = self.font.render(f"Manpower: {self.player_manpower}", True, (100, 200, 255))
         surface.blit(manpower_surf, (250, 20))
+
+        materials_surf = self.font.render(f"Materials: {self.player_materials}", True, (150, 150, 150))
+        surface.blit(materials_surf, (420, 20))
+
+        fuel_surf = self.font.render(f"Fuel: {self.player_fuel}", True, (200, 100, 255))
+        surface.blit(fuel_surf, (580, 20))
 
         player_display = self.nation_data.get(self.player_country, {}).get("name", self.player_country)
         name_surf = self.font.render(f"Playing as: {player_display.title()}", True, (200, 200, 200))

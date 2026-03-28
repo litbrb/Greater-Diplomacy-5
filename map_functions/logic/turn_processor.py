@@ -230,29 +230,32 @@ def process_movement(self):
 
 def process_economy(self):
     """Calculates income for ALL countries based on the provinces they own."""
-    BASE_TAX = 10
-    
-    # 1. Tracker for this turn's earnings
-    turn_income = {name: 0 for name in self.nation_data.keys()}
+    # the values 
+    YIELD_MONEY = 500
+    YIELD_MANPOWER = 50
+    YIELD_MATERIALS = 100
+    YIELD_FUEL = 1
 
-    # 2. Sum up province income
+    # 1. Tracker for this turn's earnings
+    turn_counts = {name: 0 for name in self.nation_data.keys()}
+
+    # 2. Count provinces per owner
     for province in self.map_data.values():
         owner = province.get("owner")
-        if owner in turn_income and owner != "None":
-            turn_income[owner] += BASE_TAX
+        if owner in turn_counts and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
+            turn_counts[owner] += 1
 
     # 3. Update the actual data
-    player_earned = 0
-    for country_name, amount in turn_income.items():
+    for country_name, count in turn_counts.items():
         if country_name in self.nation_data:
-            self.nation_data[country_name]["money"] += amount
-            # Manpower could have its own logic, but adding for now
-            self.nation_data[country_name]["manpower"] = self.nation_data[country_name].get("manpower", 0) + amount
-            
-            if country_name == self.player_country:
-                player_earned = amount
+            stats = self.nation_data[country_name]
+            stats["money"] += count * YIELD_MONEY
+            stats["manpower"] = stats.get("manpower", 0) + (count * YIELD_MANPOWER)
+            stats["materials"] = stats.get("materials", 0) + (count * YIELD_MATERIALS)
+            stats["fuel"] = stats.get("fuel", 0) + (count * YIELD_FUEL)
 
-    return player_earned
+    # Return player's total money for feedback if needed
+    return self.nation_data.get(self.player_country, {}).get("money", 0)
 
 def process_recruitment(self, days_passed):
     """Handles the deployment of units from the queue to the field with dynamic scaling."""

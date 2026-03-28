@@ -68,7 +68,7 @@ class Construction_Screen(GameState):
             self.map_screen.show_feedback(f"Started {b_name}")
             self.refresh_ui()
         else:
-            self.map_screen.show_feedback("Not enough gold!")
+            self.map_screen.show_feedback("Not enough money!")
 
     def handle_events(self, events):
         for event in events:

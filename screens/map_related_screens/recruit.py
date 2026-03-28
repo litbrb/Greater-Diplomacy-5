@@ -28,8 +28,8 @@ class Recruit_Screen(GameState):
             queue = self.target_province.get("deployment_queue", [])
             if 0 <= index < len(queue):
                 removed_item = queue.pop(index)
-                # Logic for refunding (if you have a gold variable)
-                # self.map_screen.player_gold += removed_item.get('cost', 0)
+                # Logic for refunding (if you have a money variable)
+                # self.map_screen.player_money += removed_item.get('cost', 0)
                 self.map_screen.show_feedback(f"Cancelled {removed_item['unit_type']}")
 
     def additional_draw(self, surface):

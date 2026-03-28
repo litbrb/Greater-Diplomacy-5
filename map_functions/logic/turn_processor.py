@@ -230,6 +230,7 @@ def process_movement(self):
 
 def process_economy(self):
     """Calculates income and deducts unit upkeep for ALL countries."""
+    # yes i know the values here are comically high just keep it this way (for testing)
     YIELD_MONEY = 999500
     YIELD_MANPOWER = 99950
     YIELD_MATERIALS = 999100

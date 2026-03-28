@@ -51,38 +51,39 @@ class Recruit_Screen(GameState):
     def refresh_ui(self):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
         player_research = self.map_screen.nation_data[self.map_screen.player_country].get("research", {})
-        
-        # 1. Logic to find the 'highest version' available
-        available_units = {} # {base_name: (full_name, stats)}
-        
-        for name, stats in self.unit_library.items():
-            if stats.get("naval_unit", False) != self.is_naval: continue
-            
-            base_name = self.get_group_name(name)
-            # Roman numeral to Int converter for comparison
-            level = self.roman_to_int(name.replace(base_name, "").strip())
-            
-            # Check research: "cavalry": 5 in research means Cavalry V is available
-            # Note: tech keys in research template are lowercase
-            researched_level = player_research.get(base_name.lower().replace(" ", "_"), 0)
-            
-            if level <= researched_level or level == 0: # 0 is for units without numerals
-                # If we find a higher level version of the same series, overwrite
-                if base_name not in available_units or level > available_units[base_name][2]:
-                    available_units[base_name] = (name, stats, level)
 
-        # 2. Render only the best versions
         y_offset = 120
-        for base_name, (full_name, stats, lvl) in available_units.items():
-            cost_str = f"{stats.get('cost_money', 0)}M"
-            btn = Button(250, y_offset, "small", "blue" if self.is_naval else "green", 
-                        full_name, lambda n=full_name: self.buy_unit(n))
-            btn.internal_unit_name = full_name
-            self.elements.append(btn)
+        for group_name in self.ordered_groups:
+            # 1. Find the highest unlocked version for this group
+            highest_unlocked = None
+            highest_lvl = -1
+
+            # Filter units belonging to this specific group
+            group_units = [ (n, s) for n, s in self.unit_library.items() 
+                           if self.get_group_name(n) == group_name]
+
+            for name, stats in group_units:
+                lvl = self.roman_to_int(name.replace(group_name, "").strip())
+                tech_key = group_name.lower().replace(" ", "_")
+                researched_lvl = player_research.get(tech_key, 0)
+
+                # Unit is available if level matches research or it's base tech (lvl 0)
+                if lvl <= researched_lvl or lvl == 0:
+                    if lvl > highest_lvl:
+                        highest_lvl = lvl
+                        highest_unlocked = name
+
+            # 2. Render Button (Only showing the single best version)
+            if highest_unlocked:
+                btn = Button(250, y_offset, "small", "blue" if self.is_naval else "green", 
+                             highest_unlocked, lambda n=highest_unlocked: self.buy_unit(n))
+                btn.internal_unit_name = highest_unlocked
+            else:
+                # Group exists but no version is unlocked yet
+                btn = Button(250, y_offset, "small", "grey", "LOCKED", lambda: None)
             
-            # Draw the label next to the button
-            # (This is handled in additional_draw using available_units keys)
-            y_offset += 60
+            self.elements.append(btn)
+            y_offset += 60 # Vertical spacing stays constant regardless of what is unlocked
 
     def roman_to_int(self, s):
         if not s: return 0

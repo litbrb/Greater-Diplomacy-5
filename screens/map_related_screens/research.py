@@ -122,11 +122,15 @@ class Research_Screen(GameState):
     def start_or_resume_research(self, tech_name):
         player_data = self.map_screen.nation_data[self.map_screen.player_country]
         progress_cache = player_data.setdefault("research_progress", {})
+        
         if tech_name in progress_cache:
             duration = progress_cache.pop(tech_name)
         else:
             level = player_data["research"].get(tech_name, 0)
-            duration = 30 + (level * 15)
+            # Subtract 1800 if it's a "Year based" tech, otherwise use level
+            effective_lvl = (level - 1800) if level >= 1800 else level
+            duration = 30 + (effective_lvl * 15)
+            
         player_data["research_queue"].append({"tech_name": tech_name, "days_remaining": duration})
         self.refresh_ui()
 

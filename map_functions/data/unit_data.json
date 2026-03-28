@@ -1,30 +1,4 @@
 {
-    "Chadian Toyota Hilux": {
-        "health": 50,
-        "attack": 10,
-        "defense": 1,
-        "speed": 3,
-        "cost_money": 0,
-        "cost_materials": 0,
-        "cost_manpower": 0,
-        "cost_fuel": 0,
-        "production_time": 5,
-        "naval_unit": false,
-        "order": {}
-    },
-    "Libyan T-55": {
-        "health": 100,
-        "attack": 20,
-        "defense": 10,
-        "speed": 2,
-        "cost_money": 0,
-        "cost_materials": 0,
-        "cost_manpower": 0,
-        "cost_fuel": 0,
-        "production_time": 5,
-        "naval_unit": false,
-        "order": {}
-    },
     "Infantry": {
         "health": 15,
         "attack": 9,

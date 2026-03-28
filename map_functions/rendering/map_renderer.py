@@ -82,7 +82,7 @@ def draw_map_screen(self, surface):
 
         player_display = self.nation_data.get(self.player_country, {}).get("name", self.player_country)
         name_surf = self.font.render(f"Playing as: {player_display.title()}", True, (200, 200, 200))
-        surface.blit(name_surf, (surface.get_width() - name_surf.get_width() - 20, 20))
+        surface.blit(name_surf, (surface.get_width() - name_surf.get_width() - 420, 20))
         
         if self.selected_province: 
             from map_functions.ui import sidebar_info

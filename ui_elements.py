@@ -10,6 +10,7 @@ COLORS = {
 }
 
 SIZES = {
+    "small_square": (40, 40),
     "small": (100, 40),
     "medium": (200, 50),
     "large": (300, 80)

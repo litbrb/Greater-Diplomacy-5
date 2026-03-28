@@ -10,9 +10,9 @@ def render_buttons(self):
             Button(230, 10, "small", "blue", "Political", self.set_political),
             Button(340, 10, "small", "grey", "Reset", self.reset_view),
             Button(450, 10, "small", "grey", "Refresh", self.refresh_political_map),
-            Button(480, 10, "small", "grey", "Units", lambda: self.set_view_mode("UNITS")),
-            Button(590, 10, "small", "grey", "Economy", lambda: self.set_view_mode("ECONOMY")),
-            Button(700, 10, "small", "grey", "Blank", lambda: self.set_view_mode("BLANK")),
+            Button(600, 10, "small_square", "grey", "Units", lambda: self.set_view_mode("UNITS")),
+            Button(650, 10, "small_square", "grey", "Economy", lambda: self.set_view_mode("ECONOMY")),
+            Button(700, 10, "small_square", "grey", "Blank", lambda: self.set_view_mode("BLANK")),
         ]
 
         # Right-side top buttons

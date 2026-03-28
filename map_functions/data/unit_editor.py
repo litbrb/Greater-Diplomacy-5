@@ -20,7 +20,8 @@ class UnitEditor:
             ("Cost (Money)", "cost_money"),
             ("Cost (Materials)", "cost_materials"),
             ("Cost (Manpower)", "cost_manpower"),
-            ("Cost (Fuel)", "cost_fuel")
+            ("Cost (Fuel)", "cost_fuel"),
+            ("Time", "production_time")
             #("Upkeep (Money)", "upkeep_money"),
             #("Upkeep (Materials)", "upkeep_materials"),
             #("Upkeep (Manpower)", "upkeep_manpower"),
@@ -61,6 +62,7 @@ class UnitEditor:
                 "cost_materials": int(self.entries["cost_materials"].get() or 0),
                 "cost_manpower": int(self.entries["cost_manpower"].get() or 0),
                 "cost_fuel": int(self.entries["cost_fuel"].get() or 0),
+                "production_time": int(self.entries["production_time"].get() or 5),
                 #"upkeep_money": int(self.entries["upkeep_money"].get() or 0),
                 #"upkeep_materials": int(self.entries["upkeep_materials"].get() or 0),
                 #"upkeep_manpower": int(self.entries["upkeep_manpower"].get() or 0),

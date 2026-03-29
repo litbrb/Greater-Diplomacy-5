@@ -74,9 +74,15 @@ class Research_Screen(GameState):
             self.draw_category_content(res_levels, queue, progress_cache)
 
     def draw_category_content(self, res_levels, queue, progress_cache):
-        y_pos = 120 # Moved up slightly to fit more
+        y_pos = 120
         cat_techs = [t for t, data in self.tech_tree.items() if data[0] == self.current_category]
         
+        # --- Separate Infinite vs Standard ---
+        # Sort so that 9999 (infinite) techs come first
+        cat_techs.sort(key=lambda t: self.tech_tree[t][1] != 9999)
+
+        has_drawn_infinite = False
+
         for tech in cat_techs:
             level = res_levels.get(tech, 0)
             max_lvl = self.tech_tree[tech][1]
@@ -84,24 +90,43 @@ class Research_Screen(GameState):
             req_met = self.check_requirements(res_levels, reqs)
             queued_item = next((item for item in queue if item["tech_name"] == tech), None)
 
+            # Add extra space after the last infinite research item
+            if has_drawn_infinite and max_lvl != 9999:
+                y_pos += 25 
+                has_drawn_infinite = False # Only add space once
+            
+            if max_lvl == 9999:
+                has_drawn_infinite = True
+
+            # 1. Handle Display Name Logic
+            display_name = tech.replace('_',' ').title()
+            
+            # 2. Logic for Level display
+            if max_lvl == 1:
+                # One-off tech: just show the name
+                level_str = ""
+            else:
+                # Multi-level or infinite: show current progress/target
+                level_str = f" Lvl {level + 1}" if not queued_item else f" Lvl {level}"
+
             if level >= max_lvl and max_lvl != 9999:
-                status_text = f"{tech.replace('_',' ').title()}: MAX ({level})"
+                status_text = f"{display_name}: MAXED"
                 color, callback = "grey", lambda: None
             elif queued_item:
-                status_text = f"{tech.replace('_',' ').title()}: {queued_item['days_remaining']}d (PAUSE)"
+                status_text = f"{display_name}: {queued_item['days_remaining']}d (PAUSE)"
                 color, callback = "green", lambda t=tech: self.pause_research(t)
             elif not req_met:
-                status_text = f"{tech.replace('_',' ').title()} (Locked)"
+                status_text = f"{display_name} (Locked)"
                 color, callback = "red", lambda: self.map_screen.show_feedback("Requirements not met!")
             elif len(queue) < 2:
                 has_progress = tech in progress_cache
                 effective_lvl = max(0, level - 1800) if tech in ["infantry", "industry"] else level
                 days = 30 + (effective_lvl * 15) if not has_progress else progress_cache[tech]
                 prefix = "Resume" if has_progress else "Start"
-                status_text = f"{prefix} {tech.replace('_',' ').title()} Lvl {level+1} ({days}d)"
+                status_text = f"{prefix} {display_name}{level_str} ({days}d)"
                 color, callback = "blue", lambda t=tech: self.start_or_resume_research(t)
             else:
-                status_text = f"{tech.replace('_',' ').title()} (Slots Full)"
+                status_text = f"{display_name} (Slots Full)"
                 color, callback = "grey", lambda: self.map_screen.show_feedback("Research slots full!")
 
             self.elements.append(Button("centered", y_pos, "large", color, status_text, callback))
@@ -178,49 +203,60 @@ class Research_Screen(GameState):
                     surface.blit(hud_font.render(txt, True, (100, 255, 100)), (40, y_off))
                 else:
                     surface.blit(hud_font.render(f"Slot {i+1}: [EMPTY]", True, (150, 150, 150)), (40, y_off))
+    
     def render_completed_text_list(self, surface):
-        """Helper to draw the full list of techs as clean text."""
+        """Draws the full list of techs as clean text with logical spacing."""
         player_data = self.map_screen.nation_data[self.map_screen.player_country]
         res_levels = player_data.get("research", {})
         
         text_font = pygame.font.SysFont("Arial", 22)
         label_font = pygame.font.SysFont("Arial", 24, bold=True)
         
-        # Organize by original categories
         organized = {cat: [] for cat in self.categories if cat != "COMPLETED"}
-        
-        # Get all techs from the tree to ensure we show 0-level progress too
         for tech_id, data in self.tech_tree.items():
             cat = data[0]
             lvl = res_levels.get(tech_id, 0)
-            organized[cat].append((tech_id, lvl))
+            max_lvl = data[1]
+            organized[cat].append((tech_id, lvl, max_lvl))
 
         start_y = 150
-        column_width = 350
+        column_width = 320
         
         for i, (cat_name, techs) in enumerate(organized.items()):
-            curr_x = 100 + (i * column_width)
+            curr_x = 50 + (i * column_width)
             curr_y = start_y
             
-            # Category Header
+            # Header
             head = label_font.render(cat_name, True, (255, 215, 0))
             surface.blit(head, (curr_x, curr_y))
-            curr_y += 35
+            curr_y += 40
             
-            for tech_id, lvl in techs:
-                # Format: "Infantry: 1805" or "Main Battle Tank: 0"
+            # Sort techs within column: Infinites first
+            techs.sort(key=lambda x: x[2] != 9999)
+            
+            has_infinite_spacer = False
+            for tech_id, lvl, max_lvl in techs:
+                if has_infinite_spacer and max_lvl != 9999:
+                    curr_y += 15 # Smaller spacer for text list
+                    has_infinite_spacer = False
+                if max_lvl == 9999: has_infinite_spacer = True
+
                 display_name = tech_id.replace('_', ' ').title()
                 
-                # Dim the text if it's level 0 (not started)
-                color = (200, 200, 200) if lvl > 0 else (100, 100, 100)
-                # Special color for Infantry/Industry base levels
-                if tech_id in ["infantry", "industry"] and lvl <= 1800:
-                    color = (150, 150, 150)
+                # Logic: Hide level if max is 1 and level is 0 or 1
+                if max_lvl == 1:
+                    val_text = ": Level 1" if lvl >= 1 else ": Level 0"
+                else:
+                    val_text = f": Level {lvl}"
 
-                txt_surf = text_font.render(f"{display_name}: {lvl}", True, color)
+                color = (200, 200, 200) if lvl > 0 else (100, 100, 100)
+                if tech_id in ["infantry", "industry"] and lvl <= 1800:
+                    color = (140, 140, 140)
+
+                txt_surf = text_font.render(f"{display_name}{val_text}", True, color)
                 surface.blit(txt_surf, (curr_x + 10, curr_y))
                 curr_y += 28
-                
+
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True
 

@@ -10,34 +10,19 @@ class Research_Screen(GameState):
         self.bg_color = (20, 20, 30)
         self.map_screen = None
         self.current_category = "INFANTRY" 
-
-        # 1. Added COMPLETED category
         self.categories = ["INFANTRY", "TANKS", "NAVY", "INDUSTRY", "COMPLETED"]
 
-        self.tech_tree = {
-            "cavalry": ["INFANTRY", 20, {}],
-            "infantry": ["INFANTRY", 9999, {}],
-            "WW1_armored_car": ["TANKS", 1, {}],
-            "WW1_tank": ["TANKS", 1, {}],
-            "armored_car": ["TANKS", 5, {"WW1_armored_car": 1}],
-            "light_tank": ["TANKS", 5, {"WW1_tank": 1}],
-            "medium_tank": ["TANKS", 3, {"WW1_tank": 1}],
-            "heavy_tank": ["TANKS", 3, {"WW1_tank": 1}],
-            "main_battle_tank": ["TANKS", 1, {"OR": [{"medium_tank": 3}, {"heavy_tank": 3}]}],
-            "carrack": ["NAVY", 1, {}],
-            "ironclad": ["NAVY", 1, {"carrack": 1}],
-            "pre-dreadnaught": ["NAVY", 1, {"ironclad": 1}],
-            "dreadnaught": ["NAVY", 1, {"pre-dreadnaught": 1}],
-            "destroyer": ["NAVY", 8, {"dreadnaught": 1}],
-            "aircraft_carrier": ["NAVY", 4, {"destroyer": 1}],
-            "industry": ["INDUSTRY", 9999, {}],
-            "workshop": ["INDUSTRY", 5, {}],
-            "basic_factory": ["INDUSTRY", 1, {"workshop": 5}],
-            "factory": ["INDUSTRY", 5, {"basic_factory": 1}],
-            "bergius_process": ["INDUSTRY", 1, {}],
-            "synthetic_fuel_experiments": ["INDUSTRY", 1, {"bergius_process": 1}],
-            "fuel_refining": ["INDUSTRY", 3, {"synthetic_fuel_experiments": 1}]
-        }
+        # Load tech tree from the template file
+        self.tech_tree = self.load_tech_tree()
+
+    def load_tech_tree(self):
+        path = "map_functions/data/research_template.json"
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                return json.load(f)
+        else:
+            print(f"Error: {path} not found!")
+            return {}
 
     def start_research(self, map_ref):
         self.map_screen = map_ref
@@ -75,15 +60,18 @@ class Research_Screen(GameState):
 
     def draw_category_content(self, res_levels, queue, progress_cache):
         y_pos = 120
-        cat_techs = [t for t, data in self.tech_tree.items() if data[0] == self.current_category]
-        cat_techs.sort(key=lambda t: self.tech_tree[t][1] != 9999)
+        # Filter techs based on the 'category' key in the new JSON structure
+        cat_techs = [t for t, data in self.tech_tree.items() if data["category"] == self.current_category]
+        
+        # Sort so that 9999 (infinite) techs come first
+        cat_techs.sort(key=lambda t: self.tech_tree[t]["max_lvl"] != 9999)
 
         has_drawn_infinite = False
 
         for tech in cat_techs:
             level = res_levels.get(tech, 0)
-            max_lvl = self.tech_tree[tech][1]
-            reqs = self.tech_tree[tech][2]
+            max_lvl = self.tech_tree[tech]["max_lvl"]
+            reqs = self.tech_tree[tech]["req"]
             req_met = self.check_requirements(res_levels, reqs)
             queued_item = next((item for item in queue if item["tech_name"] == tech), None)
 
@@ -91,11 +79,12 @@ class Research_Screen(GameState):
                 y_pos += 25 
                 has_drawn_infinite = False
             
-            if max_lvl == 9999: has_drawn_infinite = True
+            if max_lvl == 9999:
+                has_drawn_infinite = True
 
             display_name = tech.replace('_',' ').title()
             
-            # --- Type vs Lvl vs One-off ---
+            # --- Type vs Lvl Logic ---
             if max_lvl == 9999:
                 level_str = f" Type {level + 1}" if not queued_item else f" Type {level}"
             elif max_lvl == 1:
@@ -103,11 +92,12 @@ class Research_Screen(GameState):
             else:
                 level_str = f" Lvl {level + 1}" if not queued_item else f" Lvl {level}"
 
+            # --- Button Logic ---
             if level >= max_lvl and max_lvl != 9999:
                 status_text = f"{display_name}: MAXED"
                 color, callback = "grey", lambda: None
             elif queued_item:
-                status_text = f"{display_name}: {queued_item['days_remaining']}d"
+                status_text = f"{display_name}: {queued_item['days_remaining']}d (PAUSE)"
                 color, callback = "green", lambda t=tech: self.pause_research(t)
             elif not req_met:
                 status_text = f"{display_name} (Locked)"
@@ -127,7 +117,6 @@ class Research_Screen(GameState):
             btn = Button("centered", y_pos, "large", color, status_text, callback)
             self.elements.append(btn)
 
-            # --- DRAW PROGRESS BAR ---
             if queued_item:
                 effective_lvl = max(0, level - 1800) if tech in ["infantry", "industry"] else level
                 total_days = 30 + (effective_lvl * 15)
@@ -220,7 +209,7 @@ class Research_Screen(GameState):
                     surface.blit(hud_font.render(f"Slot {i+1}: [EMPTY]", True, (150, 150, 150)), (40, y_off))
     
     def render_completed_text_list(self, surface):
-        """Draws the full list of techs as clean text with logical spacing."""
+        """Draws the summary with spacing and 'Type' vs 'Level' labeling."""
         player_data = self.map_screen.nation_data[self.map_screen.player_country]
         res_levels = player_data.get("research", {})
         
@@ -229,9 +218,9 @@ class Research_Screen(GameState):
         
         organized = {cat: [] for cat in self.categories if cat != "COMPLETED"}
         for tech_id, data in self.tech_tree.items():
-            cat = data[0]
+            cat = data["category"]
             lvl = res_levels.get(tech_id, 0)
-            max_lvl = data[1]
+            max_lvl = data["max_lvl"]
             organized[cat].append((tech_id, lvl, max_lvl))
 
         start_y = 150
@@ -241,24 +230,22 @@ class Research_Screen(GameState):
             curr_x = 50 + (i * column_width)
             curr_y = start_y
             
-            # Header
             head = label_font.render(cat_name, True, (255, 215, 0))
             surface.blit(head, (curr_x, curr_y))
             curr_y += 40
             
-            # Sort techs within column: Infinites first
             techs.sort(key=lambda x: x[2] != 9999)
             
             has_infinite_spacer = False
             for tech_id, lvl, max_lvl in techs:
                 if has_infinite_spacer and max_lvl != 9999:
-                    curr_y += 15 # Smaller spacer for text list
+                    curr_y += 15
                     has_infinite_spacer = False
                 if max_lvl == 9999: has_infinite_spacer = True
 
                 display_name = tech_id.replace('_', ' ').title()
                 
-                # Logic: Hide level if max is 1 and level is 0 or 1
+                # --- Label Refactor ---
                 if max_lvl == 9999:
                     val_text = f": Type {lvl}"
                 elif max_lvl == 1:

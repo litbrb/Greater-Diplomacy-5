@@ -77,34 +77,79 @@ class CountryEditor:
 
         self.refresh_list()
 
-    # --- NEW METHOD: Bulk Reset ---
+    def get_default_research_dict(self):
+        """Helper to build a starting research dict from the structural template."""
+        template_path = "map_functions/data/research_template.json"
+        if os.path.exists(template_path):
+            with open(template_path, "r") as f:
+                struct = json.load(f)
+            # We initialize everything to 0, except the infinites which start at 1800
+            return {tech: (1800 if data["max_lvl"] == 9999 else 0) for tech, data in struct.items()}
+        return {"infantry": 1800, "industry": 1800} # Hardcoded fallback
+
     def bulk_reset_template(self):
-        """Updates every country in the list to the new data format while keeping Name/Color."""
-        msg = ("This will reset research, money, and relations for ALL countries to the default template.\n\n"
-               "Names and Colors will be preserved. Proceed?")
-        if not messagebox.askyesno("Confirm Bulk Reset", msg):
+        """Synchronizes all countries to have every tech defined in the template."""
+        msg = ("This will add any NEW technologies from your JSON to ALL countries.\n"
+               "Existing research levels will be PRESERVED. Proceed?")
+        if not messagebox.askyesno("Confirm Sync", msg):
             return
 
-        for int_id in self.data:
-            # Preserve existing identifying info
-            old_name = self.data[int_id].get("name", int_id)
-            old_color = self.data[int_id].get("color", [150, 150, 150])
+        default_research = self.get_default_research_dict()
 
-            # Overwrite with the template
-            self.data[int_id] = {
-                "name": old_name,
-                "color": old_color,
-                "research": {"infantry": 1800, "cavalry": 1, "industry": 1800}, # Set cavalry to 1 here
-                "money": 0, "manpower": 0, "materials": 0, "fuel": 0,      
-                "is_playable": True,
-                "at_war_with": [], "allied_with": []
-            }
+        for int_id in self.data:
+            # 1. Ensure the 'research' key exists
+            if "research" not in self.data[int_id]:
+                self.data[int_id]["research"] = default_research.copy()
+            else:
+                # 2. Add missing keys from the template to existing research dicts
+                current_res = self.data[int_id]["research"]
+                for tech_key, start_val in default_research.items():
+                    if tech_key not in current_res:
+                        current_res[tech_key] = start_val
+                        print(f"Added {tech_key} to {int_id}")
+
+            # 3. Ensure other basic keys exist (money, manpower, etc)
+            for key in ["money", "manpower", "materials", "fuel"]:
+                self.data[int_id].setdefault(key, 0)
+            
+            self.data[int_id].setdefault("at_war_with", [])
+            self.data[int_id].setdefault("allied_with", [])
 
         with open(PATH, "w") as f:
             json.dump(self.data, f, indent=4)
         
-        messagebox.showinfo("Success", "All countries have been synchronized to the new template.")
+        messagebox.showinfo("Success", "All countries synchronized to the current tech tree.")
         self.refresh_list()
+
+    def save_country(self):
+        """Saves or updates a country using the dynamic tech template."""
+        int_id = self.id_ent.get().strip()
+        disp_name = self.name_ent.get().strip() or int_id
+        
+        if not int_id: 
+            messagebox.showwarning("Error", "Internal ID cannot be empty")
+            return
+        
+        if int_id in self.data:
+            self.data[int_id]["name"] = disp_name
+            self.data[int_id]["color"] = self.current_color
+        else:
+            # New Country: use the dynamic template
+            self.data[int_id] = {
+                "name": disp_name,
+                "color": self.current_color,
+                "research": self.get_default_research_dict(),
+                "money": 0, "manpower": 0, "materials": 0, "fuel": 0,      
+                "is_playable": True,
+                "at_war_with": [], "allied_with": []
+            }
+        
+        with open(PATH, "w") as f:
+            json.dump(self.data, f, indent=4)
+        
+        self.refresh_list()
+        self.id_ent.delete(0, tk.END)
+        self.name_ent.delete(0, tk.END)
 
     def toggle_sort(self):
         if self.sort_mode == "NAME":

@@ -61,16 +61,6 @@ class Button:
     def draw(self, surface):
         if not self.visible: return
 
-        # Determine border color: Gold/Yellow if selected, otherwise dark
-        border_color = (255, 255, 0) if self.selected else (50, 50, 50)
-        border_width = 4 if self.selected else 2
-
-        # Draw the main button body
-        pygame.draw.rect(surface, self.current_color, self.rect)
-        
-        # Draw the highlight border
-        pygame.draw.rect(surface, border_color, self.rect, border_width)
-
         mouse_pos = pygame.mouse.get_pos()
         is_hovered = self.rect.collidepoint(mouse_pos)
         
@@ -108,6 +98,16 @@ class Button:
             shadow = self.font.render(self.text, True, (0, 0, 0))
             surface.blit(shadow, (text_rect.x + 1, text_rect.y + 1))
             surface.blit(text_surf, text_rect)
+        
+        # Determine border color: Gold/Yellow if selected, otherwise dark
+        border_color = (255, 255, 0) if self.selected else (50, 50, 50)
+        border_width = 4 if self.selected else 2
+
+        # Draw the main button body
+        pygame.draw.rect(surface, self.current_color, self.rect)
+        
+        # Draw the highlight border
+        pygame.draw.rect(surface, border_color, self.rect, border_width)
 
     def draw_gradient_rect(self, surface, color, rect):
         """Draws a simple vertical gradient from light to dark."""

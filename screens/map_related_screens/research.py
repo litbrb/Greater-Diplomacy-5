@@ -9,14 +9,15 @@ class Research_Screen(GameState):
         super().__init__()
         self.bg_color = (20, 20, 30)
         self.map_screen = None
-        self.current_category = "MAIN"  # MAIN, INFANTRY, TANKS, NAVY, INDUSTRY
+        self.current_category = "INFANTRY" # Start in a category instead of a menu
 
-        # Define the Tech Tree Structure
-        # name: [category, max_level, requirement_dict]
+        # Define categories for the navigation bar
+        self.categories = ["INFANTRY", "TANKS", "NAVY", "INDUSTRY"]
+
+        # Tech Tree Structure (Matches your template)
         self.tech_tree = {
             "cavalry": ["INFANTRY", 20, {}],
             "infantry": ["INFANTRY", 9999, {}],
-            
             "WW1_armored_car": ["TANKS", 1, {}],
             "WW1_tank": ["TANKS", 1, {}],
             "armored_car": ["TANKS", 5, {"WW1_armored_car": 1}],
@@ -24,14 +25,12 @@ class Research_Screen(GameState):
             "medium_tank": ["TANKS", 3, {"WW1_tank": 1}],
             "heavy_tank": ["TANKS", 3, {"WW1_tank": 1}],
             "main_battle_tank": ["TANKS", 1, {"OR": [{"medium_tank": 3}, {"heavy_tank": 3}]}],
-
             "carrack": ["NAVY", 1, {}],
             "ironclad": ["NAVY", 1, {"carrack": 1}],
             "pre-dreadnaught": ["NAVY", 1, {"ironclad": 1}],
             "dreadnaught": ["NAVY", 1, {"pre-dreadnaught": 1}],
             "destroyer": ["NAVY", 8, {"dreadnaught": 1}],
             "aircraft_carrier": ["NAVY", 4, {"destroyer": 1}],
-
             "industry": ["INDUSTRY", 9999, {}],
             "workshop": ["INDUSTRY", 5, {}],
             "basic_factory": ["INDUSTRY", 1, {"workshop": 5}],
@@ -43,7 +42,8 @@ class Research_Screen(GameState):
 
     def start_research(self, map_ref):
         self.map_screen = map_ref
-        self.current_category = "MAIN"
+        # Default to Infantry on open
+        self.current_category = "INFANTRY"
         self.refresh_ui()
 
     def set_category(self, cat):
@@ -53,11 +53,18 @@ class Research_Screen(GameState):
     def refresh_ui(self):
         self.elements = []
         
-        # Back Button logic
-        if self.current_category == "MAIN":
-            self.elements.append(Button(50, 50, "small", "red", "Exit", self.exit_to_map))
-        else:
-            self.elements.append(Button(50, 50, "small", "red", "Back", lambda: self.set_category("MAIN")))
+        # --- 1. Top Navigation Bar ---
+        # Exit Button (Top Left)
+        self.elements.append(Button(20, 10, "small", "red", "Exit", self.exit_to_map))
+
+        # Category Tabs
+        # We space them out across the top
+        start_x = 200
+        for i, cat in enumerate(self.categories):
+            # Highlight the current category with a different color
+            color = "green" if self.current_category == cat else "blue"
+            btn = Button(start_x + (i * 210), 10, "medium", color, cat, lambda c=cat: self.set_category(c))
+            self.elements.append(btn)
 
         if not self.map_screen or self.map_screen.player_country == "None": return
         
@@ -66,18 +73,10 @@ class Research_Screen(GameState):
         queue = player_data.setdefault("research_queue", [])
         progress_cache = player_data.setdefault("research_progress", {})
 
-        if self.current_category == "MAIN":
-            self.draw_main_menu()
-        else:
-            self.draw_category_menu(res_levels, queue, progress_cache)
+        # --- 2. Draw Research Items for current category ---
+        self.draw_category_content(res_levels, queue, progress_cache)
 
-    def draw_main_menu(self):
-        categories = ["INFANTRY", "TANKS", "NAVY", "INDUSTRY"]
-        for i, cat in enumerate(categories):
-            btn = Button("centered", 200 + (i * 100), "large", "blue", cat, lambda c=cat: self.set_category(c))
-            self.elements.append(btn)
-
-    def draw_category_menu(self, res_levels, queue, progress_cache):
+    def draw_category_content(self, res_levels, queue, progress_cache):
         y_pos = 150
         cat_techs = [t for t, data in self.tech_tree.items() if data[0] == self.current_category]
         
@@ -90,7 +89,7 @@ class Research_Screen(GameState):
             queued_item = next((item for item in queue if item["tech_name"] == tech), None)
 
             if level >= max_lvl and max_lvl != 9999:
-                status_text = f"{tech.replace('_',' ').title()}: MAX LEVEL"
+                status_text = f"{tech.replace('_',' ').title()}: MAX"
                 color, callback = "grey", lambda: None
             elif queued_item:
                 status_text = f"{tech.replace('_',' ').title()}: {queued_item['days_remaining']}d (PAUSE)"
@@ -101,18 +100,13 @@ class Research_Screen(GameState):
             elif len(queue) < 2:
                 has_progress = tech in progress_cache
                 
-                # --- THE FIX STARTS HERE ---
-                if has_progress:
-                    days = progress_cache[tech]
+                # Handling the 1800 offset logic for Infantry/Industry
+                if tech in ["infantry", "industry"]:
+                    effective_lvl = max(0, level - 1800)
                 else:
-                    # Apply the specific 1800 offset for infantry labels
-                    if tech == "infantry":
-                        effective_lvl = max(0, level - 1800)
-                    else:
-                        effective_lvl = level
-                    days = 30 + (effective_lvl * 15)
-                # --- THE FIX ENDS HERE ---
-
+                    effective_lvl = level
+                
+                days = 30 + (effective_lvl * 15) if not has_progress else progress_cache[tech]
                 prefix = "Resume" if has_progress else "Start"
                 status_text = f"{prefix} {tech.replace('_',' ').title()} ({days}d)"
                 color, callback = "blue", lambda t=tech: self.start_or_resume_research(t)
@@ -137,13 +131,10 @@ class Research_Screen(GameState):
             duration = progress_cache.pop(tech_name)
         else:
             level = player_data["research"].get(tech_name, 0)
-            
-            # FIXED LOGIC: Only apply 1800 offset to the specific infantry key
-            if tech_name == "infantry":
+            if tech_name in ["infantry", "industry"]:
                 effective_lvl = max(0, level - 1800)
             else:
                 effective_lvl = level
-                
             duration = 30 + (effective_lvl * 15)
             
         player_data["research_queue"].append({"tech_name": tech_name, "days_remaining": duration})
@@ -161,11 +152,10 @@ class Research_Screen(GameState):
 
     def additional_draw(self, surface):
         if not self.map_screen: return
-        # Title
-        font = pygame.font.SysFont("Arial", 32)
-        title_str = f"RESEARCH: {self.current_category}"
-        ts = font.render(title_str, True, (255, 255, 255))
-        surface.blit(ts, (SCREEN_WIDTH//2 - ts.get_width()//2, 40))
+        
+        # --- Draw Navigation Bar Background ---
+        pygame.draw.rect(surface, (40, 40, 50), (0, 0, SCREEN_WIDTH, 70))
+        pygame.draw.line(surface, (200, 200, 200), (0, 70), (SCREEN_WIDTH, 70), 2)
 
         # --- THE HUD (Bottom Left) ---
         hud_rect = pygame.Rect(20, SCREEN_HEIGHT - 120, 350, 100)
@@ -189,5 +179,4 @@ class Research_Screen(GameState):
         self.next_state, self.done = "MAP", True
 
     def handle_back_key(self):
-        if self.current_category != "MAIN": self.set_category("MAIN")
-        else: self.exit_to_map()
+        self.exit_to_map()

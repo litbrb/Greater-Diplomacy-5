@@ -399,8 +399,8 @@ class Map(GameState):
             return
                 
         # funny, a hardcoded number
-        # this will be a problem later if more than 10 buttons are ever added
-        for i in range(min(10, len(self.elements))): self.elements[i].visible = True
+        # this will be a problem later if more than 9 buttons are ever added
+        for i in range(min(9, len(self.elements))): self.elements[i].visible = True
         self.btn_exit_to_menu.visible = not is_sel
         self.btn_close_info.visible = is_sel
         # self.btn_go_build.visible = is_sel and owner == self.player_country

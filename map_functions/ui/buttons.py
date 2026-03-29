@@ -8,15 +8,29 @@ def render_buttons(self):
         # ALL BUTTONS NOW IN TOP BAR (y=10)
 
         unit_icon = symbol_loader.get_symbol("Infantry", 0.8)
+        economy_icon = symbol_loader.get_symbol("Factory", 0.8)
+        blank_icon = symbol_loader.get_symbol("Star", 0.8)
+        terrain_icon = symbol_loader.get_symbol("Mountains", 0.8)
+        political_icon = symbol_loader.get_symbol("Flag", 0.8)
+        research_icon = symbol_loader.get_symbol("Research", 0.8)
+        save_icon = symbol_loader.get_symbol("Save", 0.8)
 
         self.elements = [
-            Button(120, 10, "small", "green", "Terrain", self.set_terrain),
-            Button(230, 10, "small", "blue", "Political", self.set_political),
-            Button(340, 10, "small", "grey", "Reset", self.reset_view),
+            # Terrain
+            Button(120, 10, "small", "green", "", self.set_terrain, image=terrain_icon),
+            # Political
+            Button(230, 10, "small", "green", "", self.set_political, image=political_icon),
+            # Reset (this just resets the camera prolly not needed)
+            # Button(340, 10, "small", "grey", "Reset", self.reset_view),
+            # Refresh
             Button(450, 10, "small", "grey", "Refresh", self.refresh_political_map),
-            Button(600, 10, "small_square", "grey", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon),
-            Button(650, 10, "small_square", "grey", "Economy", lambda: self.set_view_mode("ECONOMY")),
-            Button(700, 10, "small_square", "grey", "Blank", lambda: self.set_view_mode("BLANK")),
+
+            # Units
+            Button(600, 10, "small_square", "red", "", lambda: self.set_view_mode("UNITS"), image=unit_icon),
+            # Economy
+            Button(650, 10, "small_square", "orange", "", lambda: self.set_view_mode("ECONOMY"), image=economy_icon),
+            # Blank
+            Button(700, 10, "small_square", "yellow", "", lambda: self.set_view_mode("BLANK"), image=blank_icon),
         ]
 
         # Right-side top buttons
@@ -29,9 +43,12 @@ def render_buttons(self):
             ])
         else:
             self.elements.extend([
-                Button(SCREEN_WIDTH - 120, 10, "small", "green", "Next Turn", self.advance_time),
-                Button(SCREEN_WIDTH - 230, 10, "small", "blue", "Research", self.open_research),
-                Button(SCREEN_WIDTH - 340, 10, "small", "grey", "Save Game", self.save_map_data)
+                # Next Turn
+                Button(SCREEN_WIDTH - 120, 10, "small", "purple", "Next Turn", self.advance_time),
+                # Research
+                Button(SCREEN_WIDTH - 230, 10, "small", "blue", "R&D", self.open_research, image=research_icon),
+                # Save
+                Button(SCREEN_WIDTH - 340, 10, "small", "green", "Save", self.save_map_data, image=save_icon)
             ])
     
     self.btn_go_build = Button(1390, 550, "medium", "grey", "Construction", self.open_construction)

@@ -10,14 +10,14 @@ def render_buttons(self):
         blank_icon = symbol_loader.get_symbol("Star", 0.8)
         terrain_icon = symbol_loader.get_symbol("Mountains", 0.8)
         political_icon = symbol_loader.get_symbol("Flag", 0.8)
-        relations_icon = symbol_loader.get_symbol("Flag", 0.8) # Re-using Flag for relations
+        relations_icon = symbol_loader.get_symbol("Heart", 0.8)
         research_icon = symbol_loader.get_symbol("Research", 0.8)
         save_icon = symbol_loader.get_symbol("Save", 0.8)
 
         self.elements = [
             # Refresh remains in the top bar
-            Button(120, 10, "small", "grey", "Refresh", self.refresh_political_map),
-            Button(220, 10, "small", "grey", "Relation", self.refresh_relations_map),
+            Button(120, 10, "small", "grey", "Pol Refresh", self.refresh_political_map),
+            Button(220, 10, "small", "grey", "Rel Refresh", self.refresh_relations_map),
         ]
 
         # Primary View Buttons (Inside the bottom bar)

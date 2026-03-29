@@ -17,20 +17,20 @@ def render_buttons(self):
 
         self.elements = [
             # Terrain
-            Button(120, 10, "small", "green", "", self.set_terrain, image=terrain_icon),
+            Button(120, 10, "small", "green", "Terrain", self.set_terrain, image=terrain_icon, show_text=False),
             # Political
-            Button(230, 10, "small", "green", "", self.set_political, image=political_icon),
+            Button(230, 10, "small", "green", "Political", self.set_political, image=political_icon, show_text=False),
             # Reset (this just resets the camera prolly not needed)
             # Button(340, 10, "small", "grey", "Reset", self.reset_view),
             # Refresh
             Button(450, 10, "small", "grey", "Refresh", self.refresh_political_map),
 
             # Units
-            Button(600, 10, "small_square", "red", "", lambda: self.set_view_mode("UNITS"), image=unit_icon),
+            Button(600, 10, "small_square", "red", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon, show_text=False),
             # Economy
-            Button(650, 10, "small_square", "orange", "", lambda: self.set_view_mode("ECONOMY"), image=economy_icon),
+            Button(650, 10, "small_square", "orange", "Economy", lambda: self.set_view_mode("ECONOMY"), image=economy_icon, show_text=False),
             # Blank
-            Button(700, 10, "small_square", "yellow", "", lambda: self.set_view_mode("BLANK"), image=blank_icon),
+            Button(700, 10, "small_square", "yellow", "Blank", lambda: self.set_view_mode("BLANK"), image=blank_icon, show_text=False),
         ]
 
         # Right-side top buttons

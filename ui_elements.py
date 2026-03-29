@@ -41,7 +41,8 @@ def parse_pos(val, limit, size):
     return val
 
 class Button:
-    def __init__(self, x, y, size_preset, color_preset, text, callback, image=None):
+    # Added show_text=True as a default parameter
+    def __init__(self, x, y, size_preset, color_preset, text, callback, image=None, show_text=True):
         self.width, self.height = SIZES.get(size_preset, (200, 50))
         final_x = parse_pos(x, g.SCREEN_WIDTH, self.width)
         final_y = parse_pos(y, g.SCREEN_HEIGHT, self.height)
@@ -53,7 +54,8 @@ class Button:
         self.text = text
         self.callback = callback
         self.image = image 
-        self.font = pygame.font.SysFont("Arial", 20, bold=True) # Slightly smaller to fit icons
+        self.show_text = show_text # Store the boolean
+        self.font = pygame.font.SysFont("Arial", 20, bold=True)
         self.visible = True
         self.is_pressed = False
 
@@ -72,9 +74,9 @@ class Button:
         border_color = (255, 255, 255) if is_hovered else (20, 20, 20)
         pygame.draw.rect(surface, border_color, self.rect, 2)
 
-        # 2. Content Layout (Icon + Text)
-        if self.image and self.text:
-            # Draw Icon on the left, Text on the right
+        # 2. Content Layout Logic
+        # CASE A: Image exists and we WANT to show text alongside it
+        if self.image and self.text and self.show_text:
             img_rect = self.image.get_rect(midleft=(self.rect.x + 10, self.rect.centery))
             surface.blit(self.image, img_rect)
             
@@ -85,13 +87,14 @@ class Button:
             surface.blit(shadow, (text_rect.x + 1, text_rect.y + 1))
             surface.blit(text_surf, text_rect)
             
+        # CASE B: Image exists and we either have no text OR show_text is False
         elif self.image:
             # Center just the icon
             img_rect = self.image.get_rect(center=self.rect.center)
             surface.blit(self.image, img_rect)
             
-        else:
-            # Standard Text Only (Centered)
+        # CASE C: No image, just show text (centered)
+        elif self.text:
             text_surf = self.font.render(self.text, True, (255, 255, 255))
             text_rect = text_surf.get_rect(center=self.rect.center)
             shadow = self.font.render(self.text, True, (0, 0, 0))

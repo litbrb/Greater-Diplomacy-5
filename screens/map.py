@@ -372,7 +372,7 @@ class Map(GameState):
             # Only show basic map buttons in Editor mode
             for el in self.elements:
                 # Standard Editor Buttons
-                if el.text in ["Terrain", "Political", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode"]:
+                if el.text in ["Terrain", "Political", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank"]:
                     el.visible = True
                 
                 # Dynamic Color for "Nation" button

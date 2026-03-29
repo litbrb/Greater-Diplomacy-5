@@ -108,24 +108,13 @@ class Research_Screen(GameState):
             y_pos += 75
 
     def draw_completed_tab(self, res_levels):
-        """3. New method to display finished tech and their levels."""
-        y_pos = 120
-        # Sort them alphabetically for better readability
-        sorted_techs = sorted(res_levels.items())
-        
-        found_any = False
-        for tech, level in sorted_techs:
-            # Logic: Hide if level 0. For infantry/industry, hide if they haven't progressed past start
-            is_baseline = tech in ["infantry", "industry"] and level <= 1800
-            if level > 0 and not is_baseline:
-                found_any = True
-                display_name = tech.replace('_', ' ').title()
-                # These are non-interactive buttons just for display
-                self.elements.append(Button("centered", y_pos, "large", "grey", f"{display_name}: Level {level}", lambda: None))
-                y_pos += 60
-
-        if not found_any:
-            self.elements.append(Button("centered", 300, "large", "red", "No advanced research completed", lambda: None))
+        """
+        Clears interactive elements for this tab. 
+        The actual text is drawn in additional_draw to avoid 'Button' styling.
+        """
+        # We clear elements so we don't have invisible buttons catching clicks
+        # The Back and Category buttons are already added in refresh_ui()
+        pass
 
     def check_requirements(self, res_levels, reqs):
         if not reqs: return True
@@ -159,32 +148,79 @@ class Research_Screen(GameState):
 
     def additional_draw(self, surface):
         if not self.map_screen: return
+        
+        # --- Standard Header ---
         pygame.draw.rect(surface, (40, 40, 50), (0, 0, SCREEN_WIDTH, 70))
         pygame.draw.line(surface, (200, 200, 200), (0, 70), (SCREEN_WIDTH, 70), 2)
 
-        # Title
         font = pygame.font.SysFont("Arial", 32)
         title_str = f"VIEWING: {self.current_category}"
         ts = font.render(title_str, True, (255, 255, 255))
         surface.blit(ts, (SCREEN_WIDTH//2 - ts.get_width()//2, 75))
 
-        # HUD (Slots)
-        hud_rect = pygame.Rect(20, SCREEN_HEIGHT - 120, 350, 100)
-        pygame.draw.rect(surface, (40, 40, 60), hud_rect)
-        pygame.draw.rect(surface, (200, 200, 200), hud_rect, 2)
-        hud_font = pygame.font.SysFont("Arial", 20)
-        surface.blit(hud_font.render("ACTIVE RESEARCH SLOTS:", True, (255, 255, 0)), (30, SCREEN_HEIGHT - 110))
+        # --- COMPLETED TAB TEXT RENDERING ---
+        if self.current_category == "COMPLETED":
+            self.render_completed_text_list(surface)
+        else:
+            # --- Standard HUD (Slots) for active research tabs ---
+            hud_rect = pygame.Rect(20, SCREEN_HEIGHT - 120, 350, 100)
+            pygame.draw.rect(surface, (40, 40, 60), hud_rect)
+            pygame.draw.rect(surface, (200, 200, 200), hud_rect, 2)
+            hud_font = pygame.font.SysFont("Arial", 20)
+            surface.blit(hud_font.render("ACTIVE RESEARCH SLOTS:", True, (255, 255, 0)), (30, SCREEN_HEIGHT - 110))
+            
+            queue = self.map_screen.nation_data[self.map_screen.player_country].get("research_queue", [])
+            for i in range(2):
+                y_off = SCREEN_HEIGHT - 80 + (i * 25)
+                if i < len(queue):
+                    p = queue[i]
+                    txt = f"Slot {i+1}: {p['tech_name'].replace('_',' ').title()} ({p['days_remaining']}d)"
+                    surface.blit(hud_font.render(txt, True, (100, 255, 100)), (40, y_off))
+                else:
+                    surface.blit(hud_font.render(f"Slot {i+1}: [EMPTY]", True, (150, 150, 150)), (40, y_off))
+    def render_completed_text_list(self, surface):
+        """Helper to draw the full list of techs as clean text."""
+        player_data = self.map_screen.nation_data[self.map_screen.player_country]
+        res_levels = player_data.get("research", {})
         
-        queue = self.map_screen.nation_data[self.map_screen.player_country].get("research_queue", [])
-        for i in range(2):
-            y_off = SCREEN_HEIGHT - 80 + (i * 25)
-            if i < len(queue):
-                p = queue[i]
-                txt = f"Slot {i+1}: {p['tech_name'].replace('_',' ').title()} ({p['days_remaining']}d)"
-                surface.blit(hud_font.render(txt, True, (100, 255, 100)), (40, y_off))
-            else:
-                surface.blit(hud_font.render(f"Slot {i+1}: [EMPTY]", True, (150, 150, 150)), (40, y_off))
+        text_font = pygame.font.SysFont("Arial", 22)
+        label_font = pygame.font.SysFont("Arial", 24, bold=True)
+        
+        # Organize by original categories
+        organized = {cat: [] for cat in self.categories if cat != "COMPLETED"}
+        
+        # Get all techs from the tree to ensure we show 0-level progress too
+        for tech_id, data in self.tech_tree.items():
+            cat = data[0]
+            lvl = res_levels.get(tech_id, 0)
+            organized[cat].append((tech_id, lvl))
 
+        start_y = 150
+        column_width = 350
+        
+        for i, (cat_name, techs) in enumerate(organized.items()):
+            curr_x = 100 + (i * column_width)
+            curr_y = start_y
+            
+            # Category Header
+            head = label_font.render(cat_name, True, (255, 215, 0))
+            surface.blit(head, (curr_x, curr_y))
+            curr_y += 35
+            
+            for tech_id, lvl in techs:
+                # Format: "Infantry: 1805" or "Main Battle Tank: 0"
+                display_name = tech_id.replace('_', ' ').title()
+                
+                # Dim the text if it's level 0 (not started)
+                color = (200, 200, 200) if lvl > 0 else (100, 100, 100)
+                # Special color for Infantry/Industry base levels
+                if tech_id in ["infantry", "industry"] and lvl <= 1800:
+                    color = (150, 150, 150)
+
+                txt_surf = text_font.render(f"{display_name}: {lvl}", True, color)
+                surface.blit(txt_surf, (curr_x + 10, curr_y))
+                curr_y += 28
+                
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True
 

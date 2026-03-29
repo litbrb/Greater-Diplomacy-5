@@ -24,11 +24,15 @@ def draw_tooltip(self, surface):
             # Show first 5 units to keep tooltip size reasonable
             for u in units[:5]:
                 u_name = u.get("type", "Unit")
-                # If it's a scaled infantry, show level
-                if "level" in u and u["level"] > 0:
-                    lines.append(f"- {u_name} (Lvl {u['level']})")
+                level = u.get("level", 0)
+                
+                if level > 0:
+                    # refactor: Use 'Type' for Infantry, 'Lvl' for others
+                    label = "Type" if u_name.lower() == "infantry" else "Lvl"
+                    lines.append(f"- {u_name} ({label} {level})")
                 else:
                     lines.append(f"- {u_name}")
+                    
             if len(units) > 5:
                 lines.append(f"...and {len(units)-5} more")
 

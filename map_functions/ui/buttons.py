@@ -54,11 +54,6 @@ def render_buttons(self):
     self.btn_go_build = Button(1390, 550, "medium", "grey", "Construction", self.open_construction)
     self.elements.append(self.btn_go_build)
 
-    # Add this to your contextual buttons
-    self.btn_go_navy = Button(1390, 490, "medium", "blue", "Navy Menu", self.open_navy)
-    self.btn_go_navy.visible = False
-    self.elements.append(self.btn_go_navy)
-
     # --- Contextual Buttons (Visible when province selected) ---
     self.btn_conquer = Button(20, 440, "small", "red", "Conquer", self.conquer_province)
     self.btn_conquer.visible = False 
@@ -95,7 +90,6 @@ def render_buttons(self):
         self.btn_exit_to_menu,
         self.btn_go_recruit,
         self.btn_go_orders,
-        self.btn_go_navy,
         self.btn_declare_war, 
         self.btn_form_alliance
     ])

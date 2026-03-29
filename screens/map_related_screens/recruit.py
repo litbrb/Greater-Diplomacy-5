@@ -8,41 +8,38 @@ from ui_elements import Button
 from screens.map_related_screens import recruit_ui
 
 class Recruit_Screen(GameState):
-    def __init__(self, is_naval=False):
+    def __init__(self):
         super().__init__()
-        self.bg_color = (20, 30, 20) if not is_naval else (10, 20, 40)
+        self.bg_color = (20, 25, 20)
         self.target_province = None
         self.map_screen = None
         self.cancel_hitboxes = []
-        self.is_naval = is_naval
-        
-        # Stat Tooltip tracking
-        self.hovered_unit_stats = None
         
         self.unit_library = self.load_unit_data()
-        # Pre-calculate the groups in JSON order
-        self.ordered_groups = self.get_ordered_groups()
+        self.land_groups, self.navy_groups = self.get_ordered_groups()
+        self.active_bars = []
+        
+        self.land_start_y = self.land_end_y = 0
+        self.navy_start_y = self.navy_end_y = 0
 
     def load_unit_data(self):
         path = 'map_functions/data/unit_data.json'
         if os.path.exists(path):
-            with open(path, 'r') as f:
-                return json.load(f)
+            with open(path, 'r') as f: return json.load(f)
         return {}
 
     def get_group_name(self, name):
-        """Groups 'Destroyer I' and 'Destroyer II' into 'Destroyer'"""
         return re.sub(r'\s+[IVXLCDM]+$', '', name).strip()
 
     def get_ordered_groups(self):
-        """Returns unique group names in the order they first appear in the JSON."""
-        groups = []
+        land_groups, navy_groups = [], []
         for name, stats in self.unit_library.items():
-            if stats.get("naval_unit", False) == self.is_naval:
-                base = self.get_group_name(name)
-                if base not in groups:
-                    groups.append(base)
-        return groups
+            base = self.get_group_name(name)
+            if stats.get("naval_unit", False):
+                if base not in navy_groups: navy_groups.append(base)
+            else:
+                if base not in land_groups: land_groups.append(base)
+        return land_groups, navy_groups
 
     def start_with_province(self, province, map_ref):
         self.target_province = province
@@ -50,16 +47,13 @@ class Recruit_Screen(GameState):
         self.refresh_ui()
 
     def get_scaled_stats(self, unit_name):
-        """Calculates stats based on research levels for Infantry."""
         tech_key = self.get_group_name(unit_name).lower().replace(" ", "_")
-        # Use a copy so we don't accidentally modify the library itself
         base_stats = self.unit_library.get(unit_name, {}).copy()
         
         if tech_key == "infantry":
             player_research = self.map_screen.nation_data[self.map_screen.player_country].get("research", {})
             level = player_research.get("infantry", 1800)
             n = level - 1800
-            # Formula: HP = 1000 * 1.01^n
             base_stats["health"] = int(1000 * math.pow(1.01, n))
             base_stats["attack"] = int(100 * math.pow(1.01, n))
             base_stats["level"] = level
@@ -69,46 +63,59 @@ class Recruit_Screen(GameState):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
         player_research = self.map_screen.nation_data[self.map_screen.player_country].get("research", {})
 
+        self.active_bars = []
         y_offset = 120
-        for group_name in self.ordered_groups:
-            highest_unlocked = None
-            tech_key = group_name.lower().replace(" ", "_")
-            researched_lvl = player_research.get(tech_key, 0)
+        x_pos = 50
 
-            # Check for Infantry special display
-            if tech_key == "infantry":
-                highest_unlocked = f"Infantry Type {researched_lvl}"
-            else:
-                # Standard Roman Numeral logic for others
-                group_units = [(n, s) for n, s in self.unit_library.items() if self.get_group_name(n) == group_name]
-                highest_lvl = -1
-                for name, stats in group_units:
-                    # Get the level suffix (e.g., "II" -> 2, "" -> 0)
-                    lvl_str = name.replace(group_name, "").strip()
-                    lvl = self.roman_to_int(lvl_str)
-                    
-                    # THE FIX: 
-                    # 1. If it's a base unit (lvl 0, like "WW1 Tank"), it now requires tech level 1.
-                    # 2. If it's a tiered unit (lvl > 0, like "Cavalry II"), it requires tech level 2.
-                    required_research = max(1, lvl) 
-                    
-                    if researched_lvl >= required_research:
-                        if lvl > highest_lvl:
-                            highest_lvl = lvl
-                            highest_unlocked = name
+        def process_groups(groups, is_navy):
+            nonlocal y_offset
+            for group_name in groups:
+                highest_unlocked = None
+                tech_key = group_name.lower().replace(" ", "_")
+                researched_lvl = player_research.get(tech_key, 0)
 
-            x_pos = 250
-            if highest_unlocked:
-                # If it's infantry, the 'internal_unit_name' must stay "Infantry" to look it up in JSON
-                lookup_name = "Infantry" if tech_key == "infantry" else highest_unlocked
-                btn = Button(x_pos, y_offset, "small", "blue" if self.is_naval else "green", 
-                             highest_unlocked, lambda n=lookup_name: self.buy_unit(n))
-                btn.internal_unit_name = lookup_name
-                self.elements.append(btn)
-            else:
-                self.elements.append(Button(x_pos, y_offset, "small", "grey", "LOCKED", lambda: None))
-            
-            y_offset += 60
+                if tech_key == "infantry":
+                    highest_unlocked = f"Infantry Type {researched_lvl}"
+                else:
+                    group_units = [(n, s) for n, s in self.unit_library.items() if self.get_group_name(n) == group_name]
+                    highest_lvl = -1
+                    for name, stats in group_units:
+                        lvl_str = name.replace(group_name, "").strip()
+                        lvl = self.roman_to_int(lvl_str)
+                        required_research = max(1, lvl) 
+                        if researched_lvl >= required_research:
+                            if lvl > highest_lvl:
+                                highest_lvl = lvl
+                                highest_unlocked = name
+
+                if highest_unlocked:
+                    lookup_name = "Infantry" if tech_key == "infantry" else highest_unlocked
+                    btn_color = "blue" if is_navy else "green"
+                    
+                    btn = Button(x_pos, y_offset, "medium", btn_color, 
+                                 highest_unlocked, lambda n=lookup_name: self.buy_unit(n))
+                    self.elements.append(btn)
+                    
+                    # Fetch stats and construct the UI bar right next to the button
+                    stats = self.get_scaled_stats(lookup_name) if tech_key == "infantry" else self.unit_library[lookup_name]
+                    bar_rect = pygame.Rect(x_pos + 210, y_offset, 550, 50)
+                    self.active_bars.append((bar_rect, stats))
+                    
+                    y_offset += 60
+
+        # --- 1. Process Land Elements ---
+        self.land_start_y = y_offset
+        process_groups(self.land_groups, is_navy=False)
+        self.land_end_y = y_offset
+
+        # --- 2. Process Naval Elements (Only if coastal) ---
+        y_offset += 30 
+        if self.target_province.get("is_coastal", False):
+            self.navy_start_y = y_offset
+            process_groups(self.navy_groups, is_navy=True)
+            self.navy_end_y = y_offset
+        else:
+            self.navy_start_y = self.navy_end_y = y_offset
 
     def roman_to_int(self, s):
         if not s: return 0
@@ -122,12 +129,12 @@ class Recruit_Screen(GameState):
                 else: res += s2 - s1; i += 2
             else: res += s1; i += 1
         return res
+
     def buy_unit(self, unit_name):
         stats = self.unit_library.get(unit_name)
         if not stats or not self.map_screen: return
 
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
-        
         costs = {
             "money": stats.get("cost_money", 0),
             "manpower": stats.get("cost_manpower", 0),
@@ -136,9 +143,7 @@ class Recruit_Screen(GameState):
         }
 
         if all(p_data.get(res, 0) >= amount for res, amount in costs.items()):
-            for res, amount in costs.items():
-                p_data[res] -= amount
-
+            for res, amount in costs.items(): p_data[res] -= amount
             order = {
                 "unit_type": unit_name,
                 "days_remaining": stats.get("production_time", 5),
@@ -148,63 +153,47 @@ class Recruit_Screen(GameState):
         else:
             self.map_screen.show_feedback("Insufficient resources!")
 
-    def draw_tooltip(self, surface):
-        if not self.hovered_unit_stats: return
-        
-        mx, my = pygame.mouse.get_pos()
-        stats = self.hovered_unit_stats
-        
-        # Prepare text lines
-        lines = [
-            f"--- {stats['name']} ---",
-            f"HP: {stats.get('health', 0)} | ATK: {stats.get('attack', 0)}",
-            f"DEF: {stats.get('defense', 0)} | SPD: {stats.get('speed', 0)}",
-            f"Time: {stats.get('production_time', 0)} days",
-            f"Cost: {stats.get('cost_money', 0)} Money",
-            f"      {stats.get('cost_materials', 0)} Mat | {stats.get('cost_manpower', 0)} Man"
-        ]
-        
-        font = pygame.font.SysFont("Arial", 16)
-        # Calculate tooltip size
-        max_w = max(font.size(l)[0] for l in lines) + 20
-        height = len(lines) * 20 + 10
-        
-        tip_rect = pygame.Rect(mx + 15, my + 15, max_w, height)
-        # Boundary check
-        if tip_rect.right > SCREEN_WIDTH: tip_rect.x -= (max_w + 30)
-        
-        pygame.draw.rect(surface, (40, 40, 40), tip_rect)
-        pygame.draw.rect(surface, (200, 200, 200), tip_rect, 1)
-        
-        for i, line in enumerate(lines):
-            color = (255, 255, 255) if i != 0 else (255, 215, 0)
-            surface.blit(font.render(line, True, color), (tip_rect.x + 10, tip_rect.y + 5 + i * 20))
-
     def additional_draw(self, surface):
         if not self.target_province: return
         
-        # 1. Title
-        title_font = pygame.font.SysFont("Arial", 28, bold=True)
-        title_str = "NAVAL SHIPYARD" if self.is_naval else "ARMY RECRUITMENT"
-        surface.blit(title_font.render(title_str, True, (255, 255, 255)), (150, 25))
+        title_font = pygame.font.SysFont("Arial", 32, bold=True)
+        surface.blit(title_font.render("RECRUITMENT & DOCKYARDS", True, (255, 255, 255)), (150, 25))
 
-        # 2. Draw Group Labels using the ordered list
-        label_font = pygame.font.SysFont("Arial", 20)
-        for i, group_name in enumerate(self.ordered_groups):
-            txt = label_font.render(f"{group_name}:", True, (200, 200, 200))
-            surface.blit(txt, (50, 130 + (i * 60)))
+        # --- Draw Green Background for Land Forces ---
+        if self.land_end_y > self.land_start_y:
+            land_rect = pygame.Rect(30, self.land_start_y - 15, 840, self.land_end_y - self.land_start_y + 15)
+            pygame.draw.rect(surface, (30, 60, 30), land_rect)
+            pygame.draw.rect(surface, (50, 150, 50), land_rect, 2)
+            lbl = pygame.font.SysFont("Arial", 20, bold=True).render("LAND FORCES", True, (100, 255, 100))
+            surface.blit(lbl, (40, self.land_start_y - 45))
 
-        # 3. Detect Hover for Tooltips
-        mouse_pos = pygame.mouse.get_pos()
-        self.hovered_unit_stats = None
-        for el in self.elements:
-            if hasattr(el, 'rect') and el.rect.collidepoint(mouse_pos):
-                if hasattr(el, 'internal_unit_name'):
-                    name = el.internal_unit_name
-                    self.hovered_unit_stats = self.unit_library[name].copy()
-                    self.hovered_unit_stats['name'] = name
+        # --- Draw Blue Background for Naval Forces ---
+        if self.navy_end_y > self.navy_start_y:
+            navy_rect = pygame.Rect(30, self.navy_start_y - 15, 840, self.navy_end_y - self.navy_start_y + 15)
+            pygame.draw.rect(surface, (30, 30, 60), navy_rect)
+            pygame.draw.rect(surface, (50, 50, 150), navy_rect, 2)
+            lbl = pygame.font.SysFont("Arial", 20, bold=True).render("NAVAL FORCES", True, (100, 150, 255))
+            surface.blit(lbl, (40, self.navy_start_y - 45))
 
-        # 4. RESOURCE HUD
+        # --- Draw Custom UI Bars Next to Buttons ---
+        bar_font = pygame.font.SysFont("Arial", 16)
+        for bar_rect, stats in self.active_bars:
+            pygame.draw.rect(surface, (40, 40, 40), bar_rect)
+            pygame.draw.rect(surface, (100, 100, 100), bar_rect, 1)
+            
+            t = stats.get('production_time', 0)
+            money = stats.get('cost_money', 0)
+            mat = stats.get('cost_materials', 0)
+            man = stats.get('cost_manpower', 0)
+            fuel = stats.get('cost_fuel', 0)
+            
+            txt1 = f"Deploy: {t}d   |   Cost: 💰{money}   ⚙️{mat}   👤{man}   ⛽{fuel}"
+            txt2 = f"Combat Stats:   ⚔️ATK: {stats.get('attack', 0)}   🛡️DEF: {stats.get('defense', 0)}   ❤️HP: {stats.get('health', 0)}   ⚡SPD: {stats.get('speed', 0)}"
+            
+            surface.blit(bar_font.render(txt1, True, (255, 215, 0)), (bar_rect.x + 15, bar_rect.y + 6))
+            surface.blit(bar_font.render(txt2, True, (200, 200, 200)), (bar_rect.x + 15, bar_rect.y + 26))
+
+        # --- Draw HUD ---
         hud_rect = pygame.Rect(0, SCREEN_HEIGHT - 60, SCREEN_WIDTH, 60)
         pygame.draw.rect(surface, (30, 30, 30), hud_rect)
         pygame.draw.line(surface, (100, 100, 100), (0, hud_rect.y), (SCREEN_WIDTH, hud_rect.y), 2)
@@ -217,13 +206,11 @@ class Recruit_Screen(GameState):
             (f"Materials: {p_data.get('materials', 0)}", (180, 180, 180)),
             (f"Fuel: {p_data.get('fuel', 0)}", (200, 100, 255))
         ]
-
         for i, (text, color) in enumerate(resources):
             surface.blit(res_font.render(text, True, color), (50 + (i * 300), hud_rect.y + 15))
 
-        # 5. Sidebar & Tooltip
+        # --- Draw Queue ---
         self.cancel_hitboxes = recruit_ui.draw_recruitment_overlay(surface, self.target_province)
-        self.draw_tooltip(surface)
 
     def handle_events(self, events):
         for event in events:

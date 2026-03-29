@@ -51,9 +51,8 @@ class Controller:
             "LOAD_GAME": Load_Game(),
             "SETTINGS": Settings(self), # Pass 'self' (the controller) here
             "MAP": Map(),
-            "RECRUIT": Recruit_Screen(is_naval=False), # Passes flag
+            "RECRUIT": Recruit_Screen(),
             "ORDERS": Orders_Screen(),
-            "NAVY": Recruit_Screen(is_naval=True),    # Uses land class with naval flag
             "RESEARCH": Research_Screen()
         }
         self.states["CONSTRUCTION"] = Construction_Screen()

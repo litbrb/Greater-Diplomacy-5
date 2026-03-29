@@ -248,11 +248,6 @@ class Map(GameState):
             self.next_state = "ORDERS"
             self.done = True
 
-    def open_navy(self):
-        if self.selected_province and self.selected_province.get("is_coastal"):
-            self.next_state = "NAVY"
-            self.done = True
-
     def select_brush_nation(self):
         """Opens a Tkinter selection window and sets mode to NATION."""
         import tkinter as tk
@@ -437,7 +432,6 @@ class Map(GameState):
                     is_land = terrain not in ["ocean", "coastal_sea", "inland_sea", "lakes"]
                     self.btn_go_build.visible = True
                     self.btn_go_recruit.visible = is_land
-                    self.btn_go_navy.visible = is_land and self.selected_province.get("is_coastal", False)
 
             # --- 2. DIPLOMACY LOGIC (Foreign Land) ---
             # Now an 'if', not an 'elif', so it can show alongside Orders

@@ -44,15 +44,14 @@ class Button:
         self.rect = pygame.Rect(final_x, final_y, self.width, self.height)
         
         self.color, self.hover_color = COLORS.get(color_preset, COLORS["grey"])
-        # Add a "pressed" color variant (slightly darker)
         self.pressed_color = (max(0, self.color[0]-40), max(0, self.color[1]-40), max(0, self.color[2]-40))
         
         self.text = text
         self.callback = callback
-        self.image = image # New: optional pygame.Surface
-        self.font = pygame.font.SysFont("Arial", 24)
+        self.image = image 
+        self.font = pygame.font.SysFont("Arial", 20, bold=True) # Slightly smaller to fit icons
         self.visible = True
-        self.is_pressed = False # Tracks if we are currently holding the button down
+        self.is_pressed = False
 
     def draw(self, surface):
         if not self.visible: return
@@ -60,27 +59,35 @@ class Button:
         mouse_pos = pygame.mouse.get_pos()
         is_hovered = self.rect.collidepoint(mouse_pos)
         
-        if self.is_pressed and is_hovered:
-            current_color = self.pressed_color
-        elif is_hovered:
-            current_color = self.hover_color
-        else:
-            current_color = self.color
+        current_color = self.color
+        if self.is_pressed and is_hovered: current_color = self.pressed_color
+        elif is_hovered: current_color = self.hover_color
         
-        # 1. Background
+        # 1. Background Gradient & Outline
         self.draw_gradient_rect(surface, current_color, self.rect)
-        
-        # 2. Outline
         border_color = (255, 255, 255) if is_hovered else (20, 20, 20)
         pygame.draw.rect(surface, border_color, self.rect, 2)
 
-        # 3. Content (Image or Text)
-        if self.image:
-            # Center the image in the button
+        # 2. Content Layout (Icon + Text)
+        if self.image and self.text:
+            # Draw Icon on the left, Text on the right
+            img_rect = self.image.get_rect(midleft=(self.rect.x + 10, self.rect.centery))
+            surface.blit(self.image, img_rect)
+            
+            text_surf = self.font.render(self.text, True, (255, 255, 255))
+            text_rect = text_surf.get_rect(midleft=(img_rect.right + 10, self.rect.centery))
+            # Shadow
+            shadow = self.font.render(self.text, True, (0, 0, 0))
+            surface.blit(shadow, (text_rect.x + 1, text_rect.y + 1))
+            surface.blit(text_surf, text_rect)
+            
+        elif self.image:
+            # Center just the icon
             img_rect = self.image.get_rect(center=self.rect.center)
             surface.blit(self.image, img_rect)
+            
         else:
-            # Fallback to Text if no image provided
+            # Standard Text Only (Centered)
             text_surf = self.font.render(self.text, True, (255, 255, 255))
             text_rect = text_surf.get_rect(center=self.rect.center)
             shadow = self.font.render(self.text, True, (0, 0, 0))

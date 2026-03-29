@@ -1,16 +1,20 @@
 # map_functions/ui/buttons.py
 from ui_elements import Button
 from gameState import SCREEN_WIDTH, SCREEN_HEIGHT
+from map_functions.rendering import symbol_loader
 
 def render_buttons(self):
     if not self.selection_mode:
         # ALL BUTTONS NOW IN TOP BAR (y=10)
+
+        unit_icon = symbol_loader.get_symbol("Infantry", 0.8)
+
         self.elements = [
             Button(120, 10, "small", "green", "Terrain", self.set_terrain),
             Button(230, 10, "small", "blue", "Political", self.set_political),
             Button(340, 10, "small", "grey", "Reset", self.reset_view),
             Button(450, 10, "small", "grey", "Refresh", self.refresh_political_map),
-            Button(600, 10, "small_square", "grey", "Units", lambda: self.set_view_mode("UNITS")),
+            Button(600, 10, "small_square", "grey", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon),
             Button(650, 10, "small_square", "grey", "Economy", lambda: self.set_view_mode("ECONOMY")),
             Button(700, 10, "small_square", "grey", "Blank", lambda: self.set_view_mode("BLANK")),
         ]

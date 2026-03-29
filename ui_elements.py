@@ -56,9 +56,20 @@ class Button:
         self.font = pygame.font.SysFont("Arial", 20, bold=True) # Slightly smaller to fit icons
         self.visible = True
         self.is_pressed = False
+        self.selected = False
 
     def draw(self, surface):
         if not self.visible: return
+
+        # Determine border color: Gold/Yellow if selected, otherwise dark
+        border_color = (255, 255, 0) if self.selected else (50, 50, 50)
+        border_width = 4 if self.selected else 2
+
+        # Draw the main button body
+        pygame.draw.rect(surface, self.current_color, self.rect)
+        
+        # Draw the highlight border
+        pygame.draw.rect(surface, border_color, self.rect, border_width)
 
         mouse_pos = pygame.mouse.get_pos()
         is_hovered = self.rect.collidepoint(mouse_pos)

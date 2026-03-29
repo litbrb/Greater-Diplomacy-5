@@ -94,7 +94,7 @@ class CountryEditor:
             self.data[int_id] = {
                 "name": old_name,
                 "color": old_color,
-                "research": {"infantry": 1800, "cavalry": 0}, # Set cavalry to 0 here
+                "research": {"infantry": 1800, "cavalry": 1, "industry": 1800}, # Set cavalry to 1 here
                 "money": 0, "manpower": 0, "materials": 0, "fuel": 0,      
                 "is_playable": True,
                 "at_war_with": [], "allied_with": []
@@ -147,7 +147,7 @@ class CountryEditor:
             self.data[int_id] = {
                 "name": disp_name,
                 "color": self.current_color,
-                "research": {"infantry": 1800, "cavalry": 0}, # Ensure cavalry starts at 0
+                "research": {"infantry": 1800, "cavalry": 1, "industry": 1800}, # Ensure cavalry starts at 1
                 "money": 0, "manpower": 0, "materials": 0, "fuel": 0,      
                 "is_playable": True,
                 "at_war_with": [], "allied_with": []

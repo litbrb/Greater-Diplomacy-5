@@ -8,7 +8,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -27,7 +28,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -46,7 +48,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -65,7 +68,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -84,7 +88,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -103,7 +108,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -122,7 +128,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -141,7 +148,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -160,7 +168,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -179,7 +188,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -198,7 +208,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -217,7 +228,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -236,7 +248,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -255,7 +268,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -274,7 +288,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -293,7 +308,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -312,7 +328,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -331,7 +348,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -350,7 +368,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -369,7 +388,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -388,7 +408,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -407,7 +428,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -426,7 +448,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -445,7 +468,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -464,7 +488,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -483,7 +508,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -502,7 +528,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -521,7 +548,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -540,7 +568,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -559,7 +588,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -578,7 +608,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -597,7 +628,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -616,7 +648,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -635,7 +668,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -654,7 +688,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -673,7 +708,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -692,7 +728,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -711,7 +748,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -730,7 +768,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -749,7 +788,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -768,7 +808,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -787,7 +828,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -806,7 +848,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -825,7 +868,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -844,7 +888,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -863,7 +908,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -882,7 +928,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -901,7 +948,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -920,7 +968,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -939,7 +988,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -958,7 +1008,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -977,7 +1028,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -996,7 +1048,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1015,7 +1068,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1034,7 +1088,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1053,7 +1108,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1072,7 +1128,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1091,7 +1148,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1110,7 +1168,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1129,7 +1188,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1148,7 +1208,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1167,7 +1228,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1186,7 +1248,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1205,7 +1268,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1224,7 +1288,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1243,7 +1308,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1262,7 +1328,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1281,7 +1348,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1300,7 +1368,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,
@@ -1319,7 +1388,8 @@
         ],
         "research": {
             "infantry": 1800,
-            "cavalry": 0
+            "cavalry": 1,
+            "industry": 1800
         },
         "money": 0,
         "manpower": 0,

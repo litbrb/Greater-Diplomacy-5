@@ -9,7 +9,11 @@ def load_map_assets(self, load_path):
     if load_path:
         self.terrain_map = pygame.image.load(os.path.join(load_path, "terrain.png")).convert()
         self.id_map = pygame.image.load(os.path.join(load_path, "id_map.png")).convert()
-        self.political_map = pygame.image.load(os.path.join(load_path, "political.png")).convert()
+        # the political map can be regenerated if it doesn't exist, that's fine
+        try:
+            self.political_map = pygame.image.load(os.path.join(load_path, "political.png")).convert()
+        except:
+            self.political_map = pygame.image.load(os.path.join(load_path, "id_map.png")).convert()
     else:
         self.terrain_map = pygame.image.load("map_tools/terrain_map.png").convert()
         self.id_map = pygame.image.load("map_tools/provinces_id_map.png").convert()

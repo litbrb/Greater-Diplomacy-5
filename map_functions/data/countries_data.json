@@ -1398,5 +1398,205 @@
         "is_playable": true,
         "at_war_with": [],
         "allied_with": []
+    },
+    "Ireland": {
+        "name": "Ireland",
+        "color": [
+            0,
+            255,
+            64
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Greece": {
+        "name": "Greece",
+        "color": [
+            0,
+            255,
+            255
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Albania": {
+        "name": "Albania",
+        "color": [
+            128,
+            0,
+            64
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Brazil": {
+        "name": "Brazil",
+        "color": [
+            0,
+            128,
+            0
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Cuba": {
+        "name": "Cuba",
+        "color": [
+            128,
+            0,
+            255
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Tibet": {
+        "name": "Tibet",
+        "color": [
+            155,
+            255,
+            155
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Thailand": {
+        "name": "Thailand",
+        "color": [
+            255,
+            206,
+            183
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Nepal": {
+        "name": "Nepal",
+        "color": [
+            128,
+            0,
+            0
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Bhutan": {
+        "name": "Bhutan",
+        "color": [
+            255,
+            188,
+            64
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Uruguay": {
+        "name": "Uruguay",
+        "color": [
+            128,
+            255,
+            255
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
     }
 }

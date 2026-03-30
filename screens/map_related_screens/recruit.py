@@ -16,10 +16,14 @@ class Recruit_Screen(GameState):
         self.cancel_hitboxes = []
         
         self.unit_library = self.load_unit_data()
-        self.land_groups, self.navy_groups = self.get_ordered_groups()
+        
+        # CHANGED: Now expects 3 lists returned
+        self.infantry_groups, self.tank_groups, self.navy_groups = self.get_ordered_groups()
         self.active_bars = []
         
-        self.land_start_y = self.land_end_y = 0
+        # CHANGED: Track start/end y-coordinates for all 3 categories
+        self.infantry_start_y = self.infantry_end_y = 0
+        self.tank_start_y = self.tank_end_y = 0
         self.navy_start_y = self.navy_end_y = 0
 
     def load_unit_data(self):
@@ -32,14 +36,17 @@ class Recruit_Screen(GameState):
         return re.sub(r'\s+[IVXLCDM]+$', '', name).strip()
 
     def get_ordered_groups(self):
-        land_groups, navy_groups = [], []
+        infantry_groups, tank_groups, navy_groups = [], [], []
         for name, stats in self.unit_library.items():
             base = self.get_group_name(name)
             if stats.get("naval_unit", False):
                 if base not in navy_groups: navy_groups.append(base)
+            # CHANGED: Check if it's an armored unit
+            elif "Tank" in base or "Armored Car" in base:
+                if base not in tank_groups: tank_groups.append(base)
             else:
-                if base not in land_groups: land_groups.append(base)
-        return land_groups, navy_groups
+                if base not in infantry_groups: infantry_groups.append(base)
+        return infantry_groups, tank_groups, navy_groups
 
     def start_with_province(self, province, map_ref):
         self.target_province = province
@@ -67,7 +74,7 @@ class Recruit_Screen(GameState):
         y_offset = 120
         x_pos = 50
 
-        def process_groups(groups, is_navy):
+        def process_groups(groups, btn_color):
             nonlocal y_offset
             for group_name in groups:
                 # --- OBSOLESCENCE CHECKS ---
@@ -97,8 +104,8 @@ class Recruit_Screen(GameState):
 
                 if highest_unlocked:
                     lookup_name = "Infantry" if tech_key == "infantry" else highest_unlocked
-                    btn_color = "blue" if is_navy else "green"
                     
+                    # CHANGED: Use the passed btn_color
                     btn = Button(x_pos, y_offset, "medium", btn_color, 
                                  highest_unlocked, lambda n=lookup_name: self.buy_unit(n))
                     self.elements.append(btn)
@@ -110,16 +117,22 @@ class Recruit_Screen(GameState):
                     
                     y_offset += 60
 
-        # --- 1. Process Land Elements ---
-        self.land_start_y = y_offset
-        process_groups(self.land_groups, is_navy=False)
-        self.land_end_y = y_offset
+        # --- 1. Process Infantry Elements ---
+        self.infantry_start_y = y_offset
+        process_groups(self.infantry_groups, "green")
+        self.infantry_end_y = y_offset
 
-        # --- 2. Process Naval Elements (Only if coastal) ---
+        # --- 2. Process Tank Elements ---
+        y_offset += 30 
+        self.tank_start_y = y_offset
+        process_groups(self.tank_groups, "green") # Using green buttons
+        self.tank_end_y = y_offset
+
+        # --- 3. Process Naval Elements (Only if coastal) ---
         y_offset += 30 
         if self.target_province.get("is_coastal", False):
             self.navy_start_y = y_offset
-            process_groups(self.navy_groups, is_navy=True)
+            process_groups(self.navy_groups, "blue")
             self.navy_end_y = y_offset
         else:
             self.navy_start_y = self.navy_end_y = y_offset
@@ -167,13 +180,21 @@ class Recruit_Screen(GameState):
         title_font = pygame.font.SysFont("Arial", 32, bold=True)
         surface.blit(title_font.render("RECRUITMENT & DOCKYARDS", True, (255, 255, 255)), (150, 25))
 
-        # --- Draw Green Background for Land Forces ---
-        if self.land_end_y > self.land_start_y:
-            land_rect = pygame.Rect(30, self.land_start_y - 15, 840, self.land_end_y - self.land_start_y + 15)
-            pygame.draw.rect(surface, (30, 60, 30), land_rect)
-            pygame.draw.rect(surface, (50, 150, 50), land_rect, 2)
-            lbl = pygame.font.SysFont("Arial", 20, bold=True).render("LAND FORCES", True, (100, 255, 100))
-            surface.blit(lbl, (40, self.land_start_y - 45))
+        # --- Draw Green Background for Infantry Forces ---
+        if self.infantry_end_y > self.infantry_start_y:
+            inf_rect = pygame.Rect(30, self.infantry_start_y - 15, 840, self.infantry_end_y - self.infantry_start_y + 15)
+            pygame.draw.rect(surface, (30, 60, 30), inf_rect)
+            pygame.draw.rect(surface, (50, 150, 50), inf_rect, 2)
+            lbl = pygame.font.SysFont("Arial", 20, bold=True).render("INFANTRY", True, (100, 255, 100))
+            surface.blit(lbl, (40, self.infantry_start_y - 45))
+
+        # --- Draw Darker Green Background for Tanks ---
+        if self.tank_end_y > self.tank_start_y:
+            tank_rect = pygame.Rect(30, self.tank_start_y - 15, 840, self.tank_end_y - self.tank_start_y + 15)
+            pygame.draw.rect(surface, (20, 45, 20), tank_rect) # Darker green background
+            pygame.draw.rect(surface, (40, 120, 40), tank_rect, 2) # Darker border
+            lbl = pygame.font.SysFont("Arial", 20, bold=True).render("TANKS", True, (80, 200, 80))
+            surface.blit(lbl, (40, self.tank_start_y - 45))
 
         # --- Draw Blue Background for Naval Forces ---
         if self.navy_end_y > self.navy_start_y:

@@ -73,19 +73,33 @@ def draw_map_screen(self, surface):
         date_surf = self.font.render(self.time_manager.get_date_string(), True, (255, 255, 255))
         surface.blit(date_surf, (SCREEN_WIDTH // 2 - date_surf.get_width() // 2, 20))
 
-        # --- NEW CLEAN RESOURCE HUD ---
-        # Set Y axis to be 25px above the bottom bar (which is 60px tall)
+        # --- NEW CLEAN RESOURCE HUD WITH NET INCOME ---
         hud_y = SCREEN_HEIGHT - 85
         
+        # Throttled Economy cache (Checks projections only once a second to avoid lag)
+        if not hasattr(self, 'econ_cache_time') or pygame.time.get_ticks() - getattr(self, 'econ_cache_time', 0) > 1000:
+            self.econ_cache = self.get_player_economy_projections()
+            self.econ_cache_time = pygame.time.get_ticks()
+            
+        total_inc, total_upkeep = getattr(self, 'econ_cache', (
+            {"money":0, "manpower":0, "materials":0, "fuel":0}, 
+            {"money":0, "manpower":0, "materials":0, "fuel":0}
+        ))
+
+        # Helper to format positive/negative net income
+        def fmt_net(inc, exp):
+            net = int(inc - exp)
+            return f"+{net}" if net >= 0 else str(net)
+
         resources = [
-            (f"Money: {int(self.player_money)}", (255, 215, 0)),
-            (f"Manpower: {int(self.player_manpower)}", (100, 200, 255)),
-            (f"Materials: {int(self.player_materials)}", (180, 180, 180)),
-            (f"Fuel: {int(self.player_fuel)}", (200, 100, 255))
+            (f"Money: {int(self.player_money)} ({fmt_net(total_inc['money'], total_upkeep['money'])})", (255, 215, 0)),
+            (f"Manpower: {int(self.player_manpower)} ({fmt_net(total_inc['manpower'], total_upkeep['manpower'])})", (100, 200, 255)),
+            (f"Materials: {int(self.player_materials)} ({fmt_net(total_inc['materials'], total_upkeep['materials'])})", (180, 180, 180)),
+            (f"Fuel: {int(self.player_fuel)} ({fmt_net(total_inc['fuel'], total_upkeep['fuel'])})", (200, 100, 255))
         ]
         
-        start_x = 300
-        spacing = 180
+        start_x = 250
+        spacing = 240 # Increased spacing to fit the net income text
         
         # Create a transparent black background surface
         bg_width = (len(resources) * spacing) - 40
@@ -97,7 +111,7 @@ def draw_map_screen(self, surface):
         surface.blit(bg_surf, bg_rect.topleft)
         pygame.draw.rect(surface, (100, 100, 100), bg_rect, 1) 
 
-        # Draw the simple text
+        # Draw the text
         for i, (text, color) in enumerate(resources):
             surface.blit(self.font.render(text, True, color), (start_x + (i * spacing), hud_y))
 

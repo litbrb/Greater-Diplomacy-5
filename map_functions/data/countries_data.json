@@ -3378,5 +3378,65 @@
         "is_playable": true,
         "at_war_with": [],
         "allied_with": []
+    },
+    "Liberia": {
+        "name": "Liberia",
+        "color": [
+            255,
+            211,
+            168
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Haiti": {
+        "name": "Haiti",
+        "color": [
+            255,
+            128,
+            192
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
+    },
+    "Dominican Republic": {
+        "name": "Dominican Republic",
+        "color": [
+            128,
+            128,
+            255
+        ],
+        "research": {
+            "infantry": 1800,
+            "cavalry": 1,
+            "industry": 1800
+        },
+        "money": 0,
+        "manpower": 0,
+        "materials": 0,
+        "fuel": 0,
+        "is_playable": true,
+        "at_war_with": [],
+        "allied_with": []
     }
 }

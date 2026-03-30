@@ -416,6 +416,20 @@ class Map(GameState):
         if self.selection_mode:
             self.btn_exit_to_menu.visible = True
             return
+        
+        # Fix for the hardcoded number comment! Safely identify contextual buttons:
+        contextual_buttons = {
+            getattr(self, 'btn_go_build', None), getattr(self, 'btn_conquer', None),
+            getattr(self, 'btn_close_info', None), getattr(self, 'btn_exit_to_menu', None),
+            getattr(self, 'btn_go_recruit', None), getattr(self, 'btn_go_orders', None),
+            getattr(self, 'btn_declare_war', None), getattr(self, 'btn_form_alliance', None)
+        }
+        
+        for el in self.elements:
+            if el not in contextual_buttons:
+                el.visible = True
+                
+        self.btn_exit_to_menu.visible = not is_sel
                 
         # funny, a hardcoded number
         # this will be a problem later if more than 12 buttons are ever added
@@ -624,6 +638,10 @@ class Map(GameState):
         
         self.show_feedback(f"Data Resynced! Added {added_count}, Updated {updated_count}.")
     
+    def open_economy_screen(self):
+        self.next_state = "ECONOMY"
+        self.done = True
+
     def open_map_research_editor(self):
         """Opens a UI to edit research for countries currently existing on the map."""
         import tkinter as tk

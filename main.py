@@ -12,6 +12,7 @@ from map_functions.data import keybind_io
 from map_functions.rendering import symbol_loader
 from screens.map_related_screens.research import Research_Screen
 from screens.map_related_screens.construction import Construction_Screen
+from screens.map_related_screens.economy import Economy_Screen
 
 pygame.display.set_caption("Greater Diplomacy Pygame Edition")
 
@@ -55,11 +56,12 @@ class Controller:
             "MENU": Menu(),
             "NEW_GAME": New_Game(),
             "LOAD_GAME": Load_Game(),
-            "SETTINGS": Settings(self), # Pass 'self' (the controller) here
+            "SETTINGS": Settings(self), 
             "MAP": Map(),
             "RECRUIT": Recruit_Screen(),
             "ORDERS": Orders_Screen(),
-            "RESEARCH": Research_Screen()
+            "RESEARCH": Research_Screen(),
+            "ECONOMY": Economy_Screen()  # <--- Add this
         }
         self.states["CONSTRUCTION"] = Construction_Screen()
         self.active_state = self.states["MENU"]
@@ -76,10 +78,12 @@ class Controller:
                 self.states[next_state_name].start_with_province(map_ref.selected_province, map_ref)
         
         # NEW: Separate handoff for Research since it doesn't care about provinces
-        if next_state_name == "RESEARCH":
+        if next_state_name in ["RESEARCH", "ECONOMY"]:
             map_ref = self.states["MAP"]
-            # We create a simpler start method that only takes the map reference
-            self.states["RESEARCH"].start_research(map_ref)
+            if next_state_name == "RESEARCH":
+                self.states["RESEARCH"].start_research(map_ref)
+            else:
+                self.states["ECONOMY"].start_economy(map_ref)
 
         # 2. Map Persistence
         if next_state_name == "MAP":

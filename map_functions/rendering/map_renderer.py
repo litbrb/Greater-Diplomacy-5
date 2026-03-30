@@ -73,30 +73,33 @@ def draw_map_screen(self, surface):
         date_surf = self.font.render(self.time_manager.get_date_string(), True, (255, 255, 255))
         surface.blit(date_surf, (SCREEN_WIDTH // 2 - date_surf.get_width() // 2, 20))
 
-        # RESOURCES MOVED TO BOTTOM BAR
-        hud_y = SCREEN_HEIGHT - 40
+        # --- NEW CLEAN RESOURCE HUD ---
+        # Set Y axis to be 25px above the bottom bar (which is 60px tall)
+        hud_y = SCREEN_HEIGHT - 85
         
-        # Throttled Economy cache (Checks projections only once a second to avoid lag)
-        if not hasattr(self, 'econ_cache_time') or pygame.time.get_ticks() - getattr(self, 'econ_cache_time', 0) > 1000:
-            self.econ_cache = self.get_player_economy_projections()
-            self.econ_cache_time = pygame.time.get_ticks()
-            
-        total_inc, total_upkeep = getattr(self, 'econ_cache', (
-            {"money":0, "manpower":0, "materials":0, "fuel":0}, 
-            {"money":0, "manpower":0, "materials":0, "fuel":0}
-        ))
-
-        # Format the strings to include projected Income (+) and Upkeep (-)
         resources = [
-            (f"Money: {int(self.player_money)} (+{int(total_inc['money'])} / -{int(total_upkeep['money'])})", (255, 215, 0)),
-            (f"Manpower: {int(self.player_manpower)} (+{int(total_inc['manpower'])} / -{int(total_upkeep['manpower'])})", (100, 200, 255)),
-            (f"Materials: {int(self.player_materials)} (+{int(total_inc['materials'])} / -{int(total_upkeep['materials'])})", (180, 180, 180)),
-            (f"Fuel: {int(self.player_fuel)} (+{int(total_inc['fuel'])} / -{int(total_upkeep['fuel'])})", (200, 100, 255))
+            (f"Money: {int(self.player_money)}", (255, 215, 0)),
+            (f"Manpower: {int(self.player_manpower)}", (100, 200, 255)),
+            (f"Materials: {int(self.player_materials)}", (180, 180, 180)),
+            (f"Fuel: {int(self.player_fuel)}", (200, 100, 255))
         ]
         
-        # Start drawing resources further right (x=200) to clear room for the new buttons
+        start_x = 300
+        spacing = 180
+        
+        # Create a transparent black background surface
+        bg_width = (len(resources) * spacing) - 40
+        bg_surf = pygame.Surface((bg_width, 30), pygame.SRCALPHA)
+        bg_surf.fill((0, 0, 0, 200))
+        
+        # Blit background and borders
+        bg_rect = pygame.Rect(start_x - 15, hud_y - 5, bg_width, 30)
+        surface.blit(bg_surf, bg_rect.topleft)
+        pygame.draw.rect(surface, (100, 100, 100), bg_rect, 1) 
+
+        # Draw the simple text
         for i, (text, color) in enumerate(resources):
-            surface.blit(self.font.render(text, True, color), (200 + (i * 320), hud_y))
+            surface.blit(self.font.render(text, True, color), (start_x + (i * spacing), hud_y))
 
         player_display = self.nation_data.get(self.player_country, {}).get("name", self.player_country)
         name_surf = self.font.render(f"Playing as: {player_display.title()}", True, (200, 200, 200))

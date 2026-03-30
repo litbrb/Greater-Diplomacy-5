@@ -10,7 +10,7 @@ def render_buttons(self):
         blank_icon = symbol_loader.get_symbol("Star", 2)
         terrain_icon = symbol_loader.get_symbol("Mountains", 1.5)
         political_icon = symbol_loader.get_symbol("Flag", 1.5)
-        relations_icon = symbol_loader.get_symbol("Heart", 1.5)
+        relations_icon = symbol_loader.get_symbol("Heart", 2)
         research_icon = symbol_loader.get_symbol("Research", 2)
         save_icon = symbol_loader.get_symbol("Save", 2)
 

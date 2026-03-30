@@ -135,13 +135,21 @@ class Orders_Screen(GameState):
         if not self.map_screen or not self.target_province: 
             return
 
+        # --- THE FIX: Temporarily hide the selected province ---
+        # This prevents map_renderer from drawing the dark overlay and sidebars.
+        temp_province = self.map_screen.selected_province
+        self.map_screen.selected_province = None
+
         # 1. Draw the actual map underneath (Terrain/Political)
         self.map_screen.additional_draw(surface)
-        
-        # 2. Apply a semi-transparent overlay to "dim" the map for the UI
-        """overlay = pygame.Surface((g.SCREEN_WIDTH, g.SCREEN_HEIGHT), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 140)) 
-        surface.blit(overlay, (0, 0))"""
+
+        # Restore the selected province state
+        self.map_screen.selected_province = temp_province
+
+        # Re-draw the yellow selection circle manually so we still know our active target
+        from map_functions.rendering import province_select
+        province_select.draw_province_select(self.map_screen, surface)
+        # -------------------------------------------------------
 
         # Reset hitboxes for this frame (so they update if units are added/removed)
         self.cancel_rects = []

@@ -139,9 +139,9 @@ class Orders_Screen(GameState):
         self.map_screen.additional_draw(surface)
         
         # 2. Apply a semi-transparent overlay to "dim" the map for the UI
-        overlay = pygame.Surface((g.SCREEN_WIDTH, g.SCREEN_HEIGHT), pygame.SRCALPHA)
+        """overlay = pygame.Surface((g.SCREEN_WIDTH, g.SCREEN_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 140)) 
-        surface.blit(overlay, (0, 0))
+        surface.blit(overlay, (0, 0))"""
 
         # Reset hitboxes for this frame (so they update if units are added/removed)
         self.cancel_rects = []

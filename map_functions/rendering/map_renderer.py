@@ -105,9 +105,12 @@ def draw_map_screen(self, surface):
         if self.selected_province: 
             from map_functions.ui import sidebar_info
             sidebar_info.draw_sidebar_info(self, surface)
-
-        if self.secondary_mode == "UNITS" and self.selected_province:
+            # Show the garrison/building popup regardless of secondary mode
             unit_info_popup.draw_unit_info(self, surface)
+
+        # REMOVE THIS OLD CONDITIONAL:
+        # if self.secondary_mode == "UNITS" and self.selected_province:
+        #     unit_info_popup.draw_unit_info(self, surface)
 
         minimap.draw_minimap(self, surface, surface.get_width(), surface.get_height())
 
@@ -156,6 +159,10 @@ def draw_map_screen(self, surface):
         # This puts it in the bottom right corner of the screen
         surface.blit(tsurf, (surface.get_width() - tsurf.get_width() - 20, SCREEN_HEIGHT - 40))
 
+    # ONLY show hover tooltip if we don't actively have a province menu open
+    if self.hovered_province and not self.selected_province: 
+        tooltip.draw_tooltip(self, surface)
+        
     if self.hovered_province: tooltip.draw_tooltip(self, surface)
 
     # --- LAYER 7: EXIT CONFIRMATION MODAL ---

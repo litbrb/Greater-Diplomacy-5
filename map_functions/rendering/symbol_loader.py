@@ -36,14 +36,14 @@ def get_symbol(name, zoom):
     return None
 
 def _scale_img(img, zoom):
-    # Base target size is 32. We scale the width by zoom.
-    target_w = max(8, int(32 * zoom))
-    
     # Get original proportions
     orig_w, orig_h = img.get_size()
-    aspect_ratio = orig_h / orig_w
     
-    # Calculate height based on aspect ratio
-    target_h = int(target_w * aspect_ratio)
+    # Scale based on the image's native resolution rather than forcing 32px
+    # You can tweak this 0.5 multiplier if your icons are globally too big or small!
+    scale_factor = zoom * 0.5 
+    
+    target_w = max(4, int(orig_w * scale_factor))
+    target_h = max(4, int(orig_h * scale_factor))
     
     return pygame.transform.scale(img, (target_w, target_h))

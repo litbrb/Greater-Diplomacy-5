@@ -5,14 +5,14 @@ from map_functions.rendering import symbol_loader
 
 def render_buttons(self):
     if not self.selection_mode:
-        unit_icon = symbol_loader.get_symbol("Infantry", 0.8)
-        economy_icon = symbol_loader.get_symbol("Factory", 0.8)
-        blank_icon = symbol_loader.get_symbol("Star", 0.8)
-        terrain_icon = symbol_loader.get_symbol("Mountains", 0.8)
-        political_icon = symbol_loader.get_symbol("Flag", 0.8)
-        relations_icon = symbol_loader.get_symbol("Heart", 0.8)
-        research_icon = symbol_loader.get_symbol("Research", 0.8)
-        save_icon = symbol_loader.get_symbol("Save", 0.8)
+        unit_icon = symbol_loader.get_symbol("Infantry", 2)
+        economy_icon = symbol_loader.get_symbol("Factory", 2)
+        blank_icon = symbol_loader.get_symbol("Star", 2)
+        terrain_icon = symbol_loader.get_symbol("Mountains", 1.5)
+        political_icon = symbol_loader.get_symbol("Flag", 1.5)
+        relations_icon = symbol_loader.get_symbol("Heart", 1.5)
+        research_icon = symbol_loader.get_symbol("Research", 2)
+        save_icon = symbol_loader.get_symbol("Save", 2)
 
         self.elements = [
             # Refresh remains in the top bar

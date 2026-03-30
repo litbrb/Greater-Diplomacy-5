@@ -110,7 +110,8 @@ class Construction_Screen(GameState):
                 "order_type": "BUILDING",
                 "item_name": b_name,
                 "days_remaining": data.get("time", 10),
-                "group": data["group"]
+                "group": data["group"],
+                "refund": costs  # <-- ADD THIS TO STORE REFUND DATA
             }
             self.target_province.setdefault("deployment_queue", []).append(order)
             self.map_screen.show_feedback(f"Started {b_name}")
@@ -185,7 +186,31 @@ class Construction_Screen(GameState):
     def cancel_order(self, index):
         queue = self.target_province.get("deployment_queue", [])
         if 0 <= index < len(queue):
-            queue.pop(index)
+            item = queue.pop(index)
+            p_data = self.map_screen.nation_data[self.map_screen.player_country]
+            
+            # --- REFUND LOGIC ---
+            if "refund" in item:
+                # Use the stored costs
+                for res, amount in item["refund"].items():
+                    p_data[res] = p_data.get(res, 0) + amount
+            else:
+                # Fallback for old save files
+                stats = {}
+                if item.get("order_type") == "BUILDING":
+                    stats = self.building_library.get(item.get("item_name"), {})
+                elif "unit_type" in item:
+                    import json, os
+                    if os.path.exists('map_functions/data/unit_data.json'):
+                        with open('map_functions/data/unit_data.json', 'r') as f:
+                            stats = json.load(f).get(item["unit_type"], {})
+                            
+                p_data["money"] = p_data.get("money", 0) + stats.get("cost_money", 0)
+                p_data["materials"] = p_data.get("materials", 0) + stats.get("cost_materials", 0)
+                p_data["manpower"] = p_data.get("manpower", 0) + stats.get("cost_manpower", 0)
+                p_data["fuel"] = p_data.get("fuel", 0) + stats.get("cost_fuel", 0)
+
+            self.map_screen.show_feedback("Cancelled & Refunded")
             self.refresh_ui()
 
     def exit_to_map(self):

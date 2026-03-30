@@ -69,42 +69,46 @@ def draw_map_screen(self, surface):
             date_surf = self.font.render(self.time_manager.get_date_string(), True, (255, 255, 255))
             surface.blit(date_surf, (SCREEN_WIDTH // 2 - date_surf.get_width() // 2, 20))
 
-        # --- NEW CLEAN RESOURCE HUD WITH NET INCOME ---
-        hud_y = SCREEN_HEIGHT - 85
+        # Check if we should hide the HUD (active if a province is selected or explicitly hidden)
+        hide_hud = getattr(self, 'hide_resource_hud', False) or self.selected_province
         
-        if not hasattr(self, 'econ_cache_time') or pygame.time.get_ticks() - getattr(self, 'econ_cache_time', 0) > 1000:
-            self.econ_cache = self.get_player_economy_projections()
-            self.econ_cache_time = pygame.time.get_ticks()
+        if not hide_hud:
+            # --- NEW CLEAN RESOURCE HUD WITH NET INCOME ---
+            hud_y = SCREEN_HEIGHT - 85
             
-        total_inc, total_upkeep = getattr(self, 'econ_cache', (
-            {"money":0, "manpower":0, "materials":0, "fuel":0}, 
-            {"money":0, "manpower":0, "materials":0, "fuel":0}
-        ))
+            if not hasattr(self, 'econ_cache_time') or pygame.time.get_ticks() - getattr(self, 'econ_cache_time', 0) > 1000:
+                self.econ_cache = self.get_player_economy_projections()
+                self.econ_cache_time = pygame.time.get_ticks()
+                
+            total_inc, total_upkeep = getattr(self, 'econ_cache', (
+                {"money":0, "manpower":0, "materials":0, "fuel":0}, 
+                {"money":0, "manpower":0, "materials":0, "fuel":0}
+            ))
 
-        def fmt_net(inc, exp):
-            net = int(inc - exp)
-            return f"+{net}" if net >= 0 else str(net)
+            def fmt_net(inc, exp):
+                net = int(inc - exp)
+                return f"+{net}" if net >= 0 else str(net)
 
-        resources = [
-            (f"Money: {int(self.player_money)} ({fmt_net(total_inc['money'], total_upkeep['money'])})", (255, 215, 0)),
-            (f"Manpower: {int(self.player_manpower)} ({fmt_net(total_inc['manpower'], total_upkeep['manpower'])})", (100, 200, 255)),
-            (f"Materials: {int(self.player_materials)} ({fmt_net(total_inc['materials'], total_upkeep['materials'])})", (180, 180, 180)),
-            (f"Fuel: {int(self.player_fuel)} ({fmt_net(total_inc['fuel'], total_upkeep['fuel'])})", (200, 100, 255))
-        ]
-        
-        start_x = 250
-        spacing = 240
-        
-        bg_width = (len(resources) * spacing) - 40
-        bg_surf = pygame.Surface((bg_width, 30), pygame.SRCALPHA)
-        bg_surf.fill((0, 0, 0, 200))
-        
-        bg_rect = pygame.Rect(start_x - 15, hud_y - 5, bg_width, 30)
-        surface.blit(bg_surf, bg_rect.topleft)
-        pygame.draw.rect(surface, (100, 100, 100), bg_rect, 1) 
+            resources = [
+                (f"Money: {int(self.player_money)} ({fmt_net(total_inc['money'], total_upkeep['money'])})", (255, 215, 0)),
+                (f"Manpower: {int(self.player_manpower)} ({fmt_net(total_inc['manpower'], total_upkeep['manpower'])})", (100, 200, 255)),
+                (f"Materials: {int(self.player_materials)} ({fmt_net(total_inc['materials'], total_upkeep['materials'])})", (180, 180, 180)),
+                (f"Fuel: {int(self.player_fuel)} ({fmt_net(total_inc['fuel'], total_upkeep['fuel'])})", (200, 100, 255))
+            ]
+            
+            start_x = 250
+            spacing = 240
+            
+            bg_width = (len(resources) * spacing) - 40
+            bg_surf = pygame.Surface((bg_width, 30), pygame.SRCALPHA)
+            bg_surf.fill((0, 0, 0, 200))
+            
+            bg_rect = pygame.Rect(start_x - 15, hud_y - 5, bg_width, 30)
+            surface.blit(bg_surf, bg_rect.topleft)
+            pygame.draw.rect(surface, (100, 100, 100), bg_rect, 1) 
 
-        for i, (text, color) in enumerate(resources):
-            surface.blit(self.font.render(text, True, color), (start_x + (i * spacing), hud_y))
+            for i, (text, color) in enumerate(resources):
+                surface.blit(self.font.render(text, True, color), (start_x + (i * spacing), hud_y))
 
         # Check flag before drawing "Playing as" text
         if not getattr(self, 'hide_top_info', False):
@@ -117,7 +121,9 @@ def draw_map_screen(self, surface):
             sidebar_info.draw_sidebar_info(self, surface)
             unit_info_popup.draw_unit_info(self, surface)
 
-        minimap.draw_minimap(self, surface, surface.get_width(), surface.get_height())
+        hide_mini = getattr(self, 'hide_minimap', False) or self.selected_province
+        if not hide_mini:
+            minimap.draw_minimap(self, surface, surface.get_width(), surface.get_height())
 
     # --- LAYER 5: SELECTION MODE ---
     else:

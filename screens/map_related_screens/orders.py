@@ -155,6 +155,8 @@ class Orders_Screen(GameState):
         self.map_screen.hide_raised_rect = True
         self.map_screen.hide_top_info = True
         self.map_screen.hide_tooltip = True
+        self.map_screen.hide_resource_hud = True # NEW
+        self.map_screen.hide_minimap = True      # NEW
 
         self.map_screen.additional_draw(surface)
 
@@ -162,6 +164,8 @@ class Orders_Screen(GameState):
         self.map_screen.hide_raised_rect = False
         self.map_screen.hide_top_info = False
         self.map_screen.hide_tooltip = False
+        self.map_screen.hide_resource_hud = False # NEW
+        self.map_screen.hide_minimap = False      # NEW
         self.map_screen.selected_province = temp_province
 
         from map_functions.rendering import province_select
@@ -176,7 +180,23 @@ class Orders_Screen(GameState):
         title = font.render(f"Orders: Province {self.target_province['id']}", True, (255, 255, 255))
         surface.blit(title, (g.SCREEN_WIDTH//2 - title.get_width()//2, 50))
         
+        # --- NEW: Draw Background Panel for Units ---
         units = self.target_province.get("units", [])
+        player_units = [u for u in units if u.get("owner") == self.map_screen.player_country]
+        
+        if player_units:
+            # Dynamically size the height based on how many units there are
+            bg_rect = pygame.Rect(80, 130, 500, len(player_units) * 60 + 40)
+            
+            # Draw semi-transparent panel
+            panel_surf = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
+            panel_surf.fill((30, 30, 50, 200))
+            surface.blit(panel_surf, bg_rect.topleft)
+            
+            # Draw border
+            pygame.draw.rect(surface, (100, 100, 250), bg_rect, 2)
+        # --------------------------------------------
+        
         for i, unit in enumerate(units):
             if unit.get("owner") != self.map_screen.player_country:
                 continue

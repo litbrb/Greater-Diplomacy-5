@@ -42,8 +42,14 @@ class Controller:
             "BACK": pygame.K_ESCAPE,
         }
 
-        # 2. Try to load from file, otherwise use defaults
-        self.keybinds = keybind_io.load_keybinds(default_keys)
+        # 2. Load settings (Keybinds & Volume)
+        self.keybinds, self.volume = keybind_io.load_settings(default_keys, 0.5)
+
+        # 3. Apply volume to global sounds on boot
+        if ui_elements.click_sound:
+            ui_elements.click_sound.set_volume(self.volume)
+        if ui_elements.slider_sound:
+            ui_elements.slider_sound.set_volume(self.volume)
 
         self.states = {
             "MENU": Menu(),

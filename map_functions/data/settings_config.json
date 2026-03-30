@@ -1,3 +1,6 @@
 {
-    "BACK": "escape"
+    "keybinds": {
+        "BACK": "escape"
+    },
+    "volume": 0.31
 }

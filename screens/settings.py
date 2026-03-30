@@ -10,17 +10,14 @@ class Settings(GameState):
         self.controller = controller
         self.bg_color = (40, 40, 40)
         
-        # 1. DEFINE VARIABLES FIRST
-        self.volume = 0.5
+        # Grab the volume that was loaded in main.py
+        self.volume = self.controller.volume 
         self.fullscreen = False
         self.listening_for = None
         
-        # 2. THEN BUILD THE UI
         self.refresh_ui()
 
     def refresh_ui(self):
-        """Rebuilds buttons to show current key names"""
-        # Ensure controller exists before trying to access keybinds
         back_key_name = pygame.key.name(self.controller.keybinds["BACK"]).upper()
         
         back_btn_text = f"Back Key: {back_key_name}"
@@ -42,29 +39,28 @@ class Settings(GameState):
     def reset_defaults(self):
         default_keys = {"BACK": pygame.K_ESCAPE}
         self.controller.keybinds = default_keys
-        keybind_io.save_keybinds(default_keys)
+        keybind_io.save_settings(default_keys, self.volume)
         self.refresh_ui()
         
     def additional_events(self, event):
         if self.listening_for and event.type == pygame.KEYDOWN:
-            # Update active binds
             self.controller.keybinds[self.listening_for] = event.key
-            
-            # PERMANENCE: Save to file immediately
-            keybind_io.save_keybinds(self.controller.keybinds)
-            
-            # Reset UI
+            keybind_io.save_settings(self.controller.keybinds, self.volume)
             self.listening_for = None
             self.refresh_ui()
 
-    def handle_back_key(self):
-        # Don't go back if we are currently trying to record a new key
-        if not self.listening_for:
-            self.go_back()
-    
-    def go_back(self):
+    def save_and_go_back(self):
+        # Save both keybinds and volume when leaving settings
+        keybind_io.save_settings(self.controller.keybinds, self.volume)
         self.next_state = "MENU"
         self.done = True
+
+    def handle_back_key(self):
+        if not self.listening_for:
+            self.save_and_go_back()
+    
+    def go_back(self):
+        self.save_and_go_back()
 
     def toggle_full(self):
         self.fullscreen = not self.fullscreen
@@ -72,8 +68,10 @@ class Settings(GameState):
 
     def set_volume(self, val):
         self.volume = val
-        # Update the global GameState variable
-        self.master_volume = val 
-        # Update the actual mixer volume
+        self.controller.volume = val
+        
+        # Apply volume live as the slider moves
         if ui_elements.click_sound:
             ui_elements.click_sound.set_volume(val)
+        if ui_elements.slider_sound:  # Fixed your missing slider sound sync!
+            ui_elements.slider_sound.set_volume(val)

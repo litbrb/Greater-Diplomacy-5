@@ -6,7 +6,7 @@ from gameState import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def draw_map_screen(self, surface):
     # --- LAYER 1: THE BASE MAP ---
-    current_base = self.active_map # <-- Use the dynamically updated active_map!
+    current_base = self.active_map
 
     vw = surface.get_width() / self.camera.zoom
     vh = (surface.get_height() - self.total_ui_h) / self.camera.zoom
@@ -49,7 +49,6 @@ def draw_map_screen(self, surface):
             if order and order.get("type") == "MOVE":
                 path = order.get("path", [])
                 if path:
-                    # Draw the arrow chain from the current province through the path
                     prev_node = province
                     for step_id in path:
                         target_node = self.id_to_province.get(step_id)
@@ -58,28 +57,21 @@ def draw_map_screen(self, surface):
                             prev_node = target_node
                             
     # --- LAYER 4: UI BARS & HUD ---
-
-    # these are the ui bars. i don't care if you're selecting a country or not, SHOW THESE
-    # Inside Layer 4: UI BARS & HUD
     pygame.draw.rect(surface, (40, 40, 40), self.top_bar_rect)
     pygame.draw.rect(surface, (40, 40, 40), self.bot_bar_rect)
     
-    # NEW: Raised left corner for secondary view buttons
-    # self.raised_rect = pygame.Rect(0, SCREEN_HEIGHT - 110, 175, 50)
-    
-    # --- ADD THIS IF STATEMENT ---
     if not self.selection_mode and not getattr(self, 'hide_raised_rect', False):
-        pygame.draw.rect(surface, (160, 40, 40), self.raised_rect) # this is just so it stands out
+        pygame.draw.rect(surface, (160, 40, 40), self.raised_rect)
     
     if not self.selection_mode:
-        # Date stays top center
-        date_surf = self.font.render(self.time_manager.get_date_string(), True, (255, 255, 255))
-        surface.blit(date_surf, (SCREEN_WIDTH // 2 - date_surf.get_width() // 2, 20))
+        # Check flag before drawing Date
+        if not getattr(self, 'hide_top_info', False):
+            date_surf = self.font.render(self.time_manager.get_date_string(), True, (255, 255, 255))
+            surface.blit(date_surf, (SCREEN_WIDTH // 2 - date_surf.get_width() // 2, 20))
 
         # --- NEW CLEAN RESOURCE HUD WITH NET INCOME ---
         hud_y = SCREEN_HEIGHT - 85
         
-        # Throttled Economy cache (Checks projections only once a second to avoid lag)
         if not hasattr(self, 'econ_cache_time') or pygame.time.get_ticks() - getattr(self, 'econ_cache_time', 0) > 1000:
             self.econ_cache = self.get_player_economy_projections()
             self.econ_cache_time = pygame.time.get_ticks()
@@ -89,7 +81,6 @@ def draw_map_screen(self, surface):
             {"money":0, "manpower":0, "materials":0, "fuel":0}
         ))
 
-        # Helper to format positive/negative net income
         def fmt_net(inc, exp):
             net = int(inc - exp)
             return f"+{net}" if net >= 0 else str(net)
@@ -102,41 +93,34 @@ def draw_map_screen(self, surface):
         ]
         
         start_x = 250
-        spacing = 240 # Increased spacing to fit the net income text
+        spacing = 240
         
-        # Create a transparent black background surface
         bg_width = (len(resources) * spacing) - 40
         bg_surf = pygame.Surface((bg_width, 30), pygame.SRCALPHA)
         bg_surf.fill((0, 0, 0, 200))
         
-        # Blit background and borders
         bg_rect = pygame.Rect(start_x - 15, hud_y - 5, bg_width, 30)
         surface.blit(bg_surf, bg_rect.topleft)
         pygame.draw.rect(surface, (100, 100, 100), bg_rect, 1) 
 
-        # Draw the text
         for i, (text, color) in enumerate(resources):
             surface.blit(self.font.render(text, True, color), (start_x + (i * spacing), hud_y))
 
-        player_display = self.nation_data.get(self.player_country, {}).get("name", self.player_country)
-        name_surf = self.font.render(f"Playing as: {player_display.title()}", True, (200, 200, 200))
-        surface.blit(name_surf, (surface.get_width() - name_surf.get_width() - 420, 20))
+        # Check flag before drawing "Playing as" text
+        if not getattr(self, 'hide_top_info', False):
+            player_display = self.nation_data.get(self.player_country, {}).get("name", self.player_country)
+            name_surf = self.font.render(f"Playing as: {player_display.title()}", True, (200, 200, 200))
+            surface.blit(name_surf, (surface.get_width() - name_surf.get_width() - 420, 20))
         
         if self.selected_province: 
             from map_functions.ui import sidebar_info
             sidebar_info.draw_sidebar_info(self, surface)
-            # Show the garrison/building popup regardless of secondary mode
             unit_info_popup.draw_unit_info(self, surface)
-
-        # REMOVE THIS OLD CONDITIONAL:
-        # if self.secondary_mode == "UNITS" and self.selected_province:
-        #     unit_info_popup.draw_unit_info(self, surface)
 
         minimap.draw_minimap(self, surface, surface.get_width(), surface.get_height())
 
-    # --- LAYER 5: SELECTION MODE (STARTING NEW GAME) ---
+    # --- LAYER 5: SELECTION MODE ---
     else:
-        # 1. Selection Prompt (Top)
         prompt_txt = "Select a Country to Play As" if not self.pending_selection else f"Play as {self.pending_selection.title()}?"
         big_font = pygame.font.SysFont("Arial", 40)
         txt = big_font.render(prompt_txt, True, (255, 255, 255))
@@ -144,7 +128,6 @@ def draw_map_screen(self, surface):
         pygame.draw.rect(surface, (0, 0, 0, 180), bg_rect.inflate(20, 10))
         surface.blit(txt, bg_rect)
 
-        # 2. Confirmation Box
         if self.pending_selection:
             overlay = pygame.Surface((surface.get_width(), surface.get_height()), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 100))
@@ -159,7 +142,6 @@ def draw_map_screen(self, surface):
             instr = confirm_font.render(f"Start Game as {self.pending_selection.title()}?", True, (255, 255, 255))
             surface.blit(instr, instr.get_rect(center=(box_rect.centerx, box_rect.y + 50)))
             
-            # Button areas for event handler
             self.confirm_rect = pygame.Rect(box_rect.x + 50, box_rect.bottom - 70, 120, 40)
             self.cancel_rect = pygame.Rect(box_rect.right - 170, box_rect.bottom - 70, 120, 40)
             
@@ -174,31 +156,24 @@ def draw_map_screen(self, surface):
     # --- LAYER 6: FEEDBACK & TOOLTIPS ---
     if self.feedback_text and pygame.time.get_ticks() - self.feedback_timer < 2000:
         tsurf = self.font.render(self.feedback_text, True, (0, 255, 0))
-        # Logic: HUD Y is SCREEN_HEIGHT - 40. 
-        # We'll place it slightly above the bottom bar or inside it.
-        # This puts it in the bottom right corner of the screen
         surface.blit(tsurf, (surface.get_width() - tsurf.get_width() - 20, SCREEN_HEIGHT - 40))
 
-    # ONLY show hover tooltip if we don't actively have a province menu open
-    if self.hovered_province and not self.selected_province: 
+    # Check flag before drawing the tooltip
+    # this is the stuff that makes it so that if you select a province you don't display the tooltip
+    if self.hovered_province and not self.selected_province and not getattr(self, 'hide_tooltip', False): 
         tooltip.draw_tooltip(self, surface)
         
-    # if self.hovered_province: tooltip.draw_tooltip(self, surface)
-
     # --- LAYER 7: EXIT CONFIRMATION MODAL ---
     if getattr(self, 'show_exit_confirmation', False):
-        # 1. Dim the whole screen
         overlay = pygame.Surface((surface.get_width(), surface.get_height()), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
         surface.blit(overlay, (0, 0))
 
-        # 2. Draw the Box
         box_rect = pygame.Rect(0, 0, 450, 200)
         box_rect.center = (surface.get_width() // 2, surface.get_height() // 2)
         pygame.draw.rect(surface, (40, 40, 40), box_rect)
         pygame.draw.rect(surface, (200, 200, 200), box_rect, 2)
 
-        # 3. Text
         font = pygame.font.SysFont("Arial", 26, bold=True)
         msg = "Quit to Main Menu?"
         sub_msg = "Unsaved progress will be lost."
@@ -209,11 +184,9 @@ def draw_map_screen(self, surface):
         surface.blit(txt_surf, txt_surf.get_rect(center=(box_rect.centerx, box_rect.y + 50)))
         surface.blit(sub_surf, sub_surf.get_rect(center=(box_rect.centerx, box_rect.y + 85)))
 
-        # 4. Buttons (Visual Only, logic is in event_handler)
         yes_rect = pygame.Rect(box_rect.centerx - 130, box_rect.y + 120, 100, 40)
         no_rect = pygame.Rect(box_rect.centerx + 30, box_rect.y + 120, 100, 40)
 
-        # Highlight if hovered
         mx, my = pygame.mouse.get_pos()
         
         pygame.draw.rect(surface, (150, 0, 0) if yes_rect.collidepoint(mx, my) else (100, 0, 0), yes_rect)

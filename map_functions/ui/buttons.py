@@ -57,7 +57,9 @@ def render_buttons(self):
                 # Research
                 Button(SCREEN_WIDTH - 230, 10, "small", "blue", "R&D", self.open_research, image=research_icon),
                 # Save
-                Button(SCREEN_WIDTH - 340, 10, "small", "green", "Save", self.save_map_data, image=save_icon)
+                Button(SCREEN_WIDTH - 340, 10, "small", "green", "Save", self.save_map_data, image=save_icon),
+                # --- NEW BUTTON ---
+                Button(SCREEN_WIDTH - 450, 10, "small", "orange", "Edit Nation", self.open_edit_country)
             ])
     
     self.btn_go_build = Button(1390, 550, "medium", "grey", "Construction", self.open_construction)

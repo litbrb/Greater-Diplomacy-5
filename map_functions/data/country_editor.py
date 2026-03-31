@@ -124,6 +124,12 @@ class CountryEditor:
             self.data[int_id].setdefault("at_war_with", [])
             self.data[int_id].setdefault("allied_with", [])
 
+            # --- NEW DATA FIELDS ---
+            self.data[int_id].setdefault("leader_name", "")
+            self.data[int_id].setdefault("leader_title", "")
+            self.data[int_id].setdefault("flag_data", "")
+            self.data[int_id].setdefault("portrait_data", "")
+
         with open(PATH, "w") as f:
             json.dump(self.data, f, indent=4)
         

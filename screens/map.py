@@ -373,6 +373,10 @@ class Map(GameState):
 
     def select_unit_brush(self):
         editor_menus.select_unit_brush(self)
+    
+    def open_edit_country(self):
+        if self.player_country and self.player_country != "None":
+            self.next_state, self.done = "EDIT_COUNTRY", True
 
     # --- Pygame Core Loop Updates ---
     def update(self):

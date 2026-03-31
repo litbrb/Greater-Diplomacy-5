@@ -37,7 +37,11 @@
         "fuel": 0,
         "is_playable": false,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Lakes": {
         "name": "Lakes",
@@ -77,7 +81,11 @@
         "fuel": 0,
         "is_playable": false,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Unclaimed": {
         "name": "Unclaimed",
@@ -117,7 +125,11 @@
         "fuel": 0,
         "is_playable": false,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Rome": {
         "name": "Rome",
@@ -157,7 +169,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Carthage": {
         "name": "Carthage",
@@ -197,7 +213,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Gaul": {
         "name": "Gaul",
@@ -237,7 +257,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Germany": {
         "name": "Germany",
@@ -277,7 +301,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "France": {
         "name": "France",
@@ -317,7 +345,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Vichy France": {
         "name": "Vichy France",
@@ -357,7 +389,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "United States of America": {
         "name": "United States of America",
@@ -397,7 +433,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "German Reich": {
         "name": "German Reich",
@@ -437,7 +477,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Austria-Hungary": {
         "name": "Austria-Hungary",
@@ -477,7 +521,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Austria": {
         "name": "Austria",
@@ -517,7 +565,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "German Empire": {
         "name": "German Empire",
@@ -557,7 +609,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Weimar Republic": {
         "name": "Weimar Republic",
@@ -597,7 +653,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Canada": {
         "name": "Canada",
@@ -637,7 +697,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Soviet Union": {
         "name": "Soviet Union",
@@ -677,7 +741,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Hungary": {
         "name": "Hungary",
@@ -717,7 +785,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Italy": {
         "name": "Italy",
@@ -757,7 +829,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Bulgaria": {
         "name": "Bulgaria",
@@ -797,7 +873,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Romania": {
         "name": "Romania",
@@ -837,7 +917,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Spain": {
         "name": "Spain",
@@ -877,7 +961,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Belgium": {
         "name": "Belgium",
@@ -917,7 +1005,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Netherlands": {
         "name": "Netherlands",
@@ -957,7 +1049,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Luxembourg": {
         "name": "Luxembourg",
@@ -997,7 +1093,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Ukraine": {
         "name": "Ukraine",
@@ -1037,7 +1137,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Russia": {
         "name": "Russia",
@@ -1077,7 +1181,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Sweden": {
         "name": "Sweden",
@@ -1117,7 +1225,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Czechoslovakia": {
         "name": "Czechoslovakia",
@@ -1157,7 +1269,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Czechia": {
         "name": "Czechia",
@@ -1197,7 +1313,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Slovakia": {
         "name": "Slovakia",
@@ -1237,7 +1357,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Turkey": {
         "name": "Turkey",
@@ -1277,7 +1401,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Ottoman Empire": {
         "name": "Ottoman Empire",
@@ -1317,7 +1445,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Serbia": {
         "name": "Serbia",
@@ -1357,7 +1489,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Norway": {
         "name": "Norway",
@@ -1397,7 +1533,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Portugal": {
         "name": "Portugal",
@@ -1437,7 +1577,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "United Kingdom": {
         "name": "United Kingdom",
@@ -1477,7 +1621,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Japan": {
         "name": "Japan",
@@ -1517,7 +1665,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Mexico": {
         "name": "Mexico",
@@ -1557,7 +1709,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Argentina": {
         "name": "Argentina",
@@ -1597,7 +1753,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Chile": {
         "name": "Chile",
@@ -1637,7 +1797,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Yugoslavia": {
         "name": "Yugoslavia",
@@ -1677,7 +1841,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "India": {
         "name": "India",
@@ -1717,7 +1885,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Nationalist China": {
         "name": "Nationalist China",
@@ -1757,7 +1929,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Communist China": {
         "name": "Communist China",
@@ -1797,7 +1973,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Australia": {
         "name": "Australia",
@@ -1837,7 +2017,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "New Zealand": {
         "name": "New Zealand",
@@ -1877,7 +2061,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Denmark": {
         "name": "Denmark",
@@ -1917,7 +2105,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Finland": {
         "name": "Finland",
@@ -1957,7 +2149,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Estonia": {
         "name": "Estonia",
@@ -1997,7 +2193,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Latvia": {
         "name": "Latvia",
@@ -2037,7 +2237,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Lithuania": {
         "name": "Lithuania",
@@ -2077,7 +2281,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Switzerland": {
         "name": "Switzerland",
@@ -2117,7 +2325,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Iran": {
         "name": "Iran",
@@ -2157,7 +2369,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Iraq": {
         "name": "Iraq",
@@ -2197,7 +2413,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Saudi Arabia": {
         "name": "Saudi Arabia",
@@ -2237,7 +2457,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Oman": {
         "name": "Oman",
@@ -2277,7 +2501,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Yemen": {
         "name": "Yemen",
@@ -2317,7 +2545,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Afganistan": {
         "name": "Afganistan",
@@ -2357,7 +2589,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Mongolia": {
         "name": "Mongolia",
@@ -2397,7 +2633,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Venezuela": {
         "name": "Venezuela",
@@ -2437,7 +2677,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Peru": {
         "name": "Peru",
@@ -2477,7 +2721,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Bolivia": {
         "name": "Bolivia",
@@ -2517,7 +2765,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Paraguay": {
         "name": "Paraguay",
@@ -2557,7 +2809,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Ecuador": {
         "name": "Ecuador",
@@ -2597,7 +2853,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Morroco": {
         "name": "Morroco",
@@ -2637,7 +2897,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Algeria": {
         "name": "Algeria",
@@ -2677,7 +2941,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Tunisia": {
         "name": "Tunisia",
@@ -2717,7 +2985,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Poland": {
         "name": "Poland",
@@ -2757,7 +3029,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Belarus": {
         "name": "Belarus",
@@ -2797,7 +3073,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Ireland": {
         "name": "Ireland",
@@ -2837,7 +3117,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Greece": {
         "name": "Greece",
@@ -2877,7 +3161,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Albania": {
         "name": "Albania",
@@ -2917,7 +3205,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Brazil": {
         "name": "Brazil",
@@ -2957,7 +3249,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Cuba": {
         "name": "Cuba",
@@ -2997,7 +3293,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Tibet": {
         "name": "Tibet",
@@ -3037,7 +3337,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Thailand": {
         "name": "Thailand",
@@ -3077,7 +3381,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Nepal": {
         "name": "Nepal",
@@ -3117,7 +3425,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Bhutan": {
         "name": "Bhutan",
@@ -3157,7 +3469,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Uruguay": {
         "name": "Uruguay",
@@ -3197,7 +3513,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Colombia": {
         "name": "Colombia",
@@ -3236,7 +3556,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Panama": {
         "name": "Panama",
@@ -3275,7 +3599,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Guatemala": {
         "name": "Guatemala",
@@ -3314,7 +3642,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Honduras": {
         "name": "Honduras",
@@ -3353,7 +3685,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "El Salvador": {
         "name": "El Salvador",
@@ -3392,7 +3728,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Nicaragua": {
         "name": "Nicaragua",
@@ -3431,7 +3771,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Costa Rica": {
         "name": "Costa Rica",
@@ -3470,7 +3814,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Guangxi Clique": {
         "name": "Guangxi Clique",
@@ -3509,7 +3857,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Yunnan": {
         "name": "Yunnan",
@@ -3548,7 +3900,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Xibei San Ma": {
         "name": "Xibei San Ma",
@@ -3587,7 +3943,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Xinjiang": {
         "name": "Xinjiang",
@@ -3626,7 +3986,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Manchuria": {
         "name": "Manchuria",
@@ -3665,7 +4029,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Ethiopia": {
         "name": "Ethiopia",
@@ -3704,7 +4072,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Liberia": {
         "name": "Liberia",
@@ -3743,7 +4115,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Haiti": {
         "name": "Haiti",
@@ -3782,7 +4158,11 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     },
     "Dominican Republic": {
         "name": "Dominican Republic",
@@ -3821,6 +4201,10 @@
         "fuel": 0,
         "is_playable": true,
         "at_war_with": [],
-        "allied_with": []
+        "allied_with": [],
+        "leader_name": "",
+        "leader_title": "",
+        "flag_data": "",
+        "portrait_data": ""
     }
 }

@@ -65,7 +65,22 @@ def draw_map_screen(self, surface):
         pygame.draw.rect(surface, (160, 40, 40), self.raised_rect)
     
     if not self.selection_mode:
-        # Check flag before drawing Date
+        # --- DRAW NATION FLAG ---
+        player_data = self.nation_data.get(self.player_country, {})
+        flag_str = player_data.get("flag_data")
+        if flag_str and not getattr(self, 'hide_top_info', False):
+            try:
+                import base64
+                img_bytes = base64.b64decode(flag_str)
+                flag_surf = pygame.image.fromstring(img_bytes, (60, 40), "RGB")
+                
+                # Draw the flag at (20, 10) so it's vertically centered in the 60px top bar
+                surface.blit(flag_surf, (20, 10))
+                pygame.draw.rect(surface, (200, 200, 200), (20, 10, 60, 40), 1) # Optional border
+            except Exception as e:
+                pass # If parsing fails, just skip drawing
+        # ------------------------
+
         if not getattr(self, 'hide_top_info', False):
             date_surf = self.font.render(self.time_manager.get_date_string(), True, (255, 255, 255))
             surface.blit(date_surf, (SCREEN_WIDTH // 2 - date_surf.get_width() // 2, 20))

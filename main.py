@@ -14,6 +14,7 @@ from map_functions.rendering import symbol_loader
 from screens.map_related_screens.research import Research_Screen
 from screens.map_related_screens.construction import Construction_Screen
 from screens.map_related_screens.economy import Economy_Screen
+from screens.map_related_screens.edit_country import Edit_Country_Screen
 
 pygame.display.set_caption("Greater Diplomacy Pygame Edition")
 
@@ -68,7 +69,8 @@ class Controller:
             "RECRUIT": Recruit_Screen(),
             "ORDERS": Orders_Screen(),
             "RESEARCH": Research_Screen(),
-            "ECONOMY": Economy_Screen()  # <--- Add this
+            "ECONOMY": Economy_Screen(),
+            "EDIT_COUNTRY": Edit_Country_Screen() # <--- Add this
         }
         self.states["CONSTRUCTION"] = Construction_Screen()
         self.active_state = self.states["MENU"]
@@ -79,9 +81,11 @@ class Controller:
         next_state_name = self.active_state.next_state
         
         # 1. Data Handoff
-        if next_state_name in ["RECRUIT", "ORDERS", "NAVY", "CONSTRUCTION"]:
+        if next_state_name in ["RECRUIT", "ORDERS", "NAVY", "CONSTRUCTION", "EDIT_COUNTRY"]:
             map_ref = self.states["MAP"]
-            if map_ref.selected_province:
+            if next_state_name == "EDIT_COUNTRY":
+                self.states["EDIT_COUNTRY"].start_editor(map_ref)
+            elif map_ref.selected_province:
                 self.states[next_state_name].start_with_province(map_ref.selected_province, map_ref)
         
         # NEW: Separate handoff for Research since it doesn't care about provinces

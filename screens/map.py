@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 from gameState import GameState, SCREEN_WIDTH, SCREEN_HEIGHT
 from map_functions.ui import buttons, event_handler, editor_menus
 from map_functions.data import load_map, save_map
@@ -381,7 +382,7 @@ class Map(GameState):
             self.next_state, self.done = "EDIT_COUNTRY", True
 
     def update_country_centers(self):
-        """Calculates the visual center for disconnected parts of every country."""
+        """Calculates the visual center, rotation, and physical spread for every country landmass."""
         self.country_text_blobs = []
         visited = set()
 
@@ -411,19 +412,33 @@ class Map(GameState):
                 count = len(comp)
                 if count == 0: continue
                 
-                # Average center of this specific component
+                # 1. Average center (Mean)
                 avg_x = sum(c["center"][0] for c in comp) / count
                 avg_y = sum(c["center"][1] for c in comp) / count
+                
+                # 2. Covariance Matrix calculations (for rotation and scale)
+                c_xx = sum((c["center"][0] - avg_x)**2 for c in comp) / count
+                c_yy = sum((c["center"][1] - avg_y)**2 for c in comp) / count
+                c_xy = sum((c["center"][0] - avg_x) * (c["center"][1] - avg_y) for c in comp) / count
+                
+                # Calculate angle (math.atan2 handles division by zero safely)
+                # atan2 returns radians, we need degrees. Pygame rotates counter-clockwise.
+                angle_rad = 0.5 * math.atan2(2 * c_xy, c_xx - c_yy)
+                display_angle = -math.degrees(angle_rad) 
+                
+                # 3. Spatial Spread (replaces raw count for scaling text)
+                spatial_spread = math.sqrt(c_xx + c_yy) if count > 1 else 15.0
                 
                 # Snap to the closest actual province in this component
                 closest_prov = min(comp, key=lambda c: (c["center"][0] - avg_x)**2 + (c["center"][1] - avg_y)**2)
                 
-                # Save the center point and the size of the landmass
                 self.country_text_blobs.append({
                     "owner": owner,
                     "cx": closest_prov["center"][0],
                     "cy": closest_prov["center"][1],
-                    "size": count
+                    "spread": spatial_spread, 
+                    "count": count, # Kept for culling logic
+                    "angle": display_angle
                 })
 
     # --- Pygame Core Loop Updates ---

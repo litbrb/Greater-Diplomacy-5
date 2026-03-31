@@ -88,18 +88,16 @@ def draw_map_screen(self, surface):
         if alpha > 0 and hasattr(self, 'country_text_blobs'):
             import math
             
-            # --- THE FIX: Track drawn countries and sort blobs by size ---
             drawn_countries = set()
-            # Sort largest to smallest so mainlands are always processed first!
-            sorted_blobs = sorted(self.country_text_blobs, key=lambda b: b["size"], reverse=True)
+            # Sort largest spatial spread to smallest so mainlands are always processed first!
+            sorted_blobs = sorted(self.country_text_blobs, key=lambda b: b["spread"], reverse=True)
             
             for blob in sorted_blobs:
                 country = blob["owner"]
                 
-                # Skip 1-province landmasses ONLY IF the country already has a name on the map
-                if blob["size"] <= 3 and country in drawn_countries:
+                # Skip small island groups ONLY IF the country already has a name on the map
+                if blob["count"] <= 3 and country in drawn_countries:
                     continue
-                # -------------------------------------------------------------
 
                 surf, shadow = self.country_name_surfs.get(country, (None, None))
                 if not surf: continue
@@ -115,8 +113,9 @@ def draw_map_screen(self, surface):
                     # Frustum Culling: Only draw if it's actually on the screen
                     if -200 < sx < surface.get_width() + 200 and 0 < sy < surface.get_height():
                         
-                        land_scale = 0.15 + (math.sqrt(blob["size"]) * 0.05)
-                        land_scale = min(land_scale, 1.5)
+                        # NEW SCALING: Map the physical spread to a reasonable text scale
+                        land_scale = 0.15 + (blob["spread"] * 0.003)
+                        land_scale = min(max(land_scale, 0.2), 2.5) # Clamp the scale safely
                         
                         scaled_w = int(surf.get_width() * self.camera.zoom * land_scale)
                         scaled_h = int(surf.get_height() * self.camera.zoom * land_scale)
@@ -125,9 +124,16 @@ def draw_map_screen(self, surface):
                             scaled_text = pygame.transform.scale(surf, (scaled_w, scaled_h))
                             scaled_shadow = pygame.transform.scale(shadow, (scaled_w, scaled_h))
                             
+                            # NEW ROTATION LOGIC
+                            angle = blob.get("angle", 0)
+                            if abs(angle) > 2: # Only rotate if the angle is significant
+                                scaled_text = pygame.transform.rotate(scaled_text, angle)
+                                scaled_shadow = pygame.transform.rotate(scaled_shadow, angle)
+                            
                             scaled_text.set_alpha(alpha)
                             scaled_shadow.set_alpha(alpha)
                             
+                            # Center the rotated rect exactly on the calculated coordinates
                             txt_rect = scaled_text.get_rect(center=(int(sx), int(sy)))
                             
                             surface.blit(scaled_shadow, (txt_rect.x + 2, txt_rect.y + 2))

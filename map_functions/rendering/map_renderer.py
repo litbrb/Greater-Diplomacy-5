@@ -57,6 +57,54 @@ def draw_map_screen(self, surface):
                             overlay_renderer.draw_movement_arrow(surface, self, prev_node, target_node)
                             prev_node = target_node
                             
+    # --- LAYER 3.5: COUNTRY NAMES ---
+    # Only show names on the Political map to avoid cluttering other modes
+    if self.base_layer == "POLITICAL":
+        
+        # 1. Cache text surfaces once to save performance
+        if not hasattr(self, 'country_name_surfs'):
+            self.country_name_surfs = {}
+            # Use your biggest font preset for maximum resolution before scaling down
+            name_font = fonts.get("title") 
+            for c_id, data in self.nation_data.items():
+                if c_id not in ["Ocean", "Lakes", "Unclaimed", "None"]:
+                    disp = data.get("name", c_id).upper()
+                    # Render white text and a black shadow
+                    surf = name_font.render(disp, True, (255, 255, 255))
+                    shadow = name_font.render(disp, True, (20, 20, 20))
+                    self.country_name_surfs[c_id] = (surf, shadow)
+
+        # 2. Draw the names
+        if hasattr(self, 'country_centers'):
+            for country, (cx, cy) in self.country_centers.items():
+                surf, shadow = self.country_name_surfs.get(country, (None, None))
+                if not surf: continue
+
+                # Wrap logic for looped maps
+                offsets = [0, -self.map_w, self.map_w] if self.loop_map else [0]
+                for offset in offsets:
+                    sx = (cx + offset - self.camera.pos.x) * self.camera.zoom
+                    sy = (cy - self.camera.pos.y) * self.camera.zoom + self.top_ui_height
+
+                    # Frustum Culling: Only draw if it's actually on the screen
+                    if -200 < sx < surface.get_width() + 200 and 0 < sy < surface.get_height():
+                        
+                        # Adjust this multiplier (0.3) to make the text larger/smaller relative to the map
+                        base_scale = 0.3 
+                        scaled_w = int(surf.get_width() * self.camera.zoom * base_scale)
+                        scaled_h = int(surf.get_height() * self.camera.zoom * base_scale)
+                        
+                        if scaled_w > 0 and scaled_h > 0:
+                            # Scale the cached surfaces
+                            scaled_text = pygame.transform.scale(surf, (scaled_w, scaled_h))
+                            scaled_shadow = pygame.transform.scale(shadow, (scaled_w, scaled_h))
+                            
+                            txt_rect = scaled_text.get_rect(center=(int(sx), int(sy)))
+                            
+                            # Blit shadow (offset by 2 pixels), then the actual text
+                            surface.blit(scaled_shadow, (txt_rect.x + 2, txt_rect.y + 2))
+                            surface.blit(scaled_text, txt_rect)
+                            
     # --- LAYER 4: UI BARS & HUD ---
     pygame.draw.rect(surface, (40, 40, 40), self.top_bar_rect)
     pygame.draw.rect(surface, (40, 40, 40), self.bot_bar_rect)

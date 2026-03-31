@@ -22,3 +22,7 @@ def conquer_province(self, province, new_owner):
         # 3. Sync the active view
         if self.map_mode == "POLITICAL":
             self.active_map = self.political_map
+            
+        # 4. UPDATE COUNTRY CENTER FOR TEXT RENDERING <-- NEW
+        if hasattr(self, 'update_country_centers'):
+            self.update_country_centers()

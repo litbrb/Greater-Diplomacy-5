@@ -87,6 +87,8 @@ class Map(GameState):
             data.setdefault("allied_with", [])
             data.setdefault("pending_diplomacy", {})
 
+        self.update_country_centers()
+
     # --- Properties ---
     @property
     def player_money(self):
@@ -377,6 +379,29 @@ class Map(GameState):
     def open_edit_country(self):
         if self.player_country and self.player_country != "None":
             self.next_state, self.done = "EDIT_COUNTRY", True
+
+    def update_country_centers(self):
+        """Calculates the visual center for every country on the map."""
+        owner_coords = {}
+        
+        # 1. Group all province centers by owner
+        for prov in self.map_data.values():
+            owner = prov.get("owner")
+            if owner and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
+                owner_coords.setdefault(owner, []).append(prov["center"])
+
+        self.country_centers = {}
+        
+        # 2. Find the average center, then snap to the closest owned province
+        for owner, coords in owner_coords.items():
+            if not coords: continue
+            
+            avg_x = sum(c[0] for c in coords) / len(coords)
+            avg_y = sum(c[1] for c in coords) / len(coords)
+
+            # Snap to the closest actual province so the name isn't in the ocean
+            closest_prov = min(coords, key=lambda c: (c[0]-avg_x)**2 + (c[1]-avg_y)**2)
+            self.country_centers[owner] = closest_prov
 
     # --- Pygame Core Loop Updates ---
     def update(self):

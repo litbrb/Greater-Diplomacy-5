@@ -1,7 +1,7 @@
 import pygame
 
 # Define the area for the sidebar info panel
-info_rect = pygame.Rect(10, 70, 300, 450)
+info_rect = pygame.Rect(180, 70, 300, 450)
 
 def draw_sidebar_info(self, surface):
     """
@@ -36,7 +36,8 @@ def draw_sidebar_info(self, surface):
     
     for i, line in enumerate(info_lines):
         tsurf = self.small_font.render(line, True, (255, 255, 255))
-        surface.blit(tsurf, (20, 80 + i * 25))
+        text_x = 190
+        surface.blit(tsurf, (text_x, 80 + i * 25))
 
     # 5. Combat Detection
     owners_present = list(set(u.get("owner", "Unknown") for u in units))

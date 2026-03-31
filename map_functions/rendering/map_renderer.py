@@ -94,7 +94,7 @@ def draw_map_screen(self, surface):
         
         if not hide_hud:
             # --- NEW CLEAN RESOURCE HUD WITH NET INCOME ---
-            hud_y = SCREEN_HEIGHT - 85
+            hud_y = SCREEN_HEIGHT - 40
             
             if not hasattr(self, 'econ_cache_time') or pygame.time.get_ticks() - getattr(self, 'econ_cache_time', 0) > 1000:
                 self.econ_cache = self.get_player_economy_projections()
@@ -116,7 +116,7 @@ def draw_map_screen(self, surface):
                 (f"Fuel: {int(self.player_fuel)} ({fmt_net(total_inc['fuel'], total_upkeep['fuel'])})", (200, 100, 255))
             ]
             
-            start_x = 250
+            start_x = 200
             spacing = 240
             
             bg_width = (len(resources) * spacing) - 40

@@ -90,8 +90,6 @@ class CountryEditor:
             # 2. Set Carracks to 1 by default if it exists in the template
             if "carrack" in res_dict:
                 res_dict["carrack"] = 1
-            if "cavalry" in res_dict:
-                res_dict["cavalry"] = 0
                 
             return res_dict
             
@@ -203,7 +201,7 @@ class CountryEditor:
             self.data[int_id] = {
                 "name": disp_name,
                 "color": self.current_color,
-                "research": {"infantry": 1800, "cavalry": 1, "industry": 1800}, # Ensure cavalry starts at 1
+                "research": {"infantry": 1800, "industry": 1800},
                 "money": 0, "manpower": 0, "materials": 0, "fuel": 0,      
                 "is_playable": True,
                 "at_war_with": [], "allied_with": []

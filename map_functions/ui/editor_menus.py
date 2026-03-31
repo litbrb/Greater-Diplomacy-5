@@ -226,7 +226,6 @@ def open_map_research_editor(self):
                 struct = json.load(f)
             res_dict = {tech: (1800 if data["max_lvl"] == 9999 else 0) for tech, data in struct.items()}
             if "carrack" in res_dict: res_dict["carrack"] = 1
-            if "cavalry" in res_dict: res_dict["cavalry"] = 0
         return res_dict
 
     default_res = get_default_research()

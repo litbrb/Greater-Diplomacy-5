@@ -9,6 +9,7 @@ from map_functions.rendering import map_renderer
 from map_functions.data import country_io
 from map_functions.logic import map_utils
 from map_functions.logic import diplomacy_logic
+from map_functions.data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
 
 class Map(GameState):
     def __init__(self, load_path=None, is_scenario=False, is_random=False): 
@@ -261,11 +262,10 @@ class Map(GameState):
         self.show_feedback("Map Randomized!")
 
     def get_player_economy_projections(self):
-        YIELD_MONEY = 500
-        YIELD_MANPOWER = 50
-        YIELD_MATERIALS = 100
-        YIELD_FUEL = 1
-        UPKEEP_MODIFIER = 0.05
+        YIELD_MONEY = BASE_YIELDS["money"]
+        YIELD_MANPOWER = BASE_YIELDS["manpower"]
+        YIELD_MATERIALS = BASE_YIELDS["materials"]
+        YIELD_FUEL = BASE_YIELDS["fuel"]
 
         inc = 0
         bonus = {"money":0, "manpower":0, "materials":0, "fuel":0}

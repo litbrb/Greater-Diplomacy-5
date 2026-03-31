@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 import json
 import os
+from map_functions.data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
 
 def editor_load_map(self):
     """Opens a file dialog to load a map folder directly into the editor."""
@@ -149,8 +150,7 @@ def open_editor_economy(self):
     root.protocol("WM_DELETE_WINDOW", close_menu)
 
     # Economy logic
-    YIELD_MONEY = 500
-    UPKEEP_MODIFIER = 0.05
+    YIELD_MONEY = BASE_YIELDS["money"]
     
     unit_library = {}
     building_library = {}

@@ -1,4 +1,5 @@
 import pygame
+from map_functions.data.economy_data import BASE_YIELDS
 
 def draw_tooltip(self, surface):
     if not self.hovered_province:
@@ -45,8 +46,8 @@ def draw_tooltip(self, surface):
     elif self.secondary_mode == "ECONOMY":
         buildings = prov.get("buildings", [])
         if not buildings:
-            # Base production from the tile itself
-            lines.append("Base Yield: +500M, +50Man, +100Mat, +1Fuel")
+            # Base production from the tile itself dynamically pulled from config
+            lines.append(f"Base Yield: +{BASE_YIELDS['money']}M, +{BASE_YIELDS['manpower']}Man, +{BASE_YIELDS['materials']}Mat, +{BASE_YIELDS['fuel']}Fuel")
         else:
             lines.append("--- Buildings ---")
             for b in buildings:

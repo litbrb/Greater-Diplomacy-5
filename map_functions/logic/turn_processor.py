@@ -4,6 +4,7 @@ import math
 from map_functions.logic import diplomacy_logic
 from map_functions.logic import edit_province_ownership
 from map_functions.data.building_data import BUILDING_LIBRARY
+from map_functions.data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
 
 def process_next_turn(self):
     days_to_advance = 5
@@ -198,11 +199,10 @@ def process_movement(self):
 def process_economy(self):
     """Calculates income, applies building yields, and deducts unit upkeep."""
     # other increase in map.py might be different if this is modified
-    YIELD_MONEY = 500
-    YIELD_MANPOWER = 50
-    YIELD_MATERIALS = 100
-    YIELD_FUEL = 1
-    UPKEEP_MODIFIER = 0.05
+    YIELD_MONEY = BASE_YIELDS["money"]
+    YIELD_MANPOWER = BASE_YIELDS["manpower"]
+    YIELD_MATERIALS = BASE_YIELDS["materials"]
+    YIELD_FUEL = BASE_YIELDS["fuel"]
 
     unit_stats_path = 'map_functions/data/unit_data.json'
     building_stats_path = 'map_functions/data/building_data.json'

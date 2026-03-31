@@ -3,7 +3,6 @@ import os
 import math
 from map_functions.logic import diplomacy_logic
 from map_functions.logic import edit_province_ownership
-from map_functions.data.building_data import BUILDING_LIBRARY
 from map_functions.data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
 
 def process_next_turn(self):

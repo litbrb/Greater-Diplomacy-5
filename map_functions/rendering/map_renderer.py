@@ -72,11 +72,14 @@ def draw_map_screen(self, surface):
             try:
                 import base64
                 img_bytes = base64.b64decode(flag_str)
-                flag_surf = pygame.image.fromstring(img_bytes, (60, 40), "RGB")
+                flag_surf = pygame.image.fromstring(img_bytes, (30, 20), "RGB")
+
+                # Scale it up
+                flag_surf = pygame.transform.scale(flag_surf, (120, 80))
                 
-                # Draw the flag at (20, 10) so it's vertically centered in the 60px top bar
-                surface.blit(flag_surf, (20, 10))
-                pygame.draw.rect(surface, (200, 200, 200), (20, 10, 60, 40), 1) # Optional border
+                # Draw the flag at (20, 20) so it's vertically centered in the 60px top bar
+                surface.blit(flag_surf, (20, 20))
+                pygame.draw.rect(surface, (200, 200, 200), (20, 20, 120, 80), 1) # Optional border
             except Exception as e:
                 pass # If parsing fails, just skip drawing
         # ------------------------

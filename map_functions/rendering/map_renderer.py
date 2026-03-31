@@ -73,19 +73,8 @@ def draw_map_screen(self, surface):
                     shadow = name_font.render(disp, True, (20, 20, 20)).convert_alpha()
                     self.country_name_surfs[c_id] = (surf, shadow)
 
-        # 2. Calculate dynamic alpha (fade out when zooming in)
-        fade_start_zoom = 2.0
-        fade_end_zoom = 4.0
-        
-        if self.camera.zoom > fade_start_zoom:
-            alpha_ratio = 1.0 - min(1.0, (self.camera.zoom - fade_start_zoom) / (fade_end_zoom - fade_start_zoom))
-        else:
-            alpha_ratio = 1.0
-            
-        alpha = int(255 * alpha_ratio)
-
-        # 3. Draw the names
-        if alpha > 0 and hasattr(self, 'country_text_blobs'):
+        # 2 & 3. Draw the names with DYNAMIC alpha
+        if hasattr(self, 'country_text_blobs'):
             import math
             
             drawn_countries = set()
@@ -114,19 +103,57 @@ def draw_map_screen(self, surface):
                     if -200 < sx < surface.get_width() + 200 and 0 < sy < surface.get_height():
                         
                         # --- THE NEW SCALING LOGIC ---
-                        # 1. How much can we scale it before it's too long for the country?
                         scale_by_length = blob["length"] / surf.get_width()
-                        
-                        # 2. How much can we scale it before it's taller than the country is thick?
-                        # We use 0.8 so the text has a little "padding" from the borders
                         scale_by_thickness = (blob["thickness"] * 0.8) / surf.get_height()
                         
-                        # The final scale MUST be the smaller of the two constraints to fit properly!
                         land_scale = min(scale_by_length, scale_by_thickness)
-                        
-                        # Clamp it so micro-nations don't have invisible text, and massive empires aren't obnoxious
                         land_scale = min(max(land_scale, 0.05), 1.0)
-                        # -----------------------------
+                        
+                        # --- NEW: DYNAMIC FADE LOGIC ---
+                        # Invert the scale: A smaller text scale means we need to zoom in MORE to trigger the fade.
+                        inv_scale = 1.0 - land_scale 
+                        
+                        # Examples:
+                        # Massive country (land_scale 1.0) -> Fades from zoom 1.0 to 2.5
+                        # Tiny country (land_scale 0.05) -> Fades from zoom ~3.8 to ~5.3
+                        
+                        # --- NEW: EXPONENTIAL FADE LOGIC ---
+                        # First, get the linear inversion (0.0 for huge, ~0.95 for tiny)
+                        linear_inv_scale = 1.0 - land_scale 
+                        
+                        # --- TWEAK THESE VARIABLES ---
+                        base_start = 1.0         # Zoom level where the LARGEST country starts fading.
+                        delay_multiplier = 4.0   # Max extra zoom tiny countries get before fading. 
+                        fade_window = 1.5        # How long the fade lasts.
+                        exponent = 2.0           # NEW: The curve! 2.0 squares it, 3.0 cubes it.
+                        # -----------------------------------
+
+                        # Apply the exponent to curve the scaling
+                        exponential_inv_scale = linear_inv_scale ** exponent
+
+                        dynamic_fade_start = base_start + (exponential_inv_scale * delay_multiplier)
+                        dynamic_fade_end = dynamic_fade_start + fade_window
+                        
+                        if self.camera.zoom > dynamic_fade_start:
+                            alpha_ratio = 1.0 - min(1.0, (self.camera.zoom - dynamic_fade_start) / (dynamic_fade_end - dynamic_fade_start))
+                        else:
+                            alpha_ratio = 1.0
+                        
+                        if self.camera.zoom > dynamic_fade_start:
+                            alpha_ratio = 1.0 - min(1.0, (self.camera.zoom - dynamic_fade_start) / (dynamic_fade_end - dynamic_fade_start))
+                        else:
+                            alpha_ratio = 1.0
+                        
+                        if self.camera.zoom > dynamic_fade_start:
+                            alpha_ratio = 1.0 - min(1.0, (self.camera.zoom - dynamic_fade_start) / (dynamic_fade_end - dynamic_fade_start))
+                        else:
+                            alpha_ratio = 1.0
+                            
+                        alpha = int(255 * alpha_ratio)
+
+                        if alpha <= 0:
+                            continue # Skip rendering entirely if fully transparent
+                        # ---------------------------------------------
                         
                         scaled_w = int(surf.get_width() * self.camera.zoom * land_scale)
                         scaled_h = int(surf.get_height() * self.camera.zoom * land_scale)

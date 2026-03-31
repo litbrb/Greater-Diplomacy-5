@@ -2,7 +2,7 @@ import json
 import os
 import pygame
 
-CONFIG_PATH = "map_functions/data/settings_config.json"
+CONFIG_PATH = "map_functions/data/json/settings_config.json"
 
 def save_settings(keybind_dict, volume):
     """Converts key codes to strings and saves along with volume to JSON."""

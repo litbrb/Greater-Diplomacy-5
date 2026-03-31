@@ -273,8 +273,8 @@ class Map(GameState):
 
         if not hasattr(self, 'cached_unit_library'):
             import json, os
-            self.cached_unit_library = json.load(open('map_functions/data/unit_data.json')) if os.path.exists('map_functions/data/unit_data.json') else {}
-            self.cached_building_library = json.load(open('map_functions/data/building_data.json')) if os.path.exists('map_functions/data/building_data.json') else {}
+            self.cached_unit_library = json.load(open('map_functions/data/json/unit_data.json')) if os.path.exists('map_functions/data/json/unit_data.json') else {}
+            self.cached_building_library = json.load(open('map_functions/data/json/building_data.json')) if os.path.exists('map_functions/data/json/building_data.json') else {}
 
         for province in self.map_data.values():
             owner = province.get("owner")

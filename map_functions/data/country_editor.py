@@ -4,7 +4,7 @@ import json
 import os
 import colorsys
 
-PATH = "map_functions/data/countries_data.json"
+PATH = "map_functions/data/json/countries_data.json"
 
 class CountryEditor:
     def __init__(self, root):
@@ -79,7 +79,7 @@ class CountryEditor:
 
     def get_default_research_dict(self):
         """Helper to build a starting research dict from the structural template."""
-        template_path = "map_functions/data/research_template.json"
+        template_path = "map_functions/data/json/research_template.json"
         if os.path.exists(template_path):
             with open(template_path, "r") as f:
                 struct = json.load(f)

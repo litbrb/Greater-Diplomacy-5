@@ -23,7 +23,7 @@ def process_next_turn(self):
 
 def process_national_research(self, days_passed):
     # Load template to know costs
-    with open("map_functions/data/research_template.json", "r") as f:
+    with open("map_functions/data/json/research_template.json", "r") as f:
         template = json.load(f)
     
     points_per_day = 10
@@ -204,8 +204,8 @@ def process_economy(self):
     YIELD_MATERIALS = BASE_YIELDS["materials"]
     YIELD_FUEL = BASE_YIELDS["fuel"]
 
-    unit_stats_path = 'map_functions/data/unit_data.json'
-    building_stats_path = 'map_functions/data/building_data.json'
+    unit_stats_path = 'map_functions/data/json/unit_data.json'
+    building_stats_path = 'map_functions/data/json/building_data.json'
     
     with open(unit_stats_path, 'r') as f:
         unit_library = json.load(f)
@@ -255,8 +255,8 @@ def process_economy(self):
 
 def process_queues(self, days_passed):
     """Processes only the VERY FIRST item in the deployment queue sequentially."""
-    unit_stats_path = 'map_functions/data/unit_data.json'
-    building_stats_path = 'map_functions/data/building_data.json'
+    unit_stats_path = 'map_functions/data/json/unit_data.json'
+    building_stats_path = 'map_functions/data/json/building_data.json'
     
     unit_library = {}
     building_library = {}

@@ -1,7 +1,7 @@
 import json
 import os
 
-COUNTRY_DATA_PATH = "map_functions/data/countries_data.json"
+COUNTRY_DATA_PATH = "map_functions/data/json/countries_data.json"
 
 def load_all_country_data():
     """Returns the full dictionary of country objects."""

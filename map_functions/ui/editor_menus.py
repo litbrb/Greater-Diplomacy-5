@@ -154,10 +154,10 @@ def open_editor_economy(self):
     
     unit_library = {}
     building_library = {}
-    if os.path.exists('map_functions/data/unit_data.json'):
-        with open('map_functions/data/unit_data.json', 'r') as f: unit_library = json.load(f)
-    if os.path.exists('map_functions/data/building_data.json'):
-        with open('map_functions/data/building_data.json', 'r') as f: building_library = json.load(f)
+    if os.path.exists('map_functions/data/json/unit_data.json'):
+        with open('map_functions/data/json/unit_data.json', 'r') as f: unit_library = json.load(f)
+    if os.path.exists('map_functions/data/json/building_data.json'):
+        with open('map_functions/data/json/building_data.json', 'r') as f: building_library = json.load(f)
 
     econ_data = {c: {"inc": 0, "bonus": 0, "upkeep": 0} for c in active_countries}
 
@@ -219,7 +219,7 @@ def open_map_research_editor(self):
         if getattr(self, "default_research", None) is not None:
             return self.default_research
 
-        template_path = "map_functions/data/research_template.json"
+        template_path = "map_functions/data/json/research_template.json"
         res_dict = {}
         if os.path.exists(template_path):
             with open(template_path, "r") as f:
@@ -357,7 +357,7 @@ def select_unit_brush(self):
     root.attributes("-topmost", True)
     self.menu_active = True
 
-    unit_path = 'map_functions/data/unit_data.json'
+    unit_path = 'map_functions/data/json/unit_data.json'
     units = list(json.load(open(unit_path, 'r')).keys()) if os.path.exists(unit_path) else []
 
     def on_select(event=None):

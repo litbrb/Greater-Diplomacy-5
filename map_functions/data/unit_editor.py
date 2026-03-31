@@ -3,7 +3,7 @@ from tkinter import messagebox
 import json
 import os
 
-PATH = "map_functions/data/unit_data.json"
+PATH = "map_functions/data/json/unit_data.json"
 
 class UnitEditor:
     def __init__(self, root):

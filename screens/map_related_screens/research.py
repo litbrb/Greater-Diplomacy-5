@@ -16,7 +16,7 @@ class Research_Screen(GameState):
         self.tech_tree = self.load_tech_tree()
 
     def load_tech_tree(self):
-        path = "map_functions/data/research_template.json"
+        path = "map_functions/data/json/research_template.json"
         if os.path.exists(path):
             with open(path, "r") as f:
                 return json.load(f)

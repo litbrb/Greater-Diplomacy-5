@@ -27,7 +27,7 @@ class Recruit_Screen(GameState):
         self.navy_start_y = self.navy_end_y = 0
 
     def load_unit_data(self):
-        path = 'map_functions/data/unit_data.json'
+        path = 'map_functions/data/json/unit_data.json'
         if os.path.exists(path):
             with open(path, 'r') as f: return json.load(f)
         return {}

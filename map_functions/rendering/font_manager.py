@@ -15,6 +15,7 @@ class FontManager:
             "heading2": {"size": 24, "bold": True},
             "heading1": {"size": 32, "bold": True},
             "title": {"size": 40, "bold": True},
+            "country_name_display": {"size": 100, "bold": False},
             # fonts.get("title")
         }
 

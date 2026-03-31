@@ -426,8 +426,17 @@ class Map(GameState):
                 angle_rad = 0.5 * math.atan2(2 * c_xy, c_xx - c_yy)
                 display_angle = -math.degrees(angle_rad) 
                 
-                # 3. Spatial Spread (replaces raw count for scaling text)
-                spatial_spread = math.sqrt(c_xx + c_yy) if count > 1 else 15.0
+                # 3. Calculate Principal Axes (Length and Thickness) via Eigenvalues
+                W = (c_xx + c_yy) / 2.0
+                D = math.sqrt(((c_xx - c_yy) / 2.0)**2 + c_xy**2)
+                
+                major_variance = W + D
+                minor_variance = max(W - D, 1.0) # Prevent zero/negative variance
+                
+                # Convert variance to spatial distance. 
+                # 3.0 is a tuning constant (adjust if all text is globally too big/small)
+                country_length = math.sqrt(major_variance) * 3.0
+                country_thickness = math.sqrt(minor_variance) * 3.0
                 
                 # Snap to the closest actual province in this component
                 closest_prov = min(comp, key=lambda c: (c["center"][0] - avg_x)**2 + (c["center"][1] - avg_y)**2)
@@ -436,8 +445,10 @@ class Map(GameState):
                     "owner": owner,
                     "cx": closest_prov["center"][0],
                     "cy": closest_prov["center"][1],
-                    "spread": spatial_spread, 
-                    "count": count, # Kept for culling logic
+                    "length": country_length,       # NEW
+                    "thickness": country_thickness, # NEW
+                    "spread": math.sqrt(c_xx + c_yy), # Kept for your sorting logic
+                    "count": count, 
                     "angle": display_angle
                 })
 

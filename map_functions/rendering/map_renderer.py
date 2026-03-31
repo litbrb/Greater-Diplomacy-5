@@ -65,7 +65,7 @@ def draw_map_screen(self, surface):
         if not hasattr(self, 'country_name_surfs'):
             self.country_name_surfs = {}
             # Use your biggest font preset for maximum resolution before scaling down
-            name_font = fonts.get("title") 
+            name_font = fonts.get("country_name_display") 
             for c_id, data in self.nation_data.items():
                 if c_id not in ["Ocean", "Lakes", "Unclaimed", "None"]:
                     disp = data.get("name", c_id).upper()
@@ -74,8 +74,8 @@ def draw_map_screen(self, surface):
                     self.country_name_surfs[c_id] = (surf, shadow)
 
         # 2. Calculate dynamic alpha (fade out when zooming in)
-        fade_start_zoom = 2.0  # Start fading at this zoom
-        fade_end_zoom = 4.0    # Completely invisible at this zoom
+        fade_start_zoom = 2.0
+        fade_end_zoom = 4.0
         
         if self.camera.zoom > fade_start_zoom:
             alpha_ratio = 1.0 - min(1.0, (self.camera.zoom - fade_start_zoom) / (fade_end_zoom - fade_start_zoom))
@@ -113,9 +113,20 @@ def draw_map_screen(self, surface):
                     # Frustum Culling: Only draw if it's actually on the screen
                     if -200 < sx < surface.get_width() + 200 and 0 < sy < surface.get_height():
                         
-                        # NEW SCALING: Map the physical spread to a reasonable text scale
-                        land_scale = 0.15 + (blob["spread"] * 0.003)
-                        land_scale = min(max(land_scale, 0.2), 2.5) # Clamp the scale safely
+                        # --- THE NEW SCALING LOGIC ---
+                        # 1. How much can we scale it before it's too long for the country?
+                        scale_by_length = blob["length"] / surf.get_width()
+                        
+                        # 2. How much can we scale it before it's taller than the country is thick?
+                        # We use 0.8 so the text has a little "padding" from the borders
+                        scale_by_thickness = (blob["thickness"] * 0.8) / surf.get_height()
+                        
+                        # The final scale MUST be the smaller of the two constraints to fit properly!
+                        land_scale = min(scale_by_length, scale_by_thickness)
+                        
+                        # Clamp it so micro-nations don't have invisible text, and massive empires aren't obnoxious
+                        land_scale = min(max(land_scale, 0.05), 1.0)
+                        # -----------------------------
                         
                         scaled_w = int(surf.get_width() * self.camera.zoom * land_scale)
                         scaled_h = int(surf.get_height() * self.camera.zoom * land_scale)
@@ -124,9 +135,8 @@ def draw_map_screen(self, surface):
                             scaled_text = pygame.transform.scale(surf, (scaled_w, scaled_h))
                             scaled_shadow = pygame.transform.scale(shadow, (scaled_w, scaled_h))
                             
-                            # NEW ROTATION LOGIC
                             angle = blob.get("angle", 0)
-                            if abs(angle) > 2: # Only rotate if the angle is significant
+                            if abs(angle) > 2: 
                                 scaled_text = pygame.transform.rotate(scaled_text, angle)
                                 scaled_shadow = pygame.transform.rotate(scaled_shadow, angle)
                             

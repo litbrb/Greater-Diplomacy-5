@@ -42,13 +42,13 @@ def render_buttons(self):
         # Right-side top buttons
         if self.is_editor:
             self.elements.extend([
-                Button(SCREEN_WIDTH - 120, 10, "small", "blue", "Save", self.save_map_data),
-                Button(SCREEN_WIDTH - 230, 10, "small", "blue", "Load", self.editor_load_map),
-                Button(SCREEN_WIDTH - 340, 10, "small", "grey", "Nation", self.select_brush_nation),
-                Button(SCREEN_WIDTH - 450, 10, "small", "grey", "Building", self.select_building_brush),
-                Button(SCREEN_WIDTH - 560, 10, "small", "grey", "Unit", self.select_unit_brush),
-                Button(SCREEN_WIDTH - 670, 10, "small", "purple", "Map Tech", self.open_map_research_editor),
-                Button(SCREEN_WIDTH - 780, 10, "small", "grey", "Data Refresh", self.refresh_nation_data)
+                Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "blue", "Save", self.save_map_data),
+                Button(SCREEN_WIDTH - 230, SCREEN_HEIGHT - 50, "small", "blue", "Load", self.editor_load_map),
+                Button(SCREEN_WIDTH - 340, SCREEN_HEIGHT - 50, "small", "grey", "Nation", self.select_brush_nation),
+                Button(SCREEN_WIDTH - 450, SCREEN_HEIGHT - 50, "small", "grey", "Building", self.select_building_brush),
+                Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 50, "small", "grey", "Unit", self.select_unit_brush),
+                Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 50, "small", "purple", "Map Tech", self.open_map_research_editor),
+                Button(SCREEN_WIDTH - 780, SCREEN_HEIGHT - 50, "small", "grey", "Data Refresh", self.refresh_nation_data)
             ])
         else:
             self.elements.extend([

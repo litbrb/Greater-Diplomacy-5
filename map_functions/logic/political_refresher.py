@@ -1,14 +1,11 @@
 import pygame
 import numpy as np
 
-import pygame
-import numpy as np
-
 def refresh_political_map(self):
     """Rebuilds the entire political map surface instantly using a NumPy LUT."""
     timer = pygame.time.get_ticks()
     
-    # 1. Extract raw 3D pixel data from the ID map (Width x Height x RGB)
+    # 1. Extract raw 3D pixel data from the ID map
     id_array = pygame.surfarray.pixels3d(self.id_map)
     
     # 2. Pack the RGB values into a single 2D array of 24-bit integers
@@ -16,15 +13,19 @@ def refresh_political_map(self):
             (id_array[:, :, 1].astype(np.uint32) << 8) | \
              id_array[:, :, 2].astype(np.uint32)
              
-    # 3. Create a Lookup Table (LUT) for all 16.7 million possible RGB colors (~67 MB in RAM)
+    # 3. Create Lookup Tables (LUTs) for Colors AND Owners
     lut = np.zeros(16777216, dtype=np.uint32)
+    owner_lut = np.zeros(16777216, dtype=np.uint32)
+    
+    owner_to_int = {}
+    next_owner_id = 1 # We reserve 0 for the black border gaps
     
     water_mapping = {
         "ocean": "Ocean", "coastal_sea": "Ocean", 
         "inland_sea": "Ocean", "lakes": "Lakes"
     }
     
-    # 4. Populate the Lookup Table with your nation logic
+    # 4. Populate both LUTs
     for color_key, data in self.map_data.items():
         terrain_type = data.get("terrain", "plains")
         
@@ -39,43 +40,48 @@ def refresh_political_map(self):
         else:
             color = self.nation_colors.get(owner, (255, 255, 255))
             
+        # Map string owner to a unique integer
+        if owner not in owner_to_int:
+            owner_to_int[owner] = next_owner_id
+            next_owner_id += 1
+            
         packed_key = (color_key[0] << 16) | (color_key[1] << 8) | color_key[2]
         packed_color = (color[0] << 16) | (color[1] << 8) | color[2]
         
         lut[packed_key] = packed_color
+        owner_lut[packed_key] = owner_to_int[owner]
         
-    # 5. INSTANTLY map every pixel on the screen in a single pass
+    # 5. INSTANTLY map every pixel for both colors and ownership
     out_2d = lut[id_2d]
+    owner_2d = owner_lut[id_2d]
     
-    # --- BORDER HIGHLIGHT LOGIC (Hearts of Iron 4 Style) ---
-    ocean_packed = (20 << 16) | (40 << 8) | 80
-    lakes_packed = (40 << 16) | (80 << 8) | 160
+    # --- BORDER HIGHLIGHT LOGIC (Owner-Based) ---
+    # Bridge the black gaps on the OWNER array so internal borders are ignored.
+    filled_owner = np.copy(owner_2d)
+    for _ in range(2): 
+        is_gap = (filled_owner == 0)
+        filled_owner[is_gap] = np.roll(filled_owner, 1, axis=1)[is_gap]
+        is_gap = (filled_owner == 0)
+        filled_owner[is_gap] = np.roll(filled_owner, -1, axis=1)[is_gap]
+        is_gap = (filled_owner == 0)
+        filled_owner[is_gap] = np.roll(filled_owner, 1, axis=0)[is_gap]
+        is_gap = (filled_owner == 0)
+        filled_owner[is_gap] = np.roll(filled_owner, -1, axis=0)[is_gap]
 
-    # THE FIX: Bridge the black province gaps in memory so internal borders are ignored.
-    # We do this on a copy so the black borders aren't permanently erased from the map.
-    filled_2d = np.copy(out_2d)
-    for _ in range(2): # Runs twice to bridge up to 2px wide borders
-        is_gap = (filled_2d == 0)
-        filled_2d[is_gap] = np.roll(filled_2d, 1, axis=1)[is_gap]
-        is_gap = (filled_2d == 0)
-        filled_2d[is_gap] = np.roll(filled_2d, -1, axis=1)[is_gap]
-        is_gap = (filled_2d == 0)
-        filled_2d[is_gap] = np.roll(filled_2d, 1, axis=0)[is_gap]
-        is_gap = (filled_2d == 0)
-        filled_2d[is_gap] = np.roll(filled_2d, -1, axis=0)[is_gap]
+    # Identify water IDs to exclude them from shading
+    ocean_id = owner_to_int.get("Ocean", -1)
+    lakes_id = owner_to_int.get("Lakes", -1)
+    is_land = (filled_owner != ocean_id) & (filled_owner != lakes_id)
 
-    # We only want to apply this shading to land tiles
-    is_land = (filled_2d != ocean_packed) & (filled_2d != lakes_packed)
+    # Shift arrays to look at neighboring owners
+    shift_u = np.roll(filled_owner, 1, axis=1)
+    shift_d = np.roll(filled_owner, -1, axis=1)
+    shift_l = np.roll(filled_owner, 1, axis=0)
+    shift_r = np.roll(filled_owner, -1, axis=0)
 
-    # Shift arrays to look at neighboring pixels (using the FILLED map)
-    shift_u = np.roll(filled_2d, 1, axis=1)
-    shift_d = np.roll(filled_2d, -1, axis=1)
-    shift_l = np.roll(filled_2d, 1, axis=0)
-    shift_r = np.roll(filled_2d, -1, axis=0)
-
-    # Edge 1: Pixels that touch a different country
-    edge_1 = is_land & ((filled_2d != shift_u) | (filled_2d != shift_d) | \
-                        (filled_2d != shift_l) | (filled_2d != shift_r))
+    # Edge 1: Pixels that touch a DIFFERENT OWNER (color doesn't matter anymore!)
+    edge_1 = is_land & ((filled_owner != shift_u) | (filled_owner != shift_d) | \
+                        (filled_owner != shift_l) | (filled_owner != shift_r))
 
     # Edge 2: Pixels exactly 1 step inward from Edge 1
     edge_2 = is_land & ~edge_1 & (np.roll(edge_1, 1, axis=1) | np.roll(edge_1, -1, axis=1) | \
@@ -93,8 +99,7 @@ def refresh_political_map(self):
     interior = is_land & ~edge_1 & ~edge_2 & ~edge_3 & ~edge_4
     # --------------------------------------------------------
 
-    # 6. Unpack back into an RGB 3D array
-    # We unpack out_2d (not filled_2d) so your black province borders remain visible!
+    # 6. Unpack back into an RGB 3D array (Using the visual colors!)
     out_3d = np.empty_like(id_array)
     out_3d[:, :, 0] = (out_2d >> 16) & 0xFF
     out_3d[:, :, 1] = (out_2d >> 8) & 0xFF

@@ -1,6 +1,9 @@
 import pygame
 import numpy as np
 
+import pygame
+import numpy as np
+
 def refresh_political_map(self):
     """Rebuilds the entire political map surface instantly using a NumPy LUT."""
     timer = pygame.time.get_ticks()
@@ -9,7 +12,6 @@ def refresh_political_map(self):
     id_array = pygame.surfarray.pixels3d(self.id_map)
     
     # 2. Pack the RGB values into a single 2D array of 24-bit integers
-    # We cast to uint32 BEFORE shifting so the numbers don't overflow
     id_2d = (id_array[:, :, 0].astype(np.uint32) << 16) | \
             (id_array[:, :, 1].astype(np.uint32) << 8) | \
              id_array[:, :, 2].astype(np.uint32)
@@ -37,7 +39,6 @@ def refresh_political_map(self):
         else:
             color = self.nation_colors.get(owner, (255, 255, 255))
             
-        # Pack the keys and target colors
         packed_key = (color_key[0] << 16) | (color_key[1] << 8) | color_key[2]
         packed_color = (color[0] << 16) | (color[1] << 8) | color[2]
         
@@ -46,11 +47,66 @@ def refresh_political_map(self):
     # 5. INSTANTLY map every pixel on the screen in a single pass
     out_2d = lut[id_2d]
     
+    # --- BORDER HIGHLIGHT LOGIC (Hearts of Iron 4 Style) ---
+    ocean_packed = (20 << 16) | (40 << 8) | 80
+    lakes_packed = (40 << 16) | (80 << 8) | 160
+
+    # THE FIX: Bridge the black province gaps in memory so internal borders are ignored.
+    # We do this on a copy so the black borders aren't permanently erased from the map.
+    filled_2d = np.copy(out_2d)
+    for _ in range(2): # Runs twice to bridge up to 2px wide borders
+        is_gap = (filled_2d == 0)
+        filled_2d[is_gap] = np.roll(filled_2d, 1, axis=1)[is_gap]
+        is_gap = (filled_2d == 0)
+        filled_2d[is_gap] = np.roll(filled_2d, -1, axis=1)[is_gap]
+        is_gap = (filled_2d == 0)
+        filled_2d[is_gap] = np.roll(filled_2d, 1, axis=0)[is_gap]
+        is_gap = (filled_2d == 0)
+        filled_2d[is_gap] = np.roll(filled_2d, -1, axis=0)[is_gap]
+
+    # We only want to apply this shading to land tiles
+    is_land = (filled_2d != ocean_packed) & (filled_2d != lakes_packed)
+
+    # Shift arrays to look at neighboring pixels (using the FILLED map)
+    shift_u = np.roll(filled_2d, 1, axis=1)
+    shift_d = np.roll(filled_2d, -1, axis=1)
+    shift_l = np.roll(filled_2d, 1, axis=0)
+    shift_r = np.roll(filled_2d, -1, axis=0)
+
+    # Edge 1: Pixels that touch a different country
+    edge_1 = is_land & ((filled_2d != shift_u) | (filled_2d != shift_d) | \
+                        (filled_2d != shift_l) | (filled_2d != shift_r))
+
+    # Edge 2: Pixels exactly 1 step inward from Edge 1
+    edge_2 = is_land & ~edge_1 & (np.roll(edge_1, 1, axis=1) | np.roll(edge_1, -1, axis=1) | \
+                                  np.roll(edge_1, 1, axis=0) | np.roll(edge_1, -1, axis=0))
+
+    # Edge 3: Pixels exactly 2 steps inward
+    edge_3 = is_land & ~edge_1 & ~edge_2 & (np.roll(edge_2, 1, axis=1) | np.roll(edge_2, -1, axis=1) | \
+                                            np.roll(edge_2, 1, axis=0) | np.roll(edge_2, -1, axis=0))
+
+    # Edge 4: Pixels exactly 3 steps inward
+    edge_4 = is_land & ~edge_1 & ~edge_2 & ~edge_3 & (np.roll(edge_3, 1, axis=1) | np.roll(edge_3, -1, axis=1) | \
+                                                      np.roll(edge_3, 1, axis=0) | np.roll(edge_3, -1, axis=0))
+
+    # Interior: The rest of the country
+    interior = is_land & ~edge_1 & ~edge_2 & ~edge_3 & ~edge_4
+    # --------------------------------------------------------
+
     # 6. Unpack back into an RGB 3D array
+    # We unpack out_2d (not filled_2d) so your black province borders remain visible!
     out_3d = np.empty_like(id_array)
     out_3d[:, :, 0] = (out_2d >> 16) & 0xFF
     out_3d[:, :, 1] = (out_2d >> 8) & 0xFF
     out_3d[:, :, 2] = out_2d & 0xFF
+    
+    # --- APPLY GRADIENT SHADING ---
+    out_3d[edge_1] = (out_3d[edge_1] * 0.7).astype(np.uint8)
+    # edge_2 remains untouched (100% brightness)
+    out_3d[edge_3] = (out_3d[edge_3] * 0.8).astype(np.uint8)
+    out_3d[edge_4] = (out_3d[edge_4] * 0.6).astype(np.uint8)
+    out_3d[interior] = (out_3d[interior] * 0.4).astype(np.uint8)
+    # ------------------------------
     
     # 7. Apply to a fresh Pygame Surface
     new_pol_surf = pygame.Surface(self.id_map.get_size(), depth=24)
@@ -61,6 +117,8 @@ def refresh_political_map(self):
         self.active_map = self.political_map
         
     print(f"Political map refreshed in {pygame.time.get_ticks() - timer} ms")
+
+# (Keep your existing refresh_relations_map underneath this)
 
 def refresh_relations_map(self):
     """Rebuilds the relations map surface instantly using a NumPy LUT."""

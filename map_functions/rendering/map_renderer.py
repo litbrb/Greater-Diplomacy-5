@@ -212,8 +212,8 @@ def draw_map_screen(self, surface):
                 (f"Fuel: {int(self.player_fuel)} ({fmt_net(total_inc['fuel'], total_upkeep['fuel'])})", (200, 100, 255))
             ]
             
-            start_x = 200
-            spacing = 240
+            start_x = 250
+            spacing = 200
             
             bg_width = (len(resources) * spacing) - 40
             bg_surf = pygame.Surface((bg_width, 30), pygame.SRCALPHA)

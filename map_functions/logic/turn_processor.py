@@ -219,22 +219,6 @@ def process_economy(self):
     turn_data = {name: {"inc_money": 0, "inc_manpower": 0, "upkeep": {"money":0, "manpower":0, "materials":0, "fuel":0}, "bonus": {"money":0, "manpower":0, "materials":0, "fuel":0}} 
                  for name in self.nation_data.keys()}
 
-    # Apply Core/Manpower Multipliers...
-    # CHECK CHECK CHECK IS THIS RIGHT WAS THIS ALREADY DONE SOMEWHERE ELSE
-    turn_data[owner]["inc_money"] += core_mult
-    turn_data[owner]["inc_manpower"] += manpower_mult
-    
-    # --- RESOURCE LOGIC ---
-    res = province.get("resources", {})
-    if isinstance(res, dict):
-        iron = int(res.get("Iron", 0))
-        coal = int(res.get("Coal", 0))
-        oil = int(res.get("Oil", 0))
-        
-        # Yield mapping
-        turn_data[owner]["bonus"]["materials"] += iron * core_mult
-        turn_data[owner]["bonus"]["fuel"] += (coal + oil) * core_mult
-
     # Sum Province Income & Building Yields
     for province in self.map_data.values():
         owner = province.get("owner")
@@ -242,11 +226,25 @@ def process_economy(self):
             
             # --- CORE CHECK ---
             is_core = owner in province.get("cores", [])
-            core_mult = 1.0 if is_core else 0.5
+            # ah so this is where the multiplier is
+            core_mult = 1.0 if is_core else 0.25
             manpower_mult = 1.0 if is_core else 0.0
             
+            # Apply Core/Manpower Multipliers...
+            # CHECK CHECK CHECK IS THIS RIGHT WAS THIS ALREADY DONE SOMEWHERE ELSE
             turn_data[owner]["inc_money"] += core_mult
             turn_data[owner]["inc_manpower"] += manpower_mult
+            
+            # --- RESOURCE LOGIC ---
+            res = province.get("resources", {})
+            if isinstance(res, dict):
+                iron = int(res.get("Iron", 0))
+                coal = int(res.get("Coal", 0))
+                oil = int(res.get("Oil", 0))
+                
+                # Yield mapping
+                turn_data[owner]["bonus"]["materials"] += iron * core_mult
+                turn_data[owner]["bonus"]["fuel"] += (coal + oil) * core_mult
             
             for b_name in province.get("buildings", []):
                 stats = building_library.get(b_name, {})

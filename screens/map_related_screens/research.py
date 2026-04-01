@@ -18,27 +18,13 @@ class Research_Screen(GameState):
         self.unit_library = self.load_json("data/json/unit_data.json")
         self.building_library = self.load_json("data/json/building_data.json")
         
-        self.active_modal = None # Holds data for the tech subscreen
+        self.active_modal = None
 
-        # --- Pre-render your text surfaces ---
-        bg_font = fonts.get("country_name_display")
-        h1_font = fonts.get("heading1")
-        text_color = (40, 40, 50) # Faint watermark color
-        
-        # Group them by category key so you only write the category once!
-        self.bg_visuals = {
-            "TANKS": [
-                (bg_font.render("ARMOR DEVELOPMENT", True, text_color), (200, 300)),
-                (h1_font.render("TOP SECRET", True, (60, 20, 20)), (200, 450))
-            ],
-            "NAVY": [
-                (bg_font.render("NAVAL DOCKYARDS", True, text_color), (250, 300))
-            ],
-            "INDUSTRY": [
-                (bg_font.render("CIVILIAN SECTOR", True, text_color), (250, 300))
-            ]
-        }
-            
+        # --- Timeline Variables ---
+        self.scroll_x = 0
+        self.target_scroll_x = 0
+        self.pixels_per_year = 35 # Adjust this to change how squeezed together the years are
+
         self.setup_nodes()
 
     def load_json(self, path):
@@ -48,81 +34,85 @@ class Research_Screen(GameState):
         return {}
 
     def setup_nodes(self):
-        """Hardcoded specific coordinates for the visual tech tree layout."""
-        self.nodes = {
-            "TANKS": [
-                {"key": "ww1_armored_car", "lvl": 1, "pos": (150, 250)},
-                {"key": "armored_car", "lvl": 1, "pos": (300, 250)},
-                {"key": "armored_car", "lvl": 2, "pos": (450, 250)},
-                {"key": "armored_car", "lvl": 3, "pos": (600, 250)},
-                {"key": "armored_car", "lvl": 4, "pos": (750, 250)},
-                {"key": "armored_car", "lvl": 5, "pos": (900, 250)},
-                
-                {"key": "ww1_tank", "lvl": 1, "pos": (150, 450)},
-                {"key": "light_tank", "lvl": 1, "pos": (300, 350)},
-                {"key": "light_tank", "lvl": 2, "pos": (450, 350)},
-                {"key": "light_tank", "lvl": 3, "pos": (600, 350)},
-                {"key": "light_tank", "lvl": 4, "pos": (750, 350)},
-                {"key": "light_tank", "lvl": 5, "pos": (900, 350)},
-                
-                {"key": "medium_tank", "lvl": 1, "pos": (300, 450)},
-                {"key": "medium_tank", "lvl": 2, "pos": (450, 450)},
-                {"key": "medium_tank", "lvl": 3, "pos": (600, 450)},
-                
-                {"key": "heavy_tank", "lvl": 1, "pos": (300, 550)},
-                {"key": "heavy_tank", "lvl": 2, "pos": (450, 550)},
-                {"key": "heavy_tank", "lvl": 3, "pos": (600, 550)},
-                
-                {"key": "main_battle_tank", "lvl": 1, "pos": (750, 500)}
-            ],
-            "NAVY": [
-                {"key": "carrack", "lvl": 1, "pos": (100, 350)},
-                {"key": "ironclad", "lvl": 1, "pos": (220, 350)},
-                {"key": "pre-dreadnaught", "lvl": 1, "pos": (340, 350)},
-                {"key": "dreadnaught", "lvl": 1, "pos": (460, 350)},
-                
-                {"key": "destroyer", "lvl": 1, "pos": (580, 300)},
-                {"key": "destroyer", "lvl": 2, "pos": (700, 300)},
-                {"key": "destroyer", "lvl": 3, "pos": (820, 300)},
-                {"key": "destroyer", "lvl": 4, "pos": (940, 300)},
-                {"key": "destroyer", "lvl": 5, "pos": (1060, 300)},
-                {"key": "destroyer", "lvl": 6, "pos": (1180, 300)},
-                {"key": "destroyer", "lvl": 7, "pos": (1300, 300)},
-                {"key": "destroyer", "lvl": 8, "pos": (1420, 300)},
-                
-                {"key": "aircraft_carrier", "lvl": 1, "pos": (580, 400)},
-                {"key": "aircraft_carrier", "lvl": 2, "pos": (700, 400)},
-                {"key": "aircraft_carrier", "lvl": 3, "pos": (820, 400)},
-                {"key": "aircraft_carrier", "lvl": 4, "pos": (940, 400)}
-            ],
-            "INDUSTRY": [
-                {"key": "workshop", "lvl": 1, "pos": (150, 250)},
-                {"key": "workshop", "lvl": 2, "pos": (270, 250)},
-                {"key": "workshop", "lvl": 3, "pos": (390, 250)},
-                {"key": "workshop", "lvl": 4, "pos": (510, 250)},
-                {"key": "workshop", "lvl": 5, "pos": (630, 250)},
-                {"key": "basic_factory", "lvl": 1, "pos": (750, 250)},
-                
-                {"key": "factory", "lvl": 1, "pos": (870, 250)},
-                {"key": "factory", "lvl": 2, "pos": (990, 250)},
-                {"key": "factory", "lvl": 3, "pos": (1110, 250)},
-                {"key": "factory", "lvl": 4, "pos": (1230, 250)},
-                {"key": "factory", "lvl": 5, "pos": (1350, 250)},
-                
-                {"key": "bergius_process", "lvl": 1, "pos": (150, 450)},
-                {"key": "synthetic_fuel_experiments", "lvl": 1, "pos": (300, 450)},
-                {"key": "fuel_refining", "lvl": 1, "pos": (450, 450)},
-                {"key": "fuel_refining", "lvl": 2, "pos": (600, 450)},
-                {"key": "fuel_refining", "lvl": 3, "pos": (750, 450)}
-            ]
+        """Dynamically positions nodes based on their associated year."""
+        self.tech_years = {
+            ("ww1_armored_car", 1): 1910, ("ww1_tank", 1): 1915,
+            ("light_tank", 1): 1918, ("light_tank", 2): 1924, ("light_tank", 3): 1930, ("light_tank", 4): 1936, ("light_tank", 5): 1942,
+            ("medium_tank", 1): 1925, ("medium_tank", 2): 1932, ("medium_tank", 3): 1939,
+            ("heavy_tank", 1): 1930, ("heavy_tank", 2): 1935, ("heavy_tank", 3): 1940,
+            ("main_battle_tank", 1): 1945,
+            ("armored_car", 1): 1920, ("armored_car", 2): 1930, ("armored_car", 3): 1940, ("armored_car", 4): 1950, ("armored_car", 5): 1960,
+            
+            ("carrack", 1): 1500, ("ironclad", 1): 1860, ("pre-dreadnaught", 1): 1880, ("dreadnaught", 1): 1900,
+            ("destroyer", 1): 1910, ("destroyer", 2): 1916, ("destroyer", 3): 1922, ("destroyer", 4): 1928, ("destroyer", 5): 1934, ("destroyer", 6): 1940, ("destroyer", 7): 1946, ("destroyer", 8): 1952,
+            ("aircraft_carrier", 1): 1920, ("aircraft_carrier", 2): 1930, ("aircraft_carrier", 3): 1940, ("aircraft_carrier", 4): 1950,
+            
+            ("workshop", 1): 1800, ("workshop", 2): 1820, ("workshop", 3): 1840, ("workshop", 4): 1860, ("workshop", 5): 1880,
+            ("basic_factory", 1): 1900,
+            ("factory", 1): 1910, ("factory", 2): 1920, ("factory", 3): 1930, ("factory", 4): 1940, ("factory", 5): 1950,
+            ("bergius_process", 1): 1910, ("synthetic_fuel_experiments", 1): 1920,
+            ("fuel_refining", 1): 1930, ("fuel_refining", 2): 1940, ("fuel_refining", 3): 1950
         }
+
+        # Stagger the Y positions to prevent branches overlapping
+        self.tech_rows = {
+            "ww1_armored_car": 250, "armored_car": 250,
+            "ww1_tank": 350, "light_tank": 350,
+            "medium_tank": 450, "main_battle_tank": 450,
+            "heavy_tank": 550,
+            "destroyer": 250,
+            "carrack": 350, "ironclad": 350, "pre-dreadnaught": 350, "dreadnaught": 350,
+            "aircraft_carrier": 450,
+            "workshop": 250, "basic_factory": 250, "factory": 250,
+            "bergius_process": 400, "synthetic_fuel_experiments": 400, "fuel_refining": 400
+        }
+
+        self.nodes = {"TANKS": [], "NAVY": [], "INDUSTRY": []}
+
+        for tech_key, data in self.tech_tree.items():
+            cat = data["category"]
+            if cat in self.nodes:
+                max_lvl = data["max_lvl"]
+                for lvl in range(1, max_lvl + 1):
+                    year = self.tech_years.get((tech_key, lvl), 1900)
+                    row_y = self.tech_rows.get(tech_key, 350)
+                    self.nodes[cat].append({
+                        "key": tech_key,
+                        "lvl": lvl,
+                        "year": year,
+                        "base_y": row_y
+                    })
+
+    def update(self):
+        super().update()
+        # Smooth horizontal scrolling mechanic
+        if hasattr(self, 'target_scroll_x'):
+            if abs(self.scroll_x - self.target_scroll_x) > 0.5:
+                self.scroll_x += (self.target_scroll_x - self.scroll_x) * 0.15
+                
+                # Instantly move dynamically generated buttons to stick to the scrolling
+                for el in self.elements:
+                    if getattr(el, 'is_tech_node', False):
+                        el.rect.x = el.base_x + self.scroll_x
+
+    def additional_events(self, event):
+        # Enable map-style drag panning and scroll-wheel interactions for the timeline
+        if self.current_category in ["TANKS", "NAVY", "INDUSTRY"] and not self.active_modal:
+            if event.type == pygame.MOUSEWHEEL:
+                self.target_scroll_x += event.y * 70
+            elif event.type == pygame.MOUSEMOTION and event.buttons[2]: # Right click drag
+                self.target_scroll_x += event.rel[0]
+                self.scroll_x += event.rel[0] # Instant lock for smooth dragging
+                
+                for el in self.elements:
+                    if getattr(el, 'is_tech_node', False):
+                        el.rect.x = el.base_x + self.scroll_x
 
     def get_display_name(self, tech_key, lvl):
         if tech_key == "infantry": return "Infantry"
         
         romans = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII"}
         
-        # Exceptions
         if tech_key == "ww1_armored_car": return "WW1 Armored Car"
         if tech_key == "ww1_tank": return "WW1 Tank"
         if tech_key == "main_battle_tank": return "Main Battle Tank"
@@ -136,23 +126,25 @@ class Research_Screen(GameState):
         
         base_name = tech_key.replace('_', ' ').title()
         
-        # Buildings
         if tech_key in ["workshop", "factory", "fuel_refining"]:
             if tech_key == "fuel_refining": base_name = "Synthetic Refinery" 
             return f"{base_name} Lvl {lvl}"
             
-        # Units
         return f"{base_name} {romans.get(lvl, str(lvl))}"
 
     def start_research(self, map_ref):
         self.map_screen = map_ref
         self.current_category = "INFANTRY"
         self.active_modal = None
+        self.scroll_x = 0
+        self.target_scroll_x = 0
         self.refresh_ui()
 
     def set_category(self, cat):
         self.current_category = cat
         self.active_modal = None
+        self.scroll_x = 0
+        self.target_scroll_x = 0
         self.refresh_ui()
 
     def refresh_ui(self):
@@ -163,16 +155,12 @@ class Research_Screen(GameState):
         queue = player_data.setdefault("research_queue", [])
         progress_cache = player_data.setdefault("research_progress", {})
 
-        # --- MODAL SUBSCREEN MODE ---
         if self.active_modal:
-            # We are inside the modal, so we only generate buttons for the subscreen
             st = self.active_modal["status"]
             panel_x, panel_y = 400, 200
             
-            # Cancel/Close Button
             self.elements.append(Button(panel_x + 650, panel_y + 430, "small", "red", "Cancel", self.close_modal))
             
-            # Action Button
             if st == "AVAILABLE":
                 if len(queue) >= 2:
                     self.elements.append(Button(panel_x + 50, panel_y + 430, "medium", "grey", "Slots Full", lambda: None))
@@ -186,7 +174,6 @@ class Research_Screen(GameState):
                 self.elements.append(Button(panel_x + 50, panel_y + 430, "medium", "green", "Researched", lambda: None))
             return
         
-        # --- STANDARD SCREEN MODE ---
         self.elements.append(Button(20, 10, "small", "red", "Exit", self.exit_to_map))
 
         start_x = 180 
@@ -196,14 +183,13 @@ class Research_Screen(GameState):
             self.elements.append(btn)
 
         if self.current_category == "COMPLETED":
-            pass # Drawn in additional_draw
+            pass 
         elif self.current_category == "INFANTRY":
             self.draw_infantry_content(res_levels, queue, progress_cache)
         else:
             self.draw_tech_nodes(res_levels, queue)
 
     def draw_infantry_content(self, res_levels, queue, progress_cache):
-        # Keep Infantry as a vertical standard list since it has 9999 levels
         tech = "infantry"
         level = res_levels.get(tech, 0)
         tech_data = self.tech_tree[tech]
@@ -231,9 +217,16 @@ class Research_Screen(GameState):
         self.elements.append(btn)
 
     def draw_tech_nodes(self, res_levels, queue):
+        current_year = self.map_screen.time_manager.year
+
         for node in self.nodes.get(self.current_category, []):
             tech_key = node["key"]
             lvl = node["lvl"]
+            year = node["year"]
+            base_y = node["base_y"]
+            
+            # 80px size button offset by 40 so the center of the button lands exactly on the timeline tick
+            base_x = (year - current_year) * self.pixels_per_year + (SCREEN_WIDTH // 2) - 40
             
             cur_lvl = res_levels.get(tech_key, 0)
             is_researching = any(q["tech_name"] == tech_key for q in queue)
@@ -266,8 +259,13 @@ class Research_Screen(GameState):
                 "icon": icon
             }
             
-            btn = Button(node["pos"][0], node["pos"][1], "tech_square", btn_color, display_name, 
+            btn = Button(base_x + self.scroll_x, base_y, "tech_square", btn_color, display_name, 
                          lambda n=node_info: self.open_modal(n), image=icon, show_text=False)
+            
+            # Apply dynamic tracking flags
+            btn.base_x = base_x
+            btn.is_tech_node = True
+            
             self.elements.append(btn)
 
     def check_requirements(self, res_levels, reqs):
@@ -316,75 +314,64 @@ class Research_Screen(GameState):
         self.refresh_ui()
 
     # --- RENDERING ---
-    def additional_draw(self, surface):
-        if not self.map_screen: return
-        
-        # --- Draw Category Backgrounds / Text ---
-        # .get() safely returns an empty list [] if the category has no background text
-        for surf, pos in self.bg_visuals.get(self.current_category, []):
-            surface.blit(surf, pos)
-        # ----------------------------------------
-        
-        # --- Standard Header ---
-        pygame.draw.rect(surface, (40, 40, 50), (0, 0, SCREEN_WIDTH, 70))
-        pygame.draw.line(surface, (200, 200, 200), (0, 70), (SCREEN_WIDTH, 70), 2)
+    def draw_timeline_axis(self, surface):
+        """Draws the dynamic horizontal year axis across the screen"""
+        if self.current_category in ["INFANTRY", "COMPLETED"] or self.active_modal:
+            return
 
-        font = fonts.get("heading1")
-        ts = font.render(f"VIEWING: {self.current_category}", True, (255, 255, 255))
-        surface.blit(ts, (SCREEN_WIDTH//2 - ts.get_width()//2, 75))
+        current_year = self.map_screen.time_manager.year
+        axis_y = 180
 
-        output_text = font.render("RESEARCH OUTPUT: 10 pts/day", True, (0, 255, 255))
-        surface.blit(output_text, (SCREEN_WIDTH - output_text.get_width() - 30, 85))
+        pygame.draw.line(surface, (150, 150, 150), (0, axis_y), (SCREEN_WIDTH, axis_y), 3)
+        year_font = fonts.get("heading2")
 
-        if self.current_category == "COMPLETED":
-            self.render_completed_text_list(surface)
-        elif self.current_category != "INFANTRY":
-            player_data = self.map_screen.nation_data[self.map_screen.player_country]
-            res_levels = player_data.get("research", {})
-            self.draw_connections(surface, res_levels)
+        # Map current window limits to game years
+        start_year = int((-self.scroll_x - (SCREEN_WIDTH // 2)) / self.pixels_per_year) + current_year - 5
+        end_year = int((SCREEN_WIDTH - self.scroll_x - (SCREEN_WIDTH // 2)) / self.pixels_per_year) + current_year + 5
 
-        # Draw HUD Slots (Skip if modal is active to prevent visual clutter)
-        if not self.active_modal and self.current_category != "COMPLETED":
-            self.draw_hud_slots(surface)
-
-        # Draw Modal Subscreen if active
-        if self.active_modal:
-            self.draw_subscreen_modal(surface)
+        for year in range(start_year, end_year):
+            x = (year - current_year) * self.pixels_per_year + (SCREEN_WIDTH // 2) + self.scroll_x
+            if year % 5 == 0:
+                pygame.draw.line(surface, (200, 200, 200), (x, axis_y - 10), (x, axis_y + 10), 2)
+                txt = year_font.render(str(year), True, (200, 200, 200))
+                surface.blit(txt, (x - txt.get_width()//2, axis_y - 40))
+            elif year % 1 == 0:
+                pygame.draw.line(surface, (100, 100, 100), (x, axis_y - 5), (x, axis_y + 5), 1)
 
     def draw_connections(self, surface, res_levels):
         nodes = self.nodes.get(self.current_category, [])
-        lookup = {(n["key"], n["lvl"]): n["pos"] for n in nodes}
+        lookup = {(n["key"], n["lvl"]): n for n in nodes}
+        
+        current_year = self.map_screen.time_manager.year
         
         for node in nodes:
             k = node["key"]
             l = node["lvl"]
             
-            # Center of the 80x80 tech square
-            p1 = (node["pos"][0] + 40, node["pos"][1] + 40)
+            x1 = (node["year"] - current_year) * self.pixels_per_year + (SCREEN_WIDTH // 2) + self.scroll_x
+            y1 = node["base_y"] + 40
+            p1 = (x1, y1)
             
-            if l > 1:
-                prev_pos = lookup.get((k, l - 1))
-                if prev_pos:
-                    p2 = (prev_pos[0] + 40, prev_pos[1] + 40)
-                    color = (0, 255, 0) if res_levels.get(k, 0) >= l - 1 else (100, 100, 100)
+            def draw_line_to_prev(req_k, req_lvl):
+                prev_node = lookup.get((req_k, req_lvl))
+                if prev_node:
+                    x2 = (prev_node["year"] - current_year) * self.pixels_per_year + (SCREEN_WIDTH // 2) + self.scroll_x
+                    y2 = prev_node["base_y"] + 40
+                    p2 = (x2, y2)
+                    color = (0, 255, 0) if res_levels.get(req_k, 0) >= req_lvl else (100, 100, 100)
                     pygame.draw.line(surface, color, p2, p1, 3)
+
+            if l > 1:
+                draw_line_to_prev(k, l - 1)
             elif l == 1:
                 reqs = self.tech_tree[k].get("req", {})
                 if "OR" in reqs:
                     for sub_req in reqs["OR"]:
                         for req_k, req_lvl in sub_req.items():
-                            prev_pos = lookup.get((req_k, req_lvl))
-                            if prev_pos:
-                                p2 = (prev_pos[0] + 40, prev_pos[1] + 40)
-                                color = (0, 255, 0) if res_levels.get(req_k, 0) >= req_lvl else (100, 100, 100)
-                                pygame.draw.line(surface, color, p2, p1, 3)
+                            draw_line_to_prev(req_k, req_lvl)
                 else:
                     for req_k, req_lvl in reqs.items():
-                        prev_pos = lookup.get((req_k, req_lvl))
-                        if prev_pos:
-                            p2 = (prev_pos[0] + 40, prev_pos[1] + 40)
-                            color = (0, 255, 0) if res_levels.get(req_k, 0) >= req_lvl else (100, 100, 100)
-                            pygame.draw.line(surface, color, p2, p1, 3)
+                        draw_line_to_prev(req_k, req_lvl)
 
     def draw_hud_slots(self, surface):
         hud_rect = pygame.Rect(20, SCREEN_HEIGHT - 120, 400, 100)
@@ -409,12 +396,10 @@ class Research_Screen(GameState):
                 surface.blit(hud_font.render(f"Slot {i+1}: [EMPTY]", True, (150, 150, 150)), (40, y_off))
 
     def draw_subscreen_modal(self, surface):
-        # Dark overlay
         overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
         surface.blit(overlay, (0, 0))
 
-        # Panel
         panel_rect = pygame.Rect(400, 200, 800, 500)
         pygame.draw.rect(surface, (30, 30, 40), panel_rect)
         pygame.draw.rect(surface, (200, 200, 200), panel_rect, 2)
@@ -423,22 +408,18 @@ class Research_Screen(GameState):
         font_med = fonts.get("heading2")
         font_small = fonts.get("normal")
 
-        # Title & Icon
         title = font_title.render(self.active_modal["display_name"].upper(), True, (255, 255, 255))
         surface.blit(title, (panel_rect.x + 30, panel_rect.y + 30))
 
         if self.active_modal["icon"]:
-            # Scale up the icon for the modal display
             big_icon = pygame.transform.scale(self.active_modal["icon"], (120, 120))
             surface.blit(big_icon, (panel_rect.x + 30, panel_rect.y + 100))
 
-        # Time & Cost
         cost = self.active_modal["cost"]
         time = cost // 10
         cost_txt = font_med.render(f"Base Research Cost: {cost} pts ({time} days)", True, (255, 215, 0))
         surface.blit(cost_txt, (panel_rect.x + 200, panel_rect.y + 100))
 
-        # Stats
         stats = self.get_stats_for_modal(self.active_modal["display_name"])
         y_off = panel_rect.y + 160
         for line in stats:
@@ -511,6 +492,36 @@ class Research_Screen(GameState):
                 txt_surf = text_font.render(f"{display_name}{val_text}", True, color)
                 surface.blit(txt_surf, (curr_x + 10, curr_y))
                 curr_y += 28
+
+    def additional_draw(self, surface):
+        if not self.map_screen: return
+        
+        # --- Axis Rendering ---
+        self.draw_timeline_axis(surface)
+        
+        # --- Standard Header ---
+        pygame.draw.rect(surface, (40, 40, 50), (0, 0, SCREEN_WIDTH, 70))
+        pygame.draw.line(surface, (200, 200, 200), (0, 70), (SCREEN_WIDTH, 70), 2)
+
+        font = fonts.get("heading1")
+        ts = font.render(f"VIEWING: {self.current_category}", True, (255, 255, 255))
+        surface.blit(ts, (SCREEN_WIDTH//2 - ts.get_width()//2, 75))
+
+        output_text = font.render("RESEARCH OUTPUT: 10 pts/day", True, (0, 255, 255))
+        surface.blit(output_text, (SCREEN_WIDTH - output_text.get_width() - 30, 85))
+
+        if self.current_category == "COMPLETED":
+            self.render_completed_text_list(surface)
+        elif self.current_category != "INFANTRY":
+            player_data = self.map_screen.nation_data[self.map_screen.player_country]
+            res_levels = player_data.get("research", {})
+            self.draw_connections(surface, res_levels)
+
+        if not self.active_modal and self.current_category != "COMPLETED":
+            self.draw_hud_slots(surface)
+
+        if self.active_modal:
+            self.draw_subscreen_modal(surface)
 
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True

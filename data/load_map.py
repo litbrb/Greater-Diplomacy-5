@@ -2,7 +2,7 @@ import pygame
 import json
 import os
 from map_functions.logic.time_handler import TimeHandler
-from map_functions.data import country_io
+from data import country_io
 
 def load_map_assets(self, load_path):
     # --- 1. Image Assets ---

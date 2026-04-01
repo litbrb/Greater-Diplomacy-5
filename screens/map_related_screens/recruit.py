@@ -28,7 +28,7 @@ class Recruit_Screen(GameState):
         self.navy_start_y = self.navy_end_y = 0
 
     def load_unit_data(self):
-        path = 'map_functions/data/json/unit_data.json'
+        path = 'data/json/unit_data.json'
         if os.path.exists(path):
             with open(path, 'r') as f: return json.load(f)
         return {}
@@ -270,8 +270,8 @@ class Recruit_Screen(GameState):
                     stats = self.unit_library.get(item["unit_type"], {})
                 elif item.get("order_type") == "BUILDING":
                     import json, os
-                    if os.path.exists('map_functions/data/building_data.json'):
-                        with open('map_functions/data/building_data.json', 'r') as f:
+                    if os.path.exists('data/building_data.json'):
+                        with open('data/building_data.json', 'r') as f:
                             stats = json.load(f).get(item.get("item_name"), {})
                             
                 p_data["money"] = p_data.get("money", 0) + stats.get("cost_money", 0)

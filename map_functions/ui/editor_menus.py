@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import json
 import os
-from map_functions.data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
+from data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
 
 def editor_load_map(self):
     """Opens a file dialog to load a map folder directly into the editor."""
@@ -14,7 +14,7 @@ def editor_load_map(self):
 
     if path:
         # Re-run asset loader on this instance
-        from map_functions.data import load_map
+        from data import load_map
         load_map.load_map_assets(self, path)
         self.refresh_political_map()
         self.show_feedback("Map Loaded into Editor")
@@ -216,10 +216,10 @@ def open_editor_economy(self):
     
     unit_library = {}
     building_library = {}
-    if os.path.exists('map_functions/data/json/unit_data.json'):
-        with open('map_functions/data/json/unit_data.json', 'r') as f: unit_library = json.load(f)
-    if os.path.exists('map_functions/data/json/building_data.json'):
-        with open('map_functions/data/json/building_data.json', 'r') as f: building_library = json.load(f)
+    if os.path.exists('data/json/unit_data.json'):
+        with open('data/json/unit_data.json', 'r') as f: unit_library = json.load(f)
+    if os.path.exists('data/json/building_data.json'):
+        with open('data/json/building_data.json', 'r') as f: building_library = json.load(f)
 
     econ_data = {c: {"inc": 0, "bonus": 0, "upkeep": 0} for c in active_countries}
 
@@ -281,7 +281,7 @@ def open_map_research_editor(self):
         if getattr(self, "default_research", None) is not None:
             return self.default_research
 
-        template_path = "map_functions/data/json/research_template.json"
+        template_path = "data/json/research_template.json"
         res_dict = {}
         if os.path.exists(template_path):
             with open(template_path, "r") as f:
@@ -419,7 +419,7 @@ def select_unit_brush(self):
     root.attributes("-topmost", True)
     self.menu_active = True
 
-    unit_path = 'map_functions/data/json/unit_data.json'
+    unit_path = 'data/json/unit_data.json'
     units = list(json.load(open(unit_path, 'r')).keys()) if os.path.exists(unit_path) else []
 
     def on_select(event=None):

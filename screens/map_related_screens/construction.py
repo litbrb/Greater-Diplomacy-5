@@ -20,7 +20,7 @@ class Construction_Screen(GameState):
         self.fuel_start_y = self.fuel_end_y = 0
 
     def load_building_data(self):
-        path = 'map_functions/data/json/building_data.json'
+        path = 'data/json/building_data.json'
         if os.path.exists(path):
             with open(path, 'r') as f: return json.load(f)
         return {}
@@ -202,8 +202,8 @@ class Construction_Screen(GameState):
                     stats = self.building_library.get(item.get("item_name"), {})
                 elif "unit_type" in item:
                     import json, os
-                    if os.path.exists('map_functions/data/json/unit_data.json'):
-                        with open('map_functions/data/json/unit_data.json', 'r') as f:
+                    if os.path.exists('data/json/unit_data.json'):
+                        with open('data/json/unit_data.json', 'r') as f:
                             stats = json.load(f).get(item["unit_type"], {})
                             
                 p_data["money"] = p_data.get("money", 0) + stats.get("cost_money", 0)

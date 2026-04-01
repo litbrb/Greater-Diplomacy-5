@@ -3,14 +3,14 @@ import random
 import math
 from gameState import GameState, SCREEN_WIDTH, SCREEN_HEIGHT
 from map_functions.ui import buttons, event_handler, editor_menus
-from map_functions.data import load_map, save_map
+from data import save_map
 from map_functions.logic import edit_province_ownership, political_refresher, turn_processor
 from map_functions.camera.camera_handler import MapCamera
 from map_functions.rendering import map_renderer
-from map_functions.data import country_io
+from data import country_io, load_map
 from map_functions.logic import map_utils
 from map_functions.logic import diplomacy_logic
-from map_functions.data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
+from data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
 from map_functions.ui.minimap import UI_LEFT_OFFSET
 from map_functions.rendering.font_manager import fonts # <-- Import here
 
@@ -279,8 +279,8 @@ class Map(GameState):
 
         if not hasattr(self, 'cached_unit_library'):
             import json, os
-            self.cached_unit_library = json.load(open('map_functions/data/json/unit_data.json')) if os.path.exists('map_functions/data/json/unit_data.json') else {}
-            self.cached_building_library = json.load(open('map_functions/data/json/building_data.json')) if os.path.exists('map_functions/data/json/building_data.json') else {}
+            self.cached_unit_library = json.load(open('data/json/unit_data.json')) if os.path.exists('data/json/unit_data.json') else {}
+            self.cached_building_library = json.load(open('data/json/building_data.json')) if os.path.exists('data/json/building_data.json') else {}
 
         for province in self.map_data.values():
             owner = province.get("owner")
@@ -310,7 +310,7 @@ class Map(GameState):
         return total_inc, upkeep
     
     def refresh_nation_data(self):
-        from map_functions.data import country_io
+        from data import country_io
         new_data = country_io.load_all_country_data()
         added_count = 0
         updated_count = 0

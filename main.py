@@ -9,7 +9,7 @@ from screens.new_game import New_Game
 from screens.settings import Settings
 from screens.map_related_screens.recruit import Recruit_Screen # Renamed from New_Game
 from screens.map_related_screens.orders import Orders_Screen   # Renamed from New_Game
-from map_functions.data import keybind_io
+from data import keybind_io
 from map_functions.rendering import symbol_loader
 from screens.map_related_screens.research import Research_Screen
 from screens.map_related_screens.construction import Construction_Screen

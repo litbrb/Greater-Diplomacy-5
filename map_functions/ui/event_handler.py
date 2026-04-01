@@ -123,8 +123,8 @@ def handle_map_events(self, event):
                     else:
                         import json, os
                         unit_stats = {}
-                        if os.path.exists('map_functions/data/json/unit_data.json'):
-                            with open('map_functions/data/json/unit_data.json', 'r') as f:
+                        if os.path.exists('data/json/unit_data.json'):
+                            with open('data/json/unit_data.json', 'r') as f:
                                 unit_stats = json.load(f).get(self.brush_unit, {})
                         
                         new_unit = {

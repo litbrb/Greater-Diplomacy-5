@@ -207,6 +207,9 @@ class Map(GameState):
     def refresh_cores_map(self): 
         refresh_map.refresh_cores_map(self)
 
+    def select_resource_brush(self):
+        editor_menus.select_resource_brush(self)
+
     def auto_assign_cores(self):
         """Automatically assigns a core to whoever owns the province."""
         for province in self.map_data.values():
@@ -320,6 +323,16 @@ class Map(GameState):
 
                 inc_money += core_mult
                 inc_manpower += manpower_mult
+                
+                # --- RESOURCE PROJECTIONS ---
+                res = province.get("resources", {})
+                if isinstance(res, dict):
+                    iron = int(res.get("Iron", 0))
+                    coal = int(res.get("Coal", 0))
+                    oil = int(res.get("Oil", 0))
+                    
+                    bonus["materials"] += iron * core_mult
+                    bonus["fuel"] += (coal + oil) * core_mult
 
                 for b_name in province.get("buildings", []):
                     stats = self.cached_building_library.get(b_name, {})
@@ -514,14 +527,24 @@ class Map(GameState):
                         el.is_selected = (self.secondary_mode == "ECONOMY")
                     else:
                         el.is_selected = False
+                elif el.text == "Resources":
+                    el.is_selected = (self.secondary_mode == "RESOURCES")
                 else:
                     el.is_selected = False
 
         if self.is_editor:
             for el in self.elements:
-                if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank"]:
+                if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank", "Resource", "Resources"]:
                     el.visible = True
                 
+                # Add highlighting for the editor Resource button
+                if el.text == "Resource":
+                    el.visible = True
+                    if getattr(self, "editor_mode", "") == "RESOURCE":
+                        el.color, el.hover_color = (150, 0, 150), (200, 50, 200)
+                    else:
+                        el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
+
                 if el.text == "Nation":
                     el.visible = True
                     if self.editor_mode == "NATION":

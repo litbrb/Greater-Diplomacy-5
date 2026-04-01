@@ -109,6 +109,14 @@ def handle_map_events(self, event):
                             new_list.append(self.brush_building)
                         
                         self.hovered_province["buildings"] = new_list
+
+                # --- RESOURCE MODE ---
+                elif self.editor_mode == "RESOURCE":
+                    # Ensure resources is a dictionary
+                    if not isinstance(self.hovered_province.get("resources"), dict):
+                        self.hovered_province["resources"] = {}
+                    
+                    self.hovered_province["resources"][self.brush_resource_type] = self.brush_resource_amount
         
         # ADD THIS: Right Click (or Middle Click)
         if pygame.mouse.get_pressed()[2]: # Right Click

@@ -504,3 +504,51 @@ def select_unit_brush(self):
             pygame.event.pump()
         except:
             break
+
+def select_resource_brush(self):
+    """Opens a selection window for resource types and amounts."""
+    root = tk.Tk()
+    root.title("Resource Brush")
+    root.geometry("300x250")
+    root.attributes("-topmost", True)
+    self.menu_active = True
+
+    tk.Label(root, text="Select Resource Type:", font=("Arial", 12)).pack(pady=10)
+    
+    # FIX: Remove the StringVar and just use the Combobox directly
+    dropdown = ttk.Combobox(root, values=["Iron", "Coal", "Oil"], state="readonly", font=("Arial", 11))
+    dropdown.set("Iron") # Set the default visual value
+    dropdown.pack(pady=5)
+
+    tk.Label(root, text="Resource Amount:", font=("Arial", 12)).pack(pady=5)
+    amt_ent = tk.Entry(root, font=("Arial", 11), justify="center")
+    amt_ent.insert(0, "50")
+    amt_ent.pack(pady=5)
+
+    def on_confirm():
+        try:
+            amt = int(amt_ent.get())
+            # FIX: Grab the value directly from the dropdown widget
+            self.brush_resource_type = dropdown.get() 
+            self.brush_resource_amount = amt
+            self.editor_mode = "RESOURCE"
+            self.show_feedback(f"Brush: {self.brush_resource_type} ({amt})")
+            close_menu()
+        except ValueError:
+            messagebox.showerror("Error", "Amount must be a whole number.")
+
+    tk.Button(root, text="Confirm Selection", command=on_confirm, 
+              bg="#9C27B0", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=15)
+
+    def close_menu():
+        self.menu_active = False
+        root.destroy()
+
+    root.protocol("WM_DELETE_WINDOW", close_menu)
+
+    while self.menu_active:
+        try:
+            root.update()
+            pygame.event.pump()
+        except (tk.TclError, Exception):
+            break

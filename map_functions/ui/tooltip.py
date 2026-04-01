@@ -46,6 +46,16 @@ def draw_tooltip(self, surface):
                     
             if len(units) > 5:
                 lines.append(f"...and {len(units)-5} more")
+    
+    elif self.secondary_mode == "RESOURCES":
+            resources = prov.get("resources", {})
+            if isinstance(resources, dict) and resources:
+                lines.append("--- Resources ---")
+                for r_type, amount in resources.items():
+                    if amount > 0:
+                        lines.append(f"- {r_type}: {amount}")
+            else:
+                lines.append("No Natural Resources")
 
     elif self.secondary_mode == "ECONOMY":
         buildings = prov.get("buildings", [])

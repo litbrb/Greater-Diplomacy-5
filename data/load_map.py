@@ -82,6 +82,11 @@ def load_map_assets(self, load_path):
         v["cores"] = v.get("cores", [])
         v["units"] = v.get("units", [])
         v["deployment_queue"] = v.get("deployment_queue", [])
+
+        # --- RESOURCE DICT FIX ---
+        res = v.get("resources", {})
+        v["resources"] = res if isinstance(res, dict) else {}
+        
         v["json_key"], v["map_color"] = k, color_tuple
         
         self.map_data[color_tuple] = v

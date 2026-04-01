@@ -88,6 +88,28 @@ def draw_overlay_content(self, surface):
                             rect = pygame.Rect(sx + offset_x, sy + offset_y, 12 * self.camera.zoom, 12 * self.camera.zoom)
                             pygame.draw.rect(surface, color, rect)
                             pygame.draw.rect(surface, (255, 255, 255), rect, 1) # Border
+                
+                # --- RESOURCES VIEW ---
+                elif self.secondary_mode == "RESOURCES":
+                    resources = province.get("resources", {})
+                    if isinstance(resources, dict) and resources:
+                        offset_x = 0
+                        for res_type, amount in resources.items():
+                            if amount > 0:
+                                # Fetch icon, your symbol_loader automatically drops '.png' so it expects "Iron", "Coal", "Oil"
+                                sym = symbol_loader.get_symbol(res_type, self.camera.zoom * 0.8)
+                                if sym:
+                                    surface.blit(sym, (sx + offset_x, sy))
+                                else:
+                                    # Fallback colored square
+                                    c = (200, 200, 200)
+                                    if res_type == "Iron": c = (180, 180, 180)
+                                    if res_type == "Coal": c = (50, 50, 50)
+                                    if res_type == "Oil": c = (30, 30, 30)
+                                    pygame.draw.rect(surface, c, (sx + offset_x, sy, int(15 * self.camera.zoom), int(15 * self.camera.zoom)))
+                                
+                                # Shift right so multiple icons stack side-by-side
+                                offset_x += 20 * self.camera.zoom
 
 def draw_unit_icon(self, surface, sx, sy, province):
     # Units are now dictionaries: {"type": "...", "owner": "..."}

@@ -15,6 +15,8 @@ def render_buttons(self):
         research_icon = symbol_loader.get_symbol("Research", 2)
         save_icon = symbol_loader.get_symbol("Save", 2)
         core_icon = symbol_loader.get_symbol("Star", 1.5) # Using star as a symbol for cores
+        # Add a resource icon (falls back to something else if Iron.png fails)
+        resource_icon = symbol_loader.get_symbol("Iron", 2)
 
         self.elements = [
             # Refresh remains in the top bar
@@ -31,7 +33,9 @@ def render_buttons(self):
             Button(60, SCREEN_HEIGHT - 50, "small_square", "light_blue", "Political", self.set_political, image=political_icon, show_text=False),
             Button(110, SCREEN_HEIGHT - 50, "small_square", "purple", "Relations", self.set_relations, image=relations_icon, show_text=False),
             Button(160, SCREEN_HEIGHT - 50, "small_square", "pink", "Cores", self.set_cores, image=core_icon, show_text=False), # <--- NEW
-            Button(20, 420, "left_ui_bar", "orange", "Economy", econ_callback)
+            Button(20, 420, "left_ui_bar", "orange", "Economy", econ_callback),
+            # NEW RESOURCES BUTTON
+            Button(160, SCREEN_HEIGHT - 100, "small_square", "purple", "Resources", lambda: self.set_view_mode("RESOURCES"), image=resource_icon, show_text=False),
         ])
 
         # Secondary View Buttons (Floating directly above the primary buttons)
@@ -51,6 +55,8 @@ def render_buttons(self):
                 # --- NEW AUTO CORE BUTTON STACKED ABOVE CORE BRUSH ---
                 Button(SCREEN_WIDTH - 450, SCREEN_HEIGHT - 110, "small", "pink", "Auto-Core", self.auto_assign_cores),
                 # ----------------------------------------------------
+                # NEW RESOURCE EDITOR BUTTON (Stacked above the Building Brush)
+                Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 110, "small", "purple", "Resource", self.select_resource_brush),
                 Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 50, "small", "grey", "Building", self.select_building_brush),
                 Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 50, "small", "grey", "Unit", self.select_unit_brush),
                 Button(SCREEN_WIDTH - 780, SCREEN_HEIGHT - 50, "small", "purple", "Map Tech", self.open_map_research_editor),

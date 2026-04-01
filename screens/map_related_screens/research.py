@@ -20,14 +20,24 @@ class Research_Screen(GameState):
         
         self.active_modal = None # Holds data for the tech subscreen
 
-        # --- ADD THIS: Load custom backgrounds ---
-        try:
-            # Make sure to use .convert() for large background images to optimize performance
-            self.navy_bg = pygame.image.load("assets/ocean_bg.png").convert()
-            # Optional: Scale it to fit the area below your top bar
-            self.navy_bg = pygame.transform.scale(self.navy_bg, (SCREEN_WIDTH, SCREEN_HEIGHT - 70))
-        except:
-            self.navy_bg = None
+        # --- Pre-render your text surfaces ---
+        bg_font = fonts.get("country_name_display")
+        h1_font = fonts.get("heading1")
+        text_color = (40, 40, 50) # Faint watermark color
+        
+        # Group them by category key so you only write the category once!
+        self.bg_visuals = {
+            "TANKS": [
+                (bg_font.render("ARMOR DEVELOPMENT", True, text_color), (200, 300)),
+                (h1_font.render("TOP SECRET", True, (60, 20, 20)), (200, 450))
+            ],
+            "NAVY": [
+                (bg_font.render("NAVAL DOCKYARDS", True, text_color), (250, 300))
+            ],
+            "INDUSTRY": [
+                (bg_font.render("CIVILIAN SECTOR", True, text_color), (250, 300))
+            ]
+        }
             
         self.setup_nodes()
 
@@ -309,19 +319,13 @@ class Research_Screen(GameState):
     def additional_draw(self, surface):
         if not self.map_screen: return
         
-        # --- ADD THIS: CUSTOM BACKGROUNDS / HARDCODED TEXT ---
-        if self.current_category == "NAVY" and self.navy_bg:
-            # Draw ocean background starting just below the top UI bar (y=70)
-            surface.blit(self.navy_bg, (0, 70))
-            
-        elif self.current_category == "TANKS":
-            # Example: Draw some hardcoded watermark text in the background
-            bg_font = fonts.get("country_name_display") # Using your massive font preset
-            # Dark, faint color so it blends into the background
-            bg_text = bg_font.render("1910", True, (255, 255, 255)) 
-            surface.blit(bg_text, (100, 300))
-        # -----------------------------------------------------
-
+        # --- Draw Category Backgrounds / Text ---
+        # .get() safely returns an empty list [] if the category has no background text
+        for surf, pos in self.bg_visuals.get(self.current_category, []):
+            surface.blit(surf, pos)
+        # ----------------------------------------
+        
+        # --- Standard Header ---
         pygame.draw.rect(surface, (40, 40, 50), (0, 0, SCREEN_WIDTH, 70))
         pygame.draw.line(surface, (200, 200, 200), (0, 70), (SCREEN_WIDTH, 70), 2)
 

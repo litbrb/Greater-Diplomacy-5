@@ -24,7 +24,7 @@ class Controller:
         pygame.mixer.init() # Initialize sound engine
 
         # Initialize fonts (Optionally pass a path here: fonts.init_fonts("assets/my_font.ttf"))
-        font_path = "assets/fonts/OpenSans-Regular.ttf"
+        font_path = "assets/fonts/idk.ttf"
         # font_path = "assets/fonts/hemi head bd it.otf"
         fonts.init_fonts(font_path)
 

@@ -318,8 +318,8 @@ class Research_Screen(GameState):
             # Example: Draw some hardcoded watermark text in the background
             bg_font = fonts.get("country_name_display") # Using your massive font preset
             # Dark, faint color so it blends into the background
-            bg_text = bg_font.render("ARMOR DEVELOPMENT", True, (40, 40, 50)) 
-            surface.blit(bg_text, (SCREEN_WIDTH//2 - bg_text.get_width()//2, 300))
+            bg_text = bg_font.render("1910", True, (255, 255, 255)) 
+            surface.blit(bg_text, (100, 300))
         # -----------------------------------------------------
 
         pygame.draw.rect(surface, (40, 40, 50), (0, 0, SCREEN_WIDTH, 70))

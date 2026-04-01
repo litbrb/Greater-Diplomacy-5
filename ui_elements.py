@@ -119,10 +119,12 @@ class Button:
 
     def draw_gradient_rect(self, surface, color, rect):
         """Draws a simple vertical gradient from light to dark."""
+        hi = 30
+        low = 50
         # Top color (brighter)
-        c1 = (min(255, color[0] + 30), min(255, color[1] + 30), min(255, color[2] + 30))
+        c1 = (min(255, color[0] + hi), min(255, color[1] + hi), min(255, color[2] + hi))
         # Bottom color (darker)
-        c2 = (max(0, color[0] - 30), max(0, color[1] - 30), max(0, color[2] - 30))
+        c2 = (max(0, color[0] - low), max(0, color[1] - low), max(0, color[2] - low))
         
         for i in range(rect.height):
             # Linearly interpolate between c1 and c2

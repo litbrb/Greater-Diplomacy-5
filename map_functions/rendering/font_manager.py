@@ -11,10 +11,10 @@ class FontManager:
             "tiny": {"size": 14, "bold": False},
             "small": {"size": 16, "bold": False},
             "normal": {"size": 18, "bold": False},
-            "button": {"size": 20, "bold": False},
-            "heading2": {"size": 24, "bold": True},
-            "heading1": {"size": 32, "bold": True},
-            "title": {"size": 40, "bold": True},
+            "button": {"size": 24, "bold": False},
+            "heading2": {"size": 28, "bold": False},
+            "heading1": {"size": 32, "bold": False},
+            "title": {"size": 40, "bold": False},
             "country_name_display": {"size": 100, "bold": False},
             # fonts.get("title")
         }

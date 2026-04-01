@@ -17,6 +17,7 @@ COLORS = {
 
 SIZES = {
     "small_square": (40, 40),
+    "tech_square": (80, 80),
     "small": (100, 40),
     "left_ui_bar": (120, 50),
     "medium": (200, 50),

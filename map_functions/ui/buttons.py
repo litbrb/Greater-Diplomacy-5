@@ -18,8 +18,9 @@ def render_buttons(self):
 
         self.elements = [
             # Refresh remains in the top bar
-            # Button(1120, 210, "small", "grey", "Pol Refresh", self.refresh_political_map),
-            # Button(1220, 210, "small", "grey", "Rel Refresh", self.refresh_relations_map),
+            Button(1120, 10, "small", "grey", "Pol Refresh", self.refresh_political_map),
+            Button(1220, 10, "small", "grey", "Rel Refresh", self.refresh_relations_map),
+            Button(1320, 10, "small", "grey", "Core Refresh", self.refresh_cores_map),
         ]
 
         # Primary View Buttons (Inside the bottom bar)
@@ -46,14 +47,14 @@ def render_buttons(self):
                 Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "blue", "Save", self.save_map_data),
                 Button(SCREEN_WIDTH - 230, SCREEN_HEIGHT - 50, "small", "blue", "Load", self.editor_load_map),
                 Button(SCREEN_WIDTH - 340, SCREEN_HEIGHT - 50, "small", "grey", "Nation", self.select_brush_nation),
-                Button(SCREEN_WIDTH - 340, SCREEN_HEIGHT - 100, "small", "pink", "Core Brush", self.select_core_brush),
-                Button(SCREEN_WIDTH - 450, SCREEN_HEIGHT - 50, "small", "grey", "Building", self.select_building_brush),
-                Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 50, "small", "grey", "Unit", self.select_unit_brush),
-                Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 50, "small", "purple", "Map Tech", self.open_map_research_editor),
-                Button(SCREEN_WIDTH - 780, SCREEN_HEIGHT - 50, "small", "grey", "Data Refresh", self.refresh_nation_data),
+                Button(SCREEN_WIDTH - 450, SCREEN_HEIGHT - 50, "small", "pink", "Core Brush", self.select_core_brush),
+                Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 50, "small", "grey", "Building", self.select_building_brush),
+                Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 50, "small", "grey", "Unit", self.select_unit_brush),
+                Button(SCREEN_WIDTH - 780, SCREEN_HEIGHT - 50, "small", "purple", "Map Tech", self.open_map_research_editor),
+                Button(SCREEN_WIDTH - 890, SCREEN_HEIGHT - 50, "small", "purple", "Data Refresh", self.refresh_nation_data),
                 
                 # --- NEW BUTTON ---
-                Button(SCREEN_WIDTH - 890, SCREEN_HEIGHT - 50, "small", "orange", "Set Date", self.open_editor_date)
+                Button(SCREEN_WIDTH - 1000, SCREEN_HEIGHT - 50, "small", "purple", "Set Date", self.open_editor_date)
             ])
         else:
             self.elements.extend([

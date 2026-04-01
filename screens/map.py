@@ -177,14 +177,20 @@ class Map(GameState):
     def set_political(self): 
         self.base_layer = "POLITICAL"
         self.active_map = self.political_map
-        self.refresh_political_map()
+        # self.refresh_political_map()
         self.show_feedback("Mode: Political")
         
     def set_relations(self): 
         self.base_layer = "RELATIONS"
         self.active_map = self.relations_map
-        self.refresh_relations_map()
+        # self.refresh_relations_map()
         self.show_feedback("Mode: Relations")
+
+    def set_cores(self): 
+        self.base_layer = "CORES"
+        self.active_map = self.cores_map
+        # self.refresh_cores_map()
+        self.show_feedback("Mode: Cores")
 
     def save_map_data(self): 
         save_map.save_map_data(self)
@@ -197,12 +203,6 @@ class Map(GameState):
     
     def select_core_brush(self): 
         editor_menus.select_core_brush(self)
-    
-    def set_cores(self): 
-        self.base_layer = "CORES"
-        self.active_map = self.cores_map
-        self.refresh_cores_map()
-        self.show_feedback("Mode: Cores")
 
     def refresh_cores_map(self): 
         refresh_map.refresh_cores_map(self)
@@ -504,7 +504,7 @@ class Map(GameState):
 
         if self.is_editor:
             for el in self.elements:
-                if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank"]:
+                if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank"]:
                     el.visible = True
                 
                 if el.text == "Nation":
@@ -520,6 +520,22 @@ class Map(GameState):
                         el.color, el.hover_color = (0, 100, 200), (50, 150, 255)
                     else:
                         el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
+                
+                # --- ADD THIS FOR CORE BRUSH ---
+                if el.text == "Core Brush":
+                    el.visible = True
+                    if self.editor_mode == "CORE":
+                        el.color, el.hover_color = (200, 100, 100), (255, 150, 150) # Pink
+                    else:
+                        el.color, el.hover_color = (100, 100, 100), (150, 150, 150) # Grey
+
+                # --- ADD THIS FOR UNIT BRUSH ---
+                if el.text == "Unit":
+                    el.visible = True
+                    if self.editor_mode == "UNIT":
+                        el.color, el.hover_color = (200, 0, 0), (255, 50, 50) # Red
+                    else:
+                        el.color, el.hover_color = (100, 100, 100), (150, 150, 150) # Grey
             return
 
         is_sel = bool(self.selected_province)

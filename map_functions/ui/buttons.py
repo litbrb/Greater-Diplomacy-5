@@ -35,14 +35,14 @@ def render_buttons(self):
             Button(160, SCREEN_HEIGHT - 50, "small_square", "pink", "Cores", self.set_cores, image=core_icon, show_text=False), # <--- NEW
             Button(20, 420, "left_ui_bar", "orange", "Economy", econ_callback),
             # NEW RESOURCES BUTTON
-            Button(160, SCREEN_HEIGHT - 100, "small_square", "purple", "Resources", lambda: self.set_view_mode("RESOURCES"), image=resource_icon, show_text=False),
+            Button(10, SCREEN_HEIGHT - 100, "small_square", "purple", "Resources", lambda: self.set_view_mode("RESOURCES"), image=resource_icon, show_text=False),
         ])
 
         # Secondary View Buttons (Floating directly above the primary buttons)
         self.elements.extend([
-            Button(10, SCREEN_HEIGHT - 100, "small_square", "red", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon, show_text=False),
-            Button(60, SCREEN_HEIGHT - 100, "small_square", "orange", "Economy", lambda: self.set_view_mode("ECONOMY"), image=economy_icon, show_text=False),
-            Button(110, SCREEN_HEIGHT - 100, "small_square", "yellow", "Blank", lambda: self.set_view_mode("BLANK"), image=blank_icon, show_text=False),
+            Button(110, SCREEN_HEIGHT - 100, "small_square", "red", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon, show_text=False),
+            Button(160, SCREEN_HEIGHT - 100, "small_square", "orange", "Economy", lambda: self.set_view_mode("ECONOMY"), image=economy_icon, show_text=False),
+            Button(60, SCREEN_HEIGHT - 100, "small_square", "yellow", "Blank", lambda: self.set_view_mode("BLANK"), image=blank_icon, show_text=False),
         ])
 
         # Right-side top buttons

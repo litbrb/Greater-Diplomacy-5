@@ -284,21 +284,114 @@ class Map(GameState):
         
     def randomize_all_provinces(self):
         playable_nations = [
-            name for name, stats in self.nation_data.items() 
+            name for name, stats in self.nation_data.items()
             if stats.get("is_playable") and name not in ["Ocean", "Lakes", "Unclaimed"]
         ]
         
         if not playable_nations:
             return
 
+        # 1. Gather all land provinces and reset them
+        land_provinces = []
         for province in self.map_data.values():
             terrain = province.get("terrain", "")
             is_water = terrain in ["ocean", "coastal_sea", "inland_sea", "lakes"]
             if not is_water:
-                new_owner = random.choice(playable_nations)
-                province["owner"] = new_owner
+                land_provinces.append(province)
+                # Clear all existing data from previous scenarios
+                province["owner"] = "Unclaimed"
+                province["cores"] = []
+                province["resources"] = {}
+                province["buildings"] = []
+                province["units"] = [] # Explicitly NO random units
+                
+        if not land_provinces:
+            return
+
+        # 2. Organic Blobbing Algorithm (Multi-Source BFS)
+        import random
+        random.shuffle(playable_nations)
         
-        self.show_feedback("Map Randomized!")
+        # Don't try to place more nations than there are actual provinces
+        num_seeds = min(len(playable_nations), len(land_provinces))
+        active_nations = playable_nations[:num_seeds]
+        
+        unassigned_land = set(p["id"] for p in land_provinces)
+        
+        # Track the "frontier" of available neighbor IDs for each nation to expand into
+        frontiers = {nation: [] for nation in active_nations}
+        
+        # Step A: Plant a random seed for each nation
+        for nation in active_nations:
+            seed_id = random.choice(list(unassigned_land))
+            seed_prov = self.id_to_province[seed_id]
+            
+            seed_prov["owner"] = nation
+            seed_prov["cores"] = [nation]
+            unassigned_land.remove(seed_id)
+            
+            # Add unowned neighbors to this nation's expansion frontier
+            for n_id in seed_prov.get("neighbors", []):
+                if n_id in unassigned_land:
+                    frontiers[nation].append(n_id)
+
+        # Step B: Expand until all land is claimed
+        while unassigned_land:
+            # Find nations that still have room to expand
+            valid_nations = [n for n in active_nations if frontiers[n]]
+            
+            if not valid_nations:
+                # Edge case: All frontiers are walled off, but land remains (e.g. islands)
+                # Just pick random remaining land and re-seed
+                remaining_id = random.choice(list(unassigned_land))
+                nation = random.choice(active_nations)
+                prov = self.id_to_province[remaining_id]
+                
+                prov["owner"] = nation
+                prov["cores"] = [nation]
+                unassigned_land.remove(remaining_id)
+                for n_id in prov.get("neighbors", []):
+                    if n_id in unassigned_land:
+                        frontiers[nation].append(n_id)
+                continue
+                
+            nation = random.choice(valid_nations)
+            
+            # Pop a RANDOM province from the frontier to make borders irregular/organic
+            # (If you always pop index 0, you get perfect, unnatural diamonds)
+            frontier_list = frontiers[nation]
+            idx = random.randint(0, len(frontier_list) - 1)
+            target_id = frontier_list.pop(idx)
+            
+            if target_id in unassigned_land:
+                target_prov = self.id_to_province[target_id]
+                target_prov["owner"] = nation
+                target_prov["cores"] = [nation]  # Assign core to spawned territory
+                unassigned_land.remove(target_id)
+                
+                # Add new neighbors to the frontier
+                for n_id in target_prov.get("neighbors", []):
+                    if n_id in unassigned_land:
+                        frontier_list.append(n_id)
+
+        # 3. Random Resources and Buildings
+        building_pool = [
+            "Workshop Lvl 1", "Workshop Lvl 2", "Workshop Lvl 3", 
+            "Synthetic Refinery Lvl 1"
+        ]
+        
+        for prov in land_provinces:
+            # 15% chance to spawn a random resource
+            if random.random() < 0.15:
+                res_type = random.choice(["Iron", "Coal", "Oil"])
+                res_amount = random.randint(20, 80)
+                prov["resources"] = {res_type: res_amount}
+                
+            # 10% chance to spawn a low-level building
+            if random.random() < 0.10:
+                prov["buildings"] = [random.choice(building_pool)]
+
+        self.show_feedback("Map Randomized with Organic Borders!")
 
     def get_player_economy_projections(self):
         YIELD_MONEY = BASE_YIELDS["money"]

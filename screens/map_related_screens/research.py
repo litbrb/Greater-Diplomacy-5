@@ -36,7 +36,7 @@ class Research_Screen(GameState):
     def setup_nodes(self):
         """Dynamically positions nodes based on their associated year."""
         self.tech_years = {
-            ("ww1_armored_car", 1): 1910, ("ww1_tank", 1): 1915, ("basic_car", 1): 1900,
+            ("ww1_armored_car", 1): 1910, ("ww1_tank", 1): 1915, ("civilian_car", 1): 1905,
             ("light_tank", 1): 1918, ("light_tank", 2): 1924, ("light_tank", 3): 1930, ("light_tank", 4): 1936, ("light_tank", 5): 1942,
             ("medium_tank", 1): 1925, ("medium_tank", 2): 1932, ("medium_tank", 3): 1939,
             ("heavy_tank", 1): 1930, ("heavy_tank", 2): 1935, ("heavy_tank", 3): 1940,
@@ -56,7 +56,7 @@ class Research_Screen(GameState):
 
         # Stagger the Y positions to prevent branches overlapping
         self.tech_rows = {
-            "ww1_armored_car": 250, "armored_car": 250, "basic_car": 250,
+            "ww1_armored_car": 250, "armored_car": 250, "civilian_car": 250,
             "ww1_tank": 350, "light_tank": 350,
             "medium_tank": 450, "main_battle_tank": 450,
             "heavy_tank": 550,
@@ -113,7 +113,7 @@ class Research_Screen(GameState):
         
         romans = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII"}
         
-        if tech_key == "basic_car": return "Basic Car"
+        if tech_key == "civilian_car": return "Civilian Car"
         if tech_key == "ww1_armored_car": return "WW1 Armored Car"
         if tech_key == "ww1_tank": return "WW1 Tank"
         if tech_key == "main_battle_tank": return "Main Battle Tank"

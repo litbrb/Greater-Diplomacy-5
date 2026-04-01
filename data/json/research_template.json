@@ -1,7 +1,7 @@
 {
     "infantry": { "category": "INFANTRY", "max_lvl": 9999, "cost": 300, "req": {} },
-    "basic_car": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {} },
-    "ww1_armored_car": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {"basic_car": 1} },
+    "civilian_car": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {} },
+    "ww1_armored_car": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {"civilian_car": 1} },
     "ww1_tank": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {"ww1_armored_car": 1} },
     "armored_car": { "category": "TANKS", "max_lvl": 5, "cost": 300, "req": {"ww1_armored_car": 1} },
     "light_tank": { "category": "TANKS", "max_lvl": 5, "cost": 300, "req": {"ww1_tank": 1} },

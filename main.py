@@ -32,12 +32,12 @@ class Controller:
         
         # Load the sound into the ui_elements module
         try:
-            ui_elements.click_sound = pygame.mixer.Sound("assets/click.mp3")
+            ui_elements.click_sound = pygame.mixer.Sound("assets/sounds/click.mp3")
         except:
             print("Warning: click.mp3 not found in assets folder")
 
         try:
-            ui_elements.slider_sound = pygame.mixer.Sound("assets/slider.wav")
+            ui_elements.slider_sound = pygame.mixer.Sound("assets/sounds/slider.wav")
         except:
             print("Warning: slider.wav not found in assets folder")
 

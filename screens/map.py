@@ -60,7 +60,7 @@ class Map(GameState):
         self.ui_background_rect = pygame.Rect(0, SCREEN_HEIGHT - 120, 220, SCREEN_HEIGHT)
         
         self.map_w, self.map_h = self.id_map.get_size()
-        self.min_zoom = (SCREEN_HEIGHT - self.total_ui_h) / self.map_h 
+        self.min_zoom = (SCREEN_HEIGHT - self.total_ui_h) / self.map_h
         self.camera = MapCamera(self.min_zoom)
         
         self.active_map = self.political_map if self.base_layer == "POLITICAL" else self.terrain_map

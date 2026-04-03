@@ -6,13 +6,14 @@ class MapCamera:
         self.target_zoom = min_zoom
         self.pos = pygame.Vector2(0, 0)
         self.target_pos = pygame.Vector2(0, 0)
-        self.lerp_speed = 1
+        self.lerp_speed = 0.1
         # currently set to instant, but can be adjusted for smoother transitions
 
     def handle_input(self, event, self_map, on_ui):
         if event.type == pygame.MOUSEWHEEL:
             zoom_change = event.y * (0.1 * self.target_zoom)
-            self.target_zoom = max(self_map.min_zoom, min(self.target_zoom + zoom_change, 6.0))
+            max_zoom = 10.0
+            self.target_zoom = max(self_map.min_zoom, min(self.target_zoom + zoom_change, max_zoom))
 
         if event.type == pygame.MOUSEMOTION and event.buttons[2] and not on_ui:
             self.pos.x -= event.rel[0] / self.zoom

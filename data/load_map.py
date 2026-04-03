@@ -65,7 +65,6 @@ def load_map_assets(self, load_path):
     # Determine which map_data.json to use
     json_path = "map_tools/map_data.json" # Legacy fallback
     
-    # If a load_path is provided and it contains map_data.json, prioritize it!
     if load_path and os.path.exists(os.path.join(load_path, "map_data.json")):
         json_path = os.path.join(load_path, "map_data.json")
 
@@ -84,13 +83,19 @@ def load_map_assets(self, load_path):
             if saved_province:
                 v.update(saved_province) # Merges owner, units, etc.
         
-        # Standardize defaults
-        v["owner"] = v.get("owner", "None")
+        # --- THE WATER FIX ---
+        water_mapping = {"ocean": "Ocean", "coastal_sea": "Ocean", "inland_sea": "Ocean", "lakes": "Lakes"}
+        terrain = v.get("terrain", "plains")
+        if terrain in water_mapping:
+            v["owner"] = water_mapping[terrain]
+        else:
+            v["owner"] = v.get("owner", "None")
+        # ---------------------
+
         v["cores"] = v.get("cores", [])
         v["units"] = v.get("units", [])
         v["deployment_queue"] = v.get("deployment_queue", [])
 
-        # --- RESOURCE DICT FIX ---
         res = v.get("resources", {})
         v["resources"] = res if isinstance(res, dict) else {}
         

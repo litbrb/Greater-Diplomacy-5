@@ -606,7 +606,13 @@ class Map(GameState):
 
         # --- NEW: DYNAMIC OCEAN COLOR ---
         # Calculate zoom progress (0.0 when fully zoomed out, 1.0 when fully zoomed in)
-        zoom_range = 6.0 - self.min_zoom
+        
+        # THE FIX: Dynamically scale the brightest blue threshold.
+        # It guarantees the zoom range is always relative to the map size,
+        # but preserves the original pacing (6.0) for your larger maps.
+        target_brightest_zoom = max(6.0, self.min_zoom * 2.0) 
+        zoom_range = target_brightest_zoom - self.min_zoom
+        
         if zoom_range > 0:
             t = (self.camera.zoom - self.min_zoom) / zoom_range
             t = max(0.0, min(1.0, t))

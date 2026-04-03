@@ -74,16 +74,19 @@ class Map(GameState):
         self.show_exit_confirmation = False 
         self.confirm_box_rect = pygame.Rect(0, 0, 400, 200) 
         
-        load_map.load_map_assets(self, load_path)
+        # load_map.load_map_assets(self, load_path)
 
         self.relations_map = self.id_map.copy()
         # self.cores_map = self.id_map.copy()
 
         if is_random:
             self.randomize_all_provinces()
-            self.refresh_political_map()
-            self.refresh_relations_map()
 
+        # might take some time to load
+        self.refresh_political_map()
+        self.refresh_relations_map()
+        self.refresh_cores_map()
+        
         buttons.render_buttons(self)
 
         for country_name, data in self.nation_data.items():

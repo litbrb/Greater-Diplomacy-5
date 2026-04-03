@@ -227,12 +227,14 @@ def process_economy(self):
             # --- CORE CHECK ---
             is_core = owner in province.get("cores", [])
             # ah so this is where the multiplier is
-            core_mult = 1.0 if is_core else 0.25
-            manpower_mult = 1.0 if is_core else 0.0
+            money_mult = 1.0 if is_core else 0.2
+            materials_mult = 1.0 if is_core else 0.5
+            fuel_mult = 1.0 if is_core else 0
+            manpower_mult = 1.0 if is_core else 0
             
             # Apply Core/Manpower Multipliers...
             # CHECK CHECK CHECK IS THIS RIGHT WAS THIS ALREADY DONE SOMEWHERE ELSE
-            turn_data[owner]["inc_money"] += core_mult
+            turn_data[owner]["inc_money"] += money_mult
             turn_data[owner]["inc_manpower"] += manpower_mult
             
             # --- RESOURCE LOGIC ---
@@ -243,15 +245,15 @@ def process_economy(self):
                 oil = int(res.get("Oil", 0))
                 
                 # Yield mapping
-                turn_data[owner]["bonus"]["materials"] += iron * core_mult
-                turn_data[owner]["bonus"]["fuel"] += (coal + oil) * core_mult
+                turn_data[owner]["bonus"]["materials"] += iron * materials_mult
+                turn_data[owner]["bonus"]["fuel"] += (coal + oil) * fuel_mult
             
             for b_name in province.get("buildings", []):
                 stats = building_library.get(b_name, {})
-                turn_data[owner]["bonus"]["money"] += stats.get("prod_money", 0) * core_mult
+                turn_data[owner]["bonus"]["money"] += stats.get("prod_money", 0) * money_mult
                 turn_data[owner]["bonus"]["manpower"] += stats.get("prod_manpower", 0) * manpower_mult
-                turn_data[owner]["bonus"]["materials"] += stats.get("prod_materials", 0) * core_mult
-                turn_data[owner]["bonus"]["fuel"] += stats.get("prod_fuel", 0) * core_mult
+                turn_data[owner]["bonus"]["materials"] += stats.get("prod_materials", 0) * materials_mult
+                turn_data[owner]["bonus"]["fuel"] += stats.get("prod_fuel", 0) * fuel_mult
 
     # Calculate Upkeep
     for province in self.map_data.values():

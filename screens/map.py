@@ -401,9 +401,13 @@ class Map(GameState):
         YIELD_MATERIALS = BASE_YIELDS["materials"]
         YIELD_FUEL = BASE_YIELDS["fuel"]
 
-        inc_money = 0
-        inc_manpower = 0
-        bonus = {"money":0, "manpower":0, "materials":0, "fuel":0}
+        # Detailed tracking dictionary
+        breakdown = {
+            "money": {"core": 0, "non_core": 0, "buildings": 0, "resources": 0},
+            "manpower": {"core": 0, "non_core": 0, "buildings": 0, "resources": 0},
+            "materials": {"core": 0, "non_core": 0, "buildings": 0, "resources": 0},
+            "fuel": {"core": 0, "non_core": 0, "buildings": 0, "resources": 0}
+        }
         upkeep = {"money":0, "manpower":0, "materials":0, "fuel":0}
 
         if not hasattr(self, 'cached_unit_library'):
@@ -415,11 +419,16 @@ class Map(GameState):
             owner = province.get("owner")
             if owner == self.player_country and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
                 is_core = owner in province.get("cores", [])
-                core_mult = 1.0 if is_core else 0.5
+                core_mult = 1.0 if is_core else 0.25
                 manpower_mult = 1.0 if is_core else 0.0
 
-                inc_money += core_mult
-                inc_manpower += manpower_mult
+                # Determine if we file this under core or non-core base income
+                cat = "core" if is_core else "non_core"
+
+                breakdown["money"][cat] += core_mult * YIELD_MONEY
+                breakdown["manpower"][cat] += manpower_mult * YIELD_MANPOWER
+                breakdown["materials"][cat] += core_mult * YIELD_MATERIALS
+                breakdown["fuel"][cat] += core_mult * YIELD_FUEL
                 
                 # --- RESOURCE PROJECTIONS ---
                 res = province.get("resources", {})
@@ -428,16 +437,17 @@ class Map(GameState):
                     coal = int(res.get("Coal", 0))
                     oil = int(res.get("Oil", 0))
                     
-                    bonus["materials"] += iron * core_mult
-                    bonus["fuel"] += (coal + oil) * core_mult
+                    breakdown["materials"]["resources"] += iron * core_mult
+                    breakdown["fuel"]["resources"] += (coal + oil) * core_mult
 
                 for b_name in province.get("buildings", []):
                     stats = self.cached_building_library.get(b_name, {})
-                    bonus["money"] += stats.get("prod_money", 0) * core_mult
-                    bonus["manpower"] += stats.get("prod_manpower", 0) * manpower_mult
-                    bonus["materials"] += stats.get("prod_materials", 0) * core_mult
-                    bonus["fuel"] += stats.get("prod_fuel", 0) * core_mult
-            
+                    breakdown["money"]["buildings"] += stats.get("prod_money", 0) * core_mult
+                    breakdown["manpower"]["buildings"] += stats.get("prod_manpower", 0) * manpower_mult
+                    breakdown["materials"]["buildings"] += stats.get("prod_materials", 0) * core_mult
+                    breakdown["fuel"]["buildings"] += stats.get("prod_fuel", 0) * core_mult
+        
+        for province in self.map_data.values():
             for unit in province.get("units", []):
                 if unit.get("owner") == self.player_country:
                     stats = self.cached_unit_library.get(unit["type"], {})
@@ -447,12 +457,14 @@ class Map(GameState):
                     upkeep["fuel"] += stats.get("cost_fuel", 0) * UPKEEP_MODIFIER
 
         total_inc = {
-            "money": (inc_money * YIELD_MONEY) + bonus["money"],
-            "manpower": (inc_manpower * YIELD_MANPOWER) + bonus["manpower"],
-            "materials": (inc_money * YIELD_MATERIALS) + bonus["materials"],
-            "fuel": (inc_money * YIELD_FUEL) + bonus["fuel"]
+            "money": sum(breakdown["money"].values()),
+            "manpower": sum(breakdown["manpower"].values()),
+            "materials": sum(breakdown["materials"].values()),
+            "fuel": sum(breakdown["fuel"].values())
         }
-        return total_inc, upkeep
+        
+        # Return 3 values now!
+        return total_inc, upkeep, breakdown
     
     def refresh_nation_data(self):
         from data import country_io

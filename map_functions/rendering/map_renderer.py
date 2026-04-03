@@ -200,10 +200,13 @@ def draw_map_screen(self, surface):
                 self.econ_cache = self.get_player_economy_projections()
                 self.econ_cache_time = pygame.time.get_ticks()
                 
-            total_inc, total_upkeep = getattr(self, 'econ_cache', (
-                {"money":0, "manpower":0, "materials":0, "fuel":0}, 
-                {"money":0, "manpower":0, "materials":0, "fuel":0}
-            ))
+            # Safely unpack the 3-length tuple
+            cached_data = getattr(self, 'econ_cache', None)
+            if cached_data and len(cached_data) == 3:
+                total_inc, total_upkeep, _ = cached_data
+            else:
+                total_inc = {"money":0, "manpower":0, "materials":0, "fuel":0}
+                total_upkeep = {"money":0, "manpower":0, "materials":0, "fuel":0}
 
             def fmt_net(inc, exp):
                 net = int(inc - exp)

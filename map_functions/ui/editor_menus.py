@@ -10,7 +10,8 @@ def editor_load_map(self):
     root = tk.Tk()
     root.withdraw()
     # Point it to your new base_maps folder instead of scenarios
-    path = filedialog.askdirectory(initialdir="base_maps", title="Select Map Folder to Edit")
+    # path = filedialog.askdirectory(initialdir="base_maps", title="Select Map Folder to Edit")
+    path = filedialog.askdirectory(initialdir="scenarios", title="Select Map Folder to Edit")
     root.destroy()
 
     if path:
@@ -249,7 +250,7 @@ def open_editor_economy(self):
 
     root = tk.Tk()
     root.title("Global Economy Overview")
-    root.geometry("600x400")
+    root.geometry("1100x500") # Wider and taller for better visibility
     root.attributes("-topmost", True)
     self.menu_active = True
 
@@ -259,8 +260,29 @@ def open_editor_economy(self):
         
     root.protocol("WM_DELETE_WINDOW", close_menu)
 
+    # --- Styling for Table Look ---
+    style = ttk.Style(root)
+    try:
+        style.theme_use("clam") # Clam theme looks much more like a modern table
+    except:
+        pass # Fallback if clam isn't available on the OS
+        
+    style.configure("Treeview.Heading", 
+                    background="#d9e1f2", # Light blue-grey background for categories
+                    font=('Arial', 10, 'bold'),
+                    relief="flat")
+                    
+    style.configure("Treeview", 
+                    background="#ffffff",
+                    fieldbackground="#ffffff",
+                    rowheight=28,
+                    font=('Arial', 10))
+                    
     # Economy logic
-    YIELD_MONEY = BASE_YIELDS["money"]
+    YIELD_MONEY = BASE_YIELDS.get("money", 0)
+    YIELD_MANPOWER = BASE_YIELDS.get("manpower", 0)
+    YIELD_MATERIALS = BASE_YIELDS.get("materials", 0)
+    YIELD_FUEL = BASE_YIELDS.get("fuel", 0)
     
     unit_library = {}
     building_library = {}
@@ -269,36 +291,170 @@ def open_editor_economy(self):
     if os.path.exists('data/json/building_data.json'):
         with open('data/json/building_data.json', 'r') as f: building_library = json.load(f)
 
-    econ_data = {c: {"inc": 0, "bonus": 0, "upkeep": 0} for c in active_countries}
+    # Updated data structure to track all 4 resources
+    econ_data = {c: {
+        "money_core": 0, "money_noncore": 0, "money_bldg": 0, "money_upk": 0,
+        "man_inc": 0, "man_upk": 0,
+        "mat_inc": 0, "mat_upk": 0,
+        "fuel_inc": 0, "fuel_upk": 0
+    } for c in active_countries}
 
     for prov in self.map_data.values():
         owner = prov.get("owner")
         if owner in econ_data:
-            econ_data[owner]["inc"] += 1
+            is_core = owner in prov.get("cores", [])
+            core_mult = 1.0 if is_core else 0.25
+            man_mult = 1.0 if is_core else 0.0
+            
+            # --- Base Yields ---
+            if is_core:
+                econ_data[owner]["money_core"] += core_mult * YIELD_MONEY
+            else:
+                econ_data[owner]["money_noncore"] += core_mult * YIELD_MONEY
+                
+            econ_data[owner]["man_inc"] += man_mult * YIELD_MANPOWER
+            econ_data[owner]["mat_inc"] += core_mult * YIELD_MATERIALS
+            econ_data[owner]["fuel_inc"] += core_mult * YIELD_FUEL
+            
+            # --- Natural Resources ---
+            res = prov.get("resources", {})
+            if isinstance(res, dict):
+                econ_data[owner]["mat_inc"] += int(res.get("Iron", 0)) * core_mult
+                econ_data[owner]["fuel_inc"] += (int(res.get("Coal", 0)) + int(res.get("Oil", 0))) * core_mult
+
+            # --- Buildings ---
             for b_name in prov.get("buildings", []):
                 stats = building_library.get(b_name, {})
-                econ_data[owner]["bonus"] += stats.get("prod_money", 0)
+                econ_data[owner]["money_bldg"] += stats.get("prod_money", 0) * core_mult
+                econ_data[owner]["man_inc"] += stats.get("prod_manpower", 0) * man_mult
+                econ_data[owner]["mat_inc"] += stats.get("prod_materials", 0) * core_mult
+                econ_data[owner]["fuel_inc"] += stats.get("prod_fuel", 0) * core_mult
         
+        # --- Unit Upkeeps ---
         for unit in prov.get("units", []):
             u_owner = unit.get("owner")
             if u_owner in econ_data:
                 stats = unit_library.get(unit["type"], {})
-                econ_data[u_owner]["upkeep"] += stats.get("cost_money", 0) * UPKEEP_MODIFIER
+                econ_data[u_owner]["money_upk"] += stats.get("cost_money", 0) * UPKEEP_MODIFIER
+                econ_data[u_owner]["man_upk"] += stats.get("cost_manpower", 0) * UPKEEP_MODIFIER
+                econ_data[u_owner]["mat_upk"] += stats.get("cost_materials", 0) * UPKEEP_MODIFIER
+                econ_data[u_owner]["fuel_upk"] += stats.get("cost_fuel", 0) * UPKEEP_MODIFIER
 
-    columns = ("Country", "Provinces", "Gross Income", "Upkeep", "Net Income", "Treasury")
-    tree = ttk.Treeview(root, columns=columns, show="headings")
-    for col in columns:
-        tree.heading(col, text=col)
-        tree.column(col, width=95, anchor="center")
+    # --- Treeview UI Setup ---
+    columns = (
+        "Country", 
+        "Money (Core/Non/Bldg)", 
+        "Money (Gross/Upk/Net)", 
+        "Net Manpower", 
+        "Net Materials", 
+        "Net Fuel", 
+        "Treasury"
+    )
     
-    for c in sorted(active_countries):
-        d = econ_data[c]
-        provinces = d["inc"]
-        gross = (d["inc"] * YIELD_MONEY) + d["bonus"]
-        upk = int(d["upkeep"])
+    tree = ttk.Treeview(root, columns=columns, show="headings")
+    
+    # Zebra striping tags to simulate table lines
+    tree.tag_configure('evenrow', background='#ffffff')
+    tree.tag_configure('oddrow', background='#f2f2f2') 
+    
+    # State dictionary to track ascending/descending sort for each column
+    sort_dirs = {col: True for col in columns}
+
+    # Sorting Logic
+    def sort_data(col):
+        reverse = sort_dirs[col]
+        sort_dirs[col] = not reverse # Toggle for the next time it's clicked
+        
+        def get_val(c):
+            d = econ_data[c]
+            if col == "Country": return c
+            if col == "Money (Core/Non/Bldg)": return d["money_core"] + d["money_noncore"] + d["money_bldg"]
+            if col == "Money (Gross/Upk/Net)": return (d["money_core"] + d["money_noncore"] + d["money_bldg"]) - d["money_upk"]
+            if col == "Net Manpower": return d["man_inc"] - d["man_upk"]
+            if col == "Net Materials": return d["mat_inc"] - d["mat_upk"]
+            if col == "Net Fuel": return d["fuel_inc"] - d["fuel_upk"]
+            if col == "Treasury": return self.nation_data.get(c, {}).get("money", 0)
+            return 0
+
+        # Sort the countries using the dynamic value generator
+        sorted_countries = sorted(active_countries, key=get_val, reverse=reverse)
+        
+        # Clear existing rows
+        for item in tree.get_children():
+            tree.delete(item)
+            
+        # Re-populate using the sorted list
+        populate_tree(sorted_countries)
+
+    # Set up column headers and bind the sorting command
+    widths = {
+        "Country": 140,
+        "Money (Core/Non/Bldg)": 180,
+        "Money (Gross/Upk/Net)": 180,
+        "Net Manpower": 120,
+        "Net Materials": 120,
+        "Net Fuel": 110,
+        "Treasury": 100
+    }
+
+    for col in columns:
+        # Passing col to lambda safely captures its state for the button click
+        tree.heading(col, text=col, command=lambda c=col: sort_data(c))
+        tree.column(col, width=widths[col], anchor="center")
+    
+    # Helper formatters
+    def fmt(net): 
+        return f"+{int(net)}" if net >= 0 else str(int(net))
+        
+    def fmt_full(gross, upk):
         net = gross - upk
-        treasury = self.nation_data.get(c, {}).get("money", 0)
-        tree.insert("", tk.END, values=(c, provinces, f"+{gross}", f"-{upk}", f"{'+' if net>=0 else ''}{net}", treasury))
+        return f"+{int(gross)} / -{int(upk)} / {fmt(net)}"
+    
+    def populate_tree(country_list):
+        for i, c in enumerate(country_list):
+            d = econ_data[c]
+            
+            # Calculate Money
+            c_inc = int(d["money_core"])
+            nc_inc = int(d["money_noncore"])
+            b_inc = int(d["money_bldg"])
+            m_gross = c_inc + nc_inc + b_inc
+            m_upk = int(d["money_upk"])
+            
+            # Calculate other Nets
+            man_net = d["man_inc"] - d["man_upk"]
+            mat_net = d["mat_inc"] - d["mat_upk"]
+            fuel_net = d["fuel_inc"] - d["fuel_upk"]
+            
+            treasury = self.nation_data.get(c, {}).get("money", 0)
+            
+            # Apply zebra stripe tags
+            tag = 'evenrow' if i % 2 == 0 else 'oddrow'
+            
+            tree.insert("", tk.END, values=(
+                c, 
+                f"+{c_inc} / +{nc_inc} / +{b_inc}", 
+                fmt_full(m_gross, m_upk), 
+                fmt(man_net), 
+                fmt(mat_net), 
+                fmt(fuel_net), 
+                int(treasury)
+            ), tags=(tag,))
+
+    # Initial population (Defaults to alphabetical)
+    populate_tree(sorted(active_countries))
+
+    scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
+    tree.configure(yscroll=scrollbar.set)
+    scrollbar.pack(side="right", fill="y")
+    tree.pack(fill="both", expand=True)
+
+    while self.menu_active:
+        try:
+            root.update()
+            pygame.event.pump()
+        except:
+            break
 
     scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
     tree.configure(yscroll=scrollbar.set)

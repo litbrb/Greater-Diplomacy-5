@@ -37,6 +37,11 @@ def refresh_political_map(self):
             owner = data.get("owner", "Unclaimed")
             color = self.nation_colors.get(owner, (255, 255, 255))
             
+            # --- PREVENT COLORKEY COLLISION ---
+            if tuple(color) == (255, 0, 255):
+                color = (254, 0, 255) # Imperceptible shift to protect the country
+            # ----------------------------------
+            
         # Map string owner to a unique integer
         if owner not in owner_to_int:
             owner_to_int[owner] = next_owner_id
@@ -239,7 +244,11 @@ def refresh_cores_map(self):
                 
                 # Average out the RGB values
                 color = (r // valid, g // valid, b // valid) if valid > 0 else (255, 255, 255)
-            # ------------------------------
+            
+            # --- PREVENT COLORKEY COLLISION ---
+            if tuple(color) == (255, 0, 255):
+                color = (254, 0, 255)
+            # ----------------------------------
             
         if owner not in owner_to_int:
             owner_to_int[owner] = next_owner_id

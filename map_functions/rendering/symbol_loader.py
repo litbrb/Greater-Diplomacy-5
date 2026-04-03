@@ -1,8 +1,10 @@
 import pygame
 import os
 import re
+import numpy as np # <-- Add numpy
 
 SYMBOLS = {}
+COLORED_SYMBOLS = {} # <-- NEW: Cache for colored variants
 
 def load_symbols():
     """Load small icons for units, factories, etc."""
@@ -16,31 +18,77 @@ def load_symbols():
             name = os.path.splitext(file)[0]
             # Load and keep transparency
             img = pygame.image.load(os.path.join(path, file)).convert_alpha()
-            # Scale it to a base size (e.g., 32x32)
-            # SYMBOLS[name] = pygame.transform.scale(img, (32, 32))
             SYMBOLS[name] = img
 
-def get_symbol(name, zoom):
-    """Returns scaled icon. Falls back to base name if Roman Numeral version is missing."""
-    # 1. Try exact match
-    if name in SYMBOLS:
-        return _scale_img(SYMBOLS[name], zoom)
+# --- NEW: NumPy Colorizer ---
+import numpy as np
 
-    # 2. Try falling back (stripping I, II, III... XX)
-    # Regex looks for space followed by Roman Numerals at the end of the string
-    base_name = re.sub(r'\s+(X{0,1}V{0,1}I{0,3}|X{0,2}|I[VX]|VI{0,3})$', '', name).strip()
+def colorize_red_image(img, new_color):
+    """Treats the Red channel as brightness, but ONLY for red-tinted pixels.
+       Leaves white, grey, and black pixels completely untouched."""
     
-    if base_name in SYMBOLS:
-        return _scale_img(SYMBOLS[base_name], zoom)
+    # 1. Extract RGB and Alpha channels. Convert to float32 for precise math.
+    rgb = pygame.surfarray.pixels3d(img).astype(np.float32)
+    alpha = pygame.surfarray.pixels_alpha(img)
+
+    # 2. Isolate the "Redness" (How much Red dominates Green and Blue)
+    max_gb = np.maximum(rgb[:, :, 1], rgb[:, :, 2])
     
-    return None
+    # Calculate saturation of the red channel. 
+    # 1e-5 prevents division by zero on pure black pixels.
+    redness = np.clip((rgb[:, :, 0] - max_gb) / (rgb[:, :, 0] + 1e-5), 0, 1)
+    
+    # Expand 'redness' to 3 dimensions so we can multiply it with our RGB arrays
+    redness_3d = redness[:, :, np.newaxis]
+
+    # 3. Calculate the Colorized Version for the red parts
+    brightness = rgb[:, :, 0:1] / 255.0  # Keep it 3D for broadcasting
+    target_rgb = np.array(new_color, dtype=np.float32)
+    colorized_pixels = brightness * target_rgb
+
+    # 4. Blend original and colorized based on the redness mask
+    # Grayscale pixels (redness = 0) keep their original color.
+    # Red pixels (redness = 1) get fully replaced by the target color.
+    final_rgb = (rgb * (1.0 - redness_3d)) + (colorized_pixels * redness_3d)
+
+    # 5. Build the new surface
+    new_img = pygame.Surface(img.get_size(), pygame.SRCALPHA)
+    pygame.surfarray.blit_array(new_img, final_rgb.astype(np.uint8))
+
+    # 6. Copy the original alpha channel back over
+    alpha_dest = pygame.surfarray.pixels_alpha(new_img)
+    np.copyto(alpha_dest, alpha)
+
+    return new_img
+
+def get_symbol(name, zoom, color=None): # <-- Added 'color' parameter
+    """Returns scaled icon. Generates and caches colored variants if a color is provided."""
+    # 1. Resolve base name
+    base_name = name if name in SYMBOLS else re.sub(r'\s+(X{0,1}V{0,1}I{0,3}|X{0,2}|I[VX]|VI{0,3})$', '', name).strip()
+    
+    if base_name not in SYMBOLS:
+        return None
+
+    base_img = SYMBOLS[base_name]
+
+    # 2. Colorize and Cache if a color is requested
+    if color:
+        cache_key = (base_name, color)
+        if cache_key not in COLORED_SYMBOLS:
+            # Generate the colored version once and cache it
+            COLORED_SYMBOLS[cache_key] = colorize_red_image(base_img, color)
+        
+        target_img = COLORED_SYMBOLS[cache_key]
+    else:
+        target_img = base_img
+
+    # 3. Scale the final image dynamically based on camera zoom
+    return _scale_img(target_img, zoom)
 
 def _scale_img(img, zoom):
     # Get original proportions
     orig_w, orig_h = img.get_size()
     
-    # Scale based on the image's native resolution rather than forcing 32px
-    # You can tweak this 0.5 multiplier if your icons are globally too big or small!
     scale_factor = zoom * 0.5 
     
     target_w = max(4, int(orig_w * scale_factor))

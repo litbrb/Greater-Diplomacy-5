@@ -1,6 +1,8 @@
 # screens/map_related_screens/edit_country.py
 import pygame
 import base64
+import tkinter as tk # <-- NEW
+from tkinter import colorchooser # <-- NEW
 from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
@@ -49,6 +51,7 @@ class Edit_Country_Screen(GameState):
         self.country_name = ""
         self.leader_name = ""
         self.leader_title = ""
+        self.new_map_color = [150, 150, 150]
         
         self.palette = [
             (0,0,0), (255,255,255), (255,0,0), (0,255,0), (0,0,255),
@@ -63,7 +66,8 @@ class Edit_Country_Screen(GameState):
         self.country_name = p_data.get("name", self.map_screen.player_country)
         self.leader_name = p_data.get("leader_name", "")
         self.leader_title = p_data.get("leader_title", "")
-        
+        self.new_map_color = list(p_data.get("color", [150, 150, 150]))
+
         if p_data.get("flag_data"):
             self.flag_surf = decode_surf(p_data["flag_data"], self.flag_size)
         else:
@@ -75,6 +79,20 @@ class Edit_Country_Screen(GameState):
             self.portrait_surf.fill((255, 255, 255))
             
         self.refresh_ui()
+
+    def pick_map_color(self):
+        """Opens a native color picker to select the country's map color."""
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True) # Keeps it above the Pygame window
+        
+        color_code = colorchooser.askcolor(title="Choose Map Color", initialcolor=tuple(self.new_map_color))
+        
+        if color_code[0]: # If they didn't click cancel
+            self.new_map_color = [int(c) for c in color_code[0]]
+            
+        root.destroy()
+        pygame.event.pump() # Clears any phantom mouse clicks Tkinter leaves behind
 
     def refresh_ui(self):
         self.elements = [
@@ -96,6 +114,7 @@ class Edit_Country_Screen(GameState):
         
         self.elements.append(Button(1200, 820, "small", brush_color, "Brush", lambda: self.set_tool("BRUSH")))
         self.elements.append(Button(1320, 820, "small", fill_color, "Fill", lambda: self.set_tool("FILL")))
+        self.elements.append(Button(1200, 440, "medium", "orange", "Change Map Color", self.pick_map_color))
 
     def set_color(self, color):
         self.active_color = color
@@ -111,6 +130,19 @@ class Edit_Country_Screen(GameState):
         p_data["leader_title"] = self.leader_title
         p_data["flag_data"] = encode_surf(self.flag_surf)
         p_data["portrait_data"] = encode_surf(self.portrait_surf)
+        
+        # --- NEW COLOR SAVE LOGIC ---
+        old_color = p_data.get("color")
+        if list(old_color) != list(self.new_map_color):
+            p_data["color"] = self.new_map_color
+            
+            # Update the quick-lookup dict in the map screen
+            self.map_screen.nation_colors[self.map_screen.player_country] = tuple(self.new_map_color)
+            
+            # Trigger full map re-renders so the new color shows up instantly!
+            self.map_screen.refresh_political_map()
+            # self.map_screen.refresh_relations_map()
+            self.map_screen.refresh_cores_map()
         
         self.map_screen.show_feedback("Country Data Saved!")
         self.exit_to_map()
@@ -218,6 +250,11 @@ class Edit_Country_Screen(GameState):
         pygame.draw.rect(surface, self.active_color, (1350, 150, 60, 60))
         pygame.draw.rect(surface, (255, 255, 255), (1350, 150, 60, 60), 2)
         surface.blit(normal_font.render("Selected", True, (200, 200, 200)), (1345, 220))
+
+        # --- NEW: Map Color Preview ---
+        surface.blit(heading_font.render("Map Color", True, (200, 200, 200)), (1420, 420))
+        pygame.draw.rect(surface, self.new_map_color, (1420, 450, 60, 40))
+        pygame.draw.rect(surface, (255, 255, 255), (1420, 450, 60, 40), 2)
 
         # Draw Text Inputs
         def draw_input_box(y_pos, label_text, input_state, value):

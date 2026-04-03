@@ -118,20 +118,17 @@ def draw_unit_icon(self, surface, sx, sy, province):
     unit_type = primary_unit_data["type"]
     unit_owner = primary_unit_data["owner"]
     
-    # Determine icon by type
-    # symbol_name = "hilux_icon" if "Toyota" in unit_type else "tank_icon"
+    # --- NEW: Fetch the owner's color ---
+    owner_color = self.nation_colors.get(unit_owner, (200, 200, 200))
+    
+    # Determine icon by type and pass the color
     symbol_name = unit_type
-    symbol = symbol_loader.get_symbol(symbol_name, self.camera.zoom)
+    symbol = symbol_loader.get_symbol(symbol_name, self.camera.zoom * 0.5, color=owner_color)
     
     if symbol:
         # Center the image on the sx, sy coordinates
         rect = symbol.get_rect(center=(sx, sy))
         surface.blit(symbol, rect)
-        
-        # Optional: Draw a tiny flag or color dot representing the owner country
-        owner_color = self.nation_colors.get(unit_owner, (200, 200, 200))
-        pygame.draw.circle(surface, owner_color, (sx - 10, sy + 10), 5)
     else:
         # Fallback circle colored by owner nation
-        owner_color = self.nation_colors.get(unit_owner, (0, 100, 255))
         pygame.draw.circle(surface, owner_color, (sx, sy), int(7 * self.camera.zoom))

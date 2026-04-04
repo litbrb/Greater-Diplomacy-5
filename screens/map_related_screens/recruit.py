@@ -6,7 +6,8 @@ import math
 from gameState import GameState, SCREEN_WIDTH, SCREEN_HEIGHT
 from ui_elements import Button
 from screens.map_related_screens import recruit_ui
-from map_functions.rendering.font_manager import fonts # <-- Import the manager
+from map_functions.rendering.font_manager import fonts
+from map_functions.rendering import symbol_loader
 
 class Recruit_Screen(GameState):
     def __init__(self):
@@ -18,11 +19,9 @@ class Recruit_Screen(GameState):
         
         self.unit_library = self.load_unit_data()
         
-        # CHANGED: Now expects 3 lists returned
         self.infantry_groups, self.tank_groups, self.navy_groups = self.get_ordered_groups()
         self.active_bars = []
         
-        # CHANGED: Track start/end y-coordinates for all 3 categories
         self.infantry_start_y = self.infantry_end_y = 0
         self.tank_start_y = self.tank_end_y = 0
         self.navy_start_y = self.navy_end_y = 0
@@ -42,7 +41,6 @@ class Recruit_Screen(GameState):
             base = self.get_group_name(name)
             if stats.get("naval_unit", False):
                 if base not in navy_groups: navy_groups.append(base)
-            # CHANGED: Check if it's an armored unit
             elif "Tank" in base or "Armored Car" in base:
                 if base not in tank_groups: tank_groups.append(base)
             else:
@@ -106,7 +104,6 @@ class Recruit_Screen(GameState):
                 if highest_unlocked:
                     lookup_name = "Infantry" if tech_key == "infantry" else highest_unlocked
                     
-                    # CHANGED: Use the passed btn_color
                     btn = Button(x_pos, y_offset, "medium", btn_color, 
                                  highest_unlocked, lambda n=lookup_name: self.buy_unit(n))
                     self.elements.append(btn)
@@ -126,7 +123,7 @@ class Recruit_Screen(GameState):
         # --- 2. Process Tank Elements ---
         y_offset += 30 
         self.tank_start_y = y_offset
-        process_groups(self.tank_groups, "green") # Using green buttons
+        process_groups(self.tank_groups, "green")
         self.tank_end_y = y_offset
 
         # --- 3. Process Naval Elements (Only if coastal) ---
@@ -167,12 +164,45 @@ class Recruit_Screen(GameState):
             order = {
                 "unit_type": unit_name,
                 "days_remaining": stats.get("production_time", 5),
-                "refund": costs  # <-- ADD THIS TO STORE REFUND DATA
+                "refund": costs
             }
             self.target_province.setdefault("deployment_queue", []).append(order)
             self.map_screen.show_feedback(f"Production started: {unit_name}")
         else:
             self.map_screen.show_feedback("Insufficient resources!")
+
+    def draw_resource_string(self, surface, font, base_text, mat, man, fuel, x, y, color):
+        """Helper function to blit image icons directly into the string, hiding zero values."""
+        base_surf = font.render(base_text, True, color)
+        surface.blit(base_surf, (x, y))
+        curr_x = x + base_surf.get_width()
+        
+        icons = [("Iron", mat), ("Infantry", man), ("Oil", fuel)]
+        drawn_any = False
+
+        for icon_name, val in icons:
+            # Skip drawing if the cost is zero
+            try:
+                if float(val) == 0:
+                    continue
+            except (ValueError, TypeError):
+                continue
+                
+            drawn_any = True
+            icon_surf = symbol_loader.SYMBOLS.get(icon_name)
+            if icon_surf:
+                icon_surf = pygame.transform.smoothscale(icon_surf, (16, 16))
+                surface.blit(icon_surf, (curr_x, y + 2))
+                curr_x += 20
+            
+            val_surf = font.render(f"{val}   ", True, color)
+            surface.blit(val_surf, (curr_x, y))
+            curr_x += val_surf.get_width()
+
+        # Handle edge case where a unit literally costs nothing
+        if not drawn_any:
+            val_surf = font.render("Free", True, color)
+            surface.blit(val_surf, (curr_x, y))
 
     def additional_draw(self, surface):
         if not self.target_province: return
@@ -211,14 +241,14 @@ class Recruit_Screen(GameState):
             pygame.draw.rect(surface, (100, 100, 100), bar_rect, 1)
             
             t = stats.get('production_time', 0)
-            mat = stats.get('cost_materials', 0)
-            man = stats.get('cost_manpower', 0)
-            fuel = stats.get('cost_fuel', 0)
             
-            txt1 = f"Deploy: {t}d   |   Cost: ⚙️{mat}   👤{man}   ⛽{fuel}"
+            self.draw_resource_string(
+                surface, bar_font, f"Deploy: {t}d   |   Cost: ",
+                stats.get('cost_materials', 0), stats.get('cost_manpower', 0), stats.get('cost_fuel', 0),
+                bar_rect.x + 15, bar_rect.y + 6, (255, 215, 0)
+            )
+            
             txt2 = f"Combat Stats:   ⚔️ATK: {stats.get('attack', 0)}   🛡️DEF: {stats.get('defense', 0)}   ❤️HP: {stats.get('health', 0)}   ⚡SPD: {stats.get('speed', 0)}"
-            
-            surface.blit(bar_font.render(txt1, True, (255, 215, 0)), (bar_rect.x + 15, bar_rect.y + 6))
             surface.blit(bar_font.render(txt2, True, (200, 200, 200)), (bar_rect.x + 15, bar_rect.y + 26))
 
         # --- Draw HUD ---

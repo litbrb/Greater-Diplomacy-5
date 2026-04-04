@@ -5,6 +5,7 @@ from gameState import GameState, SCREEN_WIDTH, SCREEN_HEIGHT
 from ui_elements import Button
 from screens.map_related_screens import recruit_ui
 from map_functions.rendering.font_manager import fonts
+from map_functions.rendering import symbol_loader
 
 class Construction_Screen(GameState):
     def __init__(self):
@@ -25,6 +26,20 @@ class Construction_Screen(GameState):
             with open(path, 'r') as f: return json.load(f)
         return {}
 
+    def get_required_tech(self, b_name):
+        """Maps building names to their respective research tree requirements."""
+        if "Workshop" in b_name:
+            return "workshop", int(b_name.split()[-1])
+        if "Basic Factory" in b_name:
+            return "basic_factory", 1
+        if "Factory Lvl" in b_name:
+            return "factory", int(b_name.split()[-1])
+        if "Experimental Refinery" in b_name:
+            return "synthetic_fuel_experiments", 1
+        if "Synthetic Refinery" in b_name:
+            return "fuel_refining", int(b_name.split()[-1])
+        return None, 0
+
     def start_with_province(self, province, map_ref):
         self.target_province = province
         self.map_screen = map_ref
@@ -35,6 +50,7 @@ class Construction_Screen(GameState):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
         current_buildings = self.target_province.get("buildings", [])
         queue = self.target_province.get("deployment_queue", [])
+        player_research = self.map_screen.nation_data[self.map_screen.player_country].get("research", {})
 
         self.active_bars = []
         y_offset = 120
@@ -64,8 +80,13 @@ class Construction_Screen(GameState):
                 if target:
                     data = self.building_library[target]
                     is_building = any(q.get("group") == data["group"] for q in queue)
+                    req_tech, req_lvl = self.get_required_tech(target)
 
-                    if is_building:
+                    if req_tech and player_research.get(req_tech, 0) < req_lvl:
+                        btn_txt = f"Requires {req_tech.replace('_', ' ').title()} {req_lvl}"
+                        cb = lambda: None
+                        btn_color = "grey"
+                    elif is_building:
                         btn_txt = "Building..."
                         cb = lambda: None
                         btn_color = "grey"
@@ -111,13 +132,53 @@ class Construction_Screen(GameState):
                 "item_name": b_name,
                 "days_remaining": data.get("time", 10),
                 "group": data["group"],
-                "refund": costs  # <-- ADD THIS TO STORE REFUND DATA
+                "refund": costs
             }
             self.target_province.setdefault("deployment_queue", []).append(order)
             self.map_screen.show_feedback(f"Started {b_name}")
             self.refresh_ui()
         else:
             self.map_screen.show_feedback("Insufficient resources!")
+
+    def draw_resource_string(self, surface, font, base_text, mat, man, fuel, x, y, color, is_yield=False):
+        """Helper function to blit image icons directly into the string, hiding zero values."""
+        base_surf = font.render(base_text, True, color)
+        surface.blit(base_surf, (x, y))
+        curr_x = x + base_surf.get_width()
+        
+        icons = [("Iron", mat), ("Infantry", man), ("Oil", fuel)]
+        drawn_any = False
+        
+        for icon_name, val in icons:
+            # Skip drawing if the cost/yield is zero
+            try:
+                if float(val) == 0:
+                    continue
+            except (ValueError, TypeError):
+                continue
+                
+            drawn_any = True
+            display_val = str(val)
+            
+            # Format positive yields with a '+'
+            if is_yield and float(val) > 0 and not display_val.startswith("+"):
+                display_val = f"+{display_val}"
+
+            icon_surf = symbol_loader.SYMBOLS.get(icon_name)
+            if icon_surf:
+                icon_surf = pygame.transform.smoothscale(icon_surf, (16, 16))
+                surface.blit(icon_surf, (curr_x, y + 2))
+                curr_x += 20
+            
+            val_surf = font.render(f"{display_val}   ", True, color)
+            surface.blit(val_surf, (curr_x, y))
+            curr_x += val_surf.get_width()
+            
+        # Handle the edge case where everything costs 0 or yields 0
+        if not drawn_any:
+            fallback_text = "None" if is_yield else "Free"
+            val_surf = font.render(fallback_text, True, color)
+            surface.blit(val_surf, (curr_x, y))
 
     def additional_draw(self, surface):
         if not self.target_province: return
@@ -148,11 +209,17 @@ class Construction_Screen(GameState):
             pygame.draw.rect(surface, (100, 100, 100), bar_rect, 1)
             
             t = stats.get('time', 0)
-            txt1 = f"Build Time: {t}d   |   ⚙️{stats.get('cost_materials', 0)}   👤{stats.get('cost_manpower', 0)}   ⛽{stats.get('cost_fuel', 0)}"
-            txt2 = f"Yield (Daily):   ⚙️+{stats.get('prod_materials', 0)}   👤+{stats.get('prod_manpower', 0)}   ⛽+{stats.get('prod_fuel', 0)}"
             
-            surface.blit(bar_font.render(txt1, True, (255, 215, 0)), (bar_rect.x + 15, bar_rect.y + 6))
-            surface.blit(bar_font.render(txt2, True, (150, 255, 150)), (bar_rect.x + 15, bar_rect.y + 26))
+            self.draw_resource_string(
+                surface, bar_font, f"Build Time: {t}d   |   Cost: ",
+                stats.get('cost_materials', 0), stats.get('cost_manpower', 0), stats.get('cost_fuel', 0),
+                bar_rect.x + 15, bar_rect.y + 6, (255, 215, 0)
+            )
+            self.draw_resource_string(
+                surface, bar_font, f"Yield (Daily):   ",
+                stats.get('prod_materials', 0), stats.get('prod_manpower', 0), stats.get('prod_fuel', 0),
+                bar_rect.x + 15, bar_rect.y + 26, (150, 255, 150), is_yield=True
+            )
 
         # --- Draw HUD ---
         hud_rect = pygame.Rect(0, SCREEN_HEIGHT - 60, SCREEN_WIDTH, 60)

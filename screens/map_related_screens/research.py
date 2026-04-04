@@ -23,7 +23,7 @@ class Research_Screen(GameState):
         # --- Timeline Variables ---
         self.scroll_x = 0
         self.target_scroll_x = 0
-        self.pixels_per_year = 35 # Adjust this to change how squeezed together the years are
+        self.pixels_per_year = 35 
 
         self.setup_nodes()
 
@@ -54,8 +54,16 @@ class Research_Screen(GameState):
             ("fuel_refining", 1): 1930, ("fuel_refining", 2): 1940, ("fuel_refining", 3): 1950
         }
 
+        # Map Infantry Years
+        inf_years = [1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885, 1890, 1895, 1900, 1904, 1908, 1912, 1916, 1920, 1924, 1928, 1932, 1936, 1940, 1944, 1948]
+        for i, y in enumerate(inf_years):
+            self.tech_years[("infantry_type", i+1)] = y
+        self.tech_years[("cavalry", 1)] = 1850
+
         # Stagger the Y positions to prevent branches overlapping
         self.tech_rows = {
+            "infantry_type": 350,
+            "cavalry": 450,
             "ww1_armored_car": 250, "armored_car": 250, "civilian_car": 250,
             "ww1_tank": 350, "light_tank": 350,
             "medium_tank": 450, "main_battle_tank": 450,
@@ -67,7 +75,7 @@ class Research_Screen(GameState):
             "bergius_process": 400, "synthetic_fuel_experiments": 400, "fuel_refining": 400
         }
 
-        self.nodes = {"TANKS": [], "NAVY": [], "INDUSTRY": []}
+        self.nodes = {"INFANTRY": [], "TANKS": [], "NAVY": [], "INDUSTRY": []}
 
         for tech_key, data in self.tech_tree.items():
             cat = data["category"]
@@ -96,20 +104,24 @@ class Research_Screen(GameState):
                         el.rect.x = el.base_x + self.scroll_x
 
     def additional_events(self, event):
-        # Enable map-style drag panning and scroll-wheel interactions for the timeline
-        if self.current_category in ["TANKS", "NAVY", "INDUSTRY"] and not self.active_modal:
+        if self.current_category in ["INFANTRY", "TANKS", "NAVY", "INDUSTRY"] and not self.active_modal:
             if event.type == pygame.MOUSEWHEEL:
                 self.target_scroll_x += event.y * 70
-            elif event.type == pygame.MOUSEMOTION and event.buttons[2]: # Right click drag
+            elif event.type == pygame.MOUSEMOTION and event.buttons[2]: 
                 self.target_scroll_x += event.rel[0]
-                self.scroll_x += event.rel[0] # Instant lock for smooth dragging
+                self.scroll_x += event.rel[0] 
                 
                 for el in self.elements:
                     if getattr(el, 'is_tech_node', False):
                         el.rect.x = el.base_x + self.scroll_x
 
     def get_display_name(self, tech_key, lvl):
-        if tech_key == "infantry": return "Infantry"
+        if tech_key == "infantry_type":
+            inf_years = [1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885, 1890, 1895, 1900, 1904, 1908, 1912, 1916, 1920, 1924, 1928, 1932, 1936, 1940, 1944, 1948]
+            year = inf_years[min(lvl - 1, len(inf_years)-1)]
+            return f"Infantry Type {year}"
+        
+        if tech_key == "cavalry": return "Cavalry"
         
         romans = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII"}
         
@@ -154,7 +166,6 @@ class Research_Screen(GameState):
         player_data = self.map_screen.nation_data[self.map_screen.player_country]
         res_levels = player_data.setdefault("research", {})
         queue = player_data.setdefault("research_queue", [])
-        progress_cache = player_data.setdefault("research_progress", {})
 
         if self.active_modal:
             st = self.active_modal["status"]
@@ -185,37 +196,9 @@ class Research_Screen(GameState):
 
         if self.current_category == "COMPLETED":
             pass 
-        elif self.current_category == "INFANTRY":
-            self.draw_infantry_content(res_levels, queue, progress_cache)
         else:
+            # We now render Infantry just like everything else!
             self.draw_tech_nodes(res_levels, queue)
-
-    def draw_infantry_content(self, res_levels, queue, progress_cache):
-        tech = "infantry"
-        level = res_levels.get(tech, 0)
-        tech_data = self.tech_tree[tech]
-        total_cost = tech_data.get("cost", 300)
-        queued_item = next((item for item in queue if item["tech_name"] == tech), None)
-        
-        display_name = tech.replace('_',' ').title()
-        level_str = f" Type {level + (0 if queued_item else 1)}"
-        
-        if queued_item:
-            pts = queued_item.get('points_remaining', total_cost)
-            status_text = f"{display_name}: {pts} pts left (PAUSE)"
-            color, callback = "orange", lambda t=tech: self.pause_research(t)
-        elif len(queue) < 2:
-            has_progress = tech in progress_cache
-            pts_needed = progress_cache.get(tech, total_cost)
-            prefix = "Resume" if has_progress else "Start"
-            status_text = f"{prefix} {display_name}{level_str} ({pts_needed} pts)"
-            color, callback = "blue", lambda t=tech: self.start_or_resume_research(t)
-        else:
-            status_text = f"{display_name} (Slots Full)"
-            color, callback = "grey", lambda: self.map_screen.show_feedback("Research slots full!")
-
-        btn = Button("centered", 200, "large", color, status_text, callback)
-        self.elements.append(btn)
 
     def draw_tech_nodes(self, res_levels, queue):
         current_year = self.map_screen.time_manager.year
@@ -316,8 +299,7 @@ class Research_Screen(GameState):
 
     # --- RENDERING ---
     def draw_timeline_axis(self, surface):
-        """Draws the dynamic horizontal year axis across the screen"""
-        if self.current_category in ["INFANTRY", "COMPLETED"] or self.active_modal:
+        if self.current_category in ["COMPLETED"] or self.active_modal:
             return
 
         current_year = self.map_screen.time_manager.year
@@ -470,25 +452,15 @@ class Research_Screen(GameState):
             
             techs.sort(key=lambda x: x[2] != 9999)
             
-            has_inf_spacer = False
             for tech_id, lvl, max_lvl in techs:
-                if has_inf_spacer and max_lvl != 9999:
-                    curr_y += 15
-                    has_inf_spacer = False
-                if max_lvl == 9999: has_inf_spacer = True
-
                 display_name = tech_id.replace('_', ' ').title()
                 
-                if max_lvl == 9999:
-                    val_text = f": Type {lvl}"
-                elif max_lvl == 1:
+                if max_lvl == 1:
                     val_text = ": Level 1" if lvl >= 1 else ": Level 0"
                 else:
                     val_text = f": Level {lvl}"
 
                 color = (200, 200, 200) if lvl > 0 else (100, 100, 100)
-                if tech_id in ["infantry"] and lvl <= 1800:
-                    color = (140, 140, 140)
 
                 txt_surf = text_font.render(f"{display_name}{val_text}", True, color)
                 surface.blit(txt_surf, (curr_x + 10, curr_y))
@@ -513,7 +485,7 @@ class Research_Screen(GameState):
 
         if self.current_category == "COMPLETED":
             self.render_completed_text_list(surface)
-        elif self.current_category != "INFANTRY":
+        else:
             player_data = self.map_screen.nation_data[self.map_screen.player_country]
             res_levels = player_data.get("research", {})
             self.draw_connections(surface, res_levels)

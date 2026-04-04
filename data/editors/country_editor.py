@@ -84,17 +84,18 @@ class CountryEditor:
             with open(template_path, "r") as f:
                 struct = json.load(f)
             
-            # 1. Build the base dict (0 for standard, 1800 for infinite)
-            res_dict = {tech: (1800 if data["max_lvl"] == 9999 else 0) for tech, data in struct.items()}
+            # Everyone starts completely at 0 now. No more infinite math layers.
+            res_dict = {tech: 0 for tech in struct.keys()}
             
-            # 2. Set Carracks to 1 by default if it exists in the template
-            if "carrack" in res_dict:
-                res_dict["carrack"] = 1
+            # The basics that you start natively with
+            if "carrack" in res_dict: res_dict["carrack"] = 1
+            if "infantry_type" in res_dict: res_dict["infantry_type"] = 1
+            if "cavalry" in res_dict: res_dict["cavalry"] = 1
                 
             return res_dict
             
         # Hardcoded fallback including carrack
-        return {"infantry": 1800, "carrack": 1}
+        return {"infantry_type": 1, "cavalry": 1, "carrack": 1}
 
     def bulk_reset_template(self):
         """Synchronizes all countries to have every tech defined in the template."""
@@ -154,7 +155,7 @@ class CountryEditor:
                 "name": disp_name,
                 "color": self.current_color,
                 "research": self.get_default_research_dict(),
-                 "manpower": 0, "materials": 0, "fuel": 0,      
+                 "manpower": 0, "materials": 0, "fuel": 0,     
                 "is_playable": True,
                 "at_war_with": [], "allied_with": []
             }
@@ -191,34 +192,6 @@ class CountryEditor:
             self.current_color = [int(c) for c in color[0]]
             hex_color = '#%02x%02x%02x' % tuple(self.current_color)
             self.color_preview.config(bg=hex_color)
-
-    def save_country(self):
-        int_id = self.id_ent.get().strip()
-        disp_name = self.name_ent.get().strip() or int_id
-        
-        if not int_id: 
-            messagebox.showwarning("Error", "Internal ID cannot be empty")
-            return
-        
-        if int_id in self.data:
-            self.data[int_id]["name"] = disp_name
-            self.data[int_id]["color"] = self.current_color
-        else:
-            self.data[int_id] = {
-                "name": disp_name,
-                "color": self.current_color,
-                "research": {"infantry": 1800},
-                 "manpower": 0, "materials": 0, "fuel": 0,      
-                "is_playable": True,
-                "at_war_with": [], "allied_with": []
-            }
-        
-        with open(PATH, "w") as f:
-            json.dump(self.data, f, indent=4)
-        
-        self.refresh_list()
-        self.id_ent.delete(0, tk.END)
-        self.name_ent.delete(0, tk.END)
 
     def delete_country(self, int_id):
         if messagebox.askyesno("Confirm", f"Delete {int_id}?"):
@@ -273,6 +246,6 @@ class CountryEditor:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("500x800") # Slightly taller to fit the new button
+    root.geometry("500x800")
     CountryEditor(root)
     root.mainloop()

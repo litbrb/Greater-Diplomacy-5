@@ -19,11 +19,6 @@ def process_next_turn(self):
     process_queues(self, days_to_advance)
     
     process_national_research(self, days_to_advance)
-    
-    # might want to add a loading screen if you're going to have this
-    # self.refresh_political_map()
-    # self.refresh_relations_map()
-    # also if you do add this prevent the political and relations button from manually doing this, this can take like 0.3 seconds which is a not insignificant delay
 
 def process_national_research(self, days_passed):
     # Load template to know costs
@@ -31,7 +26,7 @@ def process_national_research(self, days_passed):
         template = json.load(f)
     
     points_per_day = 10
-    total_points_generated = days_passed * points_per_day # e.g., 50 points
+    total_points_generated = days_passed * points_per_day
 
     for country_name, country_data in self.nation_data.items():
         queue = country_data.get("research_queue", [])
@@ -316,23 +311,14 @@ def process_queues(self, days_passed):
 
             # IS UNIT?
             else:
+                # --- The Infantry Refactor (All Units Are Now Fully Generic) ---
                 unit_type = item["unit_type"]
                 stats = unit_library.get(unit_type, {})
                 
-                if unit_type == "Infantry":
-                    owner_data = self.nation_data.get(current_owner, {})
-                    inf_level = owner_data.get("research", {}).get("infantry", 1800)
-                    n = inf_level - 1800
-                    max_health = int(1000 * math.pow(1.01, n))
-                    attack = int(100 * math.pow(1.01, n))
-                    defense = stats.get("defense", 0)
-                    speed = stats.get("speed", 1)
-                else:
-                    inf_level = 0
-                    max_health = stats.get("health", 100)
-                    attack = stats.get("attack", 5)
-                    defense = stats.get("defense", 0)
-                    speed = stats.get("speed", 1)
+                max_health = stats.get("health", 100)
+                attack = stats.get("attack", 5)
+                defense = stats.get("defense", 0)
+                speed = stats.get("speed", 1)
 
                 new_unit_data = {
                     "type": unit_type,
@@ -342,7 +328,7 @@ def process_queues(self, days_passed):
                     "speed": speed,
                     "attack": attack,
                     "defense": defense,
-                    "level": inf_level,
+                    "level": 0,  # Keeping level initialized so you don't get KeyErrors elsewhere
                     "order": {"type": "MOVE", "path": []}
                 }
                 

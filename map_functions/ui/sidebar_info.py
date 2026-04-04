@@ -72,19 +72,10 @@ def draw_sidebar_info(self, surface):
             side_units = [u for u in units if u.get("owner") == side_id]
             for u in side_units[:5]:
                 u_type = u.get("type", "Unit")
-                
-                # --- FIX: Use .get() to prevent KeyError if stats are missing ---
                 atk = u.get("attack", 0)
                 hp = int(u.get("health", 0))
                 
-                # Formatting string based on whether it's scaled Infantry or standard
-                if u.get('level'):
-                    # Refactor based on whether it's an infinite type
-                    label = "Type" if u_type.lower() == "infantry" else "Lvl"
-                    print (u_type.lower())
-                    u_stats = f" - {u_type} {label} {u['level']} (HP: {hp})"
-                else:
-                    u_stats = f" - {u_type} (ATK: {atk}) (HP: {hp})"
+                u_stats = f" - {u_type} (ATK: {atk}) (HP: {hp})"
 
                 txt = self.small_font.render(u_stats, True, (200, 200, 200))
                 surface.blit(txt, (30, current_y))

@@ -33,7 +33,9 @@ class Recruit_Screen(GameState):
         return {}
 
     def get_group_name(self, name):
-        return re.sub(r'\s+[IVXLCDM]+$', '', name).strip()
+        # We strip the year off the infantry so they all group properly!
+        base = re.sub(r'\s+\d{4}$', '', name)
+        return re.sub(r'\s+[IVXLCDM]+$', '', base).strip()
 
     def get_ordered_groups(self):
         infantry_groups, tank_groups, navy_groups = [], [], []
@@ -51,19 +53,6 @@ class Recruit_Screen(GameState):
         self.target_province = province
         self.map_screen = map_ref
         self.refresh_ui()
-
-    def get_scaled_stats(self, unit_name):
-        tech_key = self.get_group_name(unit_name).lower().replace(" ", "_")
-        base_stats = self.unit_library.get(unit_name, {}).copy()
-        
-        if tech_key == "infantry":
-            player_research = self.map_screen.nation_data[self.map_screen.player_country].get("research", {})
-            level = player_research.get("infantry", 1800)
-            n = level - 1800
-            base_stats["health"] = int(1000 * math.pow(1.01, n))
-            base_stats["attack"] = int(100 * math.pow(1.01, n))
-            base_stats["level"] = level
-        return base_stats
 
     def refresh_ui(self):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
@@ -87,8 +76,15 @@ class Recruit_Screen(GameState):
                 tech_key = group_name.lower().replace(" ", "_")
                 researched_lvl = player_research.get(tech_key, 0)
 
-                if tech_key == "infantry":
-                    highest_unlocked = f"Infantry Type {researched_lvl}"
+                # --- NEW: Infantry & Cavalry Processing ---
+                if tech_key == "infantry_type":
+                    inf_years = [1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885, 1890, 1895, 1900, 1904, 1908, 1912, 1916, 1920, 1924, 1928, 1932, 1936, 1940, 1944, 1948]
+                    if researched_lvl > 0:
+                        year = inf_years[min(researched_lvl - 1, len(inf_years)-1)]
+                        highest_unlocked = f"Infantry Type {year}"
+                elif tech_key == "cavalry":
+                    if researched_lvl > 0:
+                        highest_unlocked = "Cavalry"
                 else:
                     group_units = [(n, s) for n, s in self.unit_library.items() if self.get_group_name(n) == group_name]
                     highest_lvl = -1
@@ -102,14 +98,14 @@ class Recruit_Screen(GameState):
                                 highest_unlocked = name
 
                 if highest_unlocked:
-                    lookup_name = "Infantry" if tech_key == "infantry" else highest_unlocked
+                    lookup_name = highest_unlocked
                     
                     btn = Button(x_pos, y_offset, "medium", btn_color, 
                                  highest_unlocked, lambda n=lookup_name: self.buy_unit(n))
                     self.elements.append(btn)
                     
-                    # Fetch stats and construct the UI bar right next to the button
-                    stats = self.get_scaled_stats(lookup_name) if tech_key == "infantry" else self.unit_library[lookup_name]
+                    # Fetch stats from your newly hardcoded unit dictionary
+                    stats = self.unit_library[lookup_name]
                     bar_rect = pygame.Rect(x_pos + 210, y_offset, 550, 50)
                     self.active_bars.append((bar_rect, stats))
                     
@@ -221,8 +217,8 @@ class Recruit_Screen(GameState):
         # --- Draw Darker Green Background for Tanks ---
         if self.tank_end_y > self.tank_start_y:
             tank_rect = pygame.Rect(30, self.tank_start_y - 15, 840, self.tank_end_y - self.tank_start_y + 15)
-            pygame.draw.rect(surface, (20, 45, 20), tank_rect) # Darker green background
-            pygame.draw.rect(surface, (40, 120, 40), tank_rect, 2) # Darker border
+            pygame.draw.rect(surface, (20, 45, 20), tank_rect) 
+            pygame.draw.rect(surface, (40, 120, 40), tank_rect, 2) 
             lbl = fonts.get("heading2").render("TANKS", True, (80, 200, 80))
             surface.blit(lbl, (40, self.tank_start_y - 45))
 

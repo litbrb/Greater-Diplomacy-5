@@ -190,10 +190,18 @@ def process_movement(self):
         # Sync units back to provinces so units moving later in the same sub-step "see" each other
         for unit in moving_units:
             prov = self.id_to_province.get(unit["_current_province_id"])
-            if unit not in prov["units"]: prov["units"].append(unit)
+            
+            # FIX 1: Use 'is' to check exact object identity instead of dictionary equality
+            if not any(u is unit for u in prov["units"]): 
+                prov["units"].append(unit)
+                
         if step < max_speed - 1:
+            # Create a set of memory IDs for ultra-fast lookup
+            moving_ids = {id(m) for m in moving_units} 
+            
             for province in self.map_data.values():
-                province["units"] = [u for u in province["units"] if u not in moving_units]
+                # FIX 2: Filter by memory ID to prevent accidentally deleting identical stationary units
+                province["units"] = [u for u in province["units"] if id(u) not in moving_ids]
 
 def process_economy(self):
     """Calculates income, applies building yields, and deducts unit upkeep."""

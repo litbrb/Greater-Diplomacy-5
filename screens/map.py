@@ -15,7 +15,7 @@ from map_functions.ui.minimap import UI_LEFT_OFFSET
 from map_functions.rendering.font_manager import fonts # <-- Import here
 
 class Map(GameState):
-    def __init__(self, load_path=None, is_scenario=False, is_random=False, force_editor=False): 
+    def __init__(self, load_path=None, is_scenario=False, is_random=False, force_editor=False, random_settings=None): 
         super().__init__()
 
         self.brush_building = "None" 
@@ -42,23 +42,27 @@ class Map(GameState):
         self.painting_active = False 
         self.brush_nation = "Unclaimed" 
         
-        # --- 2. Data Loading ---
-        load_map.load_map_assets(self, load_path)
+        # --- 2. Data Loading (FIXED ORDER) ---
+        # Load the selected map BEFORE we do any camera math!
+        if is_random and random_settings:
+            load_map.load_map_assets(self, random_settings["map_path"])
+            self.time_manager.year = random_settings["year"]
+        else:
+            load_map.load_map_assets(self, load_path)
 
         # --- 3. Visuals & UI Setup ---
         self.bg_color = (20, 20, 20)
-        self.font = fonts.get("normal") # <-- NEW
-        self.small_font = fonts.get("tiny") # <-- NEW
+        self.font = fonts.get("normal") 
+        self.small_font = fonts.get("tiny") 
         
         self.top_ui_height = self.bot_ui_height = 60
         self.total_ui_h = 120
         self.top_bar_rect = pygame.Rect(0, 0, SCREEN_WIDTH, 60)
         self.bot_bar_rect = pygame.Rect(0, SCREEN_HEIGHT - 60, SCREEN_WIDTH, 60)
-        # red thingy to the left
         self.raised_rect = pygame.Rect(0, 0, UI_LEFT_OFFSET, SCREEN_HEIGHT)
-        # ui background
         self.ui_background_rect = pygame.Rect(0, SCREEN_HEIGHT - 120, 220, SCREEN_HEIGHT)
         
+        # Now these grab the dimensions of the CORRECT map
         self.map_w, self.map_h = self.id_map.get_size()
         self.min_zoom = (SCREEN_HEIGHT - self.total_ui_h) / self.map_h
         self.camera = MapCamera(self.min_zoom)
@@ -73,16 +77,13 @@ class Map(GameState):
 
         self.show_exit_confirmation = False 
         self.confirm_box_rect = pygame.Rect(0, 0, 400, 200) 
-        
-        # load_map.load_map_assets(self, load_path)
 
         self.relations_map = self.id_map.copy()
-        # self.cores_map = self.id_map.copy()
 
-        if is_random:
-            self.randomize_all_provinces()
+        # Generate the random blob borders now that everything is loaded properly
+        if is_random and random_settings:
+            self.randomize_all_provinces(random_settings)
 
-        # might take some time to load
         self.refresh_political_map()
         self.refresh_relations_map()
         self.refresh_cores_map()
@@ -277,46 +278,34 @@ class Map(GameState):
     def additional_draw(self, surface): 
         map_renderer.draw_map_screen(self, surface)
         
-    def randomize_all_provinces(self):
+    def randomize_all_provinces(self, settings):
+        target_country_count = settings["countries"]
+        start_year = settings["year"]
+
         playable_nations = [
             name for name, stats in self.nation_data.items()
             if stats.get("is_playable") and name not in ["Ocean", "Lakes", "Unclaimed"]
         ]
         
-        if not playable_nations:
-            return
+        land_provinces = [p for p in self.map_data.values() if p.get("terrain", "") not in ["ocean", "coastal_sea", "inland_sea", "lakes"]]
+        
+        if not land_provinces or not playable_nations: return
 
-        # 1. Gather all land provinces and reset them
-        land_provinces = []
-        for province in self.map_data.values():
-            terrain = province.get("terrain", "")
-            is_water = terrain in ["ocean", "coastal_sea", "inland_sea", "lakes"]
-            if not is_water:
-                land_provinces.append(province)
-                # Clear all existing data from previous scenarios
-                province["owner"] = "Unclaimed"
-                province["cores"] = []
-                province["resources"] = {}
-                province["buildings"] = []
-                province["units"] = [] # Explicitly NO random units
-                
-        if not land_provinces:
-            return
+        # Wipe existing map data clean
+        for prov in land_provinces:
+            prov.update({"owner": "Unclaimed", "cores": [], "resources": {}, "buildings": [], "units": []})
 
-        # 2. Organic Blobbing Algorithm (Multi-Source BFS)
         import random
         random.shuffle(playable_nations)
         
-        # Don't try to place more nations than there are actual provinces
-        num_seeds = min(len(playable_nations), len(land_provinces))
+        # 1. Adjust country count to not exceed available provinces
+        num_seeds = min(target_country_count, len(land_provinces))
         active_nations = playable_nations[:num_seeds]
         
         unassigned_land = set(p["id"] for p in land_provinces)
-        
-        # Track the "frontier" of available neighbor IDs for each nation to expand into
         frontiers = {nation: [] for nation in active_nations}
         
-        # Step A: Plant a random seed for each nation
+        # --- Step A: Plant Seeds ---
         for nation in active_nations:
             seed_id = random.choice(list(unassigned_land))
             seed_prov = self.id_to_province[seed_id]
@@ -325,67 +314,101 @@ class Map(GameState):
             seed_prov["cores"] = [nation]
             unassigned_land.remove(seed_id)
             
-            # Add unowned neighbors to this nation's expansion frontier
             for n_id in seed_prov.get("neighbors", []):
-                if n_id in unassigned_land:
-                    frontiers[nation].append(n_id)
+                if n_id in unassigned_land: frontiers[nation].append(n_id)
 
-        # Step B: Expand until all land is claimed
+        # --- Step B: Round-Robin Expansion (Ensures Even Sizes) ---
         while unassigned_land:
-            # Find nations that still have room to expand
-            valid_nations = [n for n in active_nations if frontiers[n]]
+            expanded_this_round = False
+            for nation in active_nations:
+                frontier_list = [pid for pid in frontiers[nation] if pid in unassigned_land]
+                frontiers[nation] = frontier_list
+                
+                if frontier_list:
+                    target_id = frontier_list.pop(random.randint(0, len(frontier_list) - 1))
+                    target_prov = self.id_to_province[target_id]
+                    
+                    target_prov["owner"] = nation
+                    target_prov["cores"] = [nation]
+                    unassigned_land.remove(target_id)
+                    expanded_this_round = True
+                    
+                    for n_id in target_prov.get("neighbors", []):
+                        if n_id in unassigned_land: frontier_list.append(n_id)
             
-            if not valid_nations:
-                # Edge case: All frontiers are walled off, but land remains (e.g. islands)
-                # Just pick random remaining land and re-seed
-                remaining_id = random.choice(list(unassigned_land))
+            # Walled off island catch
+            if not expanded_this_round and unassigned_land:
+                target_id = random.choice(list(unassigned_land))
                 nation = random.choice(active_nations)
-                prov = self.id_to_province[remaining_id]
-                
-                prov["owner"] = nation
-                prov["cores"] = [nation]
-                unassigned_land.remove(remaining_id)
-                for n_id in prov.get("neighbors", []):
-                    if n_id in unassigned_land:
-                        frontiers[nation].append(n_id)
-                continue
-                
-            nation = random.choice(valid_nations)
-            
-            # Pop a RANDOM province from the frontier to make borders irregular/organic
-            # (If you always pop index 0, you get perfect, unnatural diamonds)
-            frontier_list = frontiers[nation]
-            idx = random.randint(0, len(frontier_list) - 1)
-            target_id = frontier_list.pop(idx)
-            
-            if target_id in unassigned_land:
-                target_prov = self.id_to_province[target_id]
-                target_prov["owner"] = nation
-                target_prov["cores"] = [nation]  # Assign core to spawned territory
+                self.id_to_province[target_id]["owner"] = nation
+                self.id_to_province[target_id]["cores"] = [nation]
                 unassigned_land.remove(target_id)
-                
-                # Add new neighbors to the frontier
-                for n_id in target_prov.get("neighbors", []):
-                    if n_id in unassigned_land:
-                        frontier_list.append(n_id)
+                for n_id in self.id_to_province[target_id].get("neighbors", []):
+                    if n_id in unassigned_land: frontiers[nation].append(n_id)
 
-        # 3. Random Resources and Buildings
-        building_pool = [
-            "Workshop Lvl 1", "Workshop Lvl 2", "Workshop Lvl 3", "Synthetic Refinery Lvl 1"
-        ]
+        # --- Step C: Tech & Building Assignment ---
+        # Full mapping of all techs to their historical unlock years
+        tech_timeline = {
+            # Infantry & Cavalry
+            "infantry_type": [1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885, 1890, 1895, 1900, 1904, 1908, 1912, 1916, 1920, 1924, 1928, 1932, 1936, 1940, 1944, 1948],
+            "cavalry": [1850],
+            
+            # Vehicles & Armor
+            "civilian_car": [1905],
+            "ww1_armored_car": [1910],
+            "ww1_tank": [1915],
+            "armored_car": [1916, 1922, 1928, 1934, 1940],
+            "light_tank": [1918, 1924, 1930, 1936, 1942],
+            "medium_tank": [1925, 1932, 1939],
+            "heavy_tank": [1930, 1935, 1940],
+            "main_battle_tank": [1945],
+            
+            # Naval Forces
+            "carrack": [1500],
+            "ironclad": [1860],
+            "pre-dreadnaught": [1880],
+            "dreadnaught": [1900],
+            "destroyer": [1910, 1916, 1922, 1928, 1934, 1940, 1946, 1952],
+            "aircraft_carrier": [1920, 1930, 1940, 1950],
+            
+            # Economy & Industry
+            "workshop": [1800, 1820, 1840, 1860, 1880],
+            "basic_factory": [1900],
+            "factory": [1910, 1920, 1930, 1940, 1950],
+            "bergius_process": [1910],
+            "synthetic_fuel_experiments": [1920],
+            "fuel_refining": [1930, 1940, 1950]
+        }
         
+        # Calculate what tech levels everyone gets based on the Start Year
+        baseline_tech = {}
+        for tech, years in tech_timeline.items():
+            lvl = sum(1 for y in years if y <= start_year)
+            if lvl > 0: baseline_tech[tech] = lvl
+
+        # Apply base tech to all active nations
+        for nation in active_nations:
+            if "research" not in self.nation_data[nation]:
+                self.nation_data[nation]["research"] = {}
+            self.nation_data[nation]["research"].update(baseline_tech)
+
+        # Determine which buildings are legally allowed to spawn
+        allowed_buildings = []
+        if baseline_tech.get("workshop", 0) > 0: allowed_buildings.append("Workshop Lvl 1")
+        if baseline_tech.get("basic_factory", 0) > 0: allowed_buildings.append("Basic Factory")
+        if baseline_tech.get("factory", 0) > 0: allowed_buildings.append("Factory Lvl 1")
+        if baseline_tech.get("fuel_refining", 0) > 0: allowed_buildings.append("Synthetic Refinery Lvl 1")
+
         for prov in land_provinces:
-            # 15% chance to spawn a random resource
             if random.random() < 0.15:
                 res_type = random.choice(["Iron", "Coal", "Oil"])
-                res_amount = random.randint(20, 80)
-                prov["resources"] = {res_type: res_amount}
+                prov["resources"] = {res_type: random.randint(20, 80)}
                 
-            # 10% chance to spawn a low-level building
-            if random.random() < 0.10:
-                prov["buildings"] = [random.choice(building_pool)]
+            # Only spawn buildings if the era permits it
+            if allowed_buildings and random.random() < 0.10:
+                prov["buildings"] = [random.choice(allowed_buildings)]
 
-        self.show_feedback("Map Randomized with Organic Borders!")
+        self.show_feedback(f"Randomized {target_country_count} evenly sized nations for {start_year}!")
 
     def get_player_economy_projections(self):
         YIELD_MANPOWER = BASE_YIELDS["manpower"]

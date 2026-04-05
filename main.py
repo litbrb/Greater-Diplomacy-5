@@ -16,6 +16,8 @@ from screens.map_related_screens.construction import Construction_Screen
 from screens.map_related_screens.economy import Economy_Screen
 from screens.map_related_screens.edit_country import Edit_Country_Screen
 from screens.select_base_map import Select_Base_Map
+from screens.random_setup import Random_Setup
+from screens.map import Map
 
 pygame.display.set_caption("Greater Diplomacy Pygame Edition")
 
@@ -64,15 +66,16 @@ class Controller:
         self.states = {
             "MENU": Menu(),
             "NEW_GAME": New_Game(),
+            "RANDOM_SETUP": Random_Setup(),
             "LOAD_GAME": Load_Game(),
             "SETTINGS": Settings(self), 
-            "SELECT_BASE_MAP": Select_Base_Map(), # <--- ADD THIS
+            "SELECT_BASE_MAP": Select_Base_Map(),
             "MAP": Map(),
             "RECRUIT": Recruit_Screen(),
             "ORDERS": Orders_Screen(),
             "RESEARCH": Research_Screen(),
             "ECONOMY": Economy_Screen(),
-            "EDIT_COUNTRY": Edit_Country_Screen() # <--- Add this
+            "EDIT_COUNTRY": Edit_Country_Screen()
         }
         self.states["CONSTRUCTION"] = Construction_Screen()
         self.active_state = self.states["MENU"]
@@ -100,25 +103,20 @@ class Controller:
 
         # 2. Map Persistence
         if next_state_name == "MAP":
-            if previous_state == self.states["SELECT_BASE_MAP"]:
-                path = previous_state.selected_save_path
-                from screens.map import Map
-                # Force editor to True so the UI buttons load properly!
-                self.states["MAP"] = Map(load_path=path, is_scenario=False, force_editor=True)
+            if previous_state == self.states["RANDOM_SETUP"]:
+                # Pass the settings dict from the setup screen to the map
+                self.states["MAP"] = Map(is_scenario=True, is_random=True, random_settings=previous_state.random_settings)
             
             elif hasattr(previous_state, 'selected_save_path'):
                 path = previous_state.selected_save_path
                 
                 if path == "RANDOM":
                     # Pass a new flag called is_random
-                    from screens.map import Map
                     self.states["MAP"] = Map(load_path=None, is_scenario=True, is_random=True)
                 else:
                     is_scen = "scenarios" in path
-                    from screens.map import Map
                     self.states["MAP"] = Map(load_path=path, is_scenario=is_scen)
             elif previous_state in [self.states["MENU"], self.states["NEW_GAME"]]:
-                from screens.map import Map
                 self.states["MAP"] = Map()
 
         # 3. Load Game Refresh

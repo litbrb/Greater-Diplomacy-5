@@ -52,7 +52,5 @@ class New_Game(GameState):
         self.exit_to_menu()
 
     def start_random_scenario(self):
-        # Set a flag that we can check in flip_state
-        self.selected_save_path = "RANDOM"
-        self.next_state = "MAP"
+        self.next_state = "RANDOM_SETUP"
         self.done = True

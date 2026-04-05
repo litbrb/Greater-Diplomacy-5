@@ -1,5 +1,6 @@
 import pygame
 import gameState as g
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
@@ -179,7 +180,7 @@ class Orders_Screen(GameState):
         small_font = fonts.get("normal")
         
         title = font.render(f"Orders: Province {self.target_province['id']}", True, (255, 255, 255))
-        surface.blit(title, (g.SCREEN_WIDTH//2 - title.get_width()//2, 50))
+        surface.blit(title, (SCREEN_WIDTH//2 - title.get_width()//2, 50))
         
         # --- NEW: Draw Background Panel for Units ---
         units = self.target_province.get("units", [])
@@ -241,7 +242,7 @@ class Orders_Screen(GameState):
                         sx = (cx - cam.pos.x) * cam.zoom
                         sy = (cy - cam.pos.y) * cam.zoom + self.map_screen.top_ui_height
                         
-                        if 0 <= sx <= g.SCREEN_WIDTH and 0 <= sy <= g.SCREEN_HEIGHT:
+                        if 0 <= sx <= SCREEN_WIDTH and 0 <= sy <= SCREEN_HEIGHT:
                             pygame.draw.circle(surface, (0, 255, 0), (int(sx), int(sy)), 12, 3)
 
             mouse_pos = pygame.mouse.get_pos()

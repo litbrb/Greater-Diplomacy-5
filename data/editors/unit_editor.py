@@ -21,10 +21,6 @@ class UnitEditor:
             ("Cost (Manpower)", "cost_manpower"),
             ("Cost (Fuel)", "cost_fuel"),
             ("Time", "production_time")
-            #("Upkeep (Materials)", "upkeep_materials"),
-            #("Upkeep (Manpower)", "upkeep_manpower"),
-            #("Upkeep (Fuel)", "upkeep_fuel")
-            # upkeep can be determined by just taking 10% of the cost
         ]
 
         self.entries = {}
@@ -34,10 +30,14 @@ class UnitEditor:
             ent.grid(row=i, column=1, padx=10, pady=5)
             self.entries[key] = ent
 
-        tk.Button(root, text="Save/Update Unit", command=self.save_unit).grid(row=len(fields), column=0, columnspan=2, pady=10)
+        # Main Save Button
+        tk.Button(root, text="Save/Update Unit", command=self.save_unit).grid(row=len(fields), column=0, columnspan=2, pady=5)
+        
+        # New Format Button
+        tk.Button(root, text="Reset Formatting to One-Line", command=self.format_json).grid(row=len(fields)+1, column=0, columnspan=2, pady=5)
         
         self.listbox = tk.Listbox(root, width=50)
-        self.listbox.grid(row=len(fields)+1, column=0, columnspan=2, padx=10, pady=10)
+        self.listbox.grid(row=len(fields)+2, column=0, columnspan=2, padx=10, pady=10)
         self.listbox.bind('<<ListboxSelect>>', self.on_select)
         self.refresh_list()
 
@@ -46,16 +46,50 @@ class UnitEditor:
             with open(PATH, "r") as f: return json.load(f)
         return {}
 
+    def custom_json_dump(self, data_dict, filepath):
+        """Custom dumper to keep top-level items on new lines, but inner dicts compact."""
+        lines = ["{"]
+        items = list(data_dict.items())
+        for i, (key, val) in enumerate(items):
+            # separators=(', ', ': ') removes trailing spaces around formatting to keep it tight
+            val_str = json.dumps(val, separators=(', ', ': '))
+            comma = "," if i < len(items) - 1 else ""
+            lines.append(f'    "{key}": {val_str}{comma}')
+        lines.append("}")
+        
+        with open(filepath, "w") as f:
+            f.write("\n".join(lines))
+
+    def format_json(self):
+        """Forces the current data dictionary to rewrite using the custom one-line format."""
+        if not self.data:
+            messagebox.showwarning("Warning", "No data to format.")
+            return
+            
+        self.custom_json_dump(self.data, PATH)
+        messagebox.showinfo("Success", "Unit JSON has been reset to one-line format!")
+
     def save_unit(self):
         name = self.entries["name"].get().strip()
         if not name: return
         
         try:
             self.data[name] = {
-                "health": int(self.entries["health"].get() or 0), "attack": int(self.entries["attack"].get() or 0), "defense": int(self.entries["defense"].get() or 0), "speed": int(self.entries["speed"].get() or 1), "cost_materials": int(self.entries["cost_materials"].get() or 0), "cost_manpower": int(self.entries["cost_manpower"].get() or 0), "cost_fuel": int(self.entries["cost_fuel"].get() or 0), "production_time": int(self.entries["production_time"].get() or 5), "naval_unit": False, "order": {}
+                "health": int(self.entries["health"].get() or 0), 
+                "attack": int(self.entries["attack"].get() or 0), 
+                "defense": int(self.entries["defense"].get() or 0), 
+                "speed": int(self.entries["speed"].get() or 1), 
+                "cost_materials": int(self.entries["cost_materials"].get() or 0), 
+                "cost_manpower": int(self.entries["cost_manpower"].get() or 0), 
+                "cost_fuel": int(self.entries["cost_fuel"].get() or 0), 
+                "production_time": int(self.entries["production_time"].get() or 5), 
+                "naval_unit": False, 
+                "order": {}
             }
-            with open(PATH, "w") as f:
-                json.dump(self.data, f, indent=4)
+            
+            # Use the custom dumper instead of standard json.dump
+            self.custom_json_dump(self.data, PATH)
+            
             messagebox.showinfo("Success", f"Updated {name}")
             self.refresh_list()
         except ValueError:

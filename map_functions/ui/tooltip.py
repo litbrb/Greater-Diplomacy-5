@@ -1,5 +1,5 @@
 import pygame
-from data.economy_data import BASE_YIELDS
+from data.constants import BASE_YIELDS
 
 def draw_tooltip(self, surface):
     if not self.hovered_province:

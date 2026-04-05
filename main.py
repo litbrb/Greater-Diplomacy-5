@@ -1,5 +1,5 @@
 import pygame
-from map_functions.rendering.font_manager import fonts # <-- Import the manager
+from map_functions.rendering.font_manager import fonts
 import ui_elements
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from screens.load_game import Load_Game
@@ -7,8 +7,8 @@ from screens.map import Map
 from screens.menu import Menu
 from screens.new_game import New_Game
 from screens.settings import Settings
-from screens.map_related_screens.recruit import Recruit_Screen # Renamed from New_Game
-from screens.map_related_screens.orders import Orders_Screen   # Renamed from New_Game
+from screens.map_related_screens.recruit import Recruit_Screen
+from screens.map_related_screens.orders import Orders_Screen
 from data.io import keybind_io
 from map_functions.rendering import symbol_loader
 from screens.map_related_screens.research import Research_Screen

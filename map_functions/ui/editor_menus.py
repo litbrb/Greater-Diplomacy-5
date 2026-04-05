@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import json
 import os
-from data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
+from data.constants import BASE_YIELDS, UPKEEP_MODIFIER
 
 def editor_load_map(self):
     """Opens a file dialog to load a map folder directly into the editor."""

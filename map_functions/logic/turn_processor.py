@@ -3,7 +3,7 @@ import os
 import math
 from map_functions.logic import diplomacy_logic
 from map_functions.logic import edit_province_ownership
-from data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
+from data.constants import BASE_YIELDS, UPKEEP_MODIFIER
 
 def process_next_turn(self):
     days_to_advance = 5

@@ -14,7 +14,7 @@ from map_functions.logic import (
 )
 from map_functions.camera.camera_handler import MapCamera
 from map_functions.rendering import map_renderer
-from data.economy_data import BASE_YIELDS, UPKEEP_MODIFIER
+from data.constants import BASE_YIELDS, UPKEEP_MODIFIER
 from map_functions.ui.minimap import UI_LEFT_OFFSET
 from map_functions.rendering.font_manager import fonts
 

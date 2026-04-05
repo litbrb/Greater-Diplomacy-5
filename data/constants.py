@@ -20,3 +20,12 @@ WATER_TERRAINS = ["ocean", "coastal_sea", "inland_sea", "lakes"]
 # Width and Height
 SCREEN_WIDTH = 1600
 SCREEN_HEIGHT = 900
+
+# Economy Data
+BASE_YIELDS = {
+    "manpower": 50,
+    "materials": 50,
+    "fuel": 0
+}
+
+UPKEEP_MODIFIER = 0.05

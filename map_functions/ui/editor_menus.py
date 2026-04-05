@@ -4,6 +4,7 @@ from tkinter import ttk, filedialog, messagebox
 import json
 import os
 from data.constants import BASE_YIELDS, UPKEEP_MODIFIER
+from data.map import load_map
 
 def editor_load_map(self):
     """Opens a file dialog to load a map folder directly into the editor."""
@@ -16,7 +17,6 @@ def editor_load_map(self):
 
     if path:
         # Re-run asset loader on this instance
-        from data import load_map
         load_map.load_map_assets(self, path)
         self.refresh_political_map()
         self.show_feedback("Map Loaded into Editor")

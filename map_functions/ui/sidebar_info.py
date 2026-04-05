@@ -1,4 +1,5 @@
 import pygame
+from data.constants import UI_LEFT_OFFSET
 
 # Define the area for the sidebar info panel
 info_rect = pygame.Rect(180, 70, 300, 450)
@@ -55,8 +56,9 @@ def draw_sidebar_info(self, surface):
     # 6. Draw the Combat Zone Section
     if is_combat:
         y_offset = 180
+        x_offset = UI_LEFT_OFFSET + 30
         header = self.font.render("--- COMBAT ZONE ---", True, (255, 50, 50))
-        surface.blit(header, (20, y_offset))
+        surface.blit(header, (x_offset, y_offset))
         
         current_y = y_offset + 35
         
@@ -66,19 +68,20 @@ def draw_sidebar_info(self, surface):
             side_color = self.nation_colors.get(side_id, (200, 200, 200))
             
             title = self.small_font.render(f"{side_display}:", True, side_color)
-            surface.blit(title, (20, current_y))
+            surface.blit(title, (x_offset, current_y))
             current_y += 22
             
             side_units = [u for u in units if u.get("owner") == side_id]
             for u in side_units[:5]:
                 u_type = u.get("type", "Unit")
                 atk = u.get("attack", 0)
+                defense = u.get("defense", 0)
                 hp = int(u.get("health", 0))
                 
-                u_stats = f" - {u_type} (ATK: {atk}) (HP: {hp})"
+                u_stats = f" - {u_type} (ATK: {atk}) (DEF: {defense}) (HP: {hp})"
 
                 txt = self.small_font.render(u_stats, True, (200, 200, 200))
-                surface.blit(txt, (30, current_y))
+                surface.blit(txt, (x_offset + 10, current_y))
                 current_y += 20
             
             current_y += 10

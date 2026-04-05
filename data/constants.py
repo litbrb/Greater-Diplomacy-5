@@ -21,6 +21,8 @@ WATER_TERRAINS = ["ocean", "coastal_sea", "inland_sea", "lakes"]
 SCREEN_WIDTH = 1600
 SCREEN_HEIGHT = 900
 
+UI_LEFT_OFFSET = 160
+
 # Economy Data
 BASE_YIELDS = {
     "manpower": 50,

@@ -1,6 +1,5 @@
 import pygame
-
-UI_LEFT_OFFSET = 160
+from data.constants import UI_LEFT_OFFSET
 
 def draw_minimap(self, surface, screen_width, screen_height):
     map_aspect = self.map_h / self.map_w

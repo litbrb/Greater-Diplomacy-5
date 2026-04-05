@@ -2,7 +2,7 @@ import pygame
 import ui_elements
 from gameState import GameState
 from ui_elements import Button, Slider
-from data import keybind_io
+from data.io import keybind_io
 
 class Settings(GameState):
     def __init__(self, controller):

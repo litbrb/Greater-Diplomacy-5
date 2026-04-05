@@ -2,7 +2,8 @@ import pygame
 import json
 import os
 from map_functions.logic.time_handler import TimeHandler
-from data import country_io
+from data.io import country_io
+from data.constants import WATER_MAPPING
 
 def load_map_assets(self, load_path):
     # --- 1. Image Assets ---
@@ -97,10 +98,9 @@ def load_map_assets(self, load_path):
                 v.update(saved_province) # Merges owner, units, etc.
         
         # --- THE WATER FIX ---
-        water_mapping = {"ocean": "Ocean", "coastal_sea": "Ocean", "inland_sea": "Ocean", "lakes": "Lakes"}
         terrain = v.get("terrain", "plains")
-        if terrain in water_mapping:
-            v["owner"] = water_mapping[terrain]
+        if terrain in WATER_MAPPING:
+            v["owner"] = WATER_MAPPING[terrain]
         else:
             v["owner"] = v.get("owner", "None")
         # ---------------------

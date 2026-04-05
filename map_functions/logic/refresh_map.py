@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+from data.constants import VISUAL_WATER_MAPPING
 
 def apply_border_shading(out_2d, owner_2d, id_array, water_ids):
     """
@@ -70,13 +71,11 @@ def refresh_political_map(self):
     owner_to_int = {}
     next_owner_id = 1 
     
-    water_mapping = {"ocean": "Ocean", "coastal_sea": "Ocean", "inland_sea": "Ocean", "lakes": "Ocean"}
-    
     for color_key, data in self.map_data.items():
         terrain_type = data.get("terrain", "plains")
         
-        if terrain_type in water_mapping:
-            owner = water_mapping[terrain_type]
+        if terrain_type in VISUAL_WATER_MAPPING:
+            owner = VISUAL_WATER_MAPPING[terrain_type]
             color = (255, 0, 255) # Magic pink
         else:
             owner = data.get("owner", "Unclaimed")

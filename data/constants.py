@@ -1,0 +1,18 @@
+# Used for logical ownership assignment
+WATER_MAPPING = {
+    "ocean": "Ocean", 
+    "coastal_sea": "Ocean", 
+    "inland_sea": "Ocean", 
+    "lakes": "Lakes"
+}
+
+# Used in refresh_map.py so lakes render the same color as oceans on political maps
+VISUAL_WATER_MAPPING = {
+    "ocean": "Ocean", 
+    "coastal_sea": "Ocean", 
+    "inland_sea": "Ocean", 
+    "lakes": "Ocean"
+}
+
+# Handy list since you check if terrain is water in several movement/combat files
+WATER_TERRAINS = ["ocean", "coastal_sea", "inland_sea", "lakes"]

@@ -1,5 +1,5 @@
 import pygame
-from data import country_io
+from data.io import country_io
 from map_functions.logic import map_utils
 
 def conquer_province(self, province, new_owner):

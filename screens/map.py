@@ -259,6 +259,36 @@ class Map(GameState):
     def additional_events(self, event): 
         event_handler.handle_map_events(self, event)
 
+    def sync_units_to_data(self):
+        """Forces all units currently on the map to adopt the stats from unit_data.json."""
+        import json, os
+        unit_path = 'data/json/unit_data.json'
+        
+        if not os.path.exists(unit_path):
+            self.show_feedback("Error: unit_data.json not found!")
+            return
+            
+        with open(unit_path, 'r') as f:
+            unit_library = json.load(f)
+            
+        updated_count = 0
+        for province in self.map_data.values():
+            for unit in province.get("units", []):
+                u_type = unit.get("type")
+                if u_type in unit_library:
+                    stats = unit_library[u_type]
+                    
+                    # Apply fresh stats from the JSON
+                    unit["max_health"] = stats.get("health", 100)
+                    unit["health"] = stats.get("health", 100) # Reset to full health
+                    unit["attack"] = stats.get("attack", 5)
+                    unit["defense"] = stats.get("defense", 0)
+                    unit["speed"] = stats.get("speed", 1)
+                    
+                    updated_count += 1
+                    
+        self.show_feedback(f"Synced {updated_count} units on map!")
+
     def handle_declare_war(self):
         target = self.selected_province.get("owner")
         player_data = self.nation_data[self.player_country]
@@ -534,7 +564,7 @@ class Map(GameState):
         
         self.bg_color = (r, g, b)
         # --------------------------------
-
+        
         for el in self.elements:
             el.visible = False
 
@@ -563,7 +593,7 @@ class Map(GameState):
 
         if self.is_editor:
             for el in self.elements:
-                if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank", "Resource", "Resources"]:
+                if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank", "Resource", "Resources", "Sync Units"]:
                     el.visible = True
                 
                 # Add highlighting for the editor Resource button

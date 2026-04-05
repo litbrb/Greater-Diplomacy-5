@@ -51,13 +51,15 @@ def render_buttons(self):
                 Button(SCREEN_WIDTH - 230, SCREEN_HEIGHT - 50, "small", "blue", "Load", self.editor_load_map),
                 Button(SCREEN_WIDTH - 340, SCREEN_HEIGHT - 50, "small", "grey", "Nation", self.select_brush_nation),
                 Button(SCREEN_WIDTH - 450, SCREEN_HEIGHT - 50, "small", "pink", "Core Brush", self.select_core_brush),
-                # --- NEW AUTO CORE BUTTON STACKED ABOVE CORE BRUSH ---
                 Button(SCREEN_WIDTH - 450, SCREEN_HEIGHT - 110, "small", "pink", "Auto-Core", self.auto_assign_cores),
-                # ----------------------------------------------------
-                # NEW RESOURCE EDITOR BUTTON (Stacked above the Building Brush)
+                
                 Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 110, "small", "purple", "Resource", self.select_resource_brush),
                 Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 50, "small", "grey", "Building", self.select_building_brush),
+                
+                # --- NEW BUTTON HERE Stacked above the Unit brush ---
+                Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 110, "small", "red", "Sync Units", self.sync_units_to_data),
                 Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 50, "small", "grey", "Unit", self.select_unit_brush),
+                
                 Button(SCREEN_WIDTH - 780, SCREEN_HEIGHT - 50, "small", "purple", "Map Tech", self.open_map_research_editor),
                 Button(SCREEN_WIDTH - 890, SCREEN_HEIGHT - 50, "small", "purple", "Data Refresh", self.refresh_nation_data),
                 Button(SCREEN_WIDTH - 1000, SCREEN_HEIGHT - 50, "small", "purple", "Set Date", self.open_editor_date)

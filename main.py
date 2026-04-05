@@ -115,7 +115,14 @@ class Controller:
                     self.states["MAP"] = Map(load_path=None, is_scenario=True, is_random=True)
                 else:
                     is_scen = "scenarios" in path
-                    self.states["MAP"] = Map(load_path=path, is_scenario=is_scen)
+                    
+                    # --- THE FIX ---
+                    # Check if we just came from the Map Editor selection screen
+                    is_map_editor = (previous_state == self.states["SELECT_BASE_MAP"])
+                    
+                    # Pass the force_editor flag to the Map class
+                    self.states["MAP"] = Map(load_path=path, is_scenario=is_scen, force_editor=is_map_editor)
+                    
             elif previous_state in [self.states["MENU"], self.states["NEW_GAME"]]:
                 self.states["MAP"] = Map()
 

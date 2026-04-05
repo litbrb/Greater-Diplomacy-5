@@ -39,7 +39,7 @@ def draw_tooltip(self, surface):
                 
                 if level > 0:
                     # refactor: Use 'Type' for Infantry, 'Lvl' for others
-                    label = "Type" if u_name.lower() == "infantry" else "Lvl"
+                    label = "Type" if u_name.lower() == "infantry_type" else "Lvl"
                     lines.append(f"- {u_name} ({label} {level})")
                 else:
                     lines.append(f"- {u_name}")

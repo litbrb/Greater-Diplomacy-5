@@ -24,7 +24,7 @@
     "Infantry Type 1948": { "health": 1600, "attack": 130, "defense": 0, "speed": 1, "cost_materials": 500, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 5, "naval_unit": false, "order": {} },
     "Cavalry": {
         "health": 600,
-        "attack": 200,
+        "attack": 300,
         "defense": 0,
         "speed": 2,
         "cost_materials": 2000,
@@ -36,7 +36,7 @@
     },
     "WW1 Tank": {
         "health": 10000,
-        "attack": 400,
+        "attack": 1500,
         "defense": 200,
         "speed": 1,
         "cost_materials": 50000,
@@ -120,7 +120,7 @@
     },
     "Light Tank I": {
         "health": 8000,
-        "attack": 400,
+        "attack": 1800,
         "defense": 150,
         "speed": 2,
         "cost_materials": 30000,
@@ -132,7 +132,7 @@
     },
     "Light Tank II": {
         "health": 9000,
-        "attack": 450,
+        "attack": 2100,
         "defense": 150,
         "speed": 2,
         "cost_materials": 30000,

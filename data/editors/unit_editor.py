@@ -52,20 +52,7 @@ class UnitEditor:
         
         try:
             self.data[name] = {
-                "health": int(self.entries["health"].get() or 0),
-                "attack": int(self.entries["attack"].get() or 0),
-                "defense": int(self.entries["defense"].get() or 0),
-                "speed": int(self.entries["speed"].get() or 1),
-                "cost_materials": int(self.entries["cost_materials"].get() or 0),
-                "cost_manpower": int(self.entries["cost_manpower"].get() or 0),
-                "cost_fuel": int(self.entries["cost_fuel"].get() or 0),
-                "production_time": int(self.entries["production_time"].get() or 5),
-                #"upkeep_materials": int(self.entries["upkeep_materials"].get() or 0),
-                #"upkeep_manpower": int(self.entries["upkeep_manpower"].get() or 0),
-                #"upkeep_fuel": int(self.entries["upkeep_fuel"].get() or 0),
-                # upkeep can be determined by just taking 10% of the cost
-                "naval_unit": False,
-                "order": {}
+                "health": int(self.entries["health"].get() or 0), "attack": int(self.entries["attack"].get() or 0), "defense": int(self.entries["defense"].get() or 0), "speed": int(self.entries["speed"].get() or 1), "cost_materials": int(self.entries["cost_materials"].get() or 0), "cost_manpower": int(self.entries["cost_manpower"].get() or 0), "cost_fuel": int(self.entries["cost_fuel"].get() or 0), "production_time": int(self.entries["production_time"].get() or 5), "naval_unit": False, "order": {}
             }
             with open(PATH, "w") as f:
                 json.dump(self.data, f, indent=4)

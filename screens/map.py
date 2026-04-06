@@ -322,6 +322,15 @@ class Map(GameState):
 
     def handle_declare_war(self):
         target = self.selected_province.get("owner")
+        
+        # --- NEW: Check for incoming requests to Reject ---
+        incoming = diplomacy_logic.get_pending_action(self.nation_data, target, self.player_country)
+        if incoming in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
+            del self.nation_data[target]["pending_diplomacy"][self.player_country]
+            diplomacy_logic.send_message(self.nation_data, self.player_country, target, f"We rejected your {incoming.replace('_', ' ').lower()}.", "DIPLOMACY")
+            self.show_feedback("Request Rejected!")
+            return
+
         player_data = self.nation_data[self.player_country]
         at_war = target in player_data.get("at_war_with", [])
         
@@ -331,6 +340,22 @@ class Map(GameState):
 
     def handle_form_alliance(self):
         target = self.selected_province.get("owner")
+        
+        # --- NEW: Check for incoming requests to Accept ---
+        incoming = diplomacy_logic.get_pending_action(self.nation_data, target, self.player_country)
+        if incoming == "ALLIANCE_REQUEST":
+            diplomacy_logic.finalize_alliance(self.nation_data, self.player_country, target)
+            del self.nation_data[target]["pending_diplomacy"][self.player_country]
+            diplomacy_logic.send_message(self.nation_data, self.player_country, target, "We accepted your alliance proposal.", "DIPLOMACY")
+            self.show_feedback("Alliance Accepted!")
+            return
+        elif incoming == "CEASEFIRE":
+            diplomacy_logic.finalize_neutral(self.nation_data, self.player_country, target)
+            del self.nation_data[target]["pending_diplomacy"][self.player_country]
+            diplomacy_logic.send_message(self.nation_data, self.player_country, target, "We accepted your ceasefire terms.", "DIPLOMACY")
+            self.show_feedback("Ceasefire Accepted!")
+            return
+
         player_data = self.nation_data[self.player_country]
         allied = target in player_data.get("allied_with", [])
         
@@ -744,51 +769,68 @@ class Map(GameState):
                 self.btn_declare_war.rect.y = 550 
                 self.btn_form_alliance.rect.y = 610
                 
-                at_war = owner in player_data.get("at_war_with", [])
-                allied = owner in player_data.get("allied_with", [])
+                # --- NEW: Check for incoming requests first ---
+                incoming_action = diplomacy_logic.get_pending_action(self.nation_data, owner, self.player_country)
+                incoming_turns = 0
+                if incoming_action:
+                    p_info = self.nation_data.get(owner, {}).get("pending_diplomacy", {}).get(self.player_country, {})
+                    incoming_turns = p_info.get("turns", 0) if isinstance(p_info, dict) else 0
 
-                pending_action = diplomacy_logic.get_pending_action(self.nation_data, self.player_country, owner)
-                
-                # --- THE FIX ---
-                # Check if we are still on turn 0 (can undo)
-                pending_info = pending.get(owner, {})
-                turns_elapsed = pending_info.get("turns", 0) if isinstance(pending_info, dict) else 0
-                is_sending = (turns_elapsed == 0)
-
-                # Helper to format button text based on status
-                def get_status_text():
-                    return "SENDING (UNDO)" if is_sending else "WAITING..."
-
-                if at_war:
-                    self.btn_form_alliance.visible = False
+                if incoming_action == "ALLIANCE_REQUEST" and incoming_turns > 0:
                     self.btn_declare_war.visible = True
-                    if pending_action == "CEASEFIRE":
-                        self.btn_declare_war.text = get_status_text()
-                    else:
-                        self.btn_declare_war.text = "CEASEFIRE"
-                        
-                elif allied:
-                    self.btn_declare_war.visible = False
+                    self.btn_declare_war.text = "REJECT ALLIANCE"
                     self.btn_form_alliance.visible = True
-                    if pending_action == "BREAK_ALLIANCE":
-                        self.btn_form_alliance.text = get_status_text()
-                    else:
-                        self.btn_form_alliance.text = "BREAK ALLIANCE"
-                        
+                    self.btn_form_alliance.text = "ACCEPT ALLIANCE"
+
+                elif incoming_action == "CEASEFIRE" and incoming_turns > 0:
+                    self.btn_declare_war.visible = True
+                    self.btn_declare_war.text = "REJECT CEASEFIRE"
+                    self.btn_form_alliance.visible = True
+                    self.btn_form_alliance.text = "ACCEPT CEASEFIRE"
+
                 else:
-                    # Neutral
-                    if pending_action == "WAR_DECLARATION":
-                        self.btn_declare_war.visible = True
-                        self.btn_declare_war.text = get_status_text()
+                    # --- NORMAL LOGIC ---
+                    at_war = owner in player_data.get("at_war_with", [])
+                    allied = owner in player_data.get("allied_with", [])
+
+                    pending_action = diplomacy_logic.get_pending_action(self.nation_data, self.player_country, owner)
+                    
+                    pending_info = pending.get(owner, {})
+                    turns_elapsed = pending_info.get("turns", 0) if isinstance(pending_info, dict) else 0
+                    is_sending = (turns_elapsed == 0)
+
+                    def get_status_text():
+                        return "SENDING (UNDO)" if is_sending else "WAITING..."
+
+                    if at_war:
                         self.btn_form_alliance.visible = False
-                        
-                    elif pending_action == "ALLIANCE_REQUEST":
-                        self.btn_form_alliance.visible = True
-                        self.btn_form_alliance.text = get_status_text()
-                        self.btn_declare_war.visible = False
-                        
-                    else:
                         self.btn_declare_war.visible = True
-                        self.btn_declare_war.text = "DECLARE WAR"
+                        if pending_action == "CEASEFIRE":
+                            self.btn_declare_war.text = get_status_text()
+                        else:
+                            self.btn_declare_war.text = "CEASEFIRE"
+                            
+                    elif allied:
+                        self.btn_declare_war.visible = False
                         self.btn_form_alliance.visible = True
-                        self.btn_form_alliance.text = "FORM ALLIANCE"
+                        if pending_action == "BREAK_ALLIANCE":
+                            self.btn_form_alliance.text = get_status_text()
+                        else:
+                            self.btn_form_alliance.text = "BREAK ALLIANCE"
+                            
+                    else:
+                        if pending_action == "WAR_DECLARATION":
+                            self.btn_declare_war.visible = True
+                            self.btn_declare_war.text = get_status_text()
+                            self.btn_form_alliance.visible = False
+                            
+                        elif pending_action == "ALLIANCE_REQUEST":
+                            self.btn_form_alliance.visible = True
+                            self.btn_form_alliance.text = get_status_text()
+                            self.btn_declare_war.visible = False
+                            
+                        else:
+                            self.btn_declare_war.visible = True
+                            self.btn_declare_war.text = "DECLARE WAR"
+                            self.btn_form_alliance.visible = True
+                            self.btn_form_alliance.text = "FORM ALLIANCE"

@@ -96,9 +96,12 @@ def process_diplomacy_turn(self):
                     send_message(self.nation_data, country_name, target, content, "TEXT")
                     send_message(self.nation_data, f"To: {target}", country_name, content, "TEXT")
                 elif action == "ALLIANCE_REQUEST":
-                    # Record that we officially sent the request
+                    # FIX: Send to target as well as outbox
+                    send_message(self.nation_data, country_name, target, "We propose an alliance between our nations.", "DIPLOMACY")
                     send_message(self.nation_data, f"To: {target}", country_name, "We propose an alliance between our nations.", "DIPLOMACY")
                 elif action == "CEASEFIRE":
+                    # FIX: Send to target as well as outbox
+                    send_message(self.nation_data, country_name, target, "We offer terms for a ceasefire.", "DIPLOMACY")
                     send_message(self.nation_data, f"To: {target}", country_name, "We offer terms for a ceasefire.", "DIPLOMACY")
 
                 # Advance all actions to Phase 2
@@ -106,14 +109,23 @@ def process_diplomacy_turn(self):
                 
             elif turns == 1:
                 # Phase 2 (End of Turn 1): Bilateral effects & AI Responses apply
+                # FIX: Check if the target is a human player
+                is_human_target = target in getattr(self, 'active_players', [])
+
                 if action == "WAR_DECLARATION":
-                    send_message(self.nation_data, target, country_name, "You will regret this betrayal.", "TEXT")
+                    if not is_human_target:
+                        send_message(self.nation_data, target, country_name, "You will regret this betrayal.", "TEXT")
                 elif action == "BREAK_ALLIANCE":
-                    send_message(self.nation_data, target, country_name, "We won't forget this.", "TEXT")
+                    if not is_human_target:
+                        send_message(self.nation_data, target, country_name, "We won't forget this.", "TEXT")
                 elif action.startswith("MSG:"):
-                    send_message(self.nation_data, target, country_name, "Message received.", "TEXT")
+                    if not is_human_target:
+                        send_message(self.nation_data, target, country_name, "Message received.", "TEXT")
                     
                 elif action == "ALLIANCE_REQUEST":
+                    if is_human_target:
+                        continue # Pause and wait for human to manually respond!
+
                     # 50% chance for the AI to accept or decline your request
                     if random.random() > 0.5:
                         finalize_alliance(self.nation_data, country_name, target)
@@ -122,6 +134,9 @@ def process_diplomacy_turn(self):
                         send_message(self.nation_data, target, country_name, "We decline your alliance proposal.", "DIPLOMACY")
                         
                 elif action == "CEASEFIRE":
+                    if is_human_target:
+                        continue # Pause and wait for human to manually respond!
+
                     if random.random() > 0.5:
                         finalize_neutral(self.nation_data, country_name, target)
                         send_message(self.nation_data, target, country_name, "We accept your terms for a ceasefire.", "DIPLOMACY")

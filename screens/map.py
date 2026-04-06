@@ -323,9 +323,12 @@ class Map(GameState):
     def handle_declare_war(self):
         target = self.selected_province.get("owner")
         
-        # --- NEW: Check for incoming requests to Reject ---
         incoming = diplomacy_logic.get_pending_action(self.nation_data, target, self.player_country)
-        if incoming in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
+        p_info = self.nation_data.get(target, {}).get("pending_diplomacy", {}).get(self.player_country, {})
+        incoming_turns = p_info.get("turns", 0) if isinstance(p_info, dict) else 0
+
+        # ONLY intercept if the request has actually been delivered (turns > 0)
+        if incoming in ["ALLIANCE_REQUEST", "CEASEFIRE"] and incoming_turns > 0:
             del self.nation_data[target]["pending_diplomacy"][self.player_country]
             diplomacy_logic.send_message(self.nation_data, self.player_country, target, f"We rejected your {incoming.replace('_', ' ').lower()}.", "DIPLOMACY")
             self.show_feedback("Request Rejected!")
@@ -341,20 +344,24 @@ class Map(GameState):
     def handle_form_alliance(self):
         target = self.selected_province.get("owner")
         
-        # --- NEW: Check for incoming requests to Accept ---
         incoming = diplomacy_logic.get_pending_action(self.nation_data, target, self.player_country)
-        if incoming == "ALLIANCE_REQUEST":
-            diplomacy_logic.finalize_alliance(self.nation_data, self.player_country, target)
-            del self.nation_data[target]["pending_diplomacy"][self.player_country]
-            diplomacy_logic.send_message(self.nation_data, self.player_country, target, "We accepted your alliance proposal.", "DIPLOMACY")
-            self.show_feedback("Alliance Accepted!")
-            return
-        elif incoming == "CEASEFIRE":
-            diplomacy_logic.finalize_neutral(self.nation_data, self.player_country, target)
-            del self.nation_data[target]["pending_diplomacy"][self.player_country]
-            diplomacy_logic.send_message(self.nation_data, self.player_country, target, "We accepted your ceasefire terms.", "DIPLOMACY")
-            self.show_feedback("Ceasefire Accepted!")
-            return
+        p_info = self.nation_data.get(target, {}).get("pending_diplomacy", {}).get(self.player_country, {})
+        incoming_turns = p_info.get("turns", 0) if isinstance(p_info, dict) else 0
+
+        # ONLY intercept if the request has actually been delivered (turns > 0)
+        if incoming_turns > 0:
+            if incoming == "ALLIANCE_REQUEST":
+                diplomacy_logic.finalize_alliance(self.nation_data, self.player_country, target)
+                del self.nation_data[target]["pending_diplomacy"][self.player_country]
+                diplomacy_logic.send_message(self.nation_data, self.player_country, target, "We accepted your alliance proposal.", "DIPLOMACY")
+                self.show_feedback("Alliance Accepted!")
+                return
+            elif incoming == "CEASEFIRE":
+                diplomacy_logic.finalize_neutral(self.nation_data, self.player_country, target)
+                del self.nation_data[target]["pending_diplomacy"][self.player_country]
+                diplomacy_logic.send_message(self.nation_data, self.player_country, target, "We accepted your ceasefire terms.", "DIPLOMACY")
+                self.show_feedback("Ceasefire Accepted!")
+                return
 
         player_data = self.nation_data[self.player_country]
         allied = target in player_data.get("allied_with", [])

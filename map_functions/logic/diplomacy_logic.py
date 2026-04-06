@@ -68,6 +68,54 @@ def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
 
 def process_diplomacy_turn(self):
     """Called during turn_processor.py to finalize declarations and messages."""
+    
+    # --- 1. SIMULTANEOUS ACTION CLASH RESOLUTION ---
+    # Detect if two nations fired an action at each other on the exact same turn
+    nations = list(self.nation_data.keys())
+    for i in range(len(nations)):
+        for j in range(i + 1, len(nations)):
+            nation_a = nations[i]
+            nation_b = nations[j]
+            
+            a_data = self.nation_data[nation_a].get("pending_diplomacy", {})
+            b_data = self.nation_data[nation_b].get("pending_diplomacy", {})
+            
+            a_info = a_data.get(nation_b)
+            b_info = b_data.get(nation_a)
+            
+            # If both queued an action on the same turn (turns == 0)
+            if isinstance(a_info, dict) and a_info.get("turns", 0) == 0 and \
+               isinstance(b_info, dict) and b_info.get("turns", 0) == 0:
+               
+                a_action = a_info.get("action")
+                b_action = b_info.get("action")
+               
+                # CLASH A: Mutual Alliance
+                if a_action == "ALLIANCE_REQUEST" and b_action == "ALLIANCE_REQUEST":
+                    finalize_alliance(self.nation_data, nation_a, nation_b)
+                    send_message(self.nation_data, nation_a, nation_b, "Our mutual alliance proposals crossed paths. We are now allied!", "DIPLOMACY")
+                    send_message(self.nation_data, nation_b, nation_a, "Our mutual alliance proposals crossed paths. We are now allied!", "DIPLOMACY")
+                    del a_data[nation_b]
+                    del b_data[nation_a]
+                   
+                # CLASH B: War vs Peace (War overwrites peace)
+                elif a_action == "WAR_DECLARATION" and b_action in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
+                    send_message(self.nation_data, nation_a, nation_b, f"Your diplomat proposing a {b_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
+                    del b_data[nation_a] # B's peaceful request is destroyed
+                    
+                elif b_action == "WAR_DECLARATION" and a_action in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
+                    send_message(self.nation_data, nation_b, nation_a, f"Your diplomat proposing a {a_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
+                    del a_data[nation_b] # A's peaceful request is destroyed
+                   
+                # CLASH C: Mutual Ceasefire
+                elif a_action == "CEASEFIRE" and b_action == "CEASEFIRE":
+                    finalize_neutral(self.nation_data, nation_a, nation_b)
+                    send_message(self.nation_data, nation_a, nation_b, "Mutual ceasefire agreements signed.", "DIPLOMACY")
+                    send_message(self.nation_data, nation_b, nation_a, "Mutual ceasefire agreements signed.", "DIPLOMACY")
+                    del a_data[nation_b]
+                    del b_data[nation_a]
+
+    # --- 2. STANDARD RESOLUTION ---
     for country_name, data in self.nation_data.items():
         pending = data.get("pending_diplomacy", {})
         actions_to_clear = []
@@ -96,11 +144,9 @@ def process_diplomacy_turn(self):
                     send_message(self.nation_data, country_name, target, content, "TEXT")
                     send_message(self.nation_data, f"To: {target}", country_name, content, "TEXT")
                 elif action == "ALLIANCE_REQUEST":
-                    # FIX: Send to target as well as outbox
                     send_message(self.nation_data, country_name, target, "We propose an alliance between our nations.", "DIPLOMACY")
                     send_message(self.nation_data, f"To: {target}", country_name, "We propose an alliance between our nations.", "DIPLOMACY")
                 elif action == "CEASEFIRE":
-                    # FIX: Send to target as well as outbox
                     send_message(self.nation_data, country_name, target, "We offer terms for a ceasefire.", "DIPLOMACY")
                     send_message(self.nation_data, f"To: {target}", country_name, "We offer terms for a ceasefire.", "DIPLOMACY")
 
@@ -108,8 +154,7 @@ def process_diplomacy_turn(self):
                 info["turns"] = 1
                 
             elif turns == 1:
-                # Phase 2 (End of Turn 1): Bilateral effects & AI Responses apply
-                # FIX: Check if the target is a human player
+                # Phase 2 (End of Round 1 for AI, End of Round 2 for Humans): Bilateral effects apply
                 is_human_target = target in getattr(self, 'active_players', [])
 
                 if action == "WAR_DECLARATION":
@@ -124,26 +169,28 @@ def process_diplomacy_turn(self):
                     
                 elif action == "ALLIANCE_REQUEST":
                     if is_human_target:
-                        continue # Pause and wait for human to manually respond!
-
-                    # 50% chance for the AI to accept or decline your request
-                    if random.random() > 0.5:
-                        finalize_alliance(self.nation_data, country_name, target)
-                        send_message(self.nation_data, target, country_name, "We happily accept your alliance proposal.", "DIPLOMACY")
+                        # If it survived to this phase, the human player ignored it during their turn!
+                        send_message(self.nation_data, target, country_name, "Your alliance proposal was ignored and has expired.", "DIPLOMACY")
                     else:
-                        send_message(self.nation_data, target, country_name, "We decline your alliance proposal.", "DIPLOMACY")
+                        # 50% chance for the AI to accept or decline your request
+                        if random.random() > 0.5:
+                            finalize_alliance(self.nation_data, country_name, target)
+                            send_message(self.nation_data, target, country_name, "We happily accept your alliance proposal.", "DIPLOMACY")
+                        else:
+                            send_message(self.nation_data, target, country_name, "We decline your alliance proposal.", "DIPLOMACY")
                         
                 elif action == "CEASEFIRE":
                     if is_human_target:
-                        continue # Pause and wait for human to manually respond!
-
-                    if random.random() > 0.5:
-                        finalize_neutral(self.nation_data, country_name, target)
-                        send_message(self.nation_data, target, country_name, "We accept your terms for a ceasefire.", "DIPLOMACY")
+                        # If it survived to this phase, the human player ignored it during their turn!
+                        send_message(self.nation_data, target, country_name, "Your ceasefire offer was ignored and has expired.", "DIPLOMACY")
                     else:
-                        send_message(self.nation_data, target, country_name, "We reject your ceasefire. The war continues.", "DIPLOMACY")
+                        if random.random() > 0.5:
+                            finalize_neutral(self.nation_data, country_name, target)
+                            send_message(self.nation_data, target, country_name, "We accept your terms for a ceasefire.", "DIPLOMACY")
+                        else:
+                            send_message(self.nation_data, target, country_name, "We reject your ceasefire. The war continues.", "DIPLOMACY")
                 
-                # Action is fully resolved, queue it for cleanup
+                # Action is fully resolved (or expired), queue it for cleanup
                 actions_to_clear.append(target)
 
         # Cleanup resolved actions

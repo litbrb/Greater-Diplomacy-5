@@ -214,6 +214,9 @@ class Map(GameState):
     def select_resource_brush(self):
         editor_menus.select_resource_brush(self)
 
+    def open_messages(self):
+        self.next_state, self.done = "MESSAGES", True
+
     def auto_assign_cores(self):
         """Automatically assigns a core to whoever owns the province."""
         for province in self.map_data.values():
@@ -710,14 +713,48 @@ class Map(GameState):
                 at_war = owner in player_data.get("at_war_with", [])
                 allied = owner in player_data.get("allied_with", [])
 
+                pending_action = diplomacy_logic.get_pending_action(self.nation_data, self.player_country, owner)
+                
+                # --- THE FIX ---
+                # Check if we are still on turn 0 (can undo)
+                pending_info = pending.get(owner, {})
+                turns_elapsed = pending_info.get("turns", 0) if isinstance(pending_info, dict) else 0
+                is_sending = (turns_elapsed == 0)
+
+                # Helper to format button text based on status
+                def get_status_text():
+                    return "SENDING (UNDO)" if is_sending else "WAITING..."
+
                 if at_war:
+                    self.btn_form_alliance.visible = False
                     self.btn_declare_war.visible = True
-                    self.btn_declare_war.text = "UNDO CEASEFIRE" if pending.get(owner) == "CEASEFIRE" else "CEASEFIRE"
+                    if pending_action == "CEASEFIRE":
+                        self.btn_declare_war.text = get_status_text()
+                    else:
+                        self.btn_declare_war.text = "CEASEFIRE"
+                        
                 elif allied:
+                    self.btn_declare_war.visible = False
                     self.btn_form_alliance.visible = True
-                    self.btn_form_alliance.text = "UNDO BREAK" if pending.get(owner) == "BREAK_ALLIANCE" else "BREAK ALLIANCE"
+                    if pending_action == "BREAK_ALLIANCE":
+                        self.btn_form_alliance.text = get_status_text()
+                    else:
+                        self.btn_form_alliance.text = "BREAK ALLIANCE"
+                        
                 else:
-                    self.btn_declare_war.visible = True
-                    self.btn_declare_war.text = "DECLARING..." if pending.get(owner) == "WAR_DECLARATION" else "DECLARE WAR"
-                    self.btn_form_alliance.visible = True
-                    self.btn_form_alliance.text = "REQUESTING..." if pending.get(owner) == "ALLIANCE_REQUEST" else "FORM ALLIANCE"
+                    # Neutral
+                    if pending_action == "WAR_DECLARATION":
+                        self.btn_declare_war.visible = True
+                        self.btn_declare_war.text = get_status_text()
+                        self.btn_form_alliance.visible = False
+                        
+                    elif pending_action == "ALLIANCE_REQUEST":
+                        self.btn_form_alliance.visible = True
+                        self.btn_form_alliance.text = get_status_text()
+                        self.btn_declare_war.visible = False
+                        
+                    else:
+                        self.btn_declare_war.visible = True
+                        self.btn_declare_war.text = "DECLARE WAR"
+                        self.btn_form_alliance.visible = True
+                        self.btn_form_alliance.text = "FORM ALLIANCE"

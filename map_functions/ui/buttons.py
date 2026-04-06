@@ -72,8 +72,11 @@ def render_buttons(self):
                 Button(20, 220, "left_ui_bar", "blue", "R&D", self.open_research, image=research_icon),
                 # Save
                 Button(20, 320, "left_ui_bar", "green", "Save", self.save_map_data, image=save_icon),
-                # --- NEW BUTTON ---
-                Button(20, 120, "left_ui_bar", "orange", "Edit Nation", self.open_edit_country)
+                # Edit Nation
+                Button(20, 120, "left_ui_bar", "orange", "Edit Nation", self.open_edit_country),
+                
+                # --- NEW BUTTON ADDED HERE ---
+                Button(20, 520, "left_ui_bar", "purple", "Messages", self.open_messages)
             ])
     
     self.btn_go_build = Button(1390, 550, "medium", "grey", "Construction", self.open_construction)

@@ -1,4 +1,5 @@
 import pygame
+from screens.map_related_screens.messages import Messages_Screen
 from map_functions.rendering.font_manager import fonts
 import ui_elements
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -75,7 +76,8 @@ class Controller:
             "ORDERS": Orders_Screen(),
             "RESEARCH": Research_Screen(),
             "ECONOMY": Economy_Screen(),
-            "EDIT_COUNTRY": Edit_Country_Screen()
+            "EDIT_COUNTRY": Edit_Country_Screen(),
+            "MESSAGES": Messages_Screen() # <--- NEW
         }
         self.states["CONSTRUCTION"] = Construction_Screen()
         self.active_state = self.states["MENU"]
@@ -94,12 +96,15 @@ class Controller:
                 self.states[next_state_name].start_with_province(map_ref.selected_province, map_ref)
         
         # NEW: Separate handoff for Research since it doesn't care about provinces
-        if next_state_name in ["RESEARCH", "ECONOMY"]:
+        # Look for the block handling RESEARCH and ECONOMY and change it to this:
+        if next_state_name in ["RESEARCH", "ECONOMY", "MESSAGES"]:
             map_ref = self.states["MAP"]
             if next_state_name == "RESEARCH":
                 self.states["RESEARCH"].start_research(map_ref)
-            else:
+            elif next_state_name == "ECONOMY":
                 self.states["ECONOMY"].start_economy(map_ref)
+            elif next_state_name == "MESSAGES":
+                self.states["MESSAGES"].start_messages(map_ref)
 
         # 2. Map Persistence
         if next_state_name == "MAP":

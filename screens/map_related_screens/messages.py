@@ -1,0 +1,231 @@
+import pygame
+from gameState import GameState
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from ui_elements import Button
+from map_functions.rendering.font_manager import fonts
+from map_functions.logic import diplomacy_logic
+
+class Messages_Screen(GameState):
+    def __init__(self):
+        super().__init__()
+        self.bg_color = (25, 25, 35)
+        self.map_screen = None
+        self.active_tab = "INBOX" # INBOX or COMPOSE
+        self.selected_recipient = None
+        self.compose_text = ""
+        self.scroll_y = 0
+
+    def start_messages(self, map_ref):
+        self.map_screen = map_ref
+        self.active_tab = "INBOX"
+        self.compose_text = ""
+        self.scroll_y = 0
+        self.refresh_ui()
+
+    def refresh_ui(self):
+        self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
+
+        self.elements.append(Button(200, 20, "medium", "blue" if self.active_tab == "INBOX" else "grey", "Inbox", lambda: self.set_tab("INBOX")))
+        self.elements.append(Button(420, 20, "medium", "blue" if self.active_tab == "COMPOSE" else "grey", "Compose", lambda: self.set_tab("COMPOSE")))
+
+        if self.active_tab == "COMPOSE":
+            y_off = 100
+            
+            # --- THE FIX ---
+            # 1. Scan the map to find who is actually alive right now
+            active_nations = set()
+            for prov in self.map_screen.map_data.values():
+                owner = prov.get("owner")
+                if owner and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
+                    active_nations.add(owner)
+            
+            # 2. Filter the playable list to only include living nations
+            playable = [c for c, d in self.map_screen.nation_data.items() 
+                        if d.get("is_playable") and c != self.map_screen.player_country and c in active_nations]
+            # ---------------
+            
+            playable.sort()
+            for i, c in enumerate(playable):
+                x_off = 50 + (i % 5) * 220
+                row_y = y_off + (i // 5) * 60
+                color = "green" if self.selected_recipient == c else "grey"
+                self.elements.append(Button(x_off, row_y, "medium", color, c, lambda c_name=c: self.select_recipient(c_name)))
+
+            if self.selected_recipient:
+                self.elements.append(Button(SCREEN_WIDTH - 250, SCREEN_HEIGHT - 80, "medium", "orange", "Send Message", self.send_message))
+
+    def set_tab(self, tab):
+        self.active_tab = tab
+        self.scroll_y = 0
+        self.refresh_ui()
+
+    def select_recipient(self, target):
+        self.selected_recipient = target
+        
+        # Load existing draft if present
+        player_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+        pending = player_data.get("pending_diplomacy", {}).get(target, {})
+        action = pending.get("action", "") if isinstance(pending, dict) else pending
+        turns = pending.get("turns", 0) if isinstance(pending, dict) else 0
+        
+        if isinstance(action, str) and action.startswith("MSG:") and turns == 0:
+            self.compose_text = action[4:]
+        else:
+            self.compose_text = ""
+            
+        self.refresh_ui()
+
+    def send_message(self):
+        if self.selected_recipient and self.compose_text.strip():
+            msg = diplomacy_logic.queue_text_message(self.map_screen.nation_data, self.map_screen.player_country, self.selected_recipient, self.compose_text)
+            self.map_screen.show_feedback(msg)
+            self.refresh_ui() # Stay on compose tab so they can see it saved
+        else:
+            self.map_screen.show_feedback("Message cannot be empty!")
+
+    def clear_draft(self):
+        if self.selected_recipient:
+            msg = diplomacy_logic.cancel_text_message(self.map_screen.nation_data, self.map_screen.player_country, self.selected_recipient)
+            self.map_screen.show_feedback(msg)
+            self.compose_text = ""
+            self.refresh_ui()
+
+    def additional_events(self, event):
+        if self.active_tab == "COMPOSE" and self.selected_recipient:
+            # Check lock state
+            player_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+            pending = player_data.get("pending_diplomacy", {}).get(self.selected_recipient, {})
+            action = pending.get("action", "") if isinstance(pending, dict) else pending
+            turns = pending.get("turns", 0) if isinstance(pending, dict) else 0
+            
+            # Lock input if in transit or another non-text action is pending
+            locked = turns > 0 or (isinstance(action, str) and action and not action.startswith("MSG:"))
+            
+            if not locked and event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    self.compose_text = self.compose_text[:-1]
+                elif event.key == pygame.K_RETURN:
+                    self.send_message()
+                else:
+                    if len(self.compose_text) < 70 and event.unicode.isprintable():
+                        self.compose_text += event.unicode
+                        
+        elif self.active_tab == "INBOX":
+            if event.type == pygame.MOUSEWHEEL:
+                self.scroll_y = min(0, self.scroll_y + event.y * 30)
+
+    def additional_draw(self, surface):
+        font_title = fonts.get("heading1")
+        font_med = fonts.get("heading2")
+        font_small = fonts.get("normal")
+
+        if self.active_tab == "INBOX":
+            title = font_title.render("INBOX", True, (255, 255, 255))
+            surface.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
+
+            p_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+            inbox = p_data.get("inbox", [])
+
+            if not inbox:
+                txt = font_med.render("No messages.", True, (150, 150, 150))
+                surface.blit(txt, (50, 100))
+            else:
+                y_pos = 100 + self.scroll_y
+                for msg in inbox:
+                    if y_pos > 80 and y_pos < SCREEN_HEIGHT:
+                        rect = pygame.Rect(50, y_pos, SCREEN_WIDTH - 100, 80)
+                        pygame.draw.rect(surface, (40, 40, 50), rect)
+                        pygame.draw.rect(surface, (100, 100, 200), rect, 2)
+
+                        if msg['sender'].startswith("To: "):
+                            sender_txt = font_med.render(msg['sender'], True, (150, 255, 150))
+                        else:
+                            sender_txt = font_med.render(f"From: {msg['sender']}", True, (200, 200, 255))
+
+                        content_txt = font_small.render(msg['content'], True, (255, 255, 255))
+
+                        surface.blit(sender_txt, (rect.x + 20, rect.y + 10))
+                        surface.blit(content_txt, (rect.x + 20, rect.y + 45))
+                    y_pos += 100
+
+        elif self.active_tab == "COMPOSE":
+            title = font_title.render("COMPOSE MESSAGE", True, (255, 255, 255))
+            surface.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
+
+            if self.selected_recipient:
+                player_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+                pending = player_data.get("pending_diplomacy", {}).get(self.selected_recipient, {})
+                action = pending.get("action", "") if isinstance(pending, dict) else pending
+                turns = pending.get("turns", 0) if isinstance(pending, dict) else 0
+
+                # Dynamic Status Logic
+                status_text = "Drafting new message to:"
+                if turns > 0:
+                    status_text = "Awaiting response from:"
+                elif isinstance(action, str) and action.startswith("MSG:"):
+                    status_text = "Editing queued message to:"
+                elif isinstance(action, str) and action:
+                    status_text = "Diplomat already deployed to:"
+
+                prompt = font_med.render(f"{status_text} {self.selected_recipient}", True, (200, 255, 200))
+                surface.blit(prompt, (50, SCREEN_HEIGHT - 180))
+
+                # Hide text input if locked
+                if turns == 0 and not (isinstance(action, str) and action and not action.startswith("MSG:")):
+                    input_rect = pygame.Rect(50, SCREEN_HEIGHT - 140, SCREEN_WIDTH - 480, 60)
+                    pygame.draw.rect(surface, (20, 20, 20), input_rect)
+                    pygame.draw.rect(surface, (255, 255, 255), input_rect, 2)
+
+                    txt_surf = font_med.render(self.compose_text + "|", True, (255, 255, 255))
+                    surface.blit(txt_surf, (input_rect.x + 10, input_rect.y + 15))
+
+    # --- UI Elements Refresh Update ---
+    # Put this at the end of the file to override the default refresh_ui rendering
+    def refresh_ui(self):
+        self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
+
+        self.elements.append(Button(200, 20, "medium", "blue" if self.active_tab == "INBOX" else "grey", "Inbox", lambda: self.set_tab("INBOX")))
+        self.elements.append(Button(420, 20, "medium", "blue" if self.active_tab == "COMPOSE" else "grey", "Compose", lambda: self.set_tab("COMPOSE")))
+
+        if self.active_tab == "COMPOSE":
+            y_off = 100
+            
+            # Scan map for living nations
+            active_nations = set()
+            for prov in self.map_screen.map_data.values():
+                owner = prov.get("owner")
+                if owner and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
+                    active_nations.add(owner)
+            
+            playable = [c for c, d in self.map_screen.nation_data.items() 
+                        if d.get("is_playable") and c != self.map_screen.player_country and c in active_nations]
+            
+            playable.sort()
+            for i, c in enumerate(playable):
+                x_off = 50 + (i % 5) * 220
+                row_y = y_off + (i // 5) * 60
+                color = "green" if self.selected_recipient == c else "grey"
+                self.elements.append(Button(x_off, row_y, "medium", color, c, lambda c_name=c: self.select_recipient(c_name)))
+
+            # DYNAMIC DRAFT BUTTONS
+            if self.selected_recipient:
+                player_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+                pending = player_data.get("pending_diplomacy", {}).get(self.selected_recipient, {})
+                action = pending.get("action", "") if isinstance(pending, dict) else pending
+                turns = pending.get("turns", 0) if isinstance(pending, dict) else 0
+
+                if turns > 0:
+                    self.elements.append(Button(SCREEN_WIDTH - 300, SCREEN_HEIGHT - 80, "large", "grey", "Message in Transit", lambda: None))
+                elif isinstance(action, str) and action.startswith("MSG:"):
+                    self.elements.append(Button(SCREEN_WIDTH - 420, SCREEN_HEIGHT - 80, "medium", "orange", "Update Draft", self.send_message))
+                    self.elements.append(Button(SCREEN_WIDTH - 200, SCREEN_HEIGHT - 80, "medium", "red", "Clear Draft", self.clear_draft))
+                elif isinstance(action, str) and action:
+                    self.elements.append(Button(SCREEN_WIDTH - 300, SCREEN_HEIGHT - 80, "large", "grey", "Diplomat Busy", lambda: None))
+                else:
+                    self.elements.append(Button(SCREEN_WIDTH - 250, SCREEN_HEIGHT - 80, "medium", "orange", "Queue Message", self.send_message))
+
+    def exit_to_map(self):
+        self.next_state, self.done = "MAP", True
+
+    def handle_back_key(self):
+        self.exit_to_map()

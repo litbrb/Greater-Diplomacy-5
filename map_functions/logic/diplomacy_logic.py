@@ -53,18 +53,31 @@ def cancel_text_message(nation_data, player_name, target_name):
     return "No drafted message to clear."
 
 def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
+    # 1. Deliver the message to the receiver
     receiver_data = nation_data.get(receiver)
-    if not receiver_data: return
-    if "inbox" not in receiver_data:
-        receiver_data["inbox"] = []
-    
-    # Insert at the beginning so newest messages are at the top
-    receiver_data["inbox"].insert(0, {
-        "sender": sender,
-        "content": content,
-        "type": msg_type,
-        "read": False
-    })
+    if receiver_data:
+        if "inbox" not in receiver_data:
+            receiver_data["inbox"] = []
+        
+        receiver_data["inbox"].insert(0, {
+            "sender": sender,
+            "content": content,
+            "type": msg_type,
+            "read": False
+        })
+
+    # 2. Save a "Sent" copy to the sender's inbox
+    sender_data = nation_data.get(sender)
+    if sender_data:
+        if "inbox" not in sender_data:
+            sender_data["inbox"] = []
+            
+        sender_data["inbox"].insert(0, {
+            "sender": f"To: {receiver}",
+            "content": content,
+            "type": msg_type,
+            "read": True  # Automatically mark as read for the sender
+        })
 
 def process_diplomacy_turn(self):
     """Called during turn_processor.py to finalize declarations and messages."""
@@ -134,21 +147,16 @@ def process_diplomacy_turn(self):
                 if action == "WAR_DECLARATION":
                     finalize_war(self.nation_data, country_name, target)
                     send_message(self.nation_data, country_name, target, "We have declared WAR upon you!", "DIPLOMACY")
-                    send_message(self.nation_data, f"To: {target}", country_name, "We have declared WAR upon you!", "DIPLOMACY")
                 elif action == "BREAK_ALLIANCE":
                     finalize_neutral(self.nation_data, country_name, target)
                     send_message(self.nation_data, country_name, target, "We have broken our alliance.", "DIPLOMACY")
-                    send_message(self.nation_data, f"To: {target}", country_name, "We have broken our alliance.", "DIPLOMACY")
                 elif action.startswith("MSG:"):
                     content = action[4:]
                     send_message(self.nation_data, country_name, target, content, "TEXT")
-                    send_message(self.nation_data, f"To: {target}", country_name, content, "TEXT")
                 elif action == "ALLIANCE_REQUEST":
                     send_message(self.nation_data, country_name, target, "We propose an alliance between our nations.", "DIPLOMACY")
-                    send_message(self.nation_data, f"To: {target}", country_name, "We propose an alliance between our nations.", "DIPLOMACY")
                 elif action == "CEASEFIRE":
                     send_message(self.nation_data, country_name, target, "We offer terms for a ceasefire.", "DIPLOMACY")
-                    send_message(self.nation_data, f"To: {target}", country_name, "We offer terms for a ceasefire.", "DIPLOMACY")
 
                 # Advance all actions to Phase 2
                 info["turns"] = 1

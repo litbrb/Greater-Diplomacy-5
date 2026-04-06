@@ -283,9 +283,9 @@ def open_editor_economy(self):
     # Instead, we just grab the unified dictionary from the Map class:
     all_econ = self.calculate_all_economies()
 
-    col_man = "Manpower [Bld/Core/Non/Res/Net]"
-    col_mat = "Materials [Bld/Core/Non/Res/Net]"
-    col_fuel = "Fuel [Bld/Core/Non/Res/Net]"
+    col_man = "Manpower [Inc + Bld - Upk = Net]"
+    col_mat = "Materials [Inc + Bld - Upk = Net]"
+    col_fuel = "Fuel [Inc + Bld - Upk = Net]"
 
     # --- Treeview UI Setup ---
     columns = ("Country", col_man, col_mat, col_fuel)
@@ -337,12 +337,17 @@ def open_editor_economy(self):
         tree.column(col, width=widths[col], anchor="center")
     
     # Helper formatters
-    def fmt(net): 
-        return f"+{int(net)}" if net >= 0 else str(int(net))
+    """def fmt(net): 
+        return f"+{int(net)}" if net >= 0 else str(int(net))"""
 
     def fmt_cell(bld, core, non, res, upk):
-        net = (bld + core + non + res) - upk
-        return f"[{int(bld)}/{int(core)}/{int(non)}/{int(res)}/{fmt(net)}]"
+        # Merge all non-building income sources
+        inc = core + non + res
+        # Calculate the final net value
+        net = (inc + bld) - upk
+        
+        # Return the new format: [Inc+Bld-Upk=Net]
+        return f"[{int(inc)} + {int(bld)} - {int(upk)} = {int(net)}]"
         
     def populate_tree(country_list):
         for i, c in enumerate(country_list):

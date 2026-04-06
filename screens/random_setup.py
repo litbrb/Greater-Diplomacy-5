@@ -30,15 +30,15 @@ class Random_Setup(GameState):
         return max(1, playable) # Fallback to 1
 
     def reset_to_defaults(self):
-        """Sets default year to 1900 and countries to ~10% of the map."""
-        self.current_year = 1900
+        """Sets default year to 1850 and countries to ~10% of the map."""
+        self.current_year = 1850
         # Default slider values (0.0 to 1.0)
-        self.year_slider_val = (1900 - 1850) / (1950 - 1850)
+        self.year_slider_val = (self.current_year - 1850) / (1950 - 1850)
         
         self.current_countries = min(20, self.max_countries)
         self.country_slider_val = self.current_countries / self.max_countries
         
-        self.map_index = 0
+        self.map_index = 1
 
     def refresh_ui(self):
         # CRITICAL: We keep the Sliders at Index 1 and 2 so the math below doesn't break

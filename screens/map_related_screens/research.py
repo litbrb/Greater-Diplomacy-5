@@ -118,7 +118,6 @@ class Research_Screen(GameState):
         if tech_key == "civilian_car": return "Civilian Car"
         if tech_key == "ww1_armored_car": return "WW1 Armored Car"
         if tech_key == "ww1_tank": return "WW1 Tank"
-        if tech_key == "main_battle_tank": return "Main Battle Tank"
         if tech_key == "carrack": return "Carrack"
         if tech_key == "ironclad": return "Ironclad"
         if tech_key == "pre-dreadnaught": return "Pre-Dreadnought"

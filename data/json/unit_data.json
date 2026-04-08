@@ -34,12 +34,16 @@
     "Armored Car III": {"health": 1400, "attack": 200, "defense": 100, "speed": 4, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     "Armored Car IV": {"health": 1600, "attack": 200, "defense": 100, "speed": 4, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     "Armored Car V": {"health": 1800, "attack": 200, "defense": 100, "speed": 5, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
+    "Armored Car VI": {"health": 2000, "attack": 200, "defense": 100, "speed": 5, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
+    "Armored Car VII": {"health": 2000, "attack": 200, "defense": 100, "speed": 5, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     
     "Light Tank I": {"health": 2000, "attack": 1800, "defense": 150, "speed": 2, "cost_materials": 30000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank II": {"health": 2200, "attack": 2100, "defense": 150, "speed": 2, "cost_materials": 30000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank III": {"health": 2400, "attack": 2400, "defense": 150, "speed": 3, "cost_materials": 30000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank IV": {"health": 2600, "attack": 2700, "defense": 150, "speed": 3, "cost_materials": 30000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank V": {"health": 2800, "attack": 3000, "defense": 150, "speed": 4, "cost_materials": 30000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
+    "Light Tank VI": {"health": 3000, "attack": 3000, "defense": 150, "speed": 4, "cost_materials": 30000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
+    "Light Tank VII": {"health": 3200, "attack": 3000, "defense": 150, "speed": 4, "cost_materials": 30000, "cost_manpower": 1000, "cost_fuel": 2000, "production_time": 5, "naval_unit": false, "order": {}},
     
     "Medium Tank I": {"health": 3000, "attack": 2400, "defense": 200, "speed": 2, "cost_materials": 50000, "cost_manpower": 1000, "cost_fuel": 3000, "production_time": 5, "naval_unit": false, "order": {}},
     "Medium Tank II": {"health": 3500, "attack": 3000, "defense": 200, "speed": 2, "cost_materials": 50000, "cost_manpower": 1000, "cost_fuel": 3000, "production_time": 5, "naval_unit": false, "order": {}},
@@ -49,7 +53,10 @@
     "Heavy Tank II": {"health": 4500, "attack": 3500, "defense": 250, "speed": 1, "cost_materials": 80000, "cost_manpower": 1000, "cost_fuel": 4000, "production_time": 5, "naval_unit": false, "order": {}},
     "Heavy Tank III": {"health": 5000, "attack": 4000, "defense": 250, "speed": 1, "cost_materials": 80000, "cost_manpower": 1000, "cost_fuel": 4000, "production_time": 5, "naval_unit": false, "order": {}},
     
-    "Main Battle Tank": {"health": 5000, "attack": 4000, "defense": 300, "speed": 2, "cost_materials": 80000, "cost_manpower": 1000, "cost_fuel": 5000, "production_time": 5, "naval_unit": false, "order": {}},
+    "Main Battle Tank I": {"health": 5000, "attack": 4000, "defense": 300, "speed": 2, "cost_materials": 80000, "cost_manpower": 1000, "cost_fuel": 5000, "production_time": 5, "naval_unit": false, "order": {}},
+    "Main Battle Tank II": {"health": 5000, "attack": 4000, "defense": 300, "speed": 2, "cost_materials": 80000, "cost_manpower": 1000, "cost_fuel": 5000, "production_time": 5, "naval_unit": false, "order": {}},
+    "Main Battle Tank III": {"health": 5000, "attack": 4000, "defense": 300, "speed": 2, "cost_materials": 80000, "cost_manpower": 1000, "cost_fuel": 5000, "production_time": 5, "naval_unit": false, "order": {}},
+
     
     "Carrack": {"health": 1000, "attack": 100, "defense": 0, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 5, "naval_unit": true, "order": {}},
     "Ironclad": {"health": 1000, "attack": 200, "defense": 100, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 5, "naval_unit": true, "order": {}},

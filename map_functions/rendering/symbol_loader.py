@@ -21,8 +21,6 @@ def load_symbols():
             SYMBOLS[name] = img
 
 # --- NEW: NumPy Colorizer ---
-import numpy as np
-
 def colorize_red_image(img, new_color):
     """Treats the Red channel as brightness, but ONLY for red-tinted pixels.
        Leaves white, grey, and black pixels completely untouched."""
@@ -64,8 +62,39 @@ def colorize_red_image(img, new_color):
 def get_symbol(name, zoom, color=None): # <-- Added 'color' parameter
     """Returns scaled icon. Generates and caches colored variants if a color is provided."""
     # 1. Resolve base name
-    base_name = name if name in SYMBOLS else re.sub(r'\s+(X{0,1}V{0,1}I{0,3}|X{0,2}|I[VX]|VI{0,3})$', '', name).strip()
+    base_name = name
     
+    if base_name not in SYMBOLS:
+        # Check if there is a 4-digit year in the name (e.g., "Infantry Type 1860")
+        year_match = re.search(r'\b(\d{4})\b', name)
+        if year_match:
+            year = int(year_match.group(1))
+            
+            # Dynamically strip "Type" and the year to extract the generic class ("Infantry")
+            base_type = re.sub(r'\s*(?:Type)?\s*\d{4}.*', '', name, flags=re.IGNORECASE).strip()
+            
+            range_found = False
+            # Look for an image formatted as "BaseType YYYY-YYYY" (e.g. "Infantry 1850-1900")
+            for sym_key in SYMBOLS.keys():
+                pattern = rf'^{re.escape(base_type)}\s+(\d{{4}})-(\d{{4}})$'
+                range_match = re.match(pattern, sym_key, re.IGNORECASE)
+                
+                if range_match:
+                    start_year, end_year = int(range_match.group(1)), int(range_match.group(2))
+                    # Check if our requested year falls within the bounds of this image file
+                    if start_year <= year <= end_year:
+                        base_name = sym_key
+                        range_found = True
+                        break
+                        
+            # If no specific era image matched, fallback to generic base type (e.g., "Infantry")
+            if not range_found and base_type in SYMBOLS:
+                base_name = base_type
+
+    # Original fallback for Roman Numerals (Tanks & Navy)
+    if base_name not in SYMBOLS:
+        base_name = re.sub(r'\s+(X{0,1}V{0,1}I{0,3}|X{0,2}|I[VX]|VI{0,3})$', '', name).strip()
+        
     if base_name not in SYMBOLS:
         return None
 

@@ -11,7 +11,8 @@ def randomize_all_provinces(map_screen, settings):
         if stats.get("is_playable") and name not in ["Ocean", "Lakes", "Unclaimed"]
     ]
     
-    land_provinces = [p for p in map_screen.map_data.values() if p.get("terrain", "") not in ["ocean", "coastal_sea", "inland_sea", "lakes"]]
+    water_terrains = ["ocean", "coastal_sea", "inland_sea", "lakes"]
+    land_provinces = [p for p in map_screen.map_data.values() if p.get("terrain", "") not in water_terrains]
     
     if not land_provinces or not playable_nations: return
 
@@ -19,14 +20,41 @@ def randomize_all_provinces(map_screen, settings):
     for prov in land_provinces:
         prov.update({"owner": "Unclaimed", "cores": [], "resources": {}, "buildings": [], "units": []})
 
+    # --- Step 1: Island Filtering (Connected Components) ---
+    # We find all landmasses and only keep those with 3 or more connected provinces.
+    valid_land_provinces = []
+    visited = set()
+    land_ids = set(p["id"] for p in land_provinces)
+
+    for prov in land_provinces:
+        if prov["id"] in visited: continue
+        comp = []
+        queue = [prov["id"]]
+        visited.add(prov["id"])
+
+        while queue:
+            curr_id = queue.pop(0)
+            curr_prov = map_screen.id_to_province[curr_id]
+            comp.append(curr_prov)
+
+            for n_id in curr_prov.get("neighbors", []):
+                if n_id in land_ids and n_id not in visited:
+                    visited.add(n_id)
+                    queue.append(n_id)
+
+        if len(comp) >= 3:
+            valid_land_provinces.extend(comp)
+            
+    if not valid_land_provinces: return
+
     import random
     random.shuffle(playable_nations)
     
-    # 1. Adjust country count to not exceed available provinces
-    num_seeds = min(target_country_count, len(land_provinces))
+    # 1. Adjust country count to not exceed available valid provinces
+    num_seeds = min(target_country_count, len(valid_land_provinces))
     active_nations = playable_nations[:num_seeds]
     
-    unassigned_land = set(p["id"] for p in land_provinces)
+    unassigned_land = set(p["id"] for p in valid_land_provinces)
     frontiers = {nation: [] for nation in active_nations}
     
     # --- Step A: Plant Seeds ---
@@ -113,7 +141,8 @@ def randomize_all_provinces(map_screen, settings):
     if baseline_tech.get("factory", 0) > 0: allowed_buildings.append("Factory Lvl 1")
     if baseline_tech.get("fuel_refining", 0) > 0: allowed_buildings.append("Synthetic Refinery Lvl 1")
 
-    for prov in land_provinces:
+    # Give out random resources and buildings
+    for prov in valid_land_provinces:
         if random.random() < 0.15:
             res_type = random.choice(["Iron", "Coal", "Oil"])
             prov["resources"] = {res_type: random.randint(20, 80)}
@@ -121,5 +150,55 @@ def randomize_all_provinces(map_screen, settings):
         # Only spawn buildings if the era permits it
         if allowed_buildings and random.random() < 0.10:
             prov["buildings"] = [random.choice(allowed_buildings)]
+
+    # --- Step D: Guarantee Minimums & Garrison Units ---
+    unit_library = {}
+    unit_stats_path = 'data/json/unit_data.json'
+    if os.path.exists(unit_stats_path):
+        with open(unit_stats_path, 'r') as f:
+            unit_library = json.load(f)
+
+    # Helper function to get the correct infantry name for a nation's tech level
+    def get_infantry_type(nation):
+        res_lvl = map_screen.nation_data[nation]["research"].get("infantry_type", 1)
+        inf_years = struct.get("infantry_type", {}).get("years", [1850])
+        year_val = inf_years[min(res_lvl - 1, len(inf_years)-1)]
+        return f"Infantry Type {year_val}"
+
+    # Helper to generate a fresh unit dictionary so pointers aren't shared across provinces
+    def generate_unit(nation, u_name):
+        stats = unit_library.get(u_name, {})
+        return {
+            "type": u_name,
+            "owner": nation,
+            "health": stats.get("health", 100),
+            "max_health": stats.get("health", 100),
+            "speed": stats.get("speed", 1),
+            "attack": stats.get("attack", 5),
+            "defense": stats.get("defense", 0),
+            "level": 1,
+            "order": {"type": "MOVE", "path": []}
+        }
+
+    for nation in active_nations:
+        owned_provs = [p for p in valid_land_provinces if p["owner"] == nation]
+        if not owned_provs: continue
+
+        infantry_name = get_infantry_type(nation)
+        has_factory = False
+
+        for prov in owned_provs:
+            bldgs = prov.get("buildings", [])
+            # Check if province contains an industrial building
+            if any("Workshop" in b or "Factory" in b or "Refinery" in b for b in bldgs):
+                has_factory = True
+                prov.setdefault("units", []).append(generate_unit(nation, infantry_name))
+        
+        # If the nation randomly got zero factories, guarantee them one + a garrison unit
+        if not has_factory:
+            target_prov = random.choice(owned_provs)
+            bldg_to_add = allowed_buildings[-1] if allowed_buildings else "Workshop Lvl 1"
+            target_prov.setdefault("buildings", []).append(bldg_to_add)
+            target_prov.setdefault("units", []).append(generate_unit(nation, infantry_name))
 
     map_screen.show_feedback(f"Randomized {target_country_count} evenly sized nations for {start_year}!")

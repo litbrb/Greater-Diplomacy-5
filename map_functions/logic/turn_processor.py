@@ -167,7 +167,7 @@ def process_movement(self):
             defenders = [u for u in target_prov.get("units", []) 
                         if u["owner"] != unit["owner"] and u["owner"] not in player_data.get("allied_with", [])]
 
-            can_enter = dest_owner in ["Unclaimed", "None", unit["owner"]] or \
+            can_enter = dest_owner in ["Unclaimed", "None", unit["owner"], "Ocean", "Lakes"] or \
                         dest_owner in player_data.get("at_war_with", []) or \
                         dest_owner in player_data.get("allied_with", [])
 

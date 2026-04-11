@@ -1,6 +1,8 @@
 import pygame
+import json
+import os
 import gameState as g
-from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, WATER_TERRAINS
 from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
@@ -13,7 +15,16 @@ class Orders_Screen(GameState):
         self.map_screen = None
         self.selected_unit_index = None 
         self.cancel_rects = []
+        
+        # Load unit library so we can check unit stats (like naval_unit) dynamically
+        self.unit_library = self.load_unit_data()
 
+    def load_unit_data(self):
+        path = 'data/json/unit_data.json'
+        if os.path.exists(path):
+            with open(path, 'r') as f: return json.load(f)
+        return {}
+    
     def start_with_province(self, province, map_ref):
         self.target_province = province
         self.map_screen = map_ref
@@ -115,25 +126,37 @@ class Orders_Screen(GameState):
                 self.map_screen.show_feedback("Maximum speed reached!")
 
     def can_unit_enter(self, unit, dest):
-        WATER_TYPES = ["ocean", "coastal_sea", "inland_sea", "lakes"]
-        dest_is_water = dest.get("terrain") in WATER_TYPES
-        u_type = unit["type"].lower()
+        # Use the constant imported from data.constants
+        dest_is_water = dest.get("terrain") in WATER_TERRAINS
+        
+        # Look up the actual unit stats using its type name
+        u_type = unit.get("type", "")
+        unit_stats = self.unit_library.get(u_type, {})
+        is_naval = unit_stats.get("naval_unit", False)
 
-        if ("hilux" in u_type or "t-55" in u_type) and dest_is_water:
+        # Enforce Land Unit Rules
+        if not is_naval and dest_is_water:
             self.map_screen.show_feedback("Land units cannot enter water!")
             return False
         
-        if ("boat" in u_type or "frigate" in u_type) and not dest_is_water and not dest.get("is_coastal"):
-            self.map_screen.show_feedback("Sea units blocked by land!")
+        # Enforce Naval Unit Rules
+        if is_naval and not dest_is_water and not dest.get("is_coastal"):
+            self.map_screen.show_feedback("Naval units blocked by land!")
             return False
 
+        # Enforce Diplomacy/Border Rules
         dest_owner = dest.get("owner", "Unclaimed")
         player_country = self.map_screen.player_country
-        if dest_owner not in ["Unclaimed", "None", player_country]:
+        
+        # Whitelist neutral water countries so they act as open international waters
+        allowed_owners = ["Unclaimed", "None", player_country, "Ocean", "Lakes"]
+        
+        if dest_owner not in allowed_owners:
             player_data = self.map_screen.nation_data.get(player_country, {})
             if not (dest_owner in player_data.get("at_war_with", []) or dest_owner in player_data.get("allied_with", [])):
                 self.map_screen.show_feedback(f"Neutral {dest_owner} territory!")
                 return False
+                
         return True
     
     def get_clicked_province(self, mouse_pos):

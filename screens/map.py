@@ -543,7 +543,9 @@ class Map(GameState):
             for unit in province.get("units", []):
                 u_owner = unit.get("owner")
                 if u_owner in econ_data:
-                    stats = self.cached_unit_library.get(unit["type"], {})
+                    # FETCH ORIGINAL TYPE SO WE KEEP CHARGING UPKEEP DURING TRANSIT
+                    u_type = unit.get("original_type", unit.get("type"))
+                    stats = self.cached_unit_library.get(u_type, {})
                     econ_data[u_owner]["upkeep"]["manpower"] += stats.get("cost_manpower", 0) * UPKEEP_MODIFIER
                     econ_data[u_owner]["upkeep"]["materials"] += stats.get("cost_materials", 0) * UPKEEP_MODIFIER
                     econ_data[u_owner]["upkeep"]["fuel"] += stats.get("cost_fuel", 0) * UPKEEP_MODIFIER

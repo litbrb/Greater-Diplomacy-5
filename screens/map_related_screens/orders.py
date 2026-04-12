@@ -45,6 +45,69 @@ class Orders_Screen(GameState):
             btn = Button(100, 150 + (i * 60), "medium", color, f"{unit_name}", lambda idx=i: self.select_unit(idx))
             self.elements.append(btn)
 
+        # --- THE NEW UI BUTTONS ---
+        if self.selected_unit_index is not None and 0 <= self.selected_unit_index < len(units):
+            active_unit = units[self.selected_unit_index]
+            u_type = active_unit.get("type", "")
+            order_type = active_unit.get("order", {}).get("type", "")
+
+            # Disband Button
+            btn_disband = Button(SCREEN_WIDTH - 200, 150, "medium", "red", "Disband", self.disband_unit)
+            self.elements.append(btn_disband)
+
+            # Convoy Conversion Logic (Enforce coastal/port rules)
+            is_water = self.target_province.get("terrain") in WATER_TERRAINS
+            is_coastal = self.target_province.get("is_coastal", False)
+
+            if order_type == "CONVERT":
+                txt = f"Converting ({active_unit['order'].get('days_left', 0)}d)"
+                btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", txt, lambda: None)
+                self.elements.append(btn_conv)
+            elif u_type == "Convoy":
+                if not is_water:
+                    btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "blue", "To Land Unit", self.convert_unit)
+                else:
+                    btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "Must be on Land", lambda: None)
+                self.elements.append(btn_conv)
+            else:
+                is_naval = self.unit_library.get(u_type, {}).get("naval_unit", False)
+                if not is_naval:
+                    if is_coastal or is_water:
+                        btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "blue", "To Convoy", self.convert_unit)
+                    else:
+                        btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "Must be Coastal", lambda: None)
+                    self.elements.append(btn_conv)
+
+    def disband_unit(self):
+        units = self.target_province.get("units", [])
+        if self.selected_unit_index is not None and 0 <= self.selected_unit_index < len(units):
+            unit = units.pop(self.selected_unit_index)
+            
+            # Refund based on the original unit type
+            u_type = unit.get("original_type", unit.get("type"))
+            stats = self.unit_library.get(u_type, {})
+            p_data = self.map_screen.nation_data[self.map_screen.player_country]
+            
+            p_data["materials"] = p_data.get("materials", 0) + stats.get("cost_materials", 0)
+            p_data["manpower"] = p_data.get("manpower", 0) + stats.get("cost_manpower", 0)
+            p_data["fuel"] = p_data.get("fuel", 0) + stats.get("cost_fuel", 0)
+
+            self.map_screen.show_feedback(f"Disbanded {u_type} & Refunded")
+            self.selected_unit_index = None
+            self.refresh_ui()
+
+    def convert_unit(self):
+        units = self.target_province.get("units", [])
+        if self.selected_unit_index is not None and 0 <= self.selected_unit_index < len(units):
+            unit = units[self.selected_unit_index]
+            u_type = unit.get("type", "")
+
+            target_type = "Land Unit" if u_type == "Convoy" else "Convoy"
+            unit["order"] = {"type": "CONVERT", "days_left": 10, "to": target_type}
+            
+            self.map_screen.show_feedback(f"Converting to {target_type} (10 days)")
+            self.refresh_ui()
+
     def select_unit(self, index):
         self.selected_unit_index = index
         self.refresh_ui()
@@ -102,6 +165,11 @@ class Orders_Screen(GameState):
 
             unit = self.target_province["units"][self.selected_unit_index]
             
+            # --- THE FIX ---
+            if isinstance(unit.get("order"), dict) and unit["order"].get("type") == "CONVERT":
+                self.map_screen.show_feedback("Cannot move while converting!")
+                return
+            
             if "order" not in unit or not isinstance(unit["order"], dict):
                 unit["order"] = {"type": "MOVE", "path": []}
             
@@ -130,9 +198,13 @@ class Orders_Screen(GameState):
         dest_is_water = dest.get("terrain") in WATER_TERRAINS
         
         # Look up the actual unit stats using its type name
+        # Override for Convoys
         u_type = unit.get("type", "")
-        unit_stats = self.unit_library.get(u_type, {})
-        is_naval = unit_stats.get("naval_unit", False)
+        if u_type == "Convoy":
+            is_naval = True
+        else:
+            unit_stats = self.unit_library.get(u_type, {})
+            is_naval = unit_stats.get("naval_unit", False)
 
         # Enforce Land Unit Rules
         if not is_naval and dest_is_water:

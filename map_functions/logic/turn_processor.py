@@ -10,6 +10,7 @@ def process_next_turn(self):
     self.time_manager.process_time(days_to_advance)
     
     diplomacy_logic.process_diplomacy_turn(self)
+    process_conversions(self, days_to_advance) # <-- ADD THIS
     process_movement(self)
     process_combat(self)
     check_for_post_combat_captures(self)
@@ -20,6 +21,31 @@ def process_next_turn(self):
     
     process_national_research(self, days_to_advance)
 
+def process_conversions(self, days_passed):
+    """Processes the 10-day timer for transferring units into Convoys and back."""
+    for province in self.map_data.values():
+        for unit in province.get("units", []):
+            order = unit.get("order")
+            if isinstance(order, dict) and order.get("type") == "CONVERT":
+                order["days_left"] -= days_passed
+                
+                if order["days_left"] <= 0:
+                    if order.get("to") == "Convoy":
+                        unit["original_type"] = unit["type"]
+                        unit["original_speed"] = unit.get("speed", 1)
+                        unit["type"] = "Convoy"
+                        unit["speed"] = 1
+                        unit["naval_unit"] = True
+                    else:
+                        unit["type"] = unit.get("original_type", "Infantry")
+                        unit["speed"] = unit.get("original_speed", 1)
+                        unit["naval_unit"] = False
+                        if "original_type" in unit: del unit["original_type"]
+                        if "original_speed" in unit: del unit["original_speed"]
+                        
+                    # Reset back to a blank move order so they can be selected again
+                    unit["order"] = {"type": "MOVE", "path": []}
+                    
 def process_national_research(self, days_passed):
     # Load template to know costs
     with open("data/json/research_template.json", "r") as f:

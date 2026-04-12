@@ -33,7 +33,8 @@ def process_conversions(self, days_passed):
                     if order.get("to") == "Convoy":
                         unit["original_type"] = unit["type"]
                         unit["original_speed"] = unit.get("speed", 1)
-                        unit["type"] = "Convoy"
+                        # Embed the name here!
+                        unit["type"] = f"Convoy ({unit['type']})"
                         unit["speed"] = 1
                         unit["naval_unit"] = True
                     else:
@@ -45,7 +46,7 @@ def process_conversions(self, days_passed):
                         
                     # Reset back to a blank move order so they can be selected again
                     unit["order"] = {"type": "MOVE", "path": []}
-                    
+
 def process_national_research(self, days_passed):
     # Load template to know costs
     with open("data/json/research_template.json", "r") as f:

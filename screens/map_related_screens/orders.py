@@ -60,10 +60,11 @@ class Orders_Screen(GameState):
             is_coastal = self.target_province.get("is_coastal", False)
 
             if order_type == "CONVERT":
-                txt = f"Converting ({active_unit['order'].get('days_left', 0)}d)"
-                btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", txt, lambda: None)
+                txt = f"Cancel Convert ({active_unit['order'].get('days_left', 0)}d)"
+                # Changed to a clickable red button pointing to our new cancel method
+                btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "red", txt, self.cancel_conversion)
                 self.elements.append(btn_conv)
-            elif u_type == "Convoy":
+            elif u_type.startswith("Convoy"): # Check if it starts with Convoy
                 if not is_water:
                     btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "blue", "To Land Unit", self.convert_unit)
                 else:
@@ -102,11 +103,20 @@ class Orders_Screen(GameState):
             unit = units[self.selected_unit_index]
             u_type = unit.get("type", "")
 
-            target_type = "Land Unit" if u_type == "Convoy" else "Convoy"
+            target_type = "Land Unit" if u_type.startswith("Convoy") else "Convoy"
             unit["order"] = {"type": "CONVERT", "days_left": 10, "to": target_type}
             
             self.map_screen.show_feedback(f"Converting to {target_type} (10 days)")
             self.refresh_ui()
+
+    def cancel_conversion(self):
+        units = self.target_province.get("units", [])
+        if self.selected_unit_index is not None and 0 <= self.selected_unit_index < len(units):
+            unit = units[self.selected_unit_index]
+            if "order" in unit and unit["order"].get("type") == "CONVERT":
+                del unit["order"]
+                self.map_screen.show_feedback("Conversion Cancelled")
+                self.refresh_ui()
 
     def select_unit(self, index):
         self.selected_unit_index = index
@@ -200,7 +210,7 @@ class Orders_Screen(GameState):
         # Look up the actual unit stats using its type name
         # Override for Convoys
         u_type = unit.get("type", "")
-        if u_type == "Convoy":
+        if u_type.startswith("Convoy"):
             is_naval = True
         else:
             unit_stats = self.unit_library.get(u_type, {})

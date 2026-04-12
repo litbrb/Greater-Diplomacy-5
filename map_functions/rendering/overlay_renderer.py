@@ -118,11 +118,11 @@ def draw_unit_icon(self, surface, sx, sy, province):
     unit_type = primary_unit_data["type"]
     unit_owner = primary_unit_data["owner"]
     
-    # --- NEW: Fetch the owner's color ---
+    # Fetch the owner's color
     owner_color = self.nation_colors.get(unit_owner, (200, 200, 200))
     
-    # Determine icon by type and pass the color
-    symbol_name = unit_type
+    # Check if it's a dynamic convoy, otherwise use the standard type
+    symbol_name = "Convoy" if unit_type.startswith("Convoy") else unit_type
     symbol = symbol_loader.get_symbol(symbol_name, self.camera.zoom * 0.5, color=owner_color)
     
     if symbol:

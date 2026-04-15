@@ -4,8 +4,17 @@ import requests
 from google import genai
 from google.genai import types
 
-# Paste your Gemini API key here
-client = genai.Client(api_key="AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o")
+def get_api_key():
+    """Helper to dynamically fetch the saved key."""
+    if os.path.exists("data/json/settings_config.json"):
+        try:
+            with open("data/json/settings_config.json", "r") as f:
+                data = json.load(f)
+                key = data.get("api_key", "")
+                if key: return key
+        except: pass
+    # Provide your default fallback key here if desired
+    return "AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o"
 
 def get_ai_mode():
     """Reads the settings config to see which AI is active."""
@@ -86,6 +95,8 @@ def evaluate_diplomatic_proposal(nation_data, ai_nation, sender_nation, action_t
 
     # Fallback to Gemini
     try:
+        # --- Instantiated dynamically so it catches key updates! ---
+        client = genai.Client(api_key=get_api_key())
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=f"{system_prompt}\n\n{user_prompt}",
@@ -118,6 +129,8 @@ def process_custom_message(nation_data, ai_nation, sender_nation, message_conten
         return "Ollama server error."
 
     try:
+        # --- Instantiated dynamically so it catches key updates! ---
+        client = genai.Client(api_key=get_api_key())
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=f"{system_prompt}\n\n{user_prompt}",

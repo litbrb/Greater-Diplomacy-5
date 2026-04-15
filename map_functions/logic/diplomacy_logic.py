@@ -151,17 +151,18 @@ def process_diplomacy_turn(self):
         # DRAW LOADING SCREEN BEFORE BLOCKING THE THREAD
         surf = pygame.display.get_surface()
         if surf:
-            overlay = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
-            overlay.fill((0, 0, 0, 200))
-            surf.blit(overlay, (0, 0))
+            # We removed the overlay.fill() here so it doesn't double-darken the screen!
             
             font = fonts.get("title")
-            txt = font.render(f"Waiting for {len(ai_tasks)} AI nations to respond...", True, (255, 255, 255))
-            surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2)))
+            # Changed color to a gold/yellow to pop against the main white text
+            txt = font.render(f"Waiting for {len(ai_tasks)} AI nations to respond...", True, (255, 200, 50))
+            # Shifted DOWN by 20 pixels
+            surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 + 20)))
             
             sub_font = fonts.get("normal")
             sub_txt = sub_font.render("Generating responses... Please do not close the game.", True, (150, 150, 150))
-            surf.blit(sub_txt, sub_txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 + 50)))
+            # Shifted DOWN by 60 pixels
+            surf.blit(sub_txt, sub_txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 + 60)))
             
             pygame.display.flip() # Force Pygame to draw this frame immediately
 

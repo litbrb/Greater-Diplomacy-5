@@ -3,6 +3,8 @@ import ui_elements
 from gameState import GameState
 from ui_elements import Button, Slider
 from data.io import keybind_io
+import tkinter as tk
+from tkinter import simpledialog
 
 class Settings(GameState):
     def __init__(self, controller):
@@ -17,7 +19,25 @@ class Settings(GameState):
         
         self.fullscreen = False
         self.listening_for = None
+
+        self.refresh_ui()
+
+
+    def set_ai_mode(self, mode):
+        self.ai_mode = mode
+        self.controller.ai_mode = mode
         
+        # Open a text prompt if Gemini is selected
+        if mode == "GEMINI":
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes("-topmost", True)
+            new_key = simpledialog.askstring("API Key", "Paste your custom Gemini API Key\n(Leave blank to keep current):")
+            if new_key:
+                self.controller.api_key = new_key
+            root.destroy()
+            pygame.event.pump() # Clear ghost clicks
+
         self.refresh_ui()
 
     def refresh_ui(self):
@@ -29,13 +49,26 @@ class Settings(GameState):
     
         self.elements = [
             Button(50, 50, "small", "red", "Back", self.go_back),
-            Button("centered", 150, "medium", "blue", "Toggle Fullscreen", self.toggle_full),
-            Button("centered", 250, "medium", "purple", f"AI Engine: {self.ai_mode}", self.toggle_ai),
-            Slider(300, 400, 200, "Volume", self.volume, self.set_volume),
+            Button("centered", 100, "medium", "blue", "Toggle Fullscreen", self.toggle_full),
+        ]
+        
+        # --- NEW VERTICAL AI BUTTONS ---
+        c_off = "green" if self.ai_mode == "OFF" else "grey"
+        self.elements.append(Button("centered", 180, "medium", c_off, "AI: OFF", lambda: self.set_ai_mode("OFF")))
+        
+        c_gem = "green" if self.ai_mode == "GEMINI" else "grey"
+        self.elements.append(Button("centered", 240, "medium", c_gem, "AI: GEMINI", lambda: self.set_ai_mode("GEMINI")))
+        
+        c_oll = "green" if self.ai_mode == "OLLAMA" else "grey"
+        self.elements.append(Button("centered", 300, "medium", c_oll, "AI: OLLAMA", lambda: self.set_ai_mode("OLLAMA")))
+
+        # Adjust the Y positions of the remaining elements slightly lower
+        self.elements.extend([
+            Slider(300, 420, 200, "Volume", self.volume, self.set_volume),
             Slider(300, 500, 200, f"Players: {self.num_players}", (self.num_players - 1) / 7.0, self.set_players),
             Button("centered", 600, "large", "grey", back_btn_text, self.start_listening_back),
             Button("centered", 700, "medium", "blue", "Reset Keybinds", self.reset_defaults)
-        ]
+        ])
 
     def toggle_ai(self):
         idx = self.ai_modes.index(self.ai_mode)
@@ -66,7 +99,9 @@ class Settings(GameState):
         self.elements[4].text = f"Players: {self.num_players}"
 
     def save_and_go_back(self):
-        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode)
+        # Ensure we pass the api_key when saving
+        api_key_to_save = getattr(self.controller, 'api_key', '')
+        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, api_key_to_save)
         self.next_state = "MENU"
         self.done = True
 

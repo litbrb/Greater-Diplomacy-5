@@ -278,11 +278,35 @@ class Map(GameState):
                 # All players have gone, loop back to player 1 and actually process the turn!
                 self.current_player_index = 0
                 self.player_country = self.active_players[0]
+                
+                # --- NEW: Show loading screen and explicitly refresh maps ---
+                self.draw_turn_loading_screen()
                 turn_processor.process_next_turn(self)
+                self.refresh_political_map() 
+                self.refresh_relations_map() 
+                
                 self.show_player_ready_screen = True
         else:
             # Singleplayer bypass
+            self.draw_turn_loading_screen() # <-- NEW
             turn_processor.process_next_turn(self)
+            self.refresh_political_map()    # <-- explicitly rebuild surfaces
+            self.refresh_relations_map()    # <-- ensuring changes reflect fast
+
+    def draw_turn_loading_screen(self):
+        """Draws an overlay informing the player the turn is processing."""
+        surf = pygame.display.get_surface()
+        if surf:
+            overlay = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 200))
+            surf.blit(overlay, (0, 0))
+
+            font = fonts.get("title")
+            txt = font.render("Processing Turn & Updating Map...", True, (255, 255, 255))
+            # Shifted UP by 40 pixels so it doesn't collide with the AI text
+            surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 - 40)))
+
+            pygame.display.flip() # Force draw this frame immediately!
 
     def show_feedback(self, text): 
         self.feedback_text, self.feedback_timer = text, pygame.time.get_ticks()

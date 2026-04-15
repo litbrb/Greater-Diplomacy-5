@@ -3,5 +3,6 @@
         "BACK": "escape"
     },
     "volume": 0.3,
-    "num_players": 1
+    "num_players": 1,
+    "ai_mode": "OLLAMA"
 }

@@ -4,8 +4,8 @@ import pygame
 
 CONFIG_PATH = "data/json/settings_config.json"
 
-def save_settings(keybind_dict, volume, num_players=1):
-    """Converts key codes to strings and saves along with volume/players to JSON."""
+def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI"):
+    """Converts key codes to strings and saves along with volume/players/AI to JSON."""
     readable_binds = {}
     for action, key_code in keybind_dict.items():
         readable_binds[action] = pygame.key.name(key_code)
@@ -13,16 +13,17 @@ def save_settings(keybind_dict, volume, num_players=1):
     data_to_save = {
         "keybinds": readable_binds,
         "volume": volume,
-        "num_players": num_players # NEW
+        "num_players": num_players,
+        "ai_mode": ai_mode
     }
     
     with open(CONFIG_PATH, "w") as f:
         json.dump(data_to_save, f, indent=4)
 
 def load_settings(default_binds, default_volume=0.5):
-    """Loads keybinds and volume from JSON."""
+    """Loads keybinds, volume, and AI mode from JSON."""
     if not os.path.exists(CONFIG_PATH):
-        return default_binds, default_volume
+        return default_binds, default_volume, 1, "GEMINI"
     
     try:
         with open(CONFIG_PATH, "r") as f:
@@ -48,8 +49,9 @@ def load_settings(default_binds, default_volume=0.5):
                 
         # NEW: Safely get num_players (default to 1 if it's an old save)
         saved_num_players = saved_data.get("num_players", 1) if isinstance(saved_data, dict) else 1
+        saved_ai_mode = saved_data.get("ai_mode", "GEMINI") if isinstance(saved_data, dict) else "GEMINI"
                 
-        return loaded_binds, saved_vol, saved_num_players
+        return loaded_binds, saved_vol, saved_num_players, saved_ai_mode
     except Exception as e:
         print(f"Error loading settings: {e}")
-        return default_binds, default_volume, 1
+        return default_binds, default_volume, 1, "GEMINI"

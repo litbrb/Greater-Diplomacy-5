@@ -55,8 +55,8 @@ class Controller:
             "BACK": pygame.K_ESCAPE,
         }
 
-        # 2. Load settings (Keybinds, Volume, & Players)
-        self.keybinds, self.volume, self.num_players = keybind_io.load_settings(default_keys, 0.5)
+        # 2. Load settings (Keybinds, Volume, Players, & AI Mode)
+        self.keybinds, self.volume, self.num_players, self.ai_mode = keybind_io.load_settings(default_keys, 0.5)
 
         # 3. Apply volume to global sounds on boot
         if ui_elements.click_sound:

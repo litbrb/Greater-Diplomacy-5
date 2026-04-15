@@ -1,4 +1,8 @@
 import random
+import concurrent.futures
+import pygame
+from map_functions.logic import ai_handler
+from map_functions.rendering.font_manager import fonts
 
 def get_pending_action(nation_data, player_name, target_name):
     """Helper to safely read the pending action, handling both new dicts and old strings."""
@@ -6,7 +10,7 @@ def get_pending_action(nation_data, player_name, target_name):
     info = pending.get(target_name)
     if isinstance(info, dict):
         return info.get("action")
-    return info # Fallback if it's an old string from a previous save
+    return info
 
 def toggle_diplomacy_action(nation_data, player_name, target_name, action_type):
     pending = nation_data[player_name].setdefault("pending_diplomacy", {})
@@ -60,10 +64,7 @@ def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
             receiver_data["inbox"] = []
         
         receiver_data["inbox"].insert(0, {
-            "sender": sender,
-            "content": content,
-            "type": msg_type,
-            "read": False
+            "sender": sender, "content": content, "type": msg_type, "read": False
         })
 
     # 2. Save a "Sent" copy to the sender's inbox
@@ -73,10 +74,7 @@ def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
             sender_data["inbox"] = []
             
         sender_data["inbox"].insert(0, {
-            "sender": f"To: {receiver}",
-            "content": content,
-            "type": msg_type,
-            "read": True  # Automatically mark as read for the sender
+            "sender": f"To: {receiver}", "content": content, "type": msg_type, "read": True 
         })
 
 def process_diplomacy_turn(self):
@@ -102,25 +100,22 @@ def process_diplomacy_turn(self):
                
                 a_action = a_info.get("action")
                 b_action = b_info.get("action")
-               
-                # CLASH A: Mutual Alliance
+                
                 if a_action == "ALLIANCE_REQUEST" and b_action == "ALLIANCE_REQUEST":
                     finalize_alliance(self.nation_data, nation_a, nation_b)
                     send_message(self.nation_data, nation_a, nation_b, "Our mutual alliance proposals crossed paths. We are now allied!", "DIPLOMACY")
                     send_message(self.nation_data, nation_b, nation_a, "Our mutual alliance proposals crossed paths. We are now allied!", "DIPLOMACY")
                     del a_data[nation_b]
                     del b_data[nation_a]
-                   
-                # CLASH B: War vs Peace (War overwrites peace)
+                    
                 elif a_action == "WAR_DECLARATION" and b_action in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
                     send_message(self.nation_data, nation_a, nation_b, f"Your diplomat proposing a {b_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
-                    del b_data[nation_a] # B's peaceful request is destroyed
+                    del b_data[nation_a] 
                     
                 elif b_action == "WAR_DECLARATION" and a_action in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
                     send_message(self.nation_data, nation_b, nation_a, f"Your diplomat proposing a {a_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
-                    del a_data[nation_b] # A's peaceful request is destroyed
-                   
-                # CLASH C: Mutual Ceasefire
+                    del a_data[nation_b] 
+                    
                 elif a_action == "CEASEFIRE" and b_action == "CEASEFIRE":
                     finalize_neutral(self.nation_data, nation_a, nation_b)
                     send_message(self.nation_data, nation_a, nation_b, "Mutual ceasefire agreements signed.", "DIPLOMACY")
@@ -128,10 +123,10 @@ def process_diplomacy_turn(self):
                     del a_data[nation_b]
                     del b_data[nation_a]
 
-    # --- 2. STANDARD RESOLUTION ---
+    # --- 2. GATHER AI TASKS ---
+    ai_tasks = []
     for country_name, data in self.nation_data.items():
         pending = data.get("pending_diplomacy", {})
-        actions_to_clear = []
 
         for target, info in pending.items():
             # Handle old string format if loading a legacy save
@@ -139,6 +134,66 @@ def process_diplomacy_turn(self):
                 info = {"action": info, "turns": 1}
                 pending[target] = info
 
+            action = info.get("action", "")
+            turns = info.get("turns", 0)
+
+            if turns == 1:
+                is_human_target = target in getattr(self, 'active_players', [])
+                if not is_human_target:
+                    if action in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
+                        ai_tasks.append({"sender": country_name, "target": target, "action": action})
+                    elif action.startswith("MSG:"):
+                        ai_tasks.append({"sender": country_name, "target": target, "action": "CUSTOM_MSG", "content": action[4:]})
+
+    # --- 3. LOADING SCREEN & EXECUTE AI THREADS ---
+    ai_results = {}
+    if ai_tasks:
+        # DRAW LOADING SCREEN BEFORE BLOCKING THE THREAD
+        surf = pygame.display.get_surface()
+        if surf:
+            overlay = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 200))
+            surf.blit(overlay, (0, 0))
+            
+            font = fonts.get("title")
+            txt = font.render(f"Waiting for {len(ai_tasks)} AI nations to respond...", True, (255, 255, 255))
+            surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2)))
+            
+            sub_font = fonts.get("normal")
+            sub_txt = sub_font.render("Generating responses... Please do not close the game.", True, (150, 150, 150))
+            surf.blit(sub_txt, sub_txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 + 50)))
+            
+            pygame.display.flip() # Force Pygame to draw this frame immediately
+
+        print(f"Firing {len(ai_tasks)} AI Diplomacy API calls...")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            futures = {}
+            for task in ai_tasks:
+                target_ai = task["target"]
+                sender = task["sender"]
+                
+                if task["action"] in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
+                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, target_ai, sender, task["action"])
+                    futures[future] = task
+                elif task["action"] == "CUSTOM_MSG":
+                    future = executor.submit(ai_handler.process_custom_message, self.nation_data, target_ai, sender, task["content"])
+                    futures[future] = task
+
+            for future in concurrent.futures.as_completed(futures):
+                task = futures[future]
+                try:
+                    result = future.result()
+                    key = (task["sender"], task["target"], task["action"])
+                    ai_results[key] = result
+                except Exception as e:
+                    print(f"Thread error: {e}")
+
+    # --- 4. STANDARD RESOLUTION (APPLY AI RESULTS) ---
+    for country_name, data in self.nation_data.items():
+        pending = data.get("pending_diplomacy", {})
+        actions_to_clear = []
+
+        for target, info in pending.items():
             action = info.get("action", "")
             turns = info.get("turns", 0)
 
@@ -171,32 +226,35 @@ def process_diplomacy_turn(self):
                 elif action == "BREAK_ALLIANCE":
                     if not is_human_target:
                         send_message(self.nation_data, target, country_name, "We won't forget this.", "TEXT")
+                
                 elif action.startswith("MSG:"):
                     if not is_human_target:
-                        send_message(self.nation_data, target, country_name, "Message received.", "TEXT")
+                        reply = ai_results.get((country_name, target, "CUSTOM_MSG"), "Message received.")
+                        send_message(self.nation_data, target, country_name, reply, "TEXT")
                     
                 elif action == "ALLIANCE_REQUEST":
                     if is_human_target:
                         # If it survived to this phase, the human player ignored it during their turn!
                         send_message(self.nation_data, target, country_name, "Your alliance proposal was ignored and has expired.", "DIPLOMACY")
                     else:
-                        # 50% chance for the AI to accept or decline your request
-                        if random.random() > 0.5:
+                        accepted, message = ai_results.get((country_name, target, action), (False, "Timeout."))
+                        if accepted:
                             finalize_alliance(self.nation_data, country_name, target)
-                            send_message(self.nation_data, target, country_name, "We happily accept your alliance proposal.", "DIPLOMACY")
+                            send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
                         else:
-                            send_message(self.nation_data, target, country_name, "We decline your alliance proposal.", "DIPLOMACY")
+                            send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
                         
                 elif action == "CEASEFIRE":
                     if is_human_target:
                         # If it survived to this phase, the human player ignored it during their turn!
                         send_message(self.nation_data, target, country_name, "Your ceasefire offer was ignored and has expired.", "DIPLOMACY")
                     else:
-                        if random.random() > 0.5:
+                        accepted, message = ai_results.get((country_name, target, action), (False, "Timeout."))
+                        if accepted:
                             finalize_neutral(self.nation_data, country_name, target)
-                            send_message(self.nation_data, target, country_name, "We accept your terms for a ceasefire.", "DIPLOMACY")
+                            send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
                         else:
-                            send_message(self.nation_data, target, country_name, "We reject your ceasefire. The war continues.", "DIPLOMACY")
+                            send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
                 
                 # Action is fully resolved (or expired), queue it for cleanup
                 actions_to_clear.append(target)
@@ -220,7 +278,6 @@ def finalize_alliance(nation_data, a, b):
             nation_data[country]["at_war_with"].remove(other)
 
 def finalize_neutral(nation_data, a, b):
-    """Resets both countries to neutral."""
     for country, other in [(a, b), (b, a)]:
         if other in nation_data[country]["at_war_with"]:
             nation_data[country]["at_war_with"].remove(other)

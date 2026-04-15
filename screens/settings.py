@@ -10,9 +10,11 @@ class Settings(GameState):
         self.controller = controller
         self.bg_color = (40, 40, 40)
         
-        # Grab the volume that was loaded in main.py
         self.volume = self.controller.volume 
         self.num_players = getattr(self.controller, 'num_players', 1)
+        self.ai_mode = getattr(self.controller, 'ai_mode', 'GEMINI')
+        self.ai_modes = ["OFF", "GEMINI", "OLLAMA"]
+        
         self.fullscreen = False
         self.listening_for = None
         
@@ -27,12 +29,19 @@ class Settings(GameState):
     
         self.elements = [
             Button(50, 50, "small", "red", "Back", self.go_back),
-            Button("centered", "centered", "medium", "blue", "Toggle Fullscreen", self.toggle_full),
-            Slider(300, 300, 200, "Volume", self.volume, self.set_volume),
-            Slider(300, 400, 200, f"Players: {self.num_players}", (self.num_players - 1) / 7.0, self.set_players),
-            Button("centered", "centered - 100", "large", "grey", back_btn_text, self.start_listening_back),
-            Button("centered", "centered - 200", "medium", "blue", "Reset Keybinds", self.reset_defaults)
+            Button("centered", 150, "medium", "blue", "Toggle Fullscreen", self.toggle_full),
+            Button("centered", 250, "medium", "purple", f"AI Engine: {self.ai_mode}", self.toggle_ai),
+            Slider(300, 400, 200, "Volume", self.volume, self.set_volume),
+            Slider(300, 500, 200, f"Players: {self.num_players}", (self.num_players - 1) / 7.0, self.set_players),
+            Button("centered", 600, "large", "grey", back_btn_text, self.start_listening_back),
+            Button("centered", 700, "medium", "blue", "Reset Keybinds", self.reset_defaults)
         ]
+
+    def toggle_ai(self):
+        idx = self.ai_modes.index(self.ai_mode)
+        self.ai_mode = self.ai_modes[(idx + 1) % len(self.ai_modes)]
+        self.controller.ai_mode = self.ai_mode
+        self.refresh_ui()
 
     def start_listening_back(self):
         self.listening_for = "BACK"
@@ -41,24 +50,23 @@ class Settings(GameState):
     def reset_defaults(self):
         default_keys = {"BACK": pygame.K_ESCAPE}
         self.controller.keybinds = default_keys
-        keybind_io.save_settings(default_keys, self.volume)
+        keybind_io.save_settings(default_keys, self.volume, self.num_players, self.ai_mode)
         self.refresh_ui()
         
     def additional_events(self, event):
         if self.listening_for and event.type == pygame.KEYDOWN:
             self.controller.keybinds[self.listening_for] = event.key
-            keybind_io.save_settings(self.controller.keybinds, self.volume)
+            keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode)
             self.listening_for = None
             self.refresh_ui()
 
     def set_players(self, val):
         self.num_players = 1 + int(val * 7)
         self.controller.num_players = self.num_players
-        self.elements[3].text = f"Players: {self.num_players}" # Updates slider text
+        self.elements[4].text = f"Players: {self.num_players}"
 
     def save_and_go_back(self):
-        # Save all configs
-        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players)
+        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode)
         self.next_state = "MENU"
         self.done = True
 
@@ -80,5 +88,5 @@ class Settings(GameState):
         # Apply volume live as the slider moves
         if ui_elements.click_sound:
             ui_elements.click_sound.set_volume(val)
-        if ui_elements.slider_sound:  # Fixed your missing slider sound sync!
+        if ui_elements.slider_sound:
             ui_elements.slider_sound.set_volume(val)

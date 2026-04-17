@@ -230,7 +230,7 @@ class Map(GameState):
         self.next_state, self.done = "MESSAGES", True
 
     def auto_assign_cores(self):
-        """Automatically assigns a core to whoever owns the province."""
+        # Automatically assigns a core to whoever owns the province.
         for province in self.map_data.values():
             owner = province.get("owner", "Unclaimed")
             if owner not in ["Unclaimed", "None", "Ocean", "Lakes"]:
@@ -279,7 +279,7 @@ class Map(GameState):
                 self.current_player_index = 0
                 self.player_country = self.active_players[0]
                 
-                # --- NEW: Show loading screen and explicitly refresh maps ---
+                # --- Show loading screen and explicitly refresh maps ---
                 self.draw_turn_loading_screen()
                 turn_processor.process_next_turn(self)
                 self.refresh_political_map() 
@@ -287,14 +287,13 @@ class Map(GameState):
                 
                 self.show_player_ready_screen = True
         else:
-            # Singleplayer bypass
-            self.draw_turn_loading_screen() # <-- NEW
+            self.draw_turn_loading_screen()
             turn_processor.process_next_turn(self)
-            self.refresh_political_map()    # <-- explicitly rebuild surfaces
-            self.refresh_relations_map()    # <-- ensuring changes reflect fast
+            self.refresh_political_map()    
+            self.refresh_relations_map()    
 
     def draw_turn_loading_screen(self):
-        """Draws an overlay informing the player the turn is processing."""
+        # Draws an overlay informing the player the turn is processing.
         surf = pygame.display.get_surface()
         if surf:
             overlay = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
@@ -303,19 +302,42 @@ class Map(GameState):
 
             font = fonts.get("title")
             txt = font.render("Processing Turn & Updating Map...", True, (255, 255, 255))
-            # Shifted UP by 40 pixels so it doesn't collide with the AI text
             surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 - 40)))
 
-            pygame.display.flip() # Force draw this frame immediately!
+            pygame.display.flip()
 
     def show_feedback(self, text): 
         self.feedback_text, self.feedback_timer = text, pygame.time.get_ticks()
 
     def additional_events(self, event): 
         event_handler.handle_map_events(self, event)
+        
+        # --- NEW: Direct Map Message Editing ---
+        if self.selected_province:
+            owner = self.selected_province.get("owner")
+            is_foreign = owner != self.player_country and owner in self.nation_data and self.nation_data[owner].get("is_playable")
+            if is_foreign:
+                mail_rect = pygame.Rect(1380, 420, 210, 300)
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if mail_rect.collidepoint(event.pos):
+                        self.mail_input_active = True
+                    else:
+                        self.mail_input_active = False
+                
+                if getattr(self, "mail_input_active", False) and event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.mail_draft_text = getattr(self, "mail_draft_text", "")[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        if getattr(self, "mail_draft_text", "").strip():
+                            msg = diplomacy_logic.queue_text_message(self.nation_data, self.player_country, owner, self.mail_draft_text)
+                            self.show_feedback(msg)
+                        self.mail_input_active = False
+                    else:
+                        if len(getattr(self, "mail_draft_text", "")) < 120 and event.unicode.isprintable():
+                            self.mail_draft_text = getattr(self, "mail_draft_text", "") + event.unicode
 
     def sync_units_to_data(self):
-        """Forces all units currently on the map to adopt the stats from unit_data.json."""
+        # Forces all units currently on the map to adopt the stats from unit_data.json.
         import json, os
         unit_path = 'data/json/unit_data.json'
         
@@ -333,9 +355,8 @@ class Map(GameState):
                 if u_type in unit_library:
                     stats = unit_library[u_type]
                     
-                    # Apply fresh stats from the JSON
                     unit["max_health"] = stats.get("health", 100)
-                    unit["health"] = stats.get("health", 100) # Reset to full health
+                    unit["health"] = stats.get("health", 100)
                     unit["attack"] = stats.get("attack", 5)
                     unit["defense"] = stats.get("defense", 0)
                     unit["speed"] = stats.get("speed", 1)
@@ -402,7 +423,7 @@ class Map(GameState):
         map_renderer.draw_map_screen(self, surface)
 
     def get_player_economy_projections(self):
-        """Pulls the player's UI data from the unified calculator."""
+        # Pulls the player's UI data from the unified calculator.
         all_econ = self.calculate_all_economies()
         p_econ = all_econ.get(self.player_country, {})
         
@@ -533,8 +554,6 @@ class Map(GameState):
             if owner and owner in econ_data and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
                 is_core = owner in province.get("cores", [])
 
-                # --- THE UPDATE IS HERE ---
-                # Now pulling directly from your constants.py!
                 mat_mult = 1.0 if is_core else NON_CORE_MULTIPLIERS["materials"]
                 fuel_mult = 1.0 if is_core else NON_CORE_MULTIPLIERS["fuel"]
                 man_mult = 1.0 if is_core else NON_CORE_MULTIPLIERS["manpower"]
@@ -542,7 +561,6 @@ class Map(GameState):
                 cat = "core" if is_core else "non_core"
                 bd = econ_data[owner]["breakdown"]
 
-                # Base Yields
                 bd["manpower"][cat] += man_mult * YIELD_MANPOWER
                 bd["materials"][cat] += mat_mult * YIELD_MATERIALS
                 bd["fuel"][cat] += fuel_mult * YIELD_FUEL
@@ -583,7 +601,7 @@ class Map(GameState):
         return econ_data
     
     def update_country_centers(self):
-        """Calculates the visual center, rotation, and physical spread for every country landmass."""
+        # Calculates the visual center, rotation, and physical spread for every country landmass.
         self.country_text_blobs = []
         visited = set()
 
@@ -632,7 +650,7 @@ class Map(GameState):
                 D = math.sqrt(((c_xx - c_yy) / 2.0)**2 + c_xy**2)
                 
                 major_variance = W + D
-                minor_variance = max(W - D, 1.0) # Prevent zero/negative variance
+                minor_variance = max(W - D, 1.0)
                 
                 # Convert variance to spatial distance. 
                 # 3.0 is a tuning constant (adjust if all text is globally too big/small)
@@ -646,9 +664,9 @@ class Map(GameState):
                     "owner": owner,
                     "cx": closest_prov["center"][0],
                     "cy": closest_prov["center"][1],
-                    "length": country_length,       # NEW
-                    "thickness": country_thickness, # NEW
-                    "spread": math.sqrt(c_xx + c_yy), # Kept for your sorting logic
+                    "length": country_length,
+                    "thickness": country_thickness,
+                    "spread": math.sqrt(c_xx + c_yy),
                     "count": count, 
                     "angle": display_angle
                 })
@@ -663,10 +681,10 @@ class Map(GameState):
                 el.visible = False
             return
 
-        # --- NEW: DYNAMIC OCEAN COLOR ---
+        # --- DYNAMIC OCEAN COLOR ---
         # Calculate zoom progress (0.0 when fully zoomed out, 1.0 when fully zoomed in)
         
-        # THE FIX: Dynamically scale the brightest blue threshold.
+        # Dynamically scale the brightest blue threshold.
         # It guarantees the zoom range is always relative to the map size,
         # but preserves the original pacing (6.0) for your larger maps.
         target_brightest_zoom = max(6.0, self.min_zoom * 2.0) 
@@ -680,7 +698,7 @@ class Map(GameState):
 
         # Lerp from Dark Blue to Light Blue
         dark_blue = (10, 20, 40)
-        light_blue = (40, 100, 180) # Tweak this to whatever shade you prefer!
+        light_blue = (40, 100, 180)
 
         r = int(dark_blue[0] + t * (light_blue[0] - dark_blue[0]))
         g = int(dark_blue[1] + t * (light_blue[1] - dark_blue[1]))
@@ -717,6 +735,7 @@ class Map(GameState):
 
         if self.is_editor:
             for el in self.elements:
+                # wooaaahhhhhhhhhhhh this seems... unessecarially long
                 if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank", "Resource", "Resources", "Sync Units"]:
                     el.visible = True
                 
@@ -742,21 +761,19 @@ class Map(GameState):
                     else:
                         el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
                 
-                # --- ADD THIS FOR CORE BRUSH ---
                 if el.text == "Core Brush":
                     el.visible = True
                     if self.editor_mode == "CORE":
-                        el.color, el.hover_color = (200, 100, 100), (255, 150, 150) # Pink
+                        el.color, el.hover_color = (200, 100, 100), (255, 150, 150)
                     else:
-                        el.color, el.hover_color = (100, 100, 100), (150, 150, 150) # Grey
+                        el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
 
-                # --- ADD THIS FOR UNIT BRUSH ---
                 if el.text == "Unit":
                     el.visible = True
                     if self.editor_mode == "UNIT":
-                        el.color, el.hover_color = (200, 0, 0), (255, 50, 50) # Red
+                        el.color, el.hover_color = (200, 0, 0), (255, 50, 50)
                     else:
-                        el.color, el.hover_color = (100, 100, 100), (150, 150, 150) # Grey
+                        el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
             return
 
         is_sel = bool(self.selected_province)
@@ -799,10 +816,8 @@ class Map(GameState):
                     self.btn_go_recruit.visible = is_land
 
             if owner != self.player_country and owner in self.nation_data and self.nation_data[owner].get("is_playable"):
-                self.btn_declare_war.rect.y = 550 
-                self.btn_form_alliance.rect.y = 610
                 
-                # --- NEW: Check for incoming requests first ---
+                # --- Check for incoming requests first ---
                 incoming_action = diplomacy_logic.get_pending_action(self.nation_data, owner, self.player_country)
                 incoming_turns = 0
                 if incoming_action:
@@ -867,3 +882,21 @@ class Map(GameState):
                             self.btn_declare_war.text = "DECLARE WAR"
                             self.btn_form_alliance.visible = True
                             self.btn_form_alliance.text = "FORM ALLIANCE"
+
+        # --- NEW: Sync Message Box Draft ---
+        if self.selected_province:
+            curr_sel = self.selected_province["id"]
+            if getattr(self, "last_selected_id", None) != curr_sel:
+                self.last_selected_id = curr_sel
+                owner = self.selected_province.get("owner")
+                self.mail_input_active = False
+                if owner and owner != self.player_country:
+                    pending = self.nation_data.get(self.player_country, {}).get("pending_diplomacy", {}).get(owner, {})
+                    action = pending.get("action", "") if isinstance(pending, dict) else pending
+                    turns = pending.get("turns", 0) if isinstance(pending, dict) else 0
+                    if isinstance(action, str) and action.startswith("MSG:") and turns == 0:
+                        self.mail_draft_text = action[4:]
+                    else:
+                        self.mail_draft_text = ""
+        else:
+            self.last_selected_id = None

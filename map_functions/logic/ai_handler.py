@@ -37,6 +37,8 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
     
     context += f"Your economy: {manpower} Manpower, {materials} Materials.\n\n"
     
+    # probably going to have to add some more stuff if this is a historical game, so the ai knows the context
+
     # 2. Establish Global Politics
     context += "--- GLOBAL POLITICS ---\n"
     for nation in active_nations:

@@ -14,38 +14,32 @@ def render_buttons(self):
         research_icon = symbol_loader.get_symbol("Research", 2)
         mail_icon = symbol_loader.get_symbol("Mail", 2)
         save_icon = symbol_loader.get_symbol("Save", 2)
-        core_icon = symbol_loader.get_symbol("Star", 1.5) # Using star as a symbol for cores
-        # Add a resource icon (falls back to something else if Iron.png fails)
+        core_icon = symbol_loader.get_symbol("Star", 1.5)
         resource_icon = symbol_loader.get_symbol("Iron", 2)
 
         self.elements = [
-            # Refresh remains in the top bar
             Button(1120, 10, "small", "grey", "Pol Refresh", self.refresh_political_map),
             Button(1220, 10, "small", "grey", "Rel Refresh", self.refresh_relations_map),
             Button(1320, 10, "small", "grey", "Core Refresh", self.refresh_cores_map),
         ]
 
-        # Primary View Buttons (Inside the bottom bar)
         econ_callback = self.open_editor_economy if getattr(self, 'is_editor', False) else self.open_economy_screen
         
         self.elements.extend([
             Button(10, SCREEN_HEIGHT - 50, "small_square", "green", "Terrain", self.set_terrain, image=terrain_icon, show_text=False),
             Button(60, SCREEN_HEIGHT - 50, "small_square", "light_blue", "Political", self.set_political, image=political_icon, show_text=False),
             Button(110, SCREEN_HEIGHT - 50, "small_square", "purple", "Relations", self.set_relations, image=relations_icon, show_text=False),
-            Button(160, SCREEN_HEIGHT - 50, "small_square", "pink", "Cores", self.set_cores, image=core_icon, show_text=False), # <--- NEW
+            Button(160, SCREEN_HEIGHT - 50, "small_square", "pink", "Cores", self.set_cores, image=core_icon, show_text=False),
             Button(20, 420, "left_ui_bar", "orange", "Economy", econ_callback),
-            # NEW RESOURCES BUTTON
             Button(10, SCREEN_HEIGHT - 100, "small_square", "purple", "Resources", lambda: self.set_view_mode("RESOURCES"), image=resource_icon, show_text=False),
         ])
 
-        # Secondary View Buttons (Floating directly above the primary buttons)
         self.elements.extend([
             Button(110, SCREEN_HEIGHT - 100, "small_square", "red", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon, show_text=False),
             Button(160, SCREEN_HEIGHT - 100, "small_square", "orange", "Economy", lambda: self.set_view_mode("ECONOMY"), image=economy_icon, show_text=False),
             Button(60, SCREEN_HEIGHT - 100, "small_square", "yellow", "Blank", lambda: self.set_view_mode("BLANK"), image=blank_icon, show_text=False),
         ])
 
-        # Right-side top buttons
         if self.is_editor:
             self.elements.extend([
                 Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "blue", "Save", self.save_map_data),
@@ -57,7 +51,6 @@ def render_buttons(self):
                 Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 110, "small", "purple", "Resource", self.select_resource_brush),
                 Button(SCREEN_WIDTH - 560, SCREEN_HEIGHT - 50, "small", "grey", "Building", self.select_building_brush),
                 
-                # --- NEW BUTTON HERE Stacked above the Unit brush ---
                 Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 110, "small", "red", "Sync Units", self.sync_units_to_data),
                 Button(SCREEN_WIDTH - 670, SCREEN_HEIGHT - 50, "small", "grey", "Unit", self.select_unit_brush),
                 
@@ -67,46 +60,34 @@ def render_buttons(self):
             ])
         else:
             self.elements.extend([
-                # Change the Y coordinate from 10 to SCREEN_HEIGHT - 50
                 Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "purple", "Next Turn", self.advance_time),
-                # Research
                 Button(20, 120, "left_ui_bar", "blue", "R&D", self.open_research, image=research_icon),
-                # Save
                 Button(20, 320, "left_ui_bar", "green", "Save", self.save_map_data, image=save_icon),
-                # Edit Nation
                 Button(180, 10, "small", "orange", "Edit Nation", self.open_edit_country),
-                
-                # --- NEW BUTTON ADDED HERE ---
                 Button(20, 520, "left_ui_bar", "purple", "Messages", self.open_messages, image=mail_icon)
             ])
     
-    self.btn_go_build = Button(1390, 550, "medium", "grey", "Construction", self.open_construction)
+    self.btn_go_recruit = Button(1380, 70, "medium", "green", "Recruit Menu", self.open_recruit)
+    self.btn_go_orders = Button(1380, 130, "medium", "blue", "Give Orders", self.open_orders)
+    self.btn_go_build = Button(1380, 190, "medium", "grey", "Construction", self.open_construction)
+
+    self.btn_declare_war = Button(1380, 70, "medium", "red", "Declare War", self.handle_declare_war)
+    self.btn_form_alliance = Button(1380, 130, "medium", "green", "Form Alliance", self.handle_form_alliance)
+
     self.elements.append(self.btn_go_build)
 
-    # Close/Deselect button
     self.btn_close_info = Button(SCREEN_WIDTH - 120, 10, "small", "red", "X", self.deselect_province)
     self.btn_close_info.visible = False
     self.elements.append(self.btn_close_info)
 
-    # Exit to menu button
     self.btn_exit_to_menu = Button(SCREEN_WIDTH - 120, 10, "small", "red", "Exit", self.exit_to_menu)
     self.btn_exit_to_menu.visible = False
     self.elements.append(self.btn_exit_to_menu)
 
-    # NEW: Navigation buttons for sub-screens
-    # These replace the old single 'Recruit' button
-    self.btn_go_recruit = Button(1390, 370, "medium", "green", "Recruit Menu", self.open_recruit)
-    self.btn_go_orders = Button(1390, 430, "medium", "blue", "Give Orders", self.open_orders)
-
-    self.btn_declare_war = Button(1390, 370, "medium", "red", "Declare War", self.handle_declare_war)
-    self.btn_form_alliance = Button(1390, 430, "medium", "green", "Form Alliance", self.handle_form_alliance)
-
-    # Initial Visibility
     self.btn_close_info.visible = False
     self.btn_go_recruit.visible = False
     self.btn_go_orders.visible = False
 
-    # Add them to the elements list
     self.elements.extend([
         self.btn_close_info, 
         self.btn_exit_to_menu,

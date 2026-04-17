@@ -13,7 +13,6 @@ def get_api_key():
                 key = data.get("api_key", "")
                 if key: return key
         except: pass
-    # Provide your default fallback key here if desired
     return "AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o"
 
 def get_ai_mode():
@@ -26,23 +25,50 @@ def get_ai_mode():
         except: pass
     return "GEMINI"
 
-def get_world_context(nation_data, ai_nation, target_nation=None):
+def get_world_context(nation_data, active_nations, ai_nation, target_nation=None):
     ai_stats = nation_data.get(ai_nation, {})
     manpower = ai_stats.get("manpower", 0)
     materials = ai_stats.get("materials", 0)
-    at_war_with = ai_stats.get("at_war_with", [])
-    allies = ai_stats.get("allied_with", [])
     
-    context = f"You are the leader of {ai_nation}. "
-    context += f"Your economy: {manpower} Manpower, {materials} Materials. "
+    # 1. Establish Reality
+    context = f"You are the leader of {ai_nation}.\n"
+    context += f"CRITICAL RULE: The ONLY nations that currently exist in this world are: {', '.join(active_nations)}.\n"
+    context += "Do NOT mention, reference, or interact with any country, empire, or nation not explicitly on this list.\n\n"
     
-    if at_war_with:
-        context += f"You are currently AT WAR with: {', '.join(at_war_with)}. "
-    if allies:
-        context += f"Your allies are: {', '.join(allies)}. "
+    context += f"Your economy: {manpower} Manpower, {materials} Materials.\n\n"
+    
+    # 2. Establish Global Politics
+    context += "--- GLOBAL POLITICS ---\n"
+    for nation in active_nations:
+        n_data = nation_data.get(nation, {})
+        wars = [w for w in n_data.get("at_war_with", []) if w in active_nations]
+        allies = [a for a in n_data.get("allied_with", []) if a in active_nations]
         
+        if wars or allies:
+            rels = []
+            if wars: rels.append(f"at war with {', '.join(wars)}")
+            if allies: rels.append(f"allied with {', '.join(allies)}")
+            context += f"- {nation} is {' and '.join(rels)}.\n"
+            
+    # 3. Establish Target Context & Message History
     if target_nation:
-        context += f"You are currently evaluating relations with {target_nation}. "
+        context += f"\n--- CURRENT TARGET ---\nYou are currently communicating with {target_nation}.\n"
+        
+        inbox = ai_stats.get("inbox", [])
+        thread = []
+        
+        # Reverse to read chronologically (oldest to newest)
+        for msg in reversed(inbox):
+            sender_field = msg.get("sender", "")
+            if sender_field == target_nation:
+                thread.append(f"{target_nation}: '{msg.get('content')}'")
+            elif sender_field == f"To: {target_nation}":
+                thread.append(f"You: '{msg.get('content')}'")
+        
+        if thread:
+            # Only give the last 10 messages so we don't blow up the context window
+            recent_thread = thread[-10:]
+            context += "Recent message history:\n" + "\n".join(recent_thread) + "\n"
         
     return context
 
@@ -60,11 +86,8 @@ def call_ollama(system_prompt, user_prompt):
     }
     try:
         response = requests.post(url, json=payload, timeout=45)
-        
-        # --- NEW: Print the actual error message from Ollama ---
         if response.status_code != 200:
             print(f"Ollama Server Replied: {response.text}")
-            
         response.raise_for_status()
         data = response.json()
         return json.loads(data["message"]["content"])
@@ -72,13 +95,13 @@ def call_ollama(system_prompt, user_prompt):
         print(f"Ollama Python Error: {e}")
         return None
 
-def evaluate_diplomatic_proposal(nation_data, ai_nation, sender_nation, action_type):
+def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type):
     mode = get_ai_mode()
     
     if mode == "OFF":
         return False, "Our diplomats are currently unavailable (AI is OFF)."
 
-    context = get_world_context(nation_data, ai_nation, sender_nation)
+    context = get_world_context(nation_data, active_nations, ai_nation, sender_nation)
     system_prompt = (
         "You are an AI playing a grand strategy game. You act as the leader of your nation. "
         "Evaluate the diplomatic proposal based on your current war status, economy, and logic. "
@@ -95,7 +118,6 @@ def evaluate_diplomatic_proposal(nation_data, ai_nation, sender_nation, action_t
 
     # Fallback to Gemini
     try:
-        # --- Instantiated dynamically so it catches key updates! ---
         client = genai.Client(api_key=get_api_key())
         response = client.models.generate_content(
             model='gemini-2.5-flash',
@@ -108,12 +130,12 @@ def evaluate_diplomatic_proposal(nation_data, ai_nation, sender_nation, action_t
         print(f"Gemini Error: {e}")
         return False, "API Error."
 
-def process_custom_message(nation_data, ai_nation, sender_nation, message_content):
+def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content):
     mode = get_ai_mode()
     if mode == "OFF":
         return "Message received (AI is OFF)."
 
-    context = get_world_context(nation_data, ai_nation, sender_nation)
+    context = get_world_context(nation_data, active_nations, ai_nation, sender_nation)
     system_prompt = (
         "You are an AI leader in a grand strategy game. Respond to the incoming diplomatic message in character. "
         "Keep your response under 2 sentences. "
@@ -129,7 +151,6 @@ def process_custom_message(nation_data, ai_nation, sender_nation, message_conten
         return "Ollama server error."
 
     try:
-        # --- Instantiated dynamically so it catches key updates! ---
         client = genai.Client(api_key=get_api_key())
         response = client.models.generate_content(
             model='gemini-2.5-flash',

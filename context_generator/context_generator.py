@@ -1,7 +1,7 @@
 import glob
 import os
 
-def combine_files(output_filename="combined_scripts.txt", search_directory=".", json_files_to_include=None):
+def combine_files(output_filename="context_generator/combined_scripts.txt", search_directory=".", json_files_to_include=None):
     """
     Finds all .py files and specific JSON files, writing their content to one text file.
     """

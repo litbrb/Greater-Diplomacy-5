@@ -5,7 +5,6 @@ from map_functions.logic import ai_handler
 from map_functions.rendering.font_manager import fonts
 
 def get_pending_action(nation_data, player_name, target_name):
-    """Helper to safely read the pending action, handling both new dicts and old strings."""
     pending = nation_data.get(player_name, {}).get("pending_diplomacy", {})
     info = pending.get(target_name)
     if isinstance(info, dict):
@@ -78,10 +77,15 @@ def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
         })
 
 def process_diplomacy_turn(self):
-    """Called during turn_processor.py to finalize declarations and messages."""
-    
+    # --- 0. FIND ALIVE NATIONS ---
+    active_nations = set()
+    for prov in self.map_data.values():
+        owner = prov.get("owner")
+        if owner and owner not in ["None", "Unclaimed", "Ocean", "Lakes"]:
+            active_nations.add(owner)
+    active_nations_list = sorted(list(active_nations))
+
     # --- 1. SIMULTANEOUS ACTION CLASH RESOLUTION ---
-    # Detect if two nations fired an action at each other on the exact same turn
     nations = list(self.nation_data.keys())
     for i in range(len(nations)):
         for j in range(i + 1, len(nations)):
@@ -164,7 +168,7 @@ def process_diplomacy_turn(self):
             # Shifted DOWN by 60 pixels
             surf.blit(sub_txt, sub_txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 + 60)))
             
-            pygame.display.flip() # Force Pygame to draw this frame immediately
+            pygame.display.flip()
 
         print(f"Firing {len(ai_tasks)} AI Diplomacy API calls...")
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
@@ -174,10 +178,10 @@ def process_diplomacy_turn(self):
                 sender = task["sender"]
                 
                 if task["action"] in ["ALLIANCE_REQUEST", "CEASEFIRE"]:
-                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, target_ai, sender, task["action"])
+                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"])
                     futures[future] = task
                 elif task["action"] == "CUSTOM_MSG":
-                    future = executor.submit(ai_handler.process_custom_message, self.nation_data, target_ai, sender, task["content"])
+                    future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"])
                     futures[future] = task
 
             for future in concurrent.futures.as_completed(futures):

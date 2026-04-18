@@ -3,14 +3,16 @@ import os
 import math
 from map_functions.logic import diplomacy_logic
 from map_functions.logic import edit_province_ownership
-from data.constants import BASE_YIELDS, UPKEEP_MODIFIER, DAYS_PER_TURN
+from map_functions.logic import ai_movement
+from data.constants import BASE_YIELDS, UPKEEP_MODIFIER, DAYS_PER_TURN, WATER_TERRAINS
 
 def process_next_turn(self):
     days_to_advance = DAYS_PER_TURN
     self.time_manager.process_time(days_to_advance)
     
     diplomacy_logic.process_diplomacy_turn(self)
-    process_conversions(self, days_to_advance) # <-- ADD THIS
+    process_conversions(self, days_to_advance)
+    ai_movement.process_ai_unit_orders(self) # <-- CALL NEW FILE
     process_movement(self)
     process_combat(self)
     check_for_post_combat_captures(self)
@@ -179,6 +181,11 @@ def process_movement(self):
 
     for step in range(max_speed):
         for unit in moving_units:
+            # --- THE BUG FIX ---
+            # Explicitly check if this individual unit has run out of moves
+            if step >= unit.get("speed", 1):
+                continue
+                
             order = unit.get("order")
             if not order or not order.get("path"): continue
 
@@ -202,7 +209,6 @@ def process_movement(self):
                 unit["_current_province_id"] = target_id
                 order["path"].pop(0)
 
-                # --- UPDATED ANNEXATION LOGIC ---
                 # Only conquer if there are NO defenders from an enemy nation
                 if not defenders:
                     if dest_owner == "Unclaimed" or dest_owner in player_data.get("at_war_with", []):
@@ -218,7 +224,6 @@ def process_movement(self):
         for unit in moving_units:
             prov = self.id_to_province.get(unit["_current_province_id"])
             
-            # FIX 1: Use 'is' to check exact object identity instead of dictionary equality
             if not any(u is unit for u in prov["units"]): 
                 prov["units"].append(unit)
                 
@@ -227,7 +232,6 @@ def process_movement(self):
             moving_ids = {id(m) for m in moving_units} 
             
             for province in self.map_data.values():
-                # FIX 2: Filter by memory ID to prevent accidentally deleting identical stationary units
                 province["units"] = [u for u in province["units"] if id(u) not in moving_ids]
 
 def process_economy(self):
@@ -291,7 +295,6 @@ def process_queues(self, days_passed):
 
             # IS UNIT?
             else:
-                # --- The Infantry Refactor (All Units Are Now Fully Generic) ---
                 unit_type = item["unit_type"]
                 stats = unit_library.get(unit_type, {})
                 
@@ -308,7 +311,7 @@ def process_queues(self, days_passed):
                     "speed": speed,
                     "attack": attack,
                     "defense": defense,
-                    "level": 0,  # Keeping level initialized so you don't get KeyErrors elsewhere
+                    "level": 0,
                     "order": {"type": "MOVE", "path": []}
                 }
                 

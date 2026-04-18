@@ -50,6 +50,7 @@ class Map(GameState):
             
         self.painting_active = False 
         self.brush_nation = "Unclaimed" 
+        self.viewing_ai_moves = False # <--- NEW: Tracks if we are pausing for AI
         
         # --- 2. Data Loading (FIXED ORDER) ---
         # Load the selected map BEFORE we do any camera math!
@@ -279,6 +280,22 @@ class Map(GameState):
 
     # 3. INTERCEPT NEXT TURN
     def advance_time(self):
+        # PHASE 2: Resolve the turn if we are currently viewing AI moves
+        if getattr(self, 'viewing_ai_moves', False):
+            self.draw_turn_loading_screen("Resolving Orders...")
+            turn_processor.resolve_turn(self)
+            self.refresh_political_map()
+            self.refresh_relations_map()
+            self.viewing_ai_moves = False
+
+            # If playing multiplayer, show the ready screen for Player 1 again
+            if hasattr(self, 'active_players') and len(self.active_players) > 1:
+                self.show_player_ready_screen = True
+
+            buttons.render_buttons(self) # Refresh UI to change button text back
+            return
+
+        # PHASE 1: Prepare the turn and generate AI moves
         if hasattr(self, 'active_players') and len(self.active_players) > 1:
             self.current_player_index += 1
             
@@ -287,24 +304,27 @@ class Map(GameState):
                 self.player_country = self.active_players[self.current_player_index]
                 self.show_player_ready_screen = True
             else:
-                # All players have gone, loop back to player 1 and actually process the turn!
+                # All players have gone, loop back to player 1 and PREPARE the turn!
                 self.current_player_index = 0
                 self.player_country = self.active_players[0]
                 
                 # --- Show loading screen and explicitly refresh maps ---
-                self.draw_turn_loading_screen()
-                turn_processor.process_next_turn(self)
+                self.draw_turn_loading_screen("AI is thinking...")
+                turn_processor.prepare_turn(self)
                 self.refresh_political_map() 
                 self.refresh_relations_map() 
                 
-                self.show_player_ready_screen = True
+                self.viewing_ai_moves = True
+                buttons.render_buttons(self) # Refresh UI to turn button red
         else:
-            self.draw_turn_loading_screen()
-            turn_processor.process_next_turn(self)
+            self.draw_turn_loading_screen("AI is thinking...")
+            turn_processor.prepare_turn(self)
             self.refresh_political_map()    
             self.refresh_relations_map()    
+            self.viewing_ai_moves = True
+            buttons.render_buttons(self) # Refresh UI to turn button red
 
-    def draw_turn_loading_screen(self):
+    def draw_turn_loading_screen(self, text="Processing Turn & Updating Map..."):
         # Draws an overlay informing the player the turn is processing.
         surf = pygame.display.get_surface()
         if surf:
@@ -313,7 +333,7 @@ class Map(GameState):
             surf.blit(overlay, (0, 0))
 
             font = fonts.get("title")
-            txt = font.render("Processing Turn & Updating Map...", True, (255, 255, 255))
+            txt = font.render(text, True, (255, 255, 255))
             surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 - 40)))
 
             pygame.display.flip()

@@ -6,13 +6,17 @@ from map_functions.logic import edit_province_ownership
 from map_functions.logic import ai_movement
 from data.constants import BASE_YIELDS, UPKEEP_MODIFIER, DAYS_PER_TURN, WATER_TERRAINS
 
-def process_next_turn(self):
+def prepare_turn(self):
+    """Phase 1: Calculate diplomacy and generate AI movement paths."""
+    diplomacy_logic.process_diplomacy_turn(self)
+    ai_movement.process_ai_unit_orders(self)
+
+def resolve_turn(self):
+    """Phase 2: Execute all moves, combat, and advance the clock."""
     days_to_advance = DAYS_PER_TURN
     self.time_manager.process_time(days_to_advance)
     
-    diplomacy_logic.process_diplomacy_turn(self)
     process_conversions(self, days_to_advance)
-    ai_movement.process_ai_unit_orders(self) # <-- CALL NEW FILE
     process_movement(self)
     process_combat(self)
     check_for_post_combat_captures(self)
@@ -22,6 +26,11 @@ def process_next_turn(self):
     process_queues(self, days_to_advance)
     
     process_national_research(self, days_to_advance)
+
+def process_next_turn(self):
+    """Legacy compatibility just in case it's called elsewhere."""
+    prepare_turn(self)
+    resolve_turn(self)
 
 def process_conversions(self, days_passed):
     """Processes the 10-day timer for transferring units into Convoys and back."""

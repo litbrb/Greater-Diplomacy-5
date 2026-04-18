@@ -59,8 +59,12 @@ def render_buttons(self):
                 Button(SCREEN_WIDTH - 1000, SCREEN_HEIGHT - 50, "small", "purple", "Set Date", self.open_editor_date)
             ])
         else:
+            # --- NEW: Dynamic Next Turn Button ---
+            next_btn_text = "Resolve Turn" if getattr(self, 'viewing_ai_moves', False) else "Next Turn"
+            next_btn_color = "red" if getattr(self, 'viewing_ai_moves', False) else "purple"
+            
             self.elements.extend([
-                Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", "purple", "Next Turn", self.advance_time),
+                Button(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50, "small", next_btn_color, next_btn_text, self.advance_time),
                 Button(20, 120, "left_ui_bar", "blue", "R&D", self.open_research, image=research_icon),
                 Button(20, 320, "left_ui_bar", "green", "Save", self.save_map_data, image=save_icon),
                 Button(180, 10, "small", "orange", "Edit Nation", self.open_edit_country),

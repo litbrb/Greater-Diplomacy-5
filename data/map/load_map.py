@@ -1,9 +1,46 @@
 import pygame
 import json
 import os
+import base64
 from map_functions.logic.time_handler import TimeHandler
 from data.io import country_io
 from data.constants import WATER_MAPPING
+
+def _load_default_images(map_obj):
+    """Helper to auto-load flags and portraits from the local assets folder."""
+    os.makedirs("assets/flags", exist_ok=True)
+    os.makedirs("assets/portraits", exist_ok=True)
+    
+    def encode_surf_to_b64(surf):
+        img_str = pygame.image.tostring(surf, "RGB")
+        return base64.b64encode(img_str).decode('utf-8')
+        
+    for country_name, n_data in map_obj.nation_data.items():
+        if not n_data.get("flag_data"):
+            f_path = f"assets/flags/{country_name}.png"
+            d_path = "assets/flags/default.png"
+            try:
+                if os.path.exists(f_path): img = pygame.image.load(f_path).convert()
+                elif os.path.exists(d_path): img = pygame.image.load(d_path).convert()
+                else: 
+                    img = pygame.Surface((60, 40))
+                    img.fill((200, 200, 200))
+                img = pygame.transform.scale(img, (60, 40))
+                n_data["flag_data"] = encode_surf_to_b64(img)
+            except: pass
+            
+        if not n_data.get("portrait_data"):
+            p_path = f"assets/portraits/{country_name}.png"
+            d_path = "assets/portraits/default.png"
+            try:
+                if os.path.exists(p_path): img = pygame.image.load(p_path).convert()
+                elif os.path.exists(d_path): img = pygame.image.load(d_path).convert()
+                else:
+                    img = pygame.Surface((100, 100))
+                    img.fill((200, 200, 200))
+                img = pygame.transform.scale(img, (100, 100))
+                n_data["portrait_data"] = encode_surf_to_b64(img)
+            except: pass
 
 def load_map_assets(self, load_path):
     # --- PROCEDURAL INTERCEPT ---
@@ -20,6 +57,9 @@ def load_map_assets(self, load_path):
         
         # Load the base nation templates so they are ready for the randomizer
         self.nation_data = country_io.load_all_country_data()
+        
+        _load_default_images(self) # Inject here to catch procedurals
+        
         self.nation_colors = {name: tuple(stats["color"]) for name, stats in self.nation_data.items()}
         return # Skip the rest of the normal loading process!
     
@@ -75,6 +115,7 @@ def load_map_assets(self, load_path):
         self.nation_data = base_nation_data
 
     # Update visual colors from the loaded data
+    _load_default_images(self) # Inject here to catch loaded saves
     self.nation_colors = {name: tuple(stats["color"]) for name, stats in self.nation_data.items()}
 
     # --- 4. Set Player/Map Properties ---

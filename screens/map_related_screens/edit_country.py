@@ -1,8 +1,10 @@
 # screens/map_related_screens/edit_country.py
 import pygame
 import base64
-import tkinter as tk # <-- NEW
-from tkinter import colorchooser # <-- NEW
+import os
+from pathlib import Path
+import tkinter as tk 
+from tkinter import colorchooser 
 from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
@@ -157,6 +159,26 @@ class Edit_Country_Screen(GameState):
             
         root.destroy()
         pygame.event.pump()
+        
+    def export_flag(self):
+        downloads_path = str(Path.home() / "Downloads")
+        safe_name = "".join(c for c in self.country_name if c.isalnum() or c in " _-") or "Flag"
+        export_path = os.path.join(downloads_path, f"{safe_name}_flag.png")
+        try:
+            pygame.image.save(self.flag_surf, export_path)
+            self.map_screen.show_feedback(f"Exported to Downloads")
+        except Exception as e:
+            self.map_screen.show_feedback("Failed to export")
+
+    def export_portrait(self):
+        downloads_path = str(Path.home() / "Downloads")
+        safe_name = "".join(c for c in self.country_name if c.isalnum() or c in " _-") or "Portrait"
+        export_path = os.path.join(downloads_path, f"{safe_name}_portrait.png")
+        try:
+            pygame.image.save(self.portrait_surf, export_path)
+            self.map_screen.show_feedback(f"Exported to Downloads")
+        except Exception as e:
+            self.map_screen.show_feedback("Failed to export")
 
     def refresh_ui(self):
         self.elements = [
@@ -164,6 +186,9 @@ class Edit_Country_Screen(GameState):
             Button(140, 20, "medium", "green", "Save Changes", self.save_and_exit)
         ]
         
+        # Export Buttons
+        self.elements.append(Button(50, 490, "medium", "blue", "Export Flag", self.export_flag))
+        self.elements.append(Button(600, 670, "medium", "blue", "Export Portrait", self.export_portrait))
         
         # Build Palette Buttons
         for i, color in enumerate(self.palette):

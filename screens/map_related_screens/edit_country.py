@@ -7,6 +7,8 @@ from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
 
+right_ui_x = 1150
+
 # Helper functions for encoding/decoding surfaces to JSON strings
 def encode_surf(surf):
     img_str = pygame.image.tostring(surf, "RGB")
@@ -53,9 +55,34 @@ class Edit_Country_Screen(GameState):
         self.leader_title = ""
         self.new_map_color = [150, 150, 150]
         
+        # https://smilebasic.com/en/e-manual/manual28/
         self.palette = [
-            (0,0,0), (255,255,255), (255,0,0), (0,255,0), (0,0,255),
-            (255,255,0), (255,165,0), (128,0,128), (139,69,19), (128,128,128)
+            (0,0,0),            # Black
+            (64,64,64),         # Dark Grey
+            (96,96,96),         # Dark Grey
+            (128,128,128),      # Grey
+            (196,196,196),      # Light Grey
+            (255,255,255),      # White
+            
+            (255,0,0),          # Red
+            #(255,80,8),         # Red-Orange
+            (255,160,16),       # Orange
+            #(255,200,20),       # Orange-Yellow
+            (255,255,32),       # Yellow
+            
+
+            (0,192,0),          # Green
+            #(96,255,128),       # Lime
+            (80,208,255),       # Light Blue
+            (64,64,255),        # Blue
+            
+            (255,96,208),       # Pink
+            (160,32,255),       # Purple
+            (160,128,96),       # Oak Tree
+            (255,208,160),      # White Skin
+
+            (128,0,128),        # Austria-Hungary
+            (139,69,19)         # Brown
         ]
 
     def start_editor(self, map_ref):
@@ -114,10 +141,13 @@ class Edit_Country_Screen(GameState):
             Button(140, 20, "medium", "green", "Save Changes", self.save_and_exit)
         ]
         
+        
         # Build Palette Buttons
         for i, color in enumerate(self.palette):
-            x = 1200 + (i % 2) * 60
-            y = 150 + (i // 2) * 60
+            colors_per_row = 6
+            space_between_colors = 45
+            x = right_ui_x + (i % colors_per_row) * space_between_colors
+            y = 150 + (i // colors_per_row) * space_between_colors
             btn = Button(x, y, "small_square", "grey", "", lambda c=color: self.set_color(c), show_text=False)
             btn.color = btn.hover_color = color
             self.elements.append(btn)
@@ -126,12 +156,12 @@ class Edit_Country_Screen(GameState):
         brush_color = "blue" if self.draw_mode == "BRUSH" else "grey"
         fill_color = "blue" if self.draw_mode == "FILL" else "grey"
         
-        self.elements.append(Button(1200, 820, "small", brush_color, "Brush", lambda: self.set_tool("BRUSH")))
-        self.elements.append(Button(1320, 820, "small", fill_color, "Fill", lambda: self.set_tool("FILL")))
+        self.elements.append(Button(right_ui_x, 820, "small", brush_color, "Brush", lambda: self.set_tool("BRUSH")))
+        self.elements.append(Button(right_ui_x + 120, 820, "small", fill_color, "Fill", lambda: self.set_tool("FILL")))
         
         # Updated Buttons to have both Map Color and Custom Brush Color pickers side-by-side
-        self.elements.append(Button(1200, 460, "small", "orange", "Map Color", self.pick_map_color))
-        self.elements.append(Button(1310, 460, "small", "purple", "Brush Color", self.pick_custom_brush_color))
+        self.elements.append(Button(right_ui_x, 460, "small", "orange", "Map Color", self.pick_map_color))
+        self.elements.append(Button(right_ui_x + 110, 460, "small", "purple", "Brush Color", self.pick_custom_brush_color))
 
     def set_color(self, color):
         self.active_color = color
@@ -206,11 +236,11 @@ class Edit_Country_Screen(GameState):
         # 1. Text Input Selection Logic
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mx, my = event.pos
-            if pygame.Rect(1200, 520, 300, 40).collidepoint(mx, my):
+            if pygame.Rect(right_ui_x, 520, 300, 40).collidepoint(mx, my):
                 self.active_input = "COUNTRY_NAME"
-            elif pygame.Rect(1200, 620, 300, 40).collidepoint(mx, my):
+            elif pygame.Rect(right_ui_x, 620, 300, 40).collidepoint(mx, my):
                 self.active_input = "NAME"
-            elif pygame.Rect(1200, 720, 300, 40).collidepoint(mx, my):
+            elif pygame.Rect(right_ui_x, 720, 300, 40).collidepoint(mx, my):
                 self.active_input = "TITLE"
             else:
                 self.active_input = None
@@ -264,9 +294,10 @@ class Edit_Country_Screen(GameState):
         surface.blit(heading_font.render("Color Palette", True, (200, 200, 200)), (1180, 110))
         
         # Render Active Color Indicator
-        pygame.draw.rect(surface, self.active_color, (1350, 150, 60, 60))
-        pygame.draw.rect(surface, (255, 255, 255), (1350, 150, 60, 60), 2)
-        surface.blit(normal_font.render("Selected", True, (200, 200, 200)), (1345, 220))
+        color_x = 1500
+        pygame.draw.rect(surface, self.active_color, (color_x, 150, 60, 60))
+        pygame.draw.rect(surface, (255, 255, 255), (color_x, 150, 60, 60), 2)
+        surface.blit(normal_font.render("Selected", True, (200, 200, 200)), (color_x - 5, 220))
 
         # --- NEW: Map Color Preview ---
         # Shifted slightly right to fit cleanly next to the side-by-side buttons
@@ -276,11 +307,11 @@ class Edit_Country_Screen(GameState):
 
         # Draw Text Inputs
         def draw_input_box(y_pos, label_text, input_state, value):
-            surface.blit(heading_font.render(label_text, True, (200, 200, 200)), (1200, y_pos - 40))
-            rect = pygame.Rect(1200, y_pos, 300, 40)
+            surface.blit(heading_font.render(label_text, True, (200, 200, 200)), (right_ui_x, y_pos - 40))
+            rect = pygame.Rect(right_ui_x, y_pos, 300, 40)
             color = (200, 255, 200) if self.active_input == input_state else (100, 100, 100)
             pygame.draw.rect(surface, color, rect, 2)
-            surface.blit(normal_font.render(value + ("|" if self.active_input == input_state else ""), True, (255, 255, 255)), (1210, y_pos + 10))
+            surface.blit(normal_font.render(value + ("|" if self.active_input == input_state else ""), True, (255, 255, 255)), (right_ui_x + 10, y_pos + 10))
 
         draw_input_box(520, "Country Name:", "COUNTRY_NAME", self.country_name)
         draw_input_box(620, "Leader Name:", "NAME", self.leader_name)

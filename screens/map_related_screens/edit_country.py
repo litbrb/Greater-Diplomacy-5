@@ -94,6 +94,20 @@ class Edit_Country_Screen(GameState):
         root.destroy()
         pygame.event.pump() # Clears any phantom mouse clicks Tkinter leaves behind
 
+    def pick_custom_brush_color(self):
+        """Opens a native color picker to select a custom drawing color."""
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True) 
+        
+        color_code = colorchooser.askcolor(title="Choose Brush Color", initialcolor=tuple(self.active_color))
+        
+        if color_code[0]: 
+            self.active_color = tuple(int(c) for c in color_code[0])
+            
+        root.destroy()
+        pygame.event.pump()
+
     def refresh_ui(self):
         self.elements = [
             Button(20, 20, "small", "red", "Cancel", self.exit_to_map),
@@ -114,7 +128,10 @@ class Edit_Country_Screen(GameState):
         
         self.elements.append(Button(1200, 820, "small", brush_color, "Brush", lambda: self.set_tool("BRUSH")))
         self.elements.append(Button(1320, 820, "small", fill_color, "Fill", lambda: self.set_tool("FILL")))
-        self.elements.append(Button(1200, 440, "medium", "orange", "Change Map Color", self.pick_map_color))
+        
+        # Updated Buttons to have both Map Color and Custom Brush Color pickers side-by-side
+        self.elements.append(Button(1200, 460, "small", "orange", "Map Color", self.pick_map_color))
+        self.elements.append(Button(1310, 460, "small", "purple", "Brush Color", self.pick_custom_brush_color))
 
     def set_color(self, color):
         self.active_color = color
@@ -252,9 +269,10 @@ class Edit_Country_Screen(GameState):
         surface.blit(normal_font.render("Selected", True, (200, 200, 200)), (1345, 220))
 
         # --- NEW: Map Color Preview ---
-        surface.blit(heading_font.render("Map Color", True, (200, 200, 200)), (1420, 420))
-        pygame.draw.rect(surface, self.new_map_color, (1420, 450, 60, 40))
-        pygame.draw.rect(surface, (255, 255, 255), (1420, 450, 60, 40), 2)
+        # Shifted slightly right to fit cleanly next to the side-by-side buttons
+        surface.blit(heading_font.render("Map Color", True, (200, 200, 200)), (1430, 430))
+        pygame.draw.rect(surface, self.new_map_color, (1430, 460, 60, 40))
+        pygame.draw.rect(surface, (255, 255, 255), (1430, 460, 60, 40), 2)
 
         # Draw Text Inputs
         def draw_input_box(y_pos, label_text, input_state, value):

@@ -115,9 +115,9 @@ def draw_owner_portrait(self, surface):
         try:
             img_bytes = base64.b64decode(portrait_str)
             portrait_surf = pygame.image.fromstring(img_bytes, (60, 60), "RGB")
-            portrait_surf = pygame.transform.scale(portrait_surf, (80, 80)) # Scale up slightly
+            portrait_surf = pygame.transform.scale(portrait_surf, (120, 120)) # Scale like the flag
             surface.blit(portrait_surf, (start_x, start_y))
-            pygame.draw.rect(surface, (200, 200, 200), (start_x, start_y, 80, 80), 2)
+            pygame.draw.rect(surface, (200, 200, 200), (start_x, start_y, 120, 120), 2)
         except Exception:
             pass
 
@@ -132,7 +132,7 @@ def draw_owner_portrait(self, surface):
     name_shadow = font.render(leader_name, True, (0, 0, 0))
     title_shadow = small_font.render(leader_title, True, (0, 0, 0))
 
-    text_x = start_x + 95
+    text_x = start_x + 135
     
     # Blit Name
     surface.blit(name_shadow, (text_x + 1, start_y + 11))

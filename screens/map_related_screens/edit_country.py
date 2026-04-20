@@ -33,11 +33,11 @@ class Edit_Country_Screen(GameState):
         
         # Dimensions
         self.flag_size = (60, 40)
-        self.portrait_size = (100, 100)
+        self.portrait_size = (60, 60)
         
         # Scaled drawing constraints
         self.flag_scale = 8
-        self.portrait_scale = 5
+        self.portrait_scale = 8
         
         self.flag_rect = pygame.Rect(50, 150, self.flag_size[0] * self.flag_scale, self.flag_size[1] * self.flag_scale)
         self.portrait_rect = pygame.Rect(600, 150, self.portrait_size[0] * self.portrait_scale, self.portrait_size[1] * self.portrait_scale)
@@ -337,7 +337,7 @@ class Edit_Country_Screen(GameState):
 
         # Labels
         surface.blit(heading_font.render("Flag (60x40)", True, (200, 200, 200)), (50, 110))
-        surface.blit(heading_font.render("Leader Portrait (100x100)", True, (200, 200, 200)), (600, 110))
+        surface.blit(heading_font.render("Leader Portrait (60x60)", True, (200, 200, 200)), (600, 110))
         
         # Render Palette & Tool Header
         surface.blit(heading_font.render("Color Palette", True, (200, 200, 200)), (right_ui_x, 110))

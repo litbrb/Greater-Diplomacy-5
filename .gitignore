@@ -1,11 +1,13 @@
 __pycache__/
 
 *.png
+*.json
 !assets/*
 !assets/flags/*
 !assets/portraits/*
+!map_tools/*
+!base_maps/**
 *.pyc
-*.json
 !countries_data.json
 !settings_config.json
 !unit_data.json

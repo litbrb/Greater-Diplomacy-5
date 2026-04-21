@@ -1,4 +1,5 @@
 import pygame
+from data.constants import SCREEN_WIDTH
 
 class MapCamera:
     def __init__(self, min_zoom):
@@ -42,7 +43,7 @@ class MapCamera:
             self.pos.x %= self_map.map_w
         else:
             # If not looping, clamp X between 0 and the max scroll distance
-            max_x = self_map.map_w - (1600 / self.zoom) # Assuming 1600 width
+            max_x = self_map.map_w - (SCREEN_WIDTH / self.zoom) # Assuming 1600 width
             self.pos.x = max(0, min(self.pos.x, max(0, max_x)))
 
         max_y = self_map.map_h - ((SCREEN_HEIGHT - self_map.total_ui_h) / self.zoom)

@@ -210,7 +210,8 @@ class Orders_Screen(GameState):
         # Look up the actual unit stats using its type name
         # Override for Convoys
         u_type = unit.get("type", "")
-        if u_type.startswith("Convoy"):
+        is_convoy = u_type.startswith("Convoy")
+        if is_convoy:
             is_naval = True
         else:
             unit_stats = self.unit_library.get(u_type, {})
@@ -222,9 +223,21 @@ class Orders_Screen(GameState):
             return False
         
         # Enforce Naval Unit Rules
-        if is_naval and not dest_is_water and not dest.get("is_coastal"):
-            self.map_screen.show_feedback("Naval units blocked by land!")
-            return False
+        if is_naval and not dest_is_water:
+            if not dest.get("is_coastal"):
+                self.map_screen.show_feedback("Naval units blocked by land!")
+                return False
+
+            # --- NEW: Ships can only dock at friendly coasts ---
+            dest_owner = dest.get("owner", "Unclaimed")
+            player_country = self.map_screen.player_country
+            player_data = self.map_screen.nation_data.get(player_country, {})
+            is_friendly = (dest_owner == player_country) or (dest_owner in player_data.get("allied_with", []))
+            
+            if not is_friendly and not is_convoy:
+                self.map_screen.show_feedback("Ships can only enter friendly/owned coastal tiles!")
+                return False
+            # ---------------------------------------------------
 
         # Enforce Diplomacy/Border Rules
         dest_owner = dest.get("owner", "Unclaimed")
@@ -287,7 +300,7 @@ class Orders_Screen(GameState):
         title = font.render(f"Orders: Province {self.target_province['id']}", True, (255, 255, 255))
         surface.blit(title, (SCREEN_WIDTH//2 - title.get_width()//2, 50))
         
-        # --- NEW: Draw Background Panel for Units ---
+        # --- Draw Background Panel for Units ---
         units = self.target_province.get("units", [])
         player_units = [u for u in units if u.get("owner") == self.map_screen.player_country]
         
@@ -302,7 +315,6 @@ class Orders_Screen(GameState):
             
             # Draw border
             pygame.draw.rect(surface, (100, 100, 250), bg_rect, 2)
-        # --------------------------------------------
         
         for i, unit in enumerate(units):
             if unit.get("owner") != self.map_screen.player_country:

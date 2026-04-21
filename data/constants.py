@@ -72,3 +72,7 @@ COUNTRIES_DATA_PATH = "data/json/countries_data.json"
 RESEARCH_TEMPLATE_PATH = "data/json/research_template.json"
 BUILDING_DATA_PATH = "data/json/building_data.json"
 SETTINGS_CONFIG_PATH = "data/json/settings_config.json"
+
+# How to make a god import:
+#   import data.constants as c
+#   c.UI_LEFT_OFFSET

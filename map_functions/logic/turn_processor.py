@@ -205,6 +205,11 @@ def process_movement(self):
     if not moving_units: return
     max_speed = max(unit.get("speed", 1) for unit in moving_units)
 
+    # Pre-cache unit library for naval checks
+    if not hasattr(self, 'cached_unit_library'):
+        import json, os
+        self.cached_unit_library = json.load(open(UNIT_DATA_PATH)) if os.path.exists(UNIT_DATA_PATH) else {}
+
     for step in range(max_speed):
         for unit in moving_units:
             # --- THE BUG FIX ---
@@ -222,6 +227,25 @@ def process_movement(self):
             player_data = self.nation_data.get(unit["owner"], {})
             dest_owner = target_prov.get("owner", "Unclaimed")
             
+            # --- NEW SHIP RULES EVALUATION ---
+            dest_is_water = target_prov.get("terrain") in WATER_TERRAINS
+            u_type = unit.get("type", "")
+            is_convoy = u_type.startswith("Convoy")
+            
+            if is_convoy:
+                is_naval = True
+            else:
+                stats = self.cached_unit_library.get(u_type, {})
+                is_naval = stats.get("naval_unit", False)
+                
+            is_friendly = (dest_owner == unit["owner"]) or (dest_owner in player_data.get("allied_with", []))
+            
+            if is_naval and not dest_is_water and not is_friendly and not is_convoy:
+                # Ships cannot enter hostile/unclaimed land
+                order["path"] = []
+                continue
+            # ---------------------------------
+
             # Check for existing defenders before moving
             # We look for units belonging to anyone NOT the mover and NOT an ally
             defenders = [u for u in target_prov.get("units", []) 
@@ -234,6 +258,15 @@ def process_movement(self):
             if can_enter:
                 unit["_current_province_id"] = target_id
                 order["path"].pop(0)
+
+                # --- INSTANT CONVERT FOR CONVOYS ON ENEMY/UNCLAIMED COAST ---
+                if is_convoy and not dest_is_water and not is_friendly:
+                    unit["type"] = unit.get("original_type", "Infantry")
+                    unit["speed"] = unit.get("original_speed", 1)
+                    unit["naval_unit"] = False
+                    if "original_type" in unit: del unit["original_type"]
+                    if "original_speed" in unit: del unit["original_speed"]
+                # ------------------------------------------------------------
 
                 # Only conquer if there are NO defenders from an enemy nation
                 if not defenders:

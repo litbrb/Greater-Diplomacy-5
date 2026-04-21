@@ -16,6 +16,32 @@ class Economy_Screen(GameState):
 
     def refresh_ui(self):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
+        
+        # New Conversion Buttons positioned below the resource rows
+        self.elements.append(Button(SCREEN_WIDTH // 2 - 250, 600, "medium", "orange", "10 Fuel -> 1 Mat", self.convert_fuel_to_materials))
+        self.elements.append(Button(SCREEN_WIDTH // 2 + 50, 600, "medium", "orange", "10 Mat -> 1 Fuel", self.convert_materials_to_fuel))
+
+    def convert_fuel_to_materials(self):
+        if not self.map_screen: return
+        p_data = self.map_screen.nation_data[self.map_screen.player_country]
+        
+        if p_data.get("fuel", 0) >= 10:
+            p_data["fuel"] -= 10
+            p_data["materials"] = p_data.get("materials", 0) + 1
+            self.map_screen.show_feedback("Converted 10 Fuel -> 1 Material")
+        else:
+            self.map_screen.show_feedback("Not enough fuel! (Need 10)")
+
+    def convert_materials_to_fuel(self):
+        if not self.map_screen: return
+        p_data = self.map_screen.nation_data[self.map_screen.player_country]
+        
+        if p_data.get("materials", 0) >= 10:
+            p_data["materials"] -= 10
+            p_data["fuel"] = p_data.get("fuel", 0) + 1
+            self.map_screen.show_feedback("Converted 10 Materials -> 1 Fuel")
+        else:
+            self.map_screen.show_feedback("Not enough materials! (Need 10)")
 
     def additional_draw(self, surface):
         if not self.map_screen: return
@@ -54,7 +80,7 @@ class Economy_Screen(GameState):
             net_str = f"+{int(net)}" if net >= 0 else str(int(net))
             
             # Row Background (Made taller to fit details)
-            row_rect = pygame.Rect(SCREEN_WIDTH // 2 - 450, y_offset, 900, 100)
+            row_rect = pygame.Rect(SCREEN_WIDTH // 2 - 600, y_offset, 1200, 100)
             pygame.draw.rect(surface, (40, 40, 50), row_rect)
             pygame.draw.rect(surface, (100, 100, 100), row_rect, 1)
             

@@ -1,6 +1,5 @@
 import json
 import os
-import math
 from map_functions.logic import diplomacy_logic
 from map_functions.logic import edit_province_ownership
 from map_functions.ai import ai_movement
@@ -16,31 +15,31 @@ def resolve_turn(self):
     days_to_advance = DAYS_PER_TURN
     self.time_manager.process_time(days_to_advance)
     
-    process_conversions(self, days_to_advance)
+    process_conversions(self)
     process_movement(self)
     process_combat(self)
     check_for_post_combat_captures(self)
     process_economy(self)
     
     # 5. Process Unified Queue (Sequential)
-    process_queues(self, days_to_advance)
+    process_queues(self)
     
-    process_national_research(self, days_to_advance)
+    process_national_research(self)
 
 def process_next_turn(self):
     """Legacy compatibility just in case it's called elsewhere."""
     prepare_turn(self)
     resolve_turn(self)
 
-def process_conversions(self, days_passed):
-    """Processes the 10-day timer for transferring units into Convoys and back."""
+def process_conversions(self):
+    """Processes the 1-turn timer for transferring units into Convoys and back."""
     for province in self.map_data.values():
         for unit in province.get("units", []):
             order = unit.get("order")
             if isinstance(order, dict) and order.get("type") == "CONVERT":
-                order["days_left"] -= days_passed
+                order["turns_left"] -= 1
                 
-                if order["days_left"] <= 0:
+                if order["turns_left"] <= 0:
                     if order.get("to") == "Convoy":
                         unit["original_type"] = unit["type"]
                         unit["original_speed"] = unit.get("speed", 1)
@@ -58,13 +57,12 @@ def process_conversions(self, days_passed):
                     # Reset back to a blank move order so they can be selected again
                     unit["order"] = {"type": "MOVE", "path": []}
 
-def process_national_research(self, days_passed):
+def process_national_research(self):
     # Load template to know costs
     with open("data/json/research_template.json", "r") as f:
         template = json.load(f)
     
-    points_per_day = 10
-    total_points_generated = days_passed * points_per_day
+    points_per_turn = 10 * DAYS_PER_TURN # Standardized 10/day * 10 days
 
     for country_name, country_data in self.nation_data.items():
         queue = country_data.get("research_queue", [])
@@ -78,9 +76,9 @@ def process_national_research(self, days_passed):
             # Use 'points_remaining' instead of 'days_remaining'
             # (First time initialization if coming from an old save)
             if "points_remaining" not in project:
-                project["points_remaining"] = project.get("days_remaining", 30) * points_per_day
+                project["points_remaining"] = project.get("days_remaining", 30) * 10
             
-            project["points_remaining"] -= total_points_generated
+            project["points_remaining"] -= points_per_turn
 
             if project["points_remaining"] <= 0:
                 country_data["research"][tech_key] = country_data["research"].get(tech_key, 0) + 1
@@ -282,7 +280,7 @@ def process_economy(self):
 
     return self.nation_data.get(self.player_country, {}).get("manpower", 0)
 
-def process_queues(self, days_passed):
+def process_queues(self):
     """Processes only the VERY FIRST item in the deployment queue sequentially."""
     unit_stats_path = 'data/json/unit_data.json'
     building_stats_path = 'data/json/building_data.json'
@@ -301,9 +299,14 @@ def process_queues(self, days_passed):
             
         # ONLY touch the first item!
         item = queue[0]
-        item["days_remaining"] -= days_passed
         
-        if item["days_remaining"] <= 0:
+        # Backwards compatibility check and dynamic day-to-turn scaling
+        if "days_remaining" in item:
+            item["turns_remaining"] = max(1, item.pop("days_remaining") // DAYS_PER_TURN)
+            
+        item["turns_remaining"] -= 1
+        
+        if item["turns_remaining"] <= 0:
             current_owner = province.get("owner", "None")
             
             # IS BUILDING?

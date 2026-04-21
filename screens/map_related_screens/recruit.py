@@ -4,7 +4,7 @@ import os
 import re
 import math
 from gameState import GameState
-from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DAYS_PER_TURN
 from ui_elements import Button
 from screens.map_related_screens import recruit_ui
 from map_functions.rendering.font_manager import fonts
@@ -20,7 +20,7 @@ class Recruit_Screen(GameState):
         
         # Load both libraries generically
         self.unit_library = self.load_json('data/json/unit_data.json')
-        self.tech_tree = self.load_json('data/json/research_template.json') # <-- NEW
+        self.tech_tree = self.load_json('data/json/research_template.json')
         
         self.infantry_groups, self.tank_groups, self.navy_groups = self.get_ordered_groups()
         self.active_bars = []
@@ -168,7 +168,7 @@ class Recruit_Screen(GameState):
             for res, amount in costs.items(): p_data[res] -= amount
             order = {
                 "unit_type": unit_name,
-                "days_remaining": stats.get("production_time", 5),
+                "turns_remaining": max(1, stats.get("production_time", DAYS_PER_TURN) // DAYS_PER_TURN),
                 "refund": costs
             }
             self.target_province.setdefault("deployment_queue", []).append(order)
@@ -245,10 +245,10 @@ class Recruit_Screen(GameState):
             pygame.draw.rect(surface, (40, 40, 40), bar_rect)
             pygame.draw.rect(surface, (100, 100, 100), bar_rect, 1)
             
-            t = stats.get('production_time', 0)
+            t = max(1, stats.get('production_time', DAYS_PER_TURN) // DAYS_PER_TURN)
             
             self.draw_resource_string(
-                surface, bar_font, f"Deploy: {t}d   |   Cost: ",
+                surface, bar_font, f"Deploy: {t} turns   |   Cost: ",
                 stats.get('cost_materials', 0), stats.get('cost_manpower', 0), stats.get('cost_fuel', 0),
                 bar_rect.x + 15, bar_rect.y + 6, (255, 215, 0)
             )

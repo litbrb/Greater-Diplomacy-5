@@ -2,7 +2,7 @@ import pygame
 import json
 import os
 from gameState import GameState
-from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DAYS_PER_TURN
 from ui_elements import Button
 from screens.map_related_screens import recruit_ui
 from map_functions.rendering.font_manager import fonts
@@ -134,7 +134,7 @@ class Construction_Screen(GameState):
             order = {
                 "order_type": "BUILDING",
                 "item_name": b_name,
-                "days_remaining": data.get("time", 10),
+                "turns_remaining": max(1, data.get("time", DAYS_PER_TURN) // DAYS_PER_TURN),
                 "group": data["group"],
                 "refund": costs
             }
@@ -212,15 +212,15 @@ class Construction_Screen(GameState):
             pygame.draw.rect(surface, (40, 40, 40), bar_rect)
             pygame.draw.rect(surface, (100, 100, 100), bar_rect, 1)
             
-            t = stats.get('time', 0)
+            t = max(1, stats.get('time', DAYS_PER_TURN) // DAYS_PER_TURN)
             
             self.draw_resource_string(
-                surface, bar_font, f"Build Time: {t}d   |   Cost: ",
+                surface, bar_font, f"Build Time: {t} turns   |   Cost: ",
                 stats.get('cost_materials', 0), stats.get('cost_manpower', 0), stats.get('cost_fuel', 0),
                 bar_rect.x + 15, bar_rect.y + 6, (255, 215, 0)
             )
             self.draw_resource_string(
-                surface, bar_font, f"Yield (Daily):   ",
+                surface, bar_font, f"Yield (Per Turn):   ",
                 stats.get('prod_materials', 0), stats.get('prod_manpower', 0), stats.get('prod_fuel', 0),
                 bar_rect.x + 15, bar_rect.y + 26, (150, 255, 150), is_yield=True
             )

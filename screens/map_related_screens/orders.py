@@ -60,7 +60,7 @@ class Orders_Screen(GameState):
             is_coastal = self.target_province.get("is_coastal", False)
 
             if order_type == "CONVERT":
-                txt = f"Cancel Convert ({active_unit['order'].get('days_left', 0)}d)"
+                txt = f"Cancel Convert ({active_unit['order'].get('turns_left', 0)} turns)"
                 # Changed to a clickable red button pointing to our new cancel method
                 btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "red", txt, self.cancel_conversion)
                 self.elements.append(btn_conv)
@@ -104,9 +104,9 @@ class Orders_Screen(GameState):
             u_type = unit.get("type", "")
 
             target_type = "Land Unit" if u_type.startswith("Convoy") else "Convoy"
-            unit["order"] = {"type": "CONVERT", "days_left": 10, "to": target_type}
+            unit["order"] = {"type": "CONVERT", "turns_left": 1, "to": target_type}
             
-            self.map_screen.show_feedback(f"Converting to {target_type} (10 days)")
+            self.map_screen.show_feedback(f"Converting to {target_type} (1 turn)")
             self.refresh_ui()
 
     def cancel_conversion(self):

@@ -2,7 +2,7 @@ import pygame
 import json
 import os
 from gameState import GameState
-from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DAYS_PER_TURN
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
 from map_functions.rendering import symbol_loader
@@ -429,8 +429,8 @@ class Research_Screen(GameState):
             surface.blit(big_icon, (panel_rect.x + 30, panel_rect.y + 100))
 
         cost = self.active_modal["cost"]
-        time = cost // 10
-        cost_txt = font_med.render(f"Base Research Cost: {cost} pts ({time} days)", True, (255, 215, 0))
+        time = max(1, cost // 100) # Standardized division assuming 100 pts per turn
+        cost_txt = font_med.render(f"Base Research Cost: {cost} pts ({time} turns)", True, (255, 215, 0))
         surface.blit(cost_txt, (panel_rect.x + 200, panel_rect.y + 100))
 
         y_off = panel_rect.y + 160
@@ -453,12 +453,13 @@ class Research_Screen(GameState):
         elif display_name in self.building_library:
             s = self.building_library[display_name]
             
-            txt1 = f"Construction Time: {s.get('time',0)} days"
+            # Using the standardized math here as well for read-only menus!
+            txt1 = f"Construction Time: {max(1, s.get('time',0) // DAYS_PER_TURN)} turns"
             surface.blit(font_small.render(txt1, True, (200, 200, 200)), (panel_rect.x + 200, y_off))
             y_off += 30
             
             self.draw_resource_string(
-                surface, font_small, "Daily Yield:   ",
+                surface, font_small, "Yield (Per Turn):   ",
                 s.get('prod_materials', 0), s.get('prod_manpower', 0), s.get('prod_fuel', 0),
                 panel_rect.x + 200, y_off, (150, 255, 150), is_yield=True
             )
@@ -540,7 +541,7 @@ class Research_Screen(GameState):
         ts = font.render(f"VIEWING: {self.current_category}", True, (255, 255, 255))
         surface.blit(ts, (SCREEN_WIDTH//2 - ts.get_width()//2, 75))
 
-        output_text = font.render("RESEARCH OUTPUT: 10 pts/day", True, (0, 255, 255))
+        output_text = font.render("RESEARCH OUTPUT: 100 pts/turn", True, (0, 255, 255))
         surface.blit(output_text, (SCREEN_WIDTH - output_text.get_width() - 30, 85))
 
         if self.current_category == "COMPLETED":

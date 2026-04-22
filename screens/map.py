@@ -173,6 +173,103 @@ class Map(GameState):
                 self.show_feedback(f"Now playing as {self.player_country}")
                 buttons.render_buttons(self)
                 self.refresh_relations_map()
+
+    # --- NEW SPECTATOR LOGIC ---
+    def start_spectator(self):
+        self.player_country = "Spectator"
+        if "Spectator" not in self.nation_data:
+            self.nation_data["Spectator"] = {
+                "name": "Spectator",
+                "color": [200, 200, 200],
+                "is_playable": False,
+                "at_war_with": [],
+                "allied_with": [],
+                "pending_diplomacy": {}
+            }
+        self.active_players.append("Spectator")
+        
+        if len(self.active_players) < self.num_players:
+            self.show_feedback(f"Player {len(self.active_players) + 1}, pick a country!")
+            self.pending_selection = None
+        else:
+            self.current_player_index = 0
+            self.player_country = self.active_players[0]
+            self.selection_mode = False
+            self.pending_selection = None
+            self.show_feedback(f"Now playing as {self.player_country}")
+            
+            buttons.render_buttons(self)
+            self.refresh_relations_map()
+
+    def force_war_menu(self): self.open_spectator_action_menu("WAR")
+    def force_peace_menu(self): self.open_spectator_action_menu("PEACE")
+    def force_alliance_menu(self): self.open_spectator_action_menu("ALLIANCE")
+    def force_break_alliance_menu(self): self.open_spectator_action_menu("BREAK")
+
+    def open_spectator_action_menu(self, action_type):
+        if not self.selected_province: return
+        source_nation = self.selected_province.get("owner")
+        if source_nation in UNPLAYABLE_NATIONS: return
+        
+        import tkinter as tk
+        root = tk.Tk()
+        root.title(f"{action_type} for {source_nation}")
+        root.geometry("300x450")
+        root.attributes("-topmost", True)
+        self.menu_active = True
+
+        def on_select(event=None):
+            selection = lb.curselection()
+            if selection:
+                target_nation = lb.get(selection[0])
+                from map_functions.logic import diplomacy_logic
+                
+                if action_type == "WAR":
+                    diplomacy_logic.finalize_war(self.nation_data, source_nation, target_nation)
+                    self.show_feedback(f"Forced War: {source_nation} vs {target_nation}")
+                elif action_type == "PEACE":
+                    diplomacy_logic.finalize_neutral(self.nation_data, source_nation, target_nation)
+                    self.show_feedback(f"Forced Peace: {source_nation} & {target_nation}")
+                elif action_type == "ALLIANCE":
+                    diplomacy_logic.finalize_alliance(self.nation_data, source_nation, target_nation)
+                    self.show_feedback(f"Forced Alliance: {source_nation} & {target_nation}")
+                elif action_type == "BREAK":
+                    diplomacy_logic.finalize_neutral(self.nation_data, source_nation, target_nation)
+                    self.show_feedback(f"Broke Alliance: {source_nation} & {target_nation}")
+                    
+                self.refresh_relations_map()
+            close_menu()
+
+        def close_menu():
+            self.menu_active = False
+            root.destroy()
+
+        root.protocol("WM_DELETE_WINDOW", close_menu)
+        tk.Label(root, text=f"Select Target for {action_type}:", font=("Arial", 12)).pack(pady=10)
+        
+        frame = tk.Frame(root)
+        frame.pack(fill="both", expand=True, padx=10)
+        scrollbar = tk.Scrollbar(frame)
+        scrollbar.pack(side="right", fill="y")
+        
+        # Only show other living/playable nations
+        nations = sorted([n for n, d in self.nation_data.items() if d.get("is_playable") and n != source_nation])
+        lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
+        for n in nations:
+            lb.insert(tk.END, n)
+        lb.pack(side="left", fill="both", expand=True)
+        scrollbar.config(command=lb.yview)
+        
+        tk.Button(root, text="Confirm", command=on_select, bg="#4CAF50", fg="white", pady=10).pack(fill="x", padx=10, pady=10)
+        lb.bind('<Double-1>', on_select)
+
+        while self.menu_active:
+            try:
+                root.update()
+                pygame.event.pump()
+            except:
+                break
+    # -------------------------
             
     def cancel_selection(self):
         self.pending_selection = None
@@ -291,7 +388,7 @@ class Map(GameState):
             if hasattr(self, 'active_players') and len(self.active_players) > 1:
                 self.show_player_ready_screen = True
 
-            buttons.render_buttons(self) # Refresh UI to change button text back
+            buttons.render_buttons(self) 
             return
 
         # PHASE 1: Prepare the turn and generate AI moves
@@ -314,14 +411,14 @@ class Map(GameState):
                 self.refresh_relations_map() 
                 
                 self.viewing_ai_moves = True
-                buttons.render_buttons(self) # Refresh UI to turn button red
+                buttons.render_buttons(self) 
         else:
             self.draw_turn_loading_screen("AI is thinking...")
             turn_processor.prepare_turn(self)
             self.refresh_political_map()    
             self.refresh_relations_map()    
             self.viewing_ai_moves = True
-            buttons.render_buttons(self) # Refresh UI to turn button red
+            buttons.render_buttons(self) 
 
     def draw_turn_loading_screen(self, text="Processing Turn & Updating Map..."):
         # Draws an overlay informing the player the turn is processing.
@@ -827,13 +924,18 @@ class Map(GameState):
         is_sel = bool(self.selected_province)
         if self.selection_mode:
             self.btn_exit_to_menu.visible = True
+            if hasattr(self, 'btn_spectator'):
+                self.btn_spectator.visible = True
             return
         
         contextual_buttons = {
             getattr(self, 'btn_go_build', None),
             getattr(self, 'btn_close_info', None), getattr(self, 'btn_exit_to_menu', None),
             getattr(self, 'btn_go_recruit', None), getattr(self, 'btn_go_orders', None),
-            getattr(self, 'btn_declare_war', None), getattr(self, 'btn_form_alliance', None)
+            getattr(self, 'btn_declare_war', None), getattr(self, 'btn_form_alliance', None),
+            getattr(self, 'btn_force_war', None), getattr(self, 'btn_force_peace', None),
+            getattr(self, 'btn_force_alliance', None), getattr(self, 'btn_break_alliance', None),
+            getattr(self, 'btn_spectator', None)
         }
         
         for el in self.elements:
@@ -857,85 +959,91 @@ class Map(GameState):
         if is_sel:
             owner = self.selected_province.get("owner", "Unclaimed")
             player_data = self.nation_data.get(self.player_country, {})
-            pending = player_data.get("pending_diplomacy", {})
             
-            has_player_units = any(u['owner'] == self.player_country for u in self.selected_province.get("units", []))
-            
-            if owner == self.player_country or has_player_units:
-                self.btn_go_orders.visible = True
-                if owner == self.player_country:
-                    terrain = self.selected_province.get("terrain", "")
-                    is_land = terrain not in WATER_TERRAINS
-                    self.btn_go_build.visible = True
-                    self.btn_go_recruit.visible = is_land
-
-            if owner != self.player_country and owner in self.nation_data and self.nation_data[owner].get("is_playable"):
+            # ---> NEW SPECTATOR LOGIC <---
+            if self.player_country == "Spectator":
+                if owner not in UNPLAYABLE_NATIONS:
+                    self.btn_force_war.visible = True
+                    self.btn_force_peace.visible = True
+                    self.btn_force_alliance.visible = True
+                    self.btn_break_alliance.visible = True
+            else:
+                has_player_units = any(u['owner'] == self.player_country for u in self.selected_province.get("units", []))
                 
-                # --- Check for incoming requests first ---
-                incoming_action = diplomacy_logic.get_pending_action(self.nation_data, owner, self.player_country)
-                incoming_turns = 0
-                if incoming_action:
-                    p_info = self.nation_data.get(owner, {}).get("pending_diplomacy", {}).get(self.player_country, {})
-                    incoming_turns = p_info.get("turns", 0) if isinstance(p_info, dict) else 0
+                if owner == self.player_country or has_player_units:
+                    self.btn_go_orders.visible = True
+                    if owner == self.player_country:
+                        terrain = self.selected_province.get("terrain", "")
+                        is_land = terrain not in WATER_TERRAINS
+                        self.btn_go_build.visible = True
+                        self.btn_go_recruit.visible = is_land
 
-                if incoming_action == "ALLIANCE_REQUEST" and incoming_turns > 0:
-                    self.btn_declare_war.visible = True
-                    self.btn_declare_war.text = "REJECT ALLIANCE"
-                    self.btn_form_alliance.visible = True
-                    self.btn_form_alliance.text = "ACCEPT ALLIANCE"
-
-                elif incoming_action == "CEASEFIRE" and incoming_turns > 0:
-                    self.btn_declare_war.visible = True
-                    self.btn_declare_war.text = "REJECT CEASEFIRE"
-                    self.btn_form_alliance.visible = True
-                    self.btn_form_alliance.text = "ACCEPT CEASEFIRE"
-
-                else:
-                    # --- NORMAL LOGIC ---
-                    at_war = owner in player_data.get("at_war_with", [])
-                    allied = owner in player_data.get("allied_with", [])
-
-                    pending_action = diplomacy_logic.get_pending_action(self.nation_data, self.player_country, owner)
+                if owner != self.player_country and owner in self.nation_data and self.nation_data[owner].get("is_playable"):
                     
-                    pending_info = pending.get(owner, {})
-                    turns_elapsed = pending_info.get("turns", 0) if isinstance(pending_info, dict) else 0
-                    is_sending = (turns_elapsed == 0)
+                    incoming_action = diplomacy_logic.get_pending_action(self.nation_data, owner, self.player_country)
+                    incoming_turns = 0
+                    if incoming_action:
+                        p_info = self.nation_data.get(owner, {}).get("pending_diplomacy", {}).get(self.player_country, {})
+                        incoming_turns = p_info.get("turns", 0) if isinstance(p_info, dict) else 0
 
-                    def get_status_text():
-                        return "SENDING (UNDO)" if is_sending else "WAITING..."
-
-                    if at_war:
-                        self.btn_form_alliance.visible = False
+                    if incoming_action == "ALLIANCE_REQUEST" and incoming_turns > 0:
                         self.btn_declare_war.visible = True
-                        if pending_action == "CEASEFIRE":
-                            self.btn_declare_war.text = get_status_text()
-                        else:
-                            self.btn_declare_war.text = "CEASEFIRE"
-                            
-                    elif allied:
-                        self.btn_declare_war.visible = False
+                        self.btn_declare_war.text = "REJECT ALLIANCE"
                         self.btn_form_alliance.visible = True
-                        if pending_action == "BREAK_ALLIANCE":
-                            self.btn_form_alliance.text = get_status_text()
-                        else:
-                            self.btn_form_alliance.text = "BREAK ALLIANCE"
-                            
+                        self.btn_form_alliance.text = "ACCEPT ALLIANCE"
+
+                    elif incoming_action == "CEASEFIRE" and incoming_turns > 0:
+                        self.btn_declare_war.visible = True
+                        self.btn_declare_war.text = "REJECT CEASEFIRE"
+                        self.btn_form_alliance.visible = True
+                        self.btn_form_alliance.text = "ACCEPT CEASEFIRE"
+
                     else:
-                        if pending_action == "WAR_DECLARATION":
-                            self.btn_declare_war.visible = True
-                            self.btn_declare_war.text = get_status_text()
+                        at_war = owner in player_data.get("at_war_with", [])
+                        allied = owner in player_data.get("allied_with", [])
+
+                        pending_action = diplomacy_logic.get_pending_action(self.nation_data, self.player_country, owner)
+                        
+                        pending = player_data.get("pending_diplomacy", {})
+                        pending_info = pending.get(owner, {})
+                        turns_elapsed = pending_info.get("turns", 0) if isinstance(pending_info, dict) else 0
+                        is_sending = (turns_elapsed == 0)
+
+                        def get_status_text():
+                            return "SENDING (UNDO)" if is_sending else "WAITING..."
+
+                        if at_war:
                             self.btn_form_alliance.visible = False
-                            
-                        elif pending_action == "ALLIANCE_REQUEST":
-                            self.btn_form_alliance.visible = True
-                            self.btn_form_alliance.text = get_status_text()
-                            self.btn_declare_war.visible = False
-                            
-                        else:
                             self.btn_declare_war.visible = True
-                            self.btn_declare_war.text = "DECLARE WAR"
+                            if pending_action == "CEASEFIRE":
+                                self.btn_declare_war.text = get_status_text()
+                            else:
+                                self.btn_declare_war.text = "CEASEFIRE"
+                                
+                        elif allied:
+                            self.btn_declare_war.visible = False
                             self.btn_form_alliance.visible = True
-                            self.btn_form_alliance.text = "FORM ALLIANCE"
+                            if pending_action == "BREAK_ALLIANCE":
+                                self.btn_form_alliance.text = get_status_text()
+                            else:
+                                self.btn_form_alliance.text = "BREAK ALLIANCE"
+                                
+                        else:
+                            if pending_action == "WAR_DECLARATION":
+                                self.btn_declare_war.visible = True
+                                self.btn_declare_war.text = get_status_text()
+                                self.btn_form_alliance.visible = False
+                                
+                            elif pending_action == "ALLIANCE_REQUEST":
+                                self.btn_form_alliance.visible = True
+                                self.btn_form_alliance.text = get_status_text()
+                                self.btn_declare_war.visible = False
+                                
+                            else:
+                                self.btn_declare_war.visible = True
+                                self.btn_declare_war.text = "DECLARE WAR"
+                                self.btn_form_alliance.visible = True
+                                self.btn_form_alliance.text = "FORM ALLIANCE"
 
         # --- NEW: Sync Message Box Draft ---
         if self.selected_province:

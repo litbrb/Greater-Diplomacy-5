@@ -1,4 +1,4 @@
-# map_functions/ui/buttons.py
+import pygame
 from ui_elements import Button
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_UI_CENTER_Y, BOTTOM_BAR_UI_CENTER_Y
 from map_functions.rendering import symbol_loader
@@ -57,7 +57,7 @@ def render_buttons(self):
                 Button(SCREEN_WIDTH - 1000, BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Set Date", self.open_editor_date)
             ])
         else:
-            # --- NEW: Dynamic Next Turn Button ---
+            # --- Dynamic Next Turn Button ---
             viewing_ai = getattr(self, 'viewing_ai_moves', False)
             next_btn_text = "Resolve Turn" if viewing_ai else "Next Turn"
             next_btn_color = "red" if viewing_ai else "purple"
@@ -77,8 +77,7 @@ def render_buttons(self):
                     Button(20, 520, "left_ui_bar", "purple", "Messages", self.open_messages, image=mail_icon)
                 ])
         
-        self.btn_go_recruit = Button(1380, 70, "medium", "green", "Recruit Menu", self.open_recruit)
-    
+    # Standard Action Buttons
     self.btn_go_recruit = Button(1380, 70, "medium", "green", "Recruit Menu", self.open_recruit)
     self.btn_go_orders = Button(1380, 130, "medium", "blue", "Give Orders", self.open_orders)
     self.btn_go_build = Button(1380, 190, "medium", "grey", "Construction", self.open_construction)
@@ -86,25 +85,23 @@ def render_buttons(self):
     self.btn_declare_war = Button(1380, 70, "medium", "red", "Declare War", self.handle_declare_war)
     self.btn_form_alliance = Button(1380, 130, "medium", "green", "Form Alliance", self.handle_form_alliance)
 
-    self.elements.append(self.btn_go_build)
+    # NEW: Spectator God Power Buttons
+    self.btn_force_war = Button(1380, 70, "medium", "red", "Force War", self.force_war_menu)
+    self.btn_force_peace = Button(1380, 130, "medium", "green", "Force Ceasefire", self.force_peace_menu)
+    self.btn_force_alliance = Button(1380, 190, "medium", "blue", "Force Alliance", self.force_alliance_menu)
+    self.btn_break_alliance = Button(1380, 250, "medium", "orange", "Break Alliance", self.force_break_alliance_menu)
+
+    # NEW: Spectator Mode Toggle Button
+    self.btn_spectator = Button(20, SCREEN_HEIGHT - 100, "medium", "grey", "Spectator Mode", self.start_spectator)
 
     self.btn_close_info = Button(SCREEN_WIDTH - 120, TOP_BAR_UI_CENTER_Y, "small", "red", "X", self.deselect_province)
-    self.btn_close_info.visible = False
-    self.elements.append(self.btn_close_info)
-
     self.btn_exit_to_menu = Button(SCREEN_WIDTH - 120, TOP_BAR_UI_CENTER_Y, "small", "red", "Exit", self.exit_to_menu)
-    self.btn_exit_to_menu.visible = False
-    self.elements.append(self.btn_exit_to_menu)
 
-    self.btn_close_info.visible = False
-    self.btn_go_recruit.visible = False
-    self.btn_go_orders.visible = False
-
-    self.elements.extend([
-        self.btn_close_info, 
-        self.btn_exit_to_menu,
-        self.btn_go_recruit,
-        self.btn_go_orders,
-        self.btn_declare_war, 
-        self.btn_form_alliance
-    ])
+    # Hide context-dependent buttons by default
+    for btn in [
+        self.btn_go_build, self.btn_close_info, self.btn_exit_to_menu, self.btn_go_recruit, 
+        self.btn_go_orders, self.btn_declare_war, self.btn_form_alliance, self.btn_force_war, 
+        self.btn_force_peace, self.btn_force_alliance, self.btn_break_alliance, self.btn_spectator
+    ]:
+        btn.visible = False
+        self.elements.append(btn)

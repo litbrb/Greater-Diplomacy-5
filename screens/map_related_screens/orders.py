@@ -55,6 +55,13 @@ class Orders_Screen(GameState):
             btn_disband = Button(SCREEN_WIDTH - 200, 150, "medium", "red", "Disband", self.disband_unit)
             self.elements.append(btn_disband)
 
+            # --- NEW: Combat Check ---
+            player_country = self.map_screen.player_country
+            player_data = self.map_screen.nation_data.get(player_country, {})
+            enemies = player_data.get("at_war_with", [])
+            in_combat = any(u.get("owner") in enemies for u in self.target_province.get("units", []))
+            # -------------------------
+
             # Convoy Conversion Logic (Enforce coastal/port rules)
             is_water = self.target_province.get("terrain") in WATER_TERRAINS
             is_coastal = self.target_province.get("is_coastal", False)
@@ -65,7 +72,9 @@ class Orders_Screen(GameState):
                 btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "red", txt, self.cancel_conversion)
                 self.elements.append(btn_conv)
             elif u_type.startswith("Convoy"): # Check if it starts with Convoy
-                if not is_water:
+                if in_combat:
+                    btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "In Combat!", lambda: None)
+                elif not is_water:
                     btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "blue", "To Land Unit", self.convert_unit)
                 else:
                     btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "Must be on Land", lambda: None)
@@ -73,7 +82,9 @@ class Orders_Screen(GameState):
             else:
                 is_naval = self.unit_library.get(u_type, {}).get("naval_unit", False)
                 if not is_naval:
-                    if is_coastal or is_water:
+                    if in_combat:
+                        btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "In Combat!", lambda: None)
+                    elif is_coastal or is_water:
                         btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "blue", "To Convoy", self.convert_unit)
                     else:
                         btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "Must be Coastal", lambda: None)
@@ -98,6 +109,15 @@ class Orders_Screen(GameState):
             self.refresh_ui()
 
     def convert_unit(self):
+        # --- Prevent conversion during combat just in case ---
+        player_country = self.map_screen.player_country
+        enemies = self.map_screen.nation_data.get(player_country, {}).get("at_war_with", [])
+        in_combat = any(u.get("owner") in enemies for u in self.target_province.get("units", []))
+        if in_combat:
+            self.map_screen.show_feedback("Cannot convert during combat!")
+            return
+        # -----------------------------------------------------
+
         units = self.target_province.get("units", [])
         if self.selected_unit_index is not None and 0 <= self.selected_unit_index < len(units):
             unit = units[self.selected_unit_index]

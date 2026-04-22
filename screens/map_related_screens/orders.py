@@ -6,6 +6,7 @@ from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, WATER_TERRAINS, UNIT_DAT
 from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
+from map_functions.logic import state_queries
 
 class Orders_Screen(GameState):
     def __init__(self):
@@ -57,9 +58,7 @@ class Orders_Screen(GameState):
 
             # --- NEW: Combat Check ---
             player_country = self.map_screen.player_country
-            player_data = self.map_screen.nation_data.get(player_country, {})
-            enemies = player_data.get("at_war_with", [])
-            in_combat = any(u.get("owner") in enemies for u in self.target_province.get("units", []))
+            in_combat = state_queries.is_nation_in_combat_here(player_country, self.target_province, self.map_screen.nation_data)
             # -------------------------
 
             # Convoy Conversion Logic (Enforce coastal/port rules)
@@ -111,8 +110,7 @@ class Orders_Screen(GameState):
     def convert_unit(self):
         # --- Prevent conversion during combat just in case ---
         player_country = self.map_screen.player_country
-        enemies = self.map_screen.nation_data.get(player_country, {}).get("at_war_with", [])
-        in_combat = any(u.get("owner") in enemies for u in self.target_province.get("units", []))
+        in_combat = state_queries.is_nation_in_combat_here(player_country, self.target_province, self.map_screen.nation_data)
         if in_combat:
             self.map_screen.show_feedback("Cannot convert during combat!")
             return
@@ -249,39 +247,27 @@ class Orders_Screen(GameState):
                 return False
 
             # --- NEW: Ships can only dock at friendly coasts ---
-            dest_owner = dest.get("owner", "Unclaimed")
-            player_country = self.map_screen.player_country
-            player_data = self.map_screen.nation_data.get(player_country, {})
-            is_friendly = (dest_owner == player_country) or (dest_owner in player_data.get("allied_with", []))
-            
-            if not is_friendly and not is_convoy:
+            if not is_convoy and not state_queries.can_ships_enter(unit["owner"], dest, self.map_screen.nation_data):
                 self.map_screen.show_feedback("Ships can only enter friendly/owned coastal tiles!")
                 return False
             # ---------------------------------------------------
 
         # Enforce Diplomacy/Border Rules
         dest_owner = dest.get("owner", "Unclaimed")
-        player_country = self.map_screen.player_country
-        player_data = self.map_screen.nation_data.get(player_country, {})
-        enemies = player_data.get("at_war_with", [])
         
         # --- NEW: Combat Lock (Player UI Check) ---
         current_path = unit.get("order", {}).get("path", [])
         if not current_path: # First step of the move order
-            in_combat = any(u.get("owner") in enemies for u in self.target_province.get("units", []))
-            if in_combat and dest_owner in enemies:
+            in_combat = state_queries.is_nation_in_combat_here(unit["owner"], self.target_province, self.map_screen.nation_data)
+            if in_combat and state_queries.is_hostile_territory(unit["owner"], dest_owner, self.map_screen.nation_data):
                 self.map_screen.show_feedback("Cannot advance into enemy territory while in combat! (Retreat only)")
                 return False
         # ------------------------------------------
 
-        # Whitelist neutral water countries so they act as open international waters
-        allowed_owners = ["Unclaimed", "None", player_country, "Ocean", "Lakes"]
-        
-        if dest_owner not in allowed_owners:
-            if not (dest_owner in player_data.get("at_war_with", []) or dest_owner in player_data.get("allied_with", [])):
-                self.map_screen.show_feedback(f"Neutral {dest_owner} territory!")
-                return False
-                
+        if not is_naval and not state_queries.can_land_units_enter(unit["owner"], dest, self.map_screen.nation_data):
+            self.map_screen.show_feedback(f"Neutral {dest_owner} territory!")
+            return False
+            
         return True
     
     def get_clicked_province(self, mouse_pos):

@@ -4,6 +4,7 @@ from map_functions.logic import diplomacy_logic
 from map_functions.logic import edit_province_ownership
 from map_functions.ai import ai_movement, ai_research, ai_construction
 from data.constants import BASE_YIELDS, UPKEEP_MODIFIER, DAYS_PER_TURN, WATER_TERRAINS, UNPLAYABLE_NATIONS, RESEARCH_TEMPLATE_PATH, UNIT_DATA_PATH, BUILDING_DATA_PATH
+from map_functions.logic import state_queries
 
 def prepare_turn(self):
     """Phase 1: Calculate diplomacy and generate AI movement paths."""
@@ -177,8 +178,7 @@ def check_for_post_combat_captures(self):
         hp_totals = {}
         for u in units:
             o = u["owner"]
-            player_data = self.nation_data.get(o, {})
-            at_war = current_owner in player_data.get("at_war_with", [])
+            at_war = state_queries.is_hostile_territory(o, current_owner, self.nation_data)
             is_unclaimed = current_owner in ["Unclaimed", "None", ""]
             
             # Flip ownership if the tile is unclaimed or if they are at war with the owner
@@ -254,15 +254,13 @@ def process_movement(self):
             player_data = self.nation_data.get(unit["owner"], {})
             dest_owner = target_prov.get("owner", "Unclaimed")
             
-            enemies = player_data.get("at_war_with", [])
-            
             # --- NEW: Combat Lock (Execution Check) ---
             # If the unit gets intercepted in a province during its move, 
             # it loses all remaining speed and cannot advance into an enemy tile
             curr_prov = self.id_to_province.get(unit["_current_province_id"])
             if curr_prov:
-                in_combat = any(u.get("owner") in enemies for u in curr_prov.get("units", []))
-                if in_combat and dest_owner in enemies:
+                in_combat = state_queries.is_nation_in_combat_here(unit["owner"], curr_prov, self.nation_data)
+                if in_combat and state_queries.is_hostile_territory(unit["owner"], dest_owner, self.nation_data):
                     order["path"] = []
                     continue
             # ------------------------------------------
@@ -278,9 +276,7 @@ def process_movement(self):
                 stats = self.cached_unit_library.get(u_type, {})
                 is_naval = stats.get("naval_unit", False)
                 
-            is_friendly = (dest_owner == unit["owner"]) or (dest_owner in player_data.get("allied_with", []))
-            
-            if is_naval and not dest_is_water and not is_friendly and not is_convoy:
+            if is_naval and not is_convoy and not state_queries.can_ships_enter(unit["owner"], target_prov, self.nation_data):
                 # Ships cannot enter hostile/unclaimed land
                 order["path"] = []
                 continue
@@ -291,16 +287,17 @@ def process_movement(self):
             defenders = [u for u in target_prov.get("units", []) 
                         if u["owner"] != unit["owner"] and u["owner"] not in player_data.get("allied_with", [])]
 
-            can_enter = dest_owner in ["Unclaimed", "None", unit["owner"], "Ocean", "Lakes"] or \
-                        dest_owner in player_data.get("at_war_with", []) or \
-                        dest_owner in player_data.get("allied_with", [])
+            if is_naval or is_convoy:
+                can_enter = True # Naval and convoy rules already handled above
+            else:
+                can_enter = state_queries.can_land_units_enter(unit["owner"], target_prov, self.nation_data)
 
             if can_enter:
                 unit["_current_province_id"] = target_id
                 order["path"].pop(0)
 
                 # --- INSTANT CONVERT FOR CONVOYS ON ENEMY/UNCLAIMED COAST ---
-                if is_convoy and not dest_is_water and not is_friendly:
+                if is_convoy and not dest_is_water and not state_queries.can_ships_enter(unit["owner"], target_prov, self.nation_data):
                     unit["type"] = unit.get("original_type", "Infantry")
                     unit["speed"] = unit.get("original_speed", 1)
                     unit["naval_unit"] = False

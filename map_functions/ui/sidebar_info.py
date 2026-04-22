@@ -2,6 +2,7 @@ import pygame
 import base64
 from data.constants import UI_LEFT_OFFSET, UNPLAYABLE_NATIONS
 from map_functions.rendering.font_manager import fonts
+from map_functions.logic import state_queries
 
 # Define the area for the sidebar info panel
 sidebar_x = 580
@@ -47,15 +48,7 @@ def draw_sidebar_info(self, surface):
     # 5. Combat Detection
     owners_present = list(set(u.get("owner", "Unknown") for u in units))
     
-    is_combat = False
-    if len(owners_present) > 1:
-        for i in range(len(owners_present)):
-            for j in range(i + 1, len(owners_present)):
-                nation_a = self.nation_data.get(owners_present[i], {})
-                if owners_present[j] in nation_a.get("at_war_with", []):
-                    is_combat = True
-                    break
-            if is_combat: break
+    is_combat = state_queries.is_province_in_active_combat(province, self.nation_data)
 
     # 6. Draw the Combat Zone Section
     if is_combat:

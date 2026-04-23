@@ -2,7 +2,7 @@ import pygame
 import json
 import os
 import gameState as g
-from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, WATER_TERRAINS, UNIT_DATA_PATH, TOP_BAR_UI_CENTER_Y
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, WATER_TERRAINS, UNIT_DATA_PATH, TOP_BAR_UI_CENTER_Y, ACTION_BTN_X
 from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
@@ -52,8 +52,8 @@ class Orders_Screen(GameState):
             u_type = active_unit.get("type", "")
             order_type = active_unit.get("order", {}).get("type", "")
 
-            # Disband Button
-            btn_disband = Button(SCREEN_WIDTH - 200, 150, "medium", "red", "Disband", self.disband_unit)
+            # Disband Button using standard action button position
+            btn_disband = Button(ACTION_BTN_X, 150, "medium", "red", "Disband", self.disband_unit)
             self.elements.append(btn_disband)
 
             # --- NEW: Combat Check ---
@@ -64,29 +64,32 @@ class Orders_Screen(GameState):
             # Convoy Conversion Logic (Enforce coastal/port rules)
             is_water = self.target_province.get("terrain") in WATER_TERRAINS
             is_coastal = self.target_province.get("is_coastal", False)
+            
+            # Using our updated query logic instead of isolated stat lookups
+            is_convoy = u_type.startswith("Convoy")
+            is_naval = state_queries.is_naval_unit(u_type)
 
             if order_type == "CONVERT":
                 txt = f"Cancel Convert ({active_unit['order'].get('turns_left', 0)} turns)"
                 # Changed to a clickable red button pointing to our new cancel method
-                btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "red", txt, self.cancel_conversion)
+                btn_conv = Button(ACTION_BTN_X, 220, "medium", "red", txt, self.cancel_conversion)
                 self.elements.append(btn_conv)
-            elif u_type.startswith("Convoy"): # Check if it starts with Convoy
+            elif is_convoy: # Check if it starts with Convoy
                 if in_combat:
-                    btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "In Combat!", lambda: None)
+                    btn_conv = Button(ACTION_BTN_X, 220, "medium", "grey", "In Combat!", lambda: None)
                 elif not is_water:
-                    btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "blue", "To Land Unit", self.convert_unit)
+                    btn_conv = Button(ACTION_BTN_X, 220, "medium", "blue", "To Land Unit", self.convert_unit)
                 else:
-                    btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "Must be on Land", lambda: None)
+                    btn_conv = Button(ACTION_BTN_X, 220, "medium", "grey", "Must be on Land", lambda: None)
                 self.elements.append(btn_conv)
             else:
-                is_naval = self.unit_library.get(u_type, {}).get("naval_unit", False)
                 if not is_naval:
                     if in_combat:
-                        btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "In Combat!", lambda: None)
+                        btn_conv = Button(ACTION_BTN_X, 220, "medium", "grey", "In Combat!", lambda: None)
                     elif is_coastal or is_water:
-                        btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "blue", "To Convoy", self.convert_unit)
+                        btn_conv = Button(ACTION_BTN_X, 220, "medium", "blue", "To Convoy", self.convert_unit)
                     else:
-                        btn_conv = Button(SCREEN_WIDTH - 200, 220, "medium", "grey", "Must be Coastal", lambda: None)
+                        btn_conv = Button(ACTION_BTN_X, 220, "medium", "grey", "Must be Coastal", lambda: None)
                     self.elements.append(btn_conv)
 
     def disband_unit(self):
@@ -226,14 +229,9 @@ class Orders_Screen(GameState):
         dest_is_water = dest.get("terrain") in WATER_TERRAINS
         
         # Look up the actual unit stats using its type name
-        # Override for Convoys
         u_type = unit.get("type", "")
         is_convoy = u_type.startswith("Convoy")
-        if is_convoy:
-            is_naval = True
-        else:
-            unit_stats = self.unit_library.get(u_type, {})
-            is_naval = unit_stats.get("naval_unit", False)
+        is_naval = state_queries.is_naval_unit(u_type)
 
         # Enforce Land Unit Rules
         if not is_naval and dest_is_water:
@@ -291,8 +289,8 @@ class Orders_Screen(GameState):
         self.map_screen.hide_raised_rect = True
         self.map_screen.hide_top_info = True
         self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True # NEW
-        self.map_screen.hide_minimap = True      # NEW
+        self.map_screen.hide_resource_hud = True
+        self.map_screen.hide_minimap = True
 
         self.map_screen.additional_draw(surface)
 

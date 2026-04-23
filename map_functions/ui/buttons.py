@@ -1,6 +1,10 @@
 import pygame
 from ui_elements import Button
-from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_UI_CENTER_Y, BOTTOM_BAR_UI_CENTER_Y
+from data.constants import (
+    SCREEN_WIDTH, SCREEN_HEIGHT, TOP_BAR_UI_CENTER_Y, BOTTOM_BAR_UI_CENTER_Y,
+    VIEW_BTN_START_X, VIEW_BTN_STEP_X, VIEW_BTN_ROW1_Y, VIEW_BTN_ROW2_Y,
+    ACTION_BTN_X, ACTION_BTN_START_Y, ACTION_BTN_STEP_Y
+)
 from map_functions.rendering import symbol_loader
 
 def render_buttons(self):
@@ -26,16 +30,17 @@ def render_buttons(self):
 
         econ_callback = self.open_editor_economy if getattr(self, 'is_editor', False) else self.open_economy_screen
         
-        # View Type Buttons
+        # View Type Buttons utilizing new constants
         self.elements.extend([
-            Button(10, BOTTOM_BAR_UI_CENTER_Y, "small_square", "green", "Terrain", self.set_terrain, image=terrain_icon, show_text=False),
-            Button(60, BOTTOM_BAR_UI_CENTER_Y, "small_square", "light_blue", "Political", self.set_political, image=political_icon, show_text=False),
-            Button(110, BOTTOM_BAR_UI_CENTER_Y, "small_square", "purple", "Relations", self.set_relations, image=relations_icon, show_text=False),
-            Button(160, BOTTOM_BAR_UI_CENTER_Y, "small_square", "pink", "Cores", self.set_cores, image=core_icon, show_text=False),
-            Button(10, SCREEN_HEIGHT - 100, "small_square", "purple", "Resources", lambda: self.set_view_mode("RESOURCES"), image=resource_icon, show_text=False),
-            Button(110, SCREEN_HEIGHT - 100, "small_square", "red", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon, show_text=False),
-            Button(160, SCREEN_HEIGHT - 100, "small_square", "orange", "Economy", lambda: self.set_view_mode("ECONOMY"), image=economy_icon, show_text=False),
-            Button(60, SCREEN_HEIGHT - 100, "small_square", "yellow", "Blank", lambda: self.set_view_mode("BLANK"), image=blank_icon, show_text=False),
+            Button(VIEW_BTN_START_X, VIEW_BTN_ROW1_Y, "small_square", "green", "Terrain", self.set_terrain, image=terrain_icon, show_text=False),
+            Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X, VIEW_BTN_ROW1_Y, "small_square", "light_blue", "Political", self.set_political, image=political_icon, show_text=False),
+            Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X * 2, VIEW_BTN_ROW1_Y, "small_square", "purple", "Relations", self.set_relations, image=relations_icon, show_text=False),
+            Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X * 3, VIEW_BTN_ROW1_Y, "small_square", "pink", "Cores", self.set_cores, image=core_icon, show_text=False),
+            
+            Button(VIEW_BTN_START_X, VIEW_BTN_ROW2_Y, "small_square", "purple", "Resources", lambda: self.set_view_mode("RESOURCES"), image=resource_icon, show_text=False),
+            Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X, VIEW_BTN_ROW2_Y, "small_square", "yellow", "Blank", lambda: self.set_view_mode("BLANK"), image=blank_icon, show_text=False),
+            Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X * 2, VIEW_BTN_ROW2_Y, "small_square", "red", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon, show_text=False),
+            Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X * 3, VIEW_BTN_ROW2_Y, "small_square", "orange", "Economy", lambda: self.set_view_mode("ECONOMY"), image=economy_icon, show_text=False),
         ])
 
         if self.is_editor:
@@ -77,19 +82,19 @@ def render_buttons(self):
                     Button(20, 520, "left_ui_bar", "purple", "Messages", self.open_messages, image=mail_icon)
                 ])
         
-    # Standard Action Buttons
-    self.btn_go_recruit = Button(SCREEN_WIDTH - 200, 70, "medium", "green", "Recruit Menu", self.open_recruit)
-    self.btn_go_orders = Button(SCREEN_WIDTH - 200, 130, "medium", "blue", "Give Orders", self.open_orders)
-    self.btn_go_build = Button(SCREEN_WIDTH - 200, 190, "medium", "grey", "Construction", self.open_construction)
+    # Standard Action Buttons utilizing constants
+    self.btn_go_recruit = Button(ACTION_BTN_X, ACTION_BTN_START_Y, "medium", "green", "Recruit Menu", self.open_recruit)
+    self.btn_go_orders = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y, "medium", "blue", "Give Orders", self.open_orders)
+    self.btn_go_build = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 2, "medium", "grey", "Construction", self.open_construction)
 
-    self.btn_declare_war = Button(SCREEN_WIDTH - 200, 70, "medium", "red", "Declare War", self.handle_declare_war)
-    self.btn_form_alliance = Button(SCREEN_WIDTH - 200, 130, "medium", "green", "Form Alliance", self.handle_form_alliance)
+    self.btn_declare_war = Button(ACTION_BTN_X, ACTION_BTN_START_Y, "medium", "red", "Declare War", self.handle_declare_war)
+    self.btn_form_alliance = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y, "medium", "green", "Form Alliance", self.handle_form_alliance)
 
-    # NEW: Spectator God Power Buttons
-    self.btn_force_war = Button(SCREEN_WIDTH - 200, 70, "medium", "red", "Force War", self.force_war_menu)
-    self.btn_force_peace = Button(SCREEN_WIDTH - 200, 130, "medium", "green", "Force Ceasefire", self.force_peace_menu)
-    self.btn_force_alliance = Button(SCREEN_WIDTH - 200, 190, "medium", "blue", "Force Alliance", self.force_alliance_menu)
-    self.btn_break_alliance = Button(SCREEN_WIDTH - 200, 250, "medium", "orange", "Break Alliance", self.force_break_alliance_menu)
+    # Spectator God Power Buttons
+    self.btn_force_war = Button(ACTION_BTN_X, ACTION_BTN_START_Y, "medium", "red", "Force War", self.force_war_menu)
+    self.btn_force_peace = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y, "medium", "green", "Force Ceasefire", self.force_peace_menu)
+    self.btn_force_alliance = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 2, "medium", "blue", "Force Alliance", self.force_alliance_menu)
+    self.btn_break_alliance = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 3, "medium", "orange", "Break Alliance", self.force_break_alliance_menu)
 
     # NEW: Spectator Mode Toggle Button
     self.btn_spectator = Button(20, SCREEN_HEIGHT - 100, "medium", "grey", "Spectator Mode", self.start_spectator)

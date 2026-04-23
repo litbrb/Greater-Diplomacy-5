@@ -98,6 +98,7 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
 # PROVINCE & TECH QUERIES
 # ==========================================
 
+# maybe this could be a get_industry instead and get the level
 def has_industry(province):
     """Returns True if the province contains a Workshop or Factory."""
     return any("Workshop" in b or "Factory" in b for b in province.get("buildings", []))
@@ -311,3 +312,15 @@ def roman_to_int(s):
             else: res += s2 - s1; i += 2
         else: res += s1; i += 1
     return res
+
+def is_naval_unit(unit_type):
+    """Checks if a unit is a naval unit based on its type name or unit library stats."""
+    if unit_type.startswith("Convoy"):
+        return True
+    stats = _get_unit_library().get(unit_type, {})
+    return stats.get("naval_unit", False)
+
+# maybe this could return a number instead of just a boolean check
+def has_units_in_province(nation, province):
+    """Returns True if the given nation has any units in the target province."""
+    return any(u.get("owner") == nation for u in province.get("units", []))

@@ -124,8 +124,8 @@ def process_ai_unit_orders(map_screen):
 
         for unit, prov in units_info:
             u_type = unit.get("type", "")
-            # Skip naval units for this basic land logic
-            if u_type.startswith("Convoy") or "Ship" in u_type or "Carrier" in u_type or "Destroyer" in u_type or "Dreadnaught" in u_type or "Ironclad" in u_type or "Carrack" in u_type:
+            # Skip naval units for this basic land logic utilizing the cleaner query
+            if state_queries.is_naval_unit(u_type):
                 continue
 
             curr_id = prov["id"]

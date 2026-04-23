@@ -1,13 +1,11 @@
 import pygame
 import base64
-from data.constants import UI_LEFT_OFFSET, UNPLAYABLE_NATIONS
+from data.constants import UI_LEFT_OFFSET, UNPLAYABLE_NATIONS, SIDEBAR_INFO_X, SIDEBAR_INFO_Y, SIDEBAR_INFO_WIDTH, SIDEBAR_INFO_HEIGHT
 from map_functions.rendering.font_manager import fonts
 from map_functions.logic import state_queries
 
-# Define the area for the sidebar info panel
-sidebar_x = 580
-sidebar_y = 70
-info_rect = pygame.Rect(sidebar_x, sidebar_y, 300, 450)
+# Define the area for the sidebar info panel utilizing constants
+info_rect = pygame.Rect(SIDEBAR_INFO_X, SIDEBAR_INFO_Y, SIDEBAR_INFO_WIDTH, SIDEBAR_INFO_HEIGHT)
 
 def draw_sidebar_info(self, surface):
     """
@@ -42,7 +40,7 @@ def draw_sidebar_info(self, surface):
     
     for i, line in enumerate(info_lines):
         tsurf = self.small_font.render(line, True, (255, 255, 255))
-        text_x = sidebar_x + 10
+        text_x = SIDEBAR_INFO_X + 10
         surface.blit(tsurf, (text_x, 80 + i * 25))
 
     # 5. Combat Detection
@@ -53,7 +51,7 @@ def draw_sidebar_info(self, surface):
     # 6. Draw the Combat Zone Section
     if is_combat:
         y_offset = 180
-        x_offset = sidebar_x + 10
+        x_offset = SIDEBAR_INFO_X + 10
         header = self.font.render("--- COMBAT ZONE ---", True, (255, 50, 50))
         surface.blit(header, (x_offset, y_offset))
         

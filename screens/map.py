@@ -562,11 +562,11 @@ class Map(GameState):
         if self.selected_province:
             self.deselect_province()
 
-    # Add the new handle_orders_key method right underneath it:
+    # Changed handle_orders_key to correctly utilize state queries instead of duplicate list comprehensions
     def handle_orders_key(self):
         if self.selected_province and not self.selection_mode:
             owner = self.selected_province.get("owner", "Unclaimed")
-            has_player_units = any(u['owner'] == self.player_country for u in self.selected_province.get("units", []))
+            has_player_units = state_queries.has_units_in_province(self.player_country, self.selected_province)
             
             # Replicate the button visibility condition
             if owner == self.player_country or has_player_units:
@@ -882,7 +882,7 @@ class Map(GameState):
                     self.btn_force_alliance.visible = True
                     self.btn_break_alliance.visible = True
             else:
-                has_player_units = any(u['owner'] == self.player_country for u in self.selected_province.get("units", []))
+                has_player_units = state_queries.has_units_in_province(self.player_country, self.selected_province)
                 
                 if owner == self.player_country or has_player_units:
                     self.btn_go_orders.visible = True

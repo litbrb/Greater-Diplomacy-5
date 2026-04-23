@@ -290,7 +290,7 @@ class Map(GameState):
         # --- Auto-save or clear direct message draft on exit ---
         if self.selected_province:
             owner = self.selected_province.get("owner")
-            is_foreign = owner != self.player_country and owner in self.nation_data and self.nation_data[owner].get("is_playable")
+            is_foreign = state_queries.is_foreign_playable(owner, self.player_country, self.nation_data)
             if is_foreign:
                 draft = getattr(self, "mail_draft_text", "").strip()
                 if draft:
@@ -454,7 +454,7 @@ class Map(GameState):
         # --- NEW: Direct Map Message Editing ---
         if self.selected_province:
             owner = self.selected_province.get("owner")
-            is_foreign = owner != self.player_country and owner in self.nation_data and self.nation_data[owner].get("is_playable")
+            is_foreign = state_queries.is_foreign_playable(owner, self.player_country, self.nation_data)
             if is_foreign:
                 # MAIL BOX! MAIL BOX! MAIL BOX!
                 mail_rect = pygame.Rect(*PROVINCE_UI["mail_box"])

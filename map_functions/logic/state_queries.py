@@ -1,6 +1,7 @@
 import json
 import os
 from data.constants import WATER_TERRAINS, NON_CORE_MULTIPLIERS, BASE_YIELDS, UPKEEP_MODIFIER, UNPLAYABLE_NATIONS, UNIT_DATA_PATH, BUILDING_DATA_PATH
+import re
 
 # --- CACHE LIBRARIES ---
 _cached_unit_library = None
@@ -282,3 +283,31 @@ def is_diplomat_busy(sender, target, nation_data):
     if action and not action.startswith("MSG:"): 
         return True
     return False
+
+
+# ==========================================
+# STRING & UNIT QUERIES
+# ==========================================
+
+def is_foreign_playable(owner, player_country, nation_data):
+    """Returns True if the owner is a valid, playable foreign nation."""
+    return owner != player_country and owner in nation_data and nation_data[owner].get("is_playable", False)
+
+def get_base_unit_name(unit_name):
+    """Strips years and roman numerals to return the base unit class (e.g. 'Infantry Type 1850' -> 'Infantry')."""
+    base = re.sub(r'\s+\d{4}$', '', unit_name)
+    return re.sub(r'\s+[IVXLCDM]+$', '', base).strip()
+
+def roman_to_int(s):
+    """Converts a roman numeral string to an integer."""
+    if not s: return 0
+    rom_val = {'I': 1, 'V': 5, 'X': 10}
+    res, i = 0, 0
+    while i < len(s):
+        s1 = rom_val.get(s[i], 0)
+        if i + 1 < len(s):
+            s2 = rom_val.get(s[i+1], 0)
+            if s1 >= s2: res += s1; i += 1
+            else: res += s2 - s1; i += 2
+        else: res += s1; i += 1
+    return res

@@ -8,11 +8,11 @@ from tkinter import colorchooser
 from gameState import GameState
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
-from data.constants import SCREEN_WIDTH
+from data.constants import SCREEN_WIDTH, EDIT_COUNTRY_UI_X1, EDIT_COUNTRY_UI_X2, EDIT_COUNTRY_UI_X3
 
-right_ui_x = 850
-input_box_x = 50
-second_right_ui_x = 450
+input_box_x = EDIT_COUNTRY_UI_X1
+second_right_ui_x = EDIT_COUNTRY_UI_X2
+right_ui_x = EDIT_COUNTRY_UI_X3
 
 # Helper functions for encoding/decoding surfaces to JSON strings
 def encode_surf(surf):

@@ -2,7 +2,7 @@ import pygame
 from map_functions.rendering import hover_renderer, province_select, overlay_renderer
 from map_functions.ui import minimap, tooltip, flag_renderer, top_bar_text, resource_hud
 from map_functions.ui import ui_info_popup as unit_info_popup
-from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, UNPLAYABLE_NATIONS
+from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, UNPLAYABLE_NATIONS, FEEDBACK_TEXT_OFFSET_X, FEEDBACK_TEXT_Y
 from map_functions.rendering.font_manager import fonts
 
 def draw_map_screen(self, surface):
@@ -239,8 +239,7 @@ def draw_map_screen(self, surface):
    # this is the green text stuff
     if self.feedback_text and pygame.time.get_ticks() - self.feedback_timer < 2000:
         tsurf = self.font.render(self.feedback_text, True, (0, 255, 0))
-        # Change SCREEN_HEIGHT - 40 to 20
-        surface.blit(tsurf, (surface.get_width() - tsurf.get_width() - 1120, 220))
+        surface.blit(tsurf, (surface.get_width() - tsurf.get_width() - FEEDBACK_TEXT_OFFSET_X, FEEDBACK_TEXT_Y))
 
     # Check flag before drawing the tooltip
     # this is the stuff that makes it so that if you select a province you don't display the tooltip

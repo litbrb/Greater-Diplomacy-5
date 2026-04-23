@@ -14,7 +14,7 @@ def draw_unit_info(self, surface):
         return
 
     owner = self.selected_province.get("owner", "Unclaimed")
-    is_foreign = owner != self.player_country and owner in self.nation_data and self.nation_data[owner].get("is_playable")
+    is_foreign = state_queries.is_foreign_playable(owner, self.player_country, self.nation_data)
 
     # --- 1. Units Box ---
     pygame.draw.rect(surface, (30, 30, 50), units_rect)

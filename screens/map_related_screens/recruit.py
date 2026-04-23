@@ -43,8 +43,7 @@ class Recruit_Screen(GameState):
 
     def get_group_name(self, name):
         # We strip the year off the infantry so they all group properly!
-        base = re.sub(r'\s+\d{4}$', '', name)
-        return re.sub(r'\s+[IVXLCDM]+$', '', base).strip()
+        return state_queries.get_base_unit_name(name)
 
     def get_ordered_groups(self):
         infantry_groups, tank_groups, navy_groups = [], [], []
@@ -148,17 +147,7 @@ class Recruit_Screen(GameState):
             self.navy_start_y = self.navy_end_y = y_offset
 
     def roman_to_int(self, s):
-        if not s: return 0
-        rom_val = {'I': 1, 'V': 5, 'X': 10}
-        res, i = 0, 0
-        while i < len(s):
-            s1 = rom_val.get(s[i], 0)
-            if i + 1 < len(s):
-                s2 = rom_val.get(s[i+1], 0)
-                if s1 >= s2: res += s1; i += 1
-                else: res += s2 - s1; i += 2
-            else: res += s1; i += 1
-        return res
+        return state_queries.roman_to_int(s)
 
     def buy_unit(self, unit_name):
         stats = self.unit_library.get(unit_name)

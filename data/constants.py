@@ -33,6 +33,15 @@ PROVINCE_UI = {
     "mail_box": (SCREEN_WIDTH - 200, 420, 210, 300)
 }
 
+# --- Editor UI Placement ---
+EDIT_COUNTRY_UI_X1 = 50
+EDIT_COUNTRY_UI_X2 = 450
+EDIT_COUNTRY_UI_X3 = 850
+
+# --- Feedback Text Placement ---
+FEEDBACK_TEXT_OFFSET_X = 1120
+FEEDBACK_TEXT_Y = 220
+
 UI_LEFT_OFFSET = 160
 
 # This probably needs to be implemented in more places than just orders.py / buttons.py

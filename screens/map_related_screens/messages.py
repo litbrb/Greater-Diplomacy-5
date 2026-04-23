@@ -4,6 +4,7 @@ from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, UNPLAYABLE_NATIONS
 from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
 from map_functions.logic import diplomacy_logic
+from map_functions.logic import state_queries
 
 class Messages_Screen(GameState):
     def __init__(self):
@@ -184,12 +185,8 @@ class Messages_Screen(GameState):
         if self.active_tab == "COMPOSE":
             y_off = 100
             
-            # Scan map for living nations
-            active_nations = set()
-            for prov in self.map_screen.map_data.values():
-                owner = prov.get("owner")
-                if owner and owner not in UNPLAYABLE_NATIONS:
-                    active_nations.add(owner)
+            # Scan map for living nations using the unified query
+            active_nations = state_queries.get_living_nations(self.map_screen.map_data)
             
             playable = [c for c, d in self.map_screen.nation_data.items() 
                         if d.get("is_playable") and c != self.map_screen.player_country and c in active_nations]

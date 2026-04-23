@@ -203,3 +203,34 @@ def get_economy_projections(target_nation, map_data, nation_data):
         )
         
     return p_econ.get("total_inc"), p_econ.get("upkeep"), p_econ.get("breakdown")
+
+
+# ==========================================
+# MAP & ENTITY QUERIES
+# ==========================================
+
+def get_living_nations(map_data):
+    """Scans the map and returns a set of all nations that currently own at least one province."""
+    from data.constants import UNPLAYABLE_NATIONS
+    active_nations = set()
+    for prov in map_data.values():
+        owner = prov.get("owner")
+        if owner and owner not in UNPLAYABLE_NATIONS:
+            active_nations.add(owner)
+    return active_nations
+
+
+# ==========================================
+# TIME & RESEARCH QUERIES
+# ==========================================
+
+def get_exact_year(time_manager):
+    """Calculates the exact fractional year based on the game's 360-day calendar."""
+    return time_manager.year + (time_manager.month_index / 12.0) + (time_manager.day / 360.0)
+
+def get_research_multiplier(current_exact_year, target_year):
+    """Calculates the ahead-of-time penalty multiplier. 50% at 1 year ahead, 25% at 2 years, etc."""
+    years_ahead = target_year - current_exact_year
+    if years_ahead > 0:
+        return 0.5 ** years_ahead
+    return 1.0

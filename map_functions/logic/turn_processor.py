@@ -67,8 +67,7 @@ def process_national_research(self):
     
     base_points_per_turn = 10 * DAYS_PER_TURN # Standardized 10/day * 10 days
 
-    # Calculate exact fractional year based on the game's 360-day calendar (12 months * 30 days)
-    current_exact_year = self.time_manager.year + (self.time_manager.month_index / 12.0) + (self.time_manager.day / 360.0)
+    current_exact_year = state_queries.get_exact_year(self.time_manager)
 
     for country_name, country_data in self.nation_data.items():
         queue = country_data.get("research_queue", [])
@@ -89,15 +88,7 @@ def process_national_research(self):
             target_index = min(current_level, len(years_array) - 1)
             target_year = years_array[target_index]
             
-            years_ahead = target_year - current_exact_year
-            
-            if years_ahead > 0:
-                # Exponential decay: 50% at 1 year, 25% at 2 years, etc.
-                multiplier = 0.5 ** years_ahead
-            else:
-                # No penalty if researching on time or behind time
-                multiplier = 1.0
-                
+            multiplier = state_queries.get_research_multiplier(current_exact_year, target_year)
             effective_points = base_points_per_turn * multiplier
             # -----------------------------------
             

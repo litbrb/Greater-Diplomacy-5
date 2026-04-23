@@ -5,6 +5,7 @@ import json
 import os
 from data.constants import BASE_YIELDS, UPKEEP_MODIFIER, WATER_NATIONS, UNPLAYABLE_NATIONS, BASE_MAPS_DIR, UNIT_DATA_PATH, RESEARCH_TEMPLATE_PATH, SCENARIOS_DIR
 from data.map import load_map
+from map_functions.logic import state_queries
 
 def editor_load_map(self):
     """Opens a file dialog to load a map folder directly into the editor."""
@@ -238,11 +239,7 @@ def open_editor_date(self):
 
 def open_editor_economy(self):
     """Opens a Tkinter window listing the detailed income of every active country."""
-    active_countries = set()
-    for prov in self.map_data.values():
-        owner = prov.get("owner")
-        if owner and owner not in UNPLAYABLE_NATIONS:
-            active_countries.add(owner)
+    active_countries = state_queries.get_living_nations(self.map_data)
 
     if not active_countries:
         self.show_feedback("No active countries on map!")
@@ -392,11 +389,7 @@ def open_editor_economy(self):
 
 def open_map_research_editor(self):
     """Opens a UI to edit research for countries currently existing on the map."""
-    active_countries = set()
-    for prov in self.map_data.values():
-        owner = prov.get("owner")
-        if owner and owner not in UNPLAYABLE_NATIONS:
-            active_countries.add(owner)
+    active_countries = state_queries.get_living_nations(self.map_data)
 
     if not active_countries:
         self.show_feedback("No active countries on map!")

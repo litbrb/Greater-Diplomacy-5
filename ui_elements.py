@@ -196,3 +196,33 @@ class Slider:
             self.callback(self.value)
             if slider_sound:
                 slider_sound.play()
+
+def process_text_input(event, current_text, max_length=None, validation_func=None):
+    """
+    Handles standard Pygame text input.
+    Returns the updated string and a status flag ('TYPING', 'SUBMIT', or 'CANCEL').
+    """
+    if event.type != pygame.KEYDOWN:
+        return current_text, "TYPING"
+
+    if event.key == pygame.K_BACKSPACE:
+        return current_text[:-1], "TYPING"
+    elif event.key == pygame.K_RETURN:
+        return current_text, "SUBMIT"
+    elif event.key == pygame.K_ESCAPE:
+        return current_text, "CANCEL"
+    else:
+        # Check length constraint
+        if max_length is not None and len(current_text) >= max_length:
+            return current_text, "TYPING"
+
+        char = event.unicode
+        
+        # Check character validity
+        if validation_func:
+            if not validation_func(char):
+                return current_text, "TYPING"
+        elif not char.isprintable(): # Default safe check
+            return current_text, "TYPING"
+
+        return current_text + char, "TYPING"

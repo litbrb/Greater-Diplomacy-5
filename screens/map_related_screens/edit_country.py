@@ -6,7 +6,7 @@ from pathlib import Path
 import tkinter as tk 
 from tkinter import colorchooser 
 from gameState import GameState
-from ui_elements import Button
+from ui_elements import Button, process_text_input
 from map_functions.rendering.font_manager import fonts
 from data.constants import SCREEN_WIDTH, EDIT_COUNTRY_UI_X1, EDIT_COUNTRY_UI_X2, EDIT_COUNTRY_UI_X3
 
@@ -306,19 +306,13 @@ class Edit_Country_Screen(GameState):
             self.execute_draw(mx, my, is_click=False)
 
         # 3. Keyboard Logic
-        if event.type == pygame.KEYDOWN and self.active_input:
-            if event.key == pygame.K_BACKSPACE:
-                if self.active_input == "COUNTRY_NAME": self.country_name = self.country_name[:-1]
-                elif self.active_input == "NAME": self.leader_name = self.leader_name[:-1]
-                elif self.active_input == "TITLE": self.leader_title = self.leader_title[:-1]
-            else:
-                # Limit length to prevent UI overflow
-                if self.active_input == "COUNTRY_NAME" and len(self.country_name) < 25:
-                    self.country_name += event.unicode
-                elif self.active_input == "NAME" and len(self.leader_name) < 20:
-                    self.leader_name += event.unicode
-                elif self.active_input == "TITLE" and len(self.leader_title) < 20:
-                    self.leader_title += event.unicode
+        if self.active_input:
+            if self.active_input == "COUNTRY_NAME":
+                self.country_name, _ = process_text_input(event, self.country_name, max_length=25)
+            elif self.active_input == "NAME":
+                self.leader_name, _ = process_text_input(event, self.leader_name, max_length=20)
+            elif self.active_input == "TITLE":
+                self.leader_title, _ = process_text_input(event, self.leader_title, max_length=20)
 
     def additional_draw(self, surface):
         title_font = fonts.get("title")

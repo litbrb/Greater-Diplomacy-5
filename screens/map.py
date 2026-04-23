@@ -27,6 +27,7 @@ from data.constants import (
 )
 from map_functions.rendering.font_manager import fonts
 from map_functions.logic import state_queries
+from ui_elements import Button, process_text_input
 
 class Map(GameState):
     def __init__(self, load_path=None, is_scenario=False, is_random=False, force_editor=False, random_settings=None, num_players=1):
@@ -467,11 +468,13 @@ class Map(GameState):
                         self.mail_input_active = False
                 
                 # 2. Handle typing and sending if the box is active
-                elif getattr(self, "mail_input_active", False) and event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKSPACE:
-                        self.mail_draft_text = getattr(self, "mail_draft_text", "")[:-1]
-                    elif event.key == pygame.K_RETURN:
-                        draft = getattr(self, "mail_draft_text", "").strip()
+                elif getattr(self, "mail_input_active", False):
+                    self.mail_draft_text, status = process_text_input(
+                        event, getattr(self, "mail_draft_text", ""), max_length=120
+                    )
+                    
+                    if status == "SUBMIT":
+                        draft = self.mail_draft_text.strip()
                         if draft:
                             msg = diplomacy_logic.queue_text_message(self.nation_data, self.player_country, owner, draft)
                             self.show_feedback(msg)
@@ -479,9 +482,6 @@ class Map(GameState):
                             diplomacy_logic.cancel_text_message(self.nation_data, self.player_country, owner)
                             self.show_feedback("Draft cleared.")
                         self.mail_input_active = False
-                    else:
-                        if len(getattr(self, "mail_draft_text", "")) < 120 and event.unicode.isprintable():
-                            self.mail_draft_text = getattr(self, "mail_draft_text", "") + event.unicode
 
     def sync_units_to_data(self):
         # Forces all units currently on the map to adopt the stats from unit_data.json.

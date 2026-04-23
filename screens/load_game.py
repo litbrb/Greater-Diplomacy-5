@@ -6,7 +6,7 @@ from pathlib import Path
 from tkinter import filedialog, messagebox
 import tkinter as tk
 from gameState import GameState
-from ui_elements import Button
+from ui_elements import Button, process_text_input
 from map_functions.rendering.font_manager import fonts
 from data.constants import SAVES_DIR
 
@@ -76,17 +76,18 @@ class Load_Game(GameState):
     def additional_events(self, event):
         # 1. Renaming Input Logic
         if self.renaming_folder:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.finish_rename()
-                elif event.key == pygame.K_BACKSPACE:
-                    self.new_name_text = self.new_name_text[:-1]
-                elif event.key == pygame.K_ESCAPE:
-                    self.renaming_folder = None
-                    self.refresh_save_list()
-                else:
-                    if event.unicode.isalnum() or event.unicode in " _-":
-                        self.new_name_text += event.unicode
+            # Custom validation lambda for safe folder names
+            is_valid_char = lambda c: c.isalnum() or c in " _-"
+            
+            self.new_name_text, status = process_text_input(
+                event, self.new_name_text, validation_func=is_valid_char
+            )
+
+            if status == "SUBMIT":
+                self.finish_rename()
+            elif status == "CANCEL":
+                self.renaming_folder = None
+                self.refresh_save_list()
         
         # 2. Deletion Input Logic (Enter to confirm, Esc to cancel)
         elif self.deleting_folder:

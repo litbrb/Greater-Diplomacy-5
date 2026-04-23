@@ -5,6 +5,7 @@ from ui_elements import Button
 from map_functions.rendering.font_manager import fonts
 from map_functions.logic import diplomacy_logic
 from map_functions.logic import state_queries
+from ui_elements import Button, process_text_input
 
 class Messages_Screen(GameState):
     def __init__(self):
@@ -52,17 +53,12 @@ class Messages_Screen(GameState):
 
     def additional_events(self, event):
         if self.active_tab == "COMPOSE" and self.selected_recipient:
-            # --- NEW: Use clean lock check ---
             locked = state_queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
             
-            if not locked and event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_BACKSPACE:
-                    self.compose_text = self.compose_text[:-1]
-                elif event.key == pygame.K_RETURN:
+            if not locked:
+                self.compose_text, status = process_text_input(event, self.compose_text, max_length=70)
+                if status == "SUBMIT":
                     self.send_message()
-                else:
-                    if len(self.compose_text) < 70 and event.unicode.isprintable():
-                        self.compose_text += event.unicode
                         
         elif self.active_tab == "INBOX":
             if event.type == pygame.MOUSEWHEEL:

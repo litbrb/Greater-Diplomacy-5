@@ -20,8 +20,8 @@ class Load_Game(GameState):
         self.new_name_text = ""
         self.deleting_folder = None # Track which save is pending deletion
         
-        self.root = tk.Tk()
-        self.root.withdraw()
+        #self.root = tk.Tk()
+        #self.root.withdraw()
         
         self.refresh_save_list()
 
@@ -148,15 +148,26 @@ class Load_Game(GameState):
         except Exception as e: messagebox.showerror("Export Error", str(e))
 
     def import_save_zip(self):
+        # ✅ ADD THIS: Create a temporary root just for the dialog
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True) # Fixes Mac hidden window bug
+        
         file_path = filedialog.askopenfilename(filetypes=[("Zip files", "*.zip")])
+        
+        # ✅ ADD THIS: Destroy it immediately after getting the path
+        root.destroy()
+        
         if file_path:
             save_name = Path(file_path).stem
             target_dir = os.path.join("saves", save_name)
             if os.path.exists(target_dir): target_dir += "_imported"
             try:
-                with zipfile.ZipFile(file_path, 'r') as zip_ref: zip_ref.extractall(target_dir)
+                with zipfile.ZipFile(file_path, 'r') as zip_ref: 
+                    zip_ref.extractall(target_dir)
                 self.refresh_save_list()
-            except Exception as e: messagebox.showerror("Import Error", str(e))
+            except Exception as e: 
+                messagebox.showerror("Import Error", str(e))
 
     def start_rename(self, folder_name):
         self.renaming_folder = folder_name

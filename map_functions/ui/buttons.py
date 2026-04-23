@@ -6,6 +6,7 @@ from data.constants import (
     ACTION_BTN_X, ACTION_BTN_START_Y, ACTION_BTN_STEP_Y
 )
 from map_functions.rendering import symbol_loader
+from map_functions.logic import state_queries
 
 def render_buttons(self):
     if not self.selection_mode:
@@ -110,3 +111,172 @@ def render_buttons(self):
     ]:
         btn.visible = False
         self.elements.append(btn)
+
+def update_button_states(map_screen):
+    """Dynamically updates button visibility, colors, and text every frame."""
+    
+    # reset all to invisible first
+    for el in map_screen.elements:
+        el.visible = False
+
+        if hasattr(el, 'text'):
+            if el.text == "Terrain": el.is_selected = (map_screen.base_layer == "TERRAIN")
+            elif el.text == "Political": el.is_selected = (map_screen.base_layer == "POLITICAL")
+            elif el.text == "Relations": el.is_selected = (map_screen.base_layer == "RELATIONS")
+            elif el.text == "Cores": el.is_selected = (map_screen.base_layer == "CORES")
+            elif el.text == "Units": el.is_selected = (map_screen.secondary_mode == "UNITS")
+            elif el.text == "Blank": el.is_selected = (map_screen.secondary_mode == "BLANK")
+            elif el.text == "Economy":
+                if not getattr(el, 'show_text', True): el.is_selected = (map_screen.secondary_mode == "ECONOMY")
+                else: el.is_selected = False
+            elif el.text == "Resources": el.is_selected = (map_screen.secondary_mode == "RESOURCES")
+            else: el.is_selected = False
+
+    if map_screen.is_editor:
+        for el in map_screen.elements:
+            if el.text in ["Terrain", "Political", "Relations", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "Map Tech", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank", "Resource", "Resources", "Sync Units"]:
+                el.visible = True
+            
+            if el.text == "Resource":
+                el.visible = True
+                if getattr(map_screen, "editor_mode", "") == "RESOURCE":
+                    el.color, el.hover_color = (150, 0, 150), (200, 50, 200)
+                else:
+                    el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
+
+            if el.text == "Nation":
+                el.visible = True
+                if map_screen.editor_mode == "NATION":
+                    el.color, el.hover_color = (0, 150, 0), (0, 200, 0)
+                else:
+                    el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
+
+            if el.text == "Building":
+                el.visible = True
+                if map_screen.editor_mode == "BUILDING":
+                    el.color, el.hover_color = (0, 100, 200), (50, 150, 255)
+                else:
+                    el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
+            
+            if el.text == "Core Brush":
+                el.visible = True
+                if map_screen.editor_mode == "CORE":
+                    el.color, el.hover_color = (200, 100, 100), (255, 150, 150)
+                else:
+                    el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
+
+            if el.text == "Unit":
+                el.visible = True
+                if map_screen.editor_mode == "UNIT":
+                    el.color, el.hover_color = (200, 0, 0), (255, 50, 50)
+                else:
+                    el.color, el.hover_color = (100, 100, 100), (150, 150, 150)
+        return
+
+    is_sel = bool(map_screen.selected_province)
+    if map_screen.selection_mode:
+        map_screen.btn_exit_to_menu.visible = True
+        if hasattr(map_screen, 'btn_spectator'):
+            map_screen.btn_spectator.visible = True
+        return
+    
+    contextual_buttons = {
+        getattr(map_screen, 'btn_go_build', None), getattr(map_screen, 'btn_close_info', None), 
+        getattr(map_screen, 'btn_exit_to_menu', None), getattr(map_screen, 'btn_go_recruit', None), 
+        getattr(map_screen, 'btn_go_orders', None), getattr(map_screen, 'btn_declare_war', None), 
+        getattr(map_screen, 'btn_form_alliance', None), getattr(map_screen, 'btn_force_war', None), 
+        getattr(map_screen, 'btn_force_peace', None), getattr(map_screen, 'btn_force_alliance', None), 
+        getattr(map_screen, 'btn_break_alliance', None), getattr(map_screen, 'btn_spectator', None)
+    }
+    
+    for el in map_screen.elements:
+        if el not in contextual_buttons:
+            el.visible = True
+            
+    map_screen.btn_exit_to_menu.visible = not is_sel
+    for i in range(min(10, len(map_screen.elements))): 
+        map_screen.elements[i].visible = True
+        
+    map_screen.btn_exit_to_menu.visible = not is_sel
+    map_screen.btn_close_info.visible = is_sel
+
+    for el in map_screen.elements:
+        if el.text == "Next Turn":
+            el.visible = not is_sel
+            break
+
+    if is_sel:
+        owner = map_screen.selected_province.get("owner", "Unclaimed")
+        player_data = map_screen.nation_data.get(map_screen.player_country, {})
+        
+        if map_screen.player_country == "Spectator":
+            if state_queries.is_playable(owner, map_screen.nation_data):
+                map_screen.btn_force_war.visible = True
+                map_screen.btn_force_peace.visible = True
+                map_screen.btn_force_alliance.visible = True
+                map_screen.btn_break_alliance.visible = True
+        else:
+            has_player_units = state_queries.has_units_in_province(map_screen.player_country, map_screen.selected_province)
+            
+            if owner == map_screen.player_country or has_player_units:
+                map_screen.btn_go_orders.visible = True
+                if owner == map_screen.player_country:
+                    from data.constants import WATER_TERRAINS
+                    terrain = map_screen.selected_province.get("terrain", "")
+                    is_land = terrain not in WATER_TERRAINS
+                    map_screen.btn_go_build.visible = True
+                    map_screen.btn_go_recruit.visible = is_land
+
+            if owner != map_screen.player_country and state_queries.is_playable(owner, map_screen.nation_data):
+                incoming_action, incoming_turns = state_queries.get_diplomatic_status(owner, map_screen.player_country, map_screen.nation_data)
+
+                if incoming_action == "ALLIANCE_REQUEST" and incoming_turns > 0:
+                    map_screen.btn_declare_war.visible = True
+                    map_screen.btn_declare_war.text = "REJECT ALLIANCE"
+                    map_screen.btn_form_alliance.visible = True
+                    map_screen.btn_form_alliance.text = "ACCEPT ALLIANCE"
+
+                elif incoming_action == "CEASEFIRE" and incoming_turns > 0:
+                    map_screen.btn_declare_war.visible = True
+                    map_screen.btn_declare_war.text = "REJECT CEASEFIRE"
+                    map_screen.btn_form_alliance.visible = True
+                    map_screen.btn_form_alliance.text = "ACCEPT CEASEFIRE"
+
+                else:
+                    at_war = state_queries.are_at_war(map_screen.player_country, owner, map_screen.nation_data)
+                    allied = state_queries.are_allied(map_screen.player_country, owner, map_screen.nation_data)
+
+                    pending_action, pending_turns = state_queries.get_diplomatic_status(map_screen.player_country, owner, map_screen.nation_data)
+                    is_sending = (pending_turns == 0)
+
+                    def get_status_text():
+                        return "SENDING (UNDO)" if is_sending else "WAITING..."
+
+                    if at_war:
+                        map_screen.btn_form_alliance.visible = False
+                        map_screen.btn_declare_war.visible = True
+                        if pending_action == "CEASEFIRE": map_screen.btn_declare_war.text = get_status_text()
+                        else: map_screen.btn_declare_war.text = "CEASEFIRE"
+                            
+                    elif allied:
+                        map_screen.btn_declare_war.visible = False
+                        map_screen.btn_form_alliance.visible = True
+                        if pending_action == "BREAK_ALLIANCE": map_screen.btn_form_alliance.text = get_status_text()
+                        else: map_screen.btn_form_alliance.text = "BREAK ALLIANCE"
+                            
+                    else:
+                        if pending_action == "WAR_DECLARATION":
+                            map_screen.btn_declare_war.visible = True
+                            map_screen.btn_declare_war.text = get_status_text()
+                            map_screen.btn_form_alliance.visible = False
+                            
+                        elif pending_action == "ALLIANCE_REQUEST":
+                            map_screen.btn_form_alliance.visible = True
+                            map_screen.btn_form_alliance.text = get_status_text()
+                            map_screen.btn_declare_war.visible = False
+                            
+                        else:
+                            map_screen.btn_declare_war.visible = True
+                            map_screen.btn_declare_war.text = "DECLARE WAR"
+                            map_screen.btn_form_alliance.visible = True
+                            map_screen.btn_form_alliance.text = "FORM ALLIANCE"

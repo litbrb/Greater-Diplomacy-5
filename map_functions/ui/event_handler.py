@@ -2,6 +2,7 @@ import pygame
 from map_functions.logic import map_utils
 from map_functions.logic import edit_province_ownership
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, WATER_NATIONS, UNPLAYABLE_NATIONS
+from map_functions.camera import camera_handler
 
 def handle_map_events(self, event):
     mx, my = pygame.mouse.get_pos()
@@ -51,7 +52,7 @@ def handle_map_events(self, event):
     if event.type == pygame.MOUSEWHEEL:
         self.camera.handle_input(event, self, False)
         if self.selected_province and not self.selection_mode:
-            center_camera_on_province(self)
+            camera_handler.center_camera_on_province(self.camera, self.selected_province["center"], SCREEN_WIDTH, SCREEN_HEIGHT, self.total_ui_h)
         return
 
     self.camera.handle_input(event, self, on_ui)
@@ -88,10 +89,6 @@ def handle_map_events(self, event):
                 # --- NATION MODE ---
                 if self.editor_mode == "NATION":
                     if self.hovered_province.get("owner") != self.brush_nation:
-                        # do not paint over oceans or lakes
-                        # i swear to god if you edit this line again im going to throw you into the sun
-                        # "but it's not optimal" don't care stop touching it
-                        # bleh i touched it :P
                         if self.hovered_province.get("owner") not in WATER_NATIONS:
                             edit_province_ownership.conquer_province(self, self.hovered_province, self.brush_nation)
                 
@@ -206,7 +203,7 @@ def handle_map_events(self, event):
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
         if self.hovered_province:
             self.selected_province = self.hovered_province
-            center_camera_on_province(self)
+            camera_handler.center_camera_on_province(self.camera, self.selected_province["center"], SCREEN_WIDTH, SCREEN_HEIGHT, self.total_ui_h)
 
     # --- NEW: Direct Map Message Editing ---
     if self.selected_province:
@@ -243,12 +240,3 @@ def handle_map_events(self, event):
                         diplomacy_logic.cancel_text_message(self.nation_data, self.player_country, owner)
                         self.show_feedback("Draft cleared.")
                     self.mail_input_active = False
-
-def center_camera_on_province(self):
-    """Calculates and snaps the camera to the selected province based on current zoom."""
-    cx, cy = self.selected_province["center"]
-    tx = cx - (pygame.display.get_surface().get_width() / self.camera.zoom / 2)
-    ty = cy - ((pygame.display.get_surface().get_height() - self.total_ui_h) / self.camera.zoom / 2)
-    
-    self.camera.target_pos = pygame.Vector2(tx, ty)
-    self.camera.pos = pygame.Vector2(tx, ty)

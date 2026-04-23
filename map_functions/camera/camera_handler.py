@@ -51,3 +51,32 @@ class MapCamera:
 
         self.pos.x = round(self.pos.x, 2)
         self.pos.y = round(self.pos.y, 2)
+    
+def get_dynamic_ocean_color(camera, min_zoom):
+    """Calculates the RGB value for the ocean background based on current zoom level."""
+    target_brightest_zoom = max(6.0, min_zoom * 2.0) 
+    zoom_range = target_brightest_zoom - min_zoom
+    
+    if zoom_range > 0:
+        t = (camera.zoom - min_zoom) / zoom_range
+        t = max(0.0, min(1.0, t))
+    else:
+        t = 0.0
+
+    dark_blue = (10, 20, 40)
+    light_blue = (40, 100, 180)
+
+    r = int(dark_blue[0] + t * (light_blue[0] - dark_blue[0]))
+    g = int(dark_blue[1] + t * (light_blue[1] - dark_blue[1]))
+    b = int(dark_blue[2] + t * (light_blue[2] - dark_blue[2]))
+
+    return (r, g, b)
+
+def center_camera_on_province(camera_obj, province_center, screen_width, screen_height, total_ui_h):
+    """Calculates and snaps the camera to the selected province based on current zoom."""
+    cx, cy = province_center
+    tx = cx - (screen_width / camera_obj.zoom / 2)
+    ty = cy - ((screen_height - total_ui_h) / camera_obj.zoom / 2)
+    
+    camera_obj.target_pos = pygame.Vector2(tx, ty)
+    camera_obj.pos = pygame.Vector2(tx, ty)

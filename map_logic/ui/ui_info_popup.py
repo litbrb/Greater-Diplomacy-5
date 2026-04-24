@@ -1,5 +1,5 @@
 import pygame
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data.constants import SCREEN_WIDTH, PROVINCE_UI  # <-- Import the new dictionary
 from data import queries
 

@@ -4,8 +4,8 @@ import os
 from gameState import GameState
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DAYS_PER_TURN, RESEARCH_TEMPLATE_PATH, UNIT_DATA_PATH, BUILDING_DATA_PATH
 from ui_elements import Button
-from map_functions.rendering.font_manager import fonts
-from map_functions.rendering import symbol_loader
+from map_logic.rendering.font_manager import fonts
+from map_logic.rendering import symbol_loader
 from data import queries
 
 minimum_year = 1850

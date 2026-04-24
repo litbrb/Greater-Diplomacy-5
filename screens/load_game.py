@@ -7,7 +7,7 @@ from tkinter import filedialog, messagebox
 import tkinter as tk
 from gameState import GameState
 from ui_elements import Button, process_text_input
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data.constants import SAVES_DIR
 
 class Load_Game(GameState):

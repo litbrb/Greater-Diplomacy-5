@@ -1,6 +1,6 @@
 import pygame
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DAYS_PER_TURN
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 
 def draw_recruitment_overlay(surface, target_province):
     """Draws the combined deployment and construction queue."""

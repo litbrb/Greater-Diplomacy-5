@@ -1,6 +1,6 @@
 import pygame
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 
 # --- Presets ---
 COLORS = {

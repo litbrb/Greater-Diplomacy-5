@@ -1,7 +1,7 @@
 import pygame
 import math
 
-from map_functions.rendering import symbol_loader
+from map_logic.rendering import symbol_loader
 
 def draw_movement_arrow(surface, map_screen, start_province, end_province, color=(255, 255, 0)):
     """Draws a scaled arrow between two province centers based on camera zoom/pos."""

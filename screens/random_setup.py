@@ -2,7 +2,7 @@ import os
 from gameState import GameState
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, BASE_MAPS_DIR, COUNTRIES_DATA_PATH
 from ui_elements import Button, Slider
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 import json
 
 class Random_Setup(GameState):

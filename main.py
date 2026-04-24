@@ -1,6 +1,6 @@
 import pygame
 from screens.map_related_screens.messages import Messages_Screen
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 import ui_elements
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH_DEFAULT, SOUND_CLICK_PATH, SOUND_SLIDER_PATH
 from screens.load_game import Load_Game
@@ -11,7 +11,7 @@ from screens.settings import Settings
 from screens.map_related_screens.recruit import Recruit_Screen
 from screens.map_related_screens.orders import Orders_Screen
 from data.io import keybind_io
-from map_functions.rendering import symbol_loader
+from map_logic.rendering import symbol_loader
 from screens.map_related_screens.research import Research_Screen
 from screens.map_related_screens.construction import Construction_Screen
 from screens.map_related_screens.economy import Economy_Screen

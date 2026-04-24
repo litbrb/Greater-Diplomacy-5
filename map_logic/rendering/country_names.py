@@ -1,6 +1,6 @@
 import pygame
 from data.constants import UNPLAYABLE_NATIONS
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 
 def draw_country_names(map_screen, surface):
     # --- LAYER 3.5: COUNTRY NAMES ---

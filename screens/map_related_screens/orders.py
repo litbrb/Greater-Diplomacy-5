@@ -5,7 +5,7 @@ import gameState as g
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, WATER_TERRAINS, UNIT_DATA_PATH, TOP_BAR_UI_CENTER_Y, ACTION_BTN_X
 from gameState import GameState
 from ui_elements import Button
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data import queries
 
 class Orders_Screen(GameState):
@@ -177,7 +177,7 @@ class Orders_Screen(GameState):
                 if self.map_screen.hovered_province:
                     curr_id = self.map_screen.hovered_province["id"]
                     if curr_id != self.map_screen.last_hovered_id:
-                        from map_functions import map_utils
+                        from map_logic import map_utils
                         self.map_screen.hover_glow_surf, self.map_screen.hover_glow_rect = map_utils.create_glow_surface(
                             self.map_screen.id_map, self.map_screen.hovered_province["map_color"]
                         )
@@ -302,11 +302,11 @@ class Orders_Screen(GameState):
         self.map_screen.hide_minimap = False      # NEW
         self.map_screen.selected_province = temp_province
 
-        from map_functions.rendering import province_select
+        from map_logic.rendering import province_select
         province_select.draw_province_select(self.map_screen, surface)
 
         self.cancel_rects = []
-        from map_functions.rendering import overlay_renderer
+        from map_logic.rendering import overlay_renderer
         
         font = fonts.get("heading1")
         small_font = fonts.get("normal")

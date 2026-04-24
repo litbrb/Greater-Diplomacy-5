@@ -2,8 +2,8 @@ import pygame
 from gameState import GameState
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, UNPLAYABLE_NATIONS
 from ui_elements import Button
-from map_functions.rendering.font_manager import fonts
-from map_functions.diplomacy import diplomacy_logic
+from map_logic.rendering.font_manager import fonts
+from map_logic.diplomacy import diplomacy_logic
 from data import queries
 from ui_elements import Button, process_text_input
 

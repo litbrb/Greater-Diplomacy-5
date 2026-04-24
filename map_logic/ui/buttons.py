@@ -7,7 +7,7 @@ from data.constants import (
     LEFT_UI_BAR_X, BTN_RESEARCH_Y, BTN_SAVE_Y, BTN_ECONOMY_Y, BTN_MESSAGES_Y,
     BTN_SPECTATOR_Y, EDITOR_BOT_BTN_START_X, EDITOR_BOT_BTN_STEP_X
 )
-from map_functions.rendering import symbol_loader
+from map_logic.rendering import symbol_loader
 from data import queries
 
 def render_buttons(self):

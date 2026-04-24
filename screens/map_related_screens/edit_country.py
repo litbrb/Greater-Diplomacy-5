@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import colorchooser 
 from gameState import GameState
 from ui_elements import Button, process_text_input
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data.constants import SCREEN_WIDTH, EDIT_COUNTRY_UI_X1, EDIT_COUNTRY_UI_X2, EDIT_COUNTRY_UI_X3
 
 input_box_x = EDIT_COUNTRY_UI_X1

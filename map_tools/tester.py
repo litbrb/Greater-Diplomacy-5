@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 sys.path.append(os.path.abspath(os.path.join('..', 'greater-diplomacy-5')))
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, BASE_MAPS_DIR
 
 # --- NEW: Ask which map to test BEFORE starting Pygame ---

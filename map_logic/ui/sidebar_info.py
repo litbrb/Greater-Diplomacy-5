@@ -1,7 +1,7 @@
 import pygame
 import base64
 from data.constants import UI_LEFT_OFFSET, UNPLAYABLE_NATIONS, SIDEBAR_INFO_X, SIDEBAR_INFO_Y, SIDEBAR_INFO_WIDTH, SIDEBAR_INFO_HEIGHT
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data import queries
 
 # Define the area for the sidebar info panel utilizing constants

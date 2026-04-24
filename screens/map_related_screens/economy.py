@@ -2,7 +2,7 @@ import pygame
 from gameState import GameState
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, ECON_CONVERT_BTN_X1, ECON_CONVERT_BTN_X2, ECON_CONVERT_BTN_Y
 from ui_elements import Button
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data import queries
 
 class Economy_Screen(GameState):

@@ -7,8 +7,8 @@ from gameState import GameState
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DAYS_PER_TURN, UNIT_DATA_PATH, RESEARCH_TEMPLATE_PATH, BUILDING_DATA_PATH
 from ui_elements import Button
 from screens.map_related_screens import recruit_ui
-from map_functions.rendering.font_manager import fonts
-from map_functions.rendering import symbol_loader
+from map_logic.rendering.font_manager import fonts
+from map_logic.rendering import symbol_loader
 from data import queries
 
 class Recruit_Screen(GameState):

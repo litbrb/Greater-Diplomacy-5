@@ -3,18 +3,18 @@ import random
 import math
 from data.map import load_map
 from gameState import GameState
-from map_functions.diplomacy import diplomacy_logic
-from map_functions.diplomacy import player_diplomacy_actions
-from map_functions import edit_province_ownership, refresh_map
-from map_functions.random_map import random_map_generator
-from map_functions.ui import buttons, event_handler, editor_menus
+from map_logic.diplomacy import diplomacy_logic
+from map_logic.diplomacy import player_diplomacy_actions
+from map_logic import edit_province_ownership, refresh_map
+from map_logic.random_map import random_map_generator
+from map_logic.ui import buttons, event_handler, editor_menus
 from data.map import save_map
-from map_functions import (
+from map_logic import (
     turn_processor
 )
-from map_functions.camera.camera_handler import MapCamera
-from map_functions.rendering import map_renderer
-from map_functions.ui import spectator_menus
+from map_logic.camera.camera_handler import MapCamera
+from map_logic.rendering import map_renderer
+from map_logic.ui import spectator_menus
 from data.constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
@@ -26,7 +26,7 @@ from data.constants import (
     UNPLAYABLE_NATIONS,
     PROVINCE_UI
 )
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 from data import queries
 from ui_elements import Button, process_text_input
 
@@ -606,7 +606,7 @@ class Map(GameState):
             return
 
         # 1. Update Ocean Color
-        from map_functions.camera import camera_handler
+        from map_logic.camera import camera_handler
         self.bg_color = camera_handler.get_dynamic_ocean_color(self.camera, self.min_zoom)
         
         # 2. Update Dynamic Button States

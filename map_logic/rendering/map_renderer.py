@@ -1,9 +1,9 @@
 import pygame
-from map_functions.rendering import hover_renderer, province_select, overlay_renderer, country_names
-from map_functions.ui import minimap, tooltip, flag_renderer, top_bar_text, resource_hud, ui_bars, feedback_text
-from map_functions.ui import ui_info_popup as unit_info_popup
+from map_logic.rendering import hover_renderer, province_select, overlay_renderer, country_names
+from map_logic.ui import minimap, tooltip, flag_renderer, top_bar_text, resource_hud, ui_bars, feedback_text
+from map_logic.ui import ui_info_popup as unit_info_popup
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, UNPLAYABLE_NATIONS, FEEDBACK_TEXT_OFFSET_X, FEEDBACK_TEXT_Y
-from map_functions.rendering.font_manager import fonts
+from map_logic.rendering.font_manager import fonts
 
 def draw_map_screen(self, surface):
     # --- HOTSEAT MULTIPLAYER OVERRIDE ---
@@ -86,7 +86,7 @@ def draw_map_screen(self, surface):
         
         # Note: Sidebar info and minimap logic goes below here just like before
         if self.selected_province: 
-            from map_functions.ui import sidebar_info
+            from map_logic.ui import sidebar_info
             sidebar_info.draw_sidebar_info(self, surface)
             sidebar_info.draw_owner_portrait(self, surface)
             unit_info_popup.draw_unit_info(self, surface)

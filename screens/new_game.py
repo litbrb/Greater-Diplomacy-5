@@ -24,14 +24,14 @@ class New_Game(GameState):
         if not os.path.exists(scenario_dir):
             os.makedirs(scenario_dir)
             
-        """scenarios = os.listdir(scenario_dir)
+        scenarios = os.listdir(scenario_dir)
         for i, name in enumerate(scenarios):
             btn_y = 200 + (i * 70)
             # Create a button for each scenario
             self.elements.append(
                 Button("centered", btn_y, "large", "blue", name, 
                        lambda n=name: self.start_scenario(n))
-            )"""
+            )
 
     def map_selected(self):
         self.next_state = "MAP"

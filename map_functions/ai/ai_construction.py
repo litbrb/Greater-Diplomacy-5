@@ -3,17 +3,6 @@ import os
 from data.constants import UNIT_DATA_PATH, BUILDING_DATA_PATH, RESEARCH_TEMPLATE_PATH, UNPLAYABLE_NATIONS, DAYS_PER_TURN
 from map_functions.logic import state_queries
 
-def get_highest_infantry(nation_data, tech_tree, unit_library):
-    """Finds the highest level infantry unit the AI has researched."""
-    res_lvl = nation_data.get("research", {}).get("infantry_type", 1)
-    inf_years = tech_tree.get("infantry_type", {}).get("years", [1850])
-    year_val = inf_years[min(res_lvl - 1, len(inf_years)-1)]
-    u_name = f"Infantry Type {year_val}"
-    
-    if u_name in unit_library:
-        return u_name
-    return "Infantry Type 1850"
-
 def process_ai_economy_decisions(map_screen):
     """Handles AI unit recruitment and building construction based on economy."""
     unit_library = state_queries._get_unit_library() # Use cached version

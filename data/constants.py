@@ -44,7 +44,7 @@ EDITOR_BOT_BTN_STEP_X = 110
 # --- View Toggle UI Layout ---
 VIEW_BTN_START_X = 10
 VIEW_BTN_STEP_X = 50
-VIEW_BTN_ROW1_Y = SCREEN_HEIGHT - 50 # Using explicit calculations based on SCREEN_HEIGHT
+VIEW_BTN_ROW1_Y = SCREEN_HEIGHT - 50
 VIEW_BTN_ROW2_Y = SCREEN_HEIGHT - 100
 
 # --- Action Buttons UI Layout ---

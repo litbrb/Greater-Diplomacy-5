@@ -348,6 +348,15 @@ def finalize_faction_join(nation_data, host, joiner):
     if fac:
         nation_data[joiner]["faction"] = fac
         nation_data[joiner]["is_faction_leader"] = False
+        
+        # --- FIX: Set relations to 100 with all faction members ---
+        from data import queries
+        members = queries.get_faction_members(fac, nation_data)
+        for member in members:
+            if member != joiner:
+                nation_data[joiner].setdefault("relations", {})[member] = 100
+                nation_data[member].setdefault("relations", {})[joiner] = 100
+        # ----------------------------------------------------------
 
 def finalize_faction_leave(nation_data, leaver):
     nation_data[leaver]["faction"] = ""
@@ -361,3 +370,8 @@ def join_faction_wars(nation_data, joiner, faction_member):
             nation_data[joiner]["at_war_with"].append(enemy)
         if joiner not in nation_data[enemy]["at_war_with"]:
             nation_data[enemy]["at_war_with"].append(joiner)
+            
+        # --- FIX: Instantly drop relations to -100 upon joining a war ---
+        nation_data[joiner].setdefault("relations", {})[enemy] = -100
+        nation_data[enemy].setdefault("relations", {})[joiner] = -100
+        # ----------------------------------------------------------------

@@ -11,9 +11,9 @@ def prepare_turn(self):
     print("\n" + "="*40)
     print("--- [PHASE 1] AI PREPARATION START ---")
     
-    print("[SYSTEM] Running AI Grand Strategy...")
-    # Run the LLM grand strategy first so they can queue diplomacy
-    ai_diplomacy.process_ai_grand_strategy(self)
+    # --- PROACTIVE AI REMOVED ---
+    # print("[SYSTEM] Running AI Grand Strategy...")
+    # ai_diplomacy.process_ai_grand_strategy(self)
     
     print("[SYSTEM] Processing Pending Diplomacy...")
     diplomacy_logic.process_diplomacy_turn(self)

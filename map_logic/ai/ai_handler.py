@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+import random
 from google import genai
 from google.genai import types
 from data.constants import SETTINGS_CONFIG_PATH
@@ -116,26 +117,29 @@ def call_ollama(system_prompt, user_prompt):
 def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type):
     mode = get_ai_mode()
     
+    # --- MODIFIED: Ensure 50/50 strict logic regardless of model behavior ---
+    accepted = random.choice([True, False])
+    
     if mode == "OFF":
-        return False, "Our diplomats are currently unavailable (AI is OFF)."
+        return accepted, "Our diplomats are currently unavailable (AI is OFF)."
 
     # --- ADD THIS PRINT ---
-    print(f"[LLM CALL] {ai_nation} evaluating {action_type} from {sender_nation}... (Mode: {mode})")
+    print(f"[LLM CALL] {ai_nation} generating flavor text for {action_type} from {sender_nation}... (Mode: {mode})")
 
     context = get_world_context(nation_data, active_nations, ai_nation, sender_nation)
     system_prompt = (
         "You are an AI playing a grand strategy game. You act as the leader of your nation. "
-        "Evaluate the diplomatic proposal based on your current war status, economy, and logic. "
+        f"You have already decided to strongly {'ACCEPT' if accepted else 'REJECT'} the diplomatic proposal. "
         "Reply ONLY with a valid JSON object matching this schema: "
-        '{"accepted": true or false, "message": "In-character dialogue responding to the proposal"}'
+        '{"message": "In-character dialogue responding to the proposal"}'
     )
-    user_prompt = f"{context}\n{sender_nation} has proposed a {action_type}. Do you accept?"
+    user_prompt = f"{context}\n{sender_nation} has proposed a {action_type}. Provide your response based on your decision."
 
     if mode == "OLLAMA":
         result = call_ollama(system_prompt, user_prompt)
         if result:
-            return result.get("accepted", False), result.get("message", "We decline.")
-        return False, "Ollama server error or timeout."
+            return accepted, result.get("message", "We have made our decision.")
+        return accepted, "Ollama server error or timeout."
 
     # Fallback to Gemini
     try:
@@ -146,10 +150,10 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
         reply_json = json.loads(response.text)
-        return reply_json.get("accepted", False), reply_json.get("message", "We decline.")
+        return accepted, reply_json.get("message", "We have made our decision.")
     except Exception as e:
         print(f"Gemini Error: {e}")
-        return False, "API Error."
+        return accepted, "API Error."
 
 def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content):
     mode = get_ai_mode()
@@ -189,40 +193,5 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
 
 def decide_grand_strategy(nation_data, active_nations, ai_nation, current_date):
     """Asks the LLM what diplomatic actions it wants to take this turn based on global context."""
-    mode = get_ai_mode()
-    if mode == "OFF":
-        return []
-
-    # --- ADD THIS PRINT ---
-    print(f"[LLM CALL] Generating turn strategy for {ai_nation}... (Mode: {mode})")
-
-    context = get_world_context(nation_data, active_nations, ai_nation, current_date=current_date)
-    
-    system_prompt = (
-        "You are an AI playing a grand strategy map game. Review the world events, your politics, and your RELATIONS with other countries (-100 to +100). "
-        "Use your relations to decide if you declare war (usually if relations are very low, e.g., below -50) or how you talk to them. "
-        "Decide if you want to take any diplomatic actions this turn. You may take multiple actions or none. "
-        "Valid actions are: WAR_DECLARATION, CEASEFIRE, JOIN_FACTION_REQ, FACTION_INVITE, CREATE_FACTION, LEAVE_FACTION, CUSTOM_MSG, MODIFY_RELATION, JOIN_WARS. "
-        "To artificially shift relations based on recent events/messages, you can output an action like {'action': 'MODIFY_RELATION', 'target': 'France', 'amount': -20}. "
-        "You may optionally include a 'message' key to send a custom diplomatic message along with your action. "
-        "Reply ONLY with a valid JSON array matching this schema: "
-        '[{"action": "WAR_DECLARATION", "target": "France", "message": "Prepare for destruction!"}, {"action": "MODIFY_RELATION", "target": "Germany", "amount": 10}]'
-    )
-    user_prompt = f"{context}\nWhat are your orders for this turn? (Return empty array [] if you wish to do nothing)"
-
-    if mode == "OLLAMA":
-        result = call_ollama(system_prompt, user_prompt)
-        return result if isinstance(result, list) else []
-
-    try:
-        client = genai.Client(api_key=get_api_key())
-        response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=f"{system_prompt}\n\n{user_prompt}",
-            config=types.GenerateContentConfig(response_mime_type="application/json")
-        )
-        actions = json.loads(response.text)
-        return actions if isinstance(actions, list) else []
-    except Exception as e:
-        print(f"Gemini Strategy Error for {ai_nation}: {e}")
-        return []
+    # --- PROACTIVE AI REMOVED ---
+    return []

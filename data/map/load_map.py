@@ -126,6 +126,18 @@ def load_map_assets(self, load_path):
         # Fallback to default starting data
         self.nation_data = base_nation_data
 
+    # --- FIX: INITIALIZE RELATIONS FOR STARTING WARS & FACTIONS ---
+    for c_name, c_data in self.nation_data.items():
+        for enemy in c_data.get("at_war_with", []):
+            c_data.setdefault("relations", {})[enemy] = -100
+        
+        fac = c_data.get("faction", "")
+        if fac:
+            for other_c, other_d in self.nation_data.items():
+                if other_c != c_name and other_d.get("faction", "") == fac:
+                    c_data.setdefault("relations", {})[other_c] = 100
+    # --------------------------------------------------------------
+
     _load_default_images(self)
     # --- THE FIX: Use .get() with a fallback color ---
     self.nation_colors = {name: tuple(stats.get("color", [150, 150, 150])) for name, stats in self.nation_data.items()}

@@ -98,7 +98,7 @@ def render_buttons(self):
     self.btn_go_build = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 2, "medium", "grey", "Construction", self.open_construction)
 
     self.btn_declare_war = Button(ACTION_BTN_X, ACTION_BTN_START_Y, "medium", "red", "Declare War", self.handle_declare_war)
-    self.btn_faction_action = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y, "medium", "green", "Invite to Faction", self.handle_faction_action)
+    self.btn_faction_action = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 3, "medium", "green", "Invite to Faction", self.handle_faction_action)
     self.btn_join_wars = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 2, "medium", "orange", "Join Wars", self.handle_join_wars)
 
     # Spectator God Power Buttons
@@ -239,6 +239,20 @@ def update_button_states(map_screen):
                     map_screen.btn_go_build.visible = True
                     map_screen.btn_go_recruit.visible = is_land
 
+                    map_screen.btn_faction_action.visible = True
+                    my_faction = map_screen.nation_data[map_screen.player_country].get("faction", "")
+                    is_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
+                    pending_self, pending_turns = queries.get_diplomatic_status(map_screen.player_country, map_screen.player_country, map_screen.nation_data)
+
+                    if pending_turns == 0 and pending_self:
+                        map_screen.btn_faction_action.text = "PROCESSING... (UNDO)"
+                    elif not my_faction:
+                        map_screen.btn_faction_action.text = "CREATE FACTION"
+                    elif is_leader:
+                        map_screen.btn_faction_action.text = "DISBAND FACTION"
+                    else:
+                        map_screen.btn_faction_action.text = "LEAVE FACTION"
+
             if owner != map_screen.player_country and queries.is_playable(owner, map_screen.nation_data):
                 incoming_action, incoming_turns = queries.get_diplomatic_status(owner, map_screen.player_country, map_screen.nation_data)
 
@@ -247,17 +261,19 @@ def update_button_states(map_screen):
                     map_screen.btn_declare_war.text = "REJECT INVITE"
                     map_screen.btn_faction_action.visible = True
                     map_screen.btn_faction_action.text = "ACCEPT INVITE"
-
+                elif incoming_action == "JOIN_FACTION_REQ" and incoming_turns > 0:
+                    map_screen.btn_declare_war.visible = True
+                    map_screen.btn_declare_war.text = "REJECT JOIN REQ"
+                    map_screen.btn_faction_action.visible = True
+                    map_screen.btn_faction_action.text = "ACCEPT JOIN REQ"
                 elif incoming_action == "CEASEFIRE" and incoming_turns > 0:
                     map_screen.btn_declare_war.visible = True
                     map_screen.btn_declare_war.text = "REJECT CEASEFIRE"
                     map_screen.btn_faction_action.visible = True
                     map_screen.btn_faction_action.text = "ACCEPT CEASEFIRE"
-
                 else:
                     at_war = queries.are_at_war(map_screen.player_country, owner, map_screen.nation_data)
                     in_same_faction = queries.are_in_same_faction(map_screen.player_country, owner, map_screen.nation_data)
-
                     pending_action, pending_turns = queries.get_diplomatic_status(map_screen.player_country, owner, map_screen.nation_data)
                     is_sending = (pending_turns == 0)
 
@@ -269,33 +285,35 @@ def update_button_states(map_screen):
                         map_screen.btn_declare_war.visible = True
                         if pending_action == "CEASEFIRE": map_screen.btn_declare_war.text = get_status_text()
                         else: map_screen.btn_declare_war.text = "CEASEFIRE"
-                            
                     elif in_same_faction:
                         map_screen.btn_declare_war.visible = False
-                        map_screen.btn_faction_action.visible = True
-                        map_screen.btn_faction_action.text = "LEAVE FACTION"
-                        
-                        # --- Check if we can join their wars ---
                         target_wars = queries.get_enemies(owner, map_screen.nation_data)
                         player_wars = queries.get_enemies(map_screen.player_country, map_screen.nation_data)
                         can_join_wars = any(w for w in target_wars if w not in player_wars)
-                        
                         if can_join_wars:
                             map_screen.btn_join_wars.visible = True
-                            
                     else:
                         if pending_action == "WAR_DECLARATION":
                             map_screen.btn_declare_war.visible = True
                             map_screen.btn_declare_war.text = get_status_text()
                             map_screen.btn_faction_action.visible = False
-                            
-                        elif pending_action == "FACTION_INVITE":
+                        elif pending_action == "FACTION_INVITE" or pending_action == "JOIN_FACTION_REQ":
                             map_screen.btn_faction_action.visible = True
                             map_screen.btn_faction_action.text = get_status_text()
                             map_screen.btn_declare_war.visible = False
-                            
                         else:
                             map_screen.btn_declare_war.visible = True
                             map_screen.btn_declare_war.text = "DECLARE WAR"
-                            map_screen.btn_faction_action.visible = True
-                            map_screen.btn_faction_action.text = "INVITE TO FACTION"
+                            
+                            my_faction = map_screen.nation_data[map_screen.player_country].get("faction", "")
+                            target_faction = map_screen.nation_data[owner].get("faction", "")
+                            i_am_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
+
+                            if my_faction and i_am_leader and not target_faction:
+                                map_screen.btn_faction_action.visible = True
+                                map_screen.btn_faction_action.text = "INVITE TO FACTION"
+                            elif not my_faction and target_faction:
+                                map_screen.btn_faction_action.visible = True
+                                map_screen.btn_faction_action.text = "REQUEST TO JOIN FACTION"
+                            else:
+                                map_screen.btn_faction_action.visible = False

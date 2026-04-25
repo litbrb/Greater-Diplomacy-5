@@ -29,6 +29,7 @@ def open_spectator_action_menu(map_screen, action_type):
         if selection:
             target_nation = lb.get(selection[0])
             from map_logic.diplomacy import diplomacy_logic
+            from data import queries
             
             if action_type == "WAR":
                 diplomacy_logic.finalize_war(map_screen.nation_data, source_nation, target_nation)
@@ -37,13 +38,25 @@ def open_spectator_action_menu(map_screen, action_type):
                 diplomacy_logic.finalize_neutral(map_screen.nation_data, source_nation, target_nation)
                 map_screen.show_feedback(f"Forced Peace: {source_nation} & {target_nation}")
             elif action_type == "FACTION":
+                if not queries.is_faction_leader(source_nation, map_screen.nation_data):
+                    diplomacy_logic.finalize_create_faction(map_screen.nation_data, source_nation)
+                if queries.is_faction_leader(target_nation, map_screen.nation_data):
+                    diplomacy_logic.finalize_disband_faction(map_screen.nation_data, target_nation)
+                elif map_screen.nation_data[target_nation].get("faction"):
+                    diplomacy_logic.finalize_faction_leave(map_screen.nation_data, target_nation)
+                    
                 diplomacy_logic.finalize_faction_join(map_screen.nation_data, source_nation, target_nation)
                 map_screen.show_feedback(f"Forced Faction: {source_nation} & {target_nation}")
             elif action_type == "BREAK":
-                diplomacy_logic.finalize_faction_leave(map_screen.nation_data, target_nation) # Kick them out
-                map_screen.show_feedback(f"Kicked from Faction: {target_nation}")
-                
+                if queries.is_faction_leader(target_nation, map_screen.nation_data):
+                    diplomacy_logic.finalize_disband_faction(map_screen.nation_data, target_nation)
+                    map_screen.show_feedback(f"Disbanded Faction: {target_nation}")
+                else:
+                    diplomacy_logic.finalize_faction_leave(map_screen.nation_data, target_nation)
+                    map_screen.show_feedback(f"Removed from Faction: {target_nation}")
+                    
             map_screen.refresh_relations_map()
+            map_screen.refresh_factions_map()
         close_menu()
 
     def close_menu():

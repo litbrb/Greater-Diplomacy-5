@@ -298,7 +298,10 @@ def refresh_factions_map(self):
             elif not fac:
                 color = (150, 150, 150) # Neutral grey for non-faction countries
             else:
-                if fac not in faction_colors:
+                leader = queries.get_faction_leader(fac, self.nation_data)
+                if leader and leader in self.nation_colors:
+                    faction_colors[fac] = self.nation_colors[leader]
+                elif fac not in faction_colors:
                     faction_colors[fac] = get_faction_color(fac)
                 color = faction_colors[fac]
                 

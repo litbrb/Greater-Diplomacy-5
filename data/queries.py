@@ -65,6 +65,17 @@ def get_faction_members(faction_name, nation_data):
     if not faction_name: return []
     return [n for n, d in nation_data.items() if d.get("faction") == faction_name]
 
+def get_faction_leader(faction_name, nation_data):
+    """Returns the leader of the specified faction."""
+    if not faction_name: return None
+    for n, d in nation_data.items():
+        if d.get("faction") == faction_name and d.get("is_faction_leader", False):
+            return n
+    return None
+
+def is_faction_leader(nation, nation_data):
+    """Returns True if the nation is currently a faction leader."""
+    return nation_data.get(nation, {}).get("is_faction_leader", False)
 # ==========================================
 # MOVEMENT QUERIES
 # ==========================================

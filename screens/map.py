@@ -343,6 +343,7 @@ class Map(GameState):
             turn_processor.resolve_turn(self)
             self.refresh_political_map()
             self.refresh_relations_map()
+            self.refresh_factions_map()
             self.viewing_ai_moves = False
 
             # If playing multiplayer, show the ready screen for Player 1 again

@@ -60,9 +60,12 @@ def draw_country_names(map_screen, surface):
                     if not fac_name:
                         continue
                         
-                    # Skip drawing the faction name again if we already drew it on a bigger blob
-                    if fac_name in drawn_factions:
-                        continue
+                    # Skip small island groups based on the toggle and if the country already has a name
+                    # This allows the faction name to appear on EVERY country in the faction, 
+                    # rather than just once for the whole faction!
+                    if blob["count"] <= 3:
+                        if not SHOW_SMALL_TERRITORY_NAMES or country in drawn_countries:
+                            continue
                         
                     surf, shadow = map_screen.faction_name_surfs.get(country, (None, None))
                 else:

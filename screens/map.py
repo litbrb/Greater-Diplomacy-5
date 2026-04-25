@@ -340,6 +340,8 @@ class Map(GameState):
 
     # 3. INTERCEPT NEXT TURN
     def advance_time(self):
+        turn_start_time = pygame.time.get_ticks() # Start the stopwatch
+        
         # PHASE 2: Resolve the turn if we are currently viewing AI moves
         if getattr(self, 'viewing_ai_moves', False):
             self.draw_turn_loading_screen("Resolving Orders...")
@@ -354,6 +356,11 @@ class Map(GameState):
                 self.show_player_ready_screen = True
 
             buttons.render_buttons(self) 
+            
+            # --- TIMER FEEDBACK ---
+            elapsed_seconds = (pygame.time.get_ticks() - turn_start_time) / 1000.0
+            self.show_feedback(f"Turn resolved in {elapsed_seconds:.2f}s")
+            print(f"[PERFORMANCE] Phase 2 completed in {elapsed_seconds:.2f} seconds.")
             return
 
         # PHASE 1: Prepare the turn and generate AI moves
@@ -377,6 +384,11 @@ class Map(GameState):
                 
                 self.viewing_ai_moves = True
                 buttons.render_buttons(self) 
+                
+                # --- TIMER FEEDBACK ---
+                elapsed_seconds = (pygame.time.get_ticks() - turn_start_time) / 1000.0
+                self.show_feedback(f"AI Strategy generated in {elapsed_seconds:.2f}s")
+                print(f"[PERFORMANCE] Phase 1 (Multiplayer) completed in {elapsed_seconds:.2f} seconds.")
         else:
             self.draw_turn_loading_screen("AI is thinking...")
             turn_processor.prepare_turn(self)
@@ -384,6 +396,11 @@ class Map(GameState):
             self.refresh_relations_map()    
             self.viewing_ai_moves = True
             buttons.render_buttons(self) 
+            
+            # --- TIMER FEEDBACK ---
+            elapsed_seconds = (pygame.time.get_ticks() - turn_start_time) / 1000.0
+            self.show_feedback(f"AI Strategy generated in {elapsed_seconds:.2f}s")
+            print(f"[PERFORMANCE] Phase 1 (Singleplayer) completed in {elapsed_seconds:.2f} seconds.")
 
     def draw_turn_loading_screen(self, text="Processing Turn & Updating Map..."):
         # Draws an overlay informing the player the turn is processing.

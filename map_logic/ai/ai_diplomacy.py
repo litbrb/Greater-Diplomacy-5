@@ -50,11 +50,11 @@ def process_ai_grand_strategy(map_screen):
 
         score = 0
         
-        # 1. Economic / Superpower bias (Bigger nations act more often)
+        # 1. Economic bias
         total_eco = data.get("materials", 0) + data.get("manpower", 0)
         score += min(50, total_eco // 10000) 
         
-        # 2. Are they currently at war? (Needs to negotiate or call allies)
+        # 2. War bias
         if len(data.get("at_war_with", [])) > 0:
             score += 40
             
@@ -62,11 +62,11 @@ def process_ai_grand_strategy(map_screen):
         if ai_name in hot_nations:
             score += 100
             
-        # 4. Proximity to breaking news (Neighbors care if a war breaks out next door)
+        # 4. Proximity to breaking news
         if any(hot_nation in nation_neighbors.get(ai_name, set()) for hot_nation in hot_nations):
             score += 60
             
-        # 5. Cooldown Penalty (Prevents the same large empires from hogging the LLM during peacetime)
+        # 5. Cooldown Penalty
         last_thought = data.get("last_thought_turn", -10)
         if current_absolute_turn - last_thought < THINKING_COOLDOWN:
             score -= 100
@@ -75,9 +75,7 @@ def process_ai_grand_strategy(map_screen):
 
     # Sort AIs by highest score
     sorted_ais = sorted(ai_scores.items(), key=lambda item: item[1], reverse=True)
-    
-    # Take the top 3 most relevant AIs to act this turn
-    top_ais = [ai[0] for ai in sorted_ais[:3] if ai[1] > 20] # Must have at least some relevance
+    top_ais = [ai[0] for ai in sorted_ais[:3] if ai[1] > 20] 
     
     if top_ais:
         print(f"[AI FILTER] Nations selected to execute Grand Strategy this turn: {', '.join(top_ais)}")
@@ -91,10 +89,30 @@ def process_ai_grand_strategy(map_screen):
         # Mark their cooldown
         map_screen.nation_data[ai_nation]["last_thought_turn"] = current_absolute_turn
         
-        actions = ai_handler.decide_grand_strategy(map_screen.nation_data, active_nations, ai_nation, current_date)
+        is_at_war = len(map_screen.nation_data[ai_nation].get("at_war_with", [])) > 0
+        in_news = ai_nation in hot_nations
+        
+        # --- FEATURE 2: BYPASS LLM IF STAGNANT WAR ---
+        if is_at_war and not in_news:
+            print(f"[AI OPTIMIZATION] {ai_nation} is locked in an ongoing war. Bypassing LLM.")
+            actions = []
+        else:
+            actions = ai_handler.decide_grand_strategy(map_screen.nation_data, active_nations, ai_nation, current_date)
         
         pending = map_screen.nation_data[ai_nation].setdefault("pending_diplomacy", {})
         
+        # --- FEATURE 1: FALLBACK MESSAGES ---
+        if not actions:
+            print(f"[AI EVENT] {ai_nation} maintains its course.")
+            if is_at_war:
+                # Send a taunt/status update to their primary enemy so the player sees activity
+                enemies = [e for e in map_screen.nation_data[ai_nation].get("at_war_with", []) if e in active_nations]
+                if enemies:
+                    target = enemies[0]
+                    if target not in pending or pending[target].get("turns", 0) == 0:
+                        pending[target] = {"action": "MSG:The war continues. We will not yield our ground.", "turns": 0}
+        
+        # Process normal actions
         for act in actions:
             action_type = act.get("action")
             target = act.get("target")

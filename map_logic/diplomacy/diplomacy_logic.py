@@ -42,21 +42,30 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
         return f"Undo {action_type.replace('_', ' ').title()}"
         
     elif current_action is not None:
-        # Prevents declaring war while an alliance request is pending, etc.
-        return "A diplomatic action is already pending with this nation!"
-    else:
-        pending[target_name] = {"action": action_type, "turns": 0, "message": custom_msg}
-        return "Message drafted. Will send at end of turn."
+        # NEW: Allow upgrading a drafted text message into a formal diplomatic action
+        info = pending.get(target_name, {})
+        if isinstance(info, dict) and info.get("action", "").startswith("MSG:") and info.get("turns", 0) == 0:
+            if not custom_msg:
+                # Inherit the text from the draft if the user didn't provide a new one
+                custom_msg = info.get("action")[4:]
+        else:
+            # Prevents declaring war while an alliance request is pending, etc.
+            return "A diplomatic action is already pending with this nation!"
+            
+    pending[target_name] = {"action": action_type, "turns": 0, "message": custom_msg}
+    return "Message drafted. Will send at end of turn."
 
 def queue_text_message(nation_data, player_name, target_name, content):
     pending = nation_data[player_name].setdefault("pending_diplomacy", {})
     current_action = get_pending_action(nation_data, player_name, target_name)
     
-    # Allow overwriting if the pending action is a drafted message, otherwise block it
     if current_action is not None and not current_action.startswith("MSG:"):
-        return "A diplomatic action is already pending with this nation!"
+        # NEW: If a formal action is already pending, attach the typed message to it!
+        if isinstance(pending.get(target_name), dict):
+            pending[target_name]["message"] = content
+        return "Message attached to pending action."
         
-    pending[target_name] = {"action": f"MSG:{content}", "turns": 0}
+    pending[target_name] = {"action": f"MSG:{content}", "turns": 0, "message": content}
     return "Message draft saved. Will send at end of turn."
 
 def cancel_text_message(nation_data, player_name, target_name):

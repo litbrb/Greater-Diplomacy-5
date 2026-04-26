@@ -318,17 +318,20 @@ def get_diplomatic_status(sender, target, nation_data):
 
 def get_message_draft(sender, target, nation_data):
     """Returns the draft text if one exists and hasn't been sent."""
-    action, turns = get_diplomatic_status(sender, target, nation_data)
-    if isinstance(action, str) and action.startswith("MSG:") and turns == 0:
-        return action[4:]
+    pending = nation_data.get(sender, {}).get("pending_diplomacy", {}).get(target, {})
+    if isinstance(pending, dict) and pending.get("turns", 0) == 0:
+        if "message" in pending:
+            return pending["message"]
+        # Legacy fallback
+        action = pending.get("action", "")
+        if isinstance(action, str) and action.startswith("MSG:"):
+            return action[4:]
     return ""
 
 def is_diplomat_busy(sender, target, nation_data):
-    """Returns True if the diplomat is currently traveling or performing a non-message action."""
+    """Returns True if the diplomat is currently traveling."""
     action, turns = get_diplomatic_status(sender, target, nation_data)
     if turns > 0: 
-        return True
-    if action and not action.startswith("MSG:"): 
         return True
     return False
 

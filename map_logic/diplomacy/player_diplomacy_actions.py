@@ -16,7 +16,6 @@ def handle_declare_war(map_screen):
     
     custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
     msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, action, custom_msg)
-    map_screen.mail_draft_text = ""
     map_screen.mail_input_active = False
     map_screen.show_feedback(msg)
 
@@ -42,7 +41,6 @@ def handle_faction_action(map_screen):
             req_action = "LEAVE_FACTION"
             
         msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, req_action, custom_msg)
-        map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
         map_screen.show_feedback(msg)
         return
@@ -114,7 +112,6 @@ def handle_faction_action(map_screen):
             map_screen.show_feedback(f"{target} must leave their faction first!")
             return
         msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, "FACTION_INVITE", custom_msg)
-        map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
         map_screen.show_feedback(msg)
     else:
@@ -129,7 +126,6 @@ def handle_faction_action(map_screen):
                 map_screen.show_feedback("That faction has no leader!")
                 return
         msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, "JOIN_FACTION_REQ", custom_msg)
-        map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
         map_screen.show_feedback(msg)
 
@@ -146,6 +142,5 @@ def handle_join_wars(map_screen):
     custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
     # --- MODIFIED: Queue the action instead of instant execution ---
     msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, "JOIN_WARS", custom_msg)
-    map_screen.mail_draft_text = ""
     map_screen.mail_input_active = False
     map_screen.show_feedback(msg)

@@ -195,17 +195,8 @@ def handle_map_events(self, event):
                 self.select_player_country(self.hovered_province)
         return 
 
-    # 6. STANDARD GAME SELECTION
-    # Ignore clicks if a province is already selected, or if we are watching AI moves
-    if self.selected_province or getattr(self, 'viewing_ai_moves', False):
-        return 
-
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-        if self.hovered_province:
-            self.selected_province = self.hovered_province
-            camera_handler.center_camera_on_province(self.camera, self.selected_province["center"], SCREEN_WIDTH, SCREEN_HEIGHT, self.total_ui_h)
-
     # --- NEW: Direct Map Message Editing ---
+    # Moved ABOVE the "STANDARD GAME SELECTION" return block!
     if self.selected_province:
         owner = self.selected_province.get("owner")
         from data import queries # Add if not imported
@@ -240,3 +231,18 @@ def handle_map_events(self, event):
                         diplomacy_logic.cancel_text_message(self.nation_data, self.player_country, owner)
                         self.show_feedback("Draft cleared.")
                     self.mail_input_active = False
+
+    # 6. STANDARD GAME SELECTION
+    # Ignore clicks if a province is already selected, or if we are watching AI moves
+    if self.selected_province or getattr(self, 'viewing_ai_moves', False):
+        return 
+
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        if self.hovered_province:
+            self.selected_province = self.hovered_province
+            camera_handler.center_camera_on_province(self.camera, self.selected_province["center"], SCREEN_WIDTH, SCREEN_HEIGHT, self.total_ui_h)
+            
+            # NEW: Load draft if one exists so the box isn't empty if you return
+            owner = self.selected_province.get("owner")
+            from data import queries
+            self.mail_draft_text = queries.get_message_draft(self.player_country, owner, self.nation_data)

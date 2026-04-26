@@ -43,6 +43,9 @@ class Map(GameState):
         self.brush_building = "None" 
         self.brush_unit = "None"    
         self.editor_mode = "NATION" 
+        
+        # Add our new state variable here!
+        self.show_country_names = True 
 
         # --- 1. Basic State Variables ---
         self.selection_mode = is_scenario
@@ -151,6 +154,10 @@ class Map(GameState):
             return self.nation_data[self.player_country].get("fuel", 0)
         return 0
 
+    def toggle_country_names(self):
+        self.show_country_names = not getattr(self, 'show_country_names', True)
+        self.show_feedback(f"Country Names: {'ON' if self.show_country_names else 'OFF'}")
+        
     # --- Logic Methods ---
     def set_view_mode(self, mode):
         self.secondary_mode = mode

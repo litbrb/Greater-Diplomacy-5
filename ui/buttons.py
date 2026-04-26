@@ -24,6 +24,9 @@ def render_buttons(self):
         core_icon = symbol_loader.get_symbol("Star", 1.5)
         resource_icon = symbol_loader.get_symbol("Iron", 2)
         faction_icon = symbol_loader.get_symbol("Star", 1.5)
+        
+        # Reusing the Star icon for the Names toggle so it matches your aesthetic
+        names_icon = symbol_loader.get_symbol("Star", 1.5) 
 
         # Refresh Buttons
         self.elements = [
@@ -48,6 +51,8 @@ def render_buttons(self):
             Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X, VIEW_BTN_ROW2_Y, "small_square", "yellow", "Blank", lambda: self.set_view_mode("BLANK"), image=blank_icon, show_text=False),
             Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X * 2, VIEW_BTN_ROW2_Y, "small_square", "red", "Units", lambda: self.set_view_mode("UNITS"), image=unit_icon, show_text=False),
             Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X * 3, VIEW_BTN_ROW2_Y, "small_square", "orange", "Economy", lambda: self.set_view_mode("ECONOMY"), image=economy_icon, show_text=False),
+            
+            Button(VIEW_BTN_START_X + VIEW_BTN_STEP_X * 4, VIEW_BTN_ROW2_Y, "small_square", "blue", "Names", self.toggle_country_names, image=names_icon, show_text=False),
         ])
 
         if self.is_editor:
@@ -148,11 +153,12 @@ def update_button_states(map_screen):
                 if not getattr(el, 'show_text', True): el.is_selected = (map_screen.secondary_mode == "ECONOMY")
                 else: el.is_selected = False
             elif el.text == "Resources": el.is_selected = (map_screen.secondary_mode == "RESOURCES")
+            elif el.text == "Names": el.is_selected = getattr(map_screen, 'show_country_names', True)
             else: el.is_selected = False
 
     if map_screen.is_editor:
         for el in map_screen.elements:
-            if el.text in ["Terrain", "Political", "Relations", "Factions", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Fac Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "R&D", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank", "Resource", "Resources", "Sync Units", "Diplomacy"]:
+            if el.text in ["Terrain", "Political", "Relations", "Factions", "Pol Refresh", "Rel Refresh", "Core Refresh", "Data Refresh", "Fac Refresh", "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit", "R&D", "Reset", "Save", "Load", "Nation", "Building", "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank", "Resource", "Resources", "Sync Units", "Diplomacy", "Names"]:
                 el.visible = True
             
             if el.text == "Resource":

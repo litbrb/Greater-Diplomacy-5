@@ -10,7 +10,7 @@ def draw_country_names(map_screen, surface):
     # Only show names on the Political map to avoid cluttering other modes
     # if map_screen.base_layer == "POLITICAL":
     # if map_screen.secondary_mode == "BLANK":
-    if True: # ignore this for now
+    if getattr(map_screen, 'show_country_names', True): 
         
         # 1. Cache text surfaces once to save performance
         if not hasattr(map_screen, 'country_name_surfs'):

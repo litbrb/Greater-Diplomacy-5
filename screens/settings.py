@@ -68,11 +68,11 @@ class Settings(GameState):
 
         # Adjust the Y positions of the remaining elements slightly lower
         self.elements.extend([
-            Slider(300, 420, 200, "Volume", self.volume, self.set_volume),
-            Slider(300, 500, 200, f"Players: {self.num_players}", (self.num_players - 1) / 7.0, self.set_players),
-            Button("centered", 580, "large", "grey", back_btn_text, lambda: self.start_listening("BACK")),
-            Button("centered", 670, "large", "grey", orders_btn_text, lambda: self.start_listening("ORDERS")),
-            Button("centered", 760, "medium", "blue", "Reset Keybinds", self.reset_defaults)
+            Slider(200, 420, 200, "Volume", self.volume, self.set_volume),
+            Slider(200, 500, 200, f"Players: {self.num_players}", (self.num_players - 1) / 7.0, self.set_players),
+            Button("centered", 430, "large", "grey", back_btn_text, lambda: self.start_listening("BACK")),
+            Button("centered", 520, "large", "grey", orders_btn_text, lambda: self.start_listening("ORDERS")),
+            Button("centered", 610, "medium", "blue", "Reset Keybinds", self.reset_defaults)
         ])
 
     def toggle_ai(self):

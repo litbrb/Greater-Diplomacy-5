@@ -5,7 +5,7 @@ def handle_declare_war(map_screen):
     target = map_screen.selected_province.get("owner")
     action, incoming_turns = queries.get_diplomatic_status(target, map_screen.player_country, map_screen.nation_data)
 
-    if action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ"] and incoming_turns > 0:
+    if action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS"] and incoming_turns > 0:
         del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
         diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, f"We rejected your {action.replace('_', ' ').lower()}.", "DIPLOMACY")
         map_screen.show_feedback("Request Rejected!")
@@ -98,6 +98,18 @@ def handle_faction_action(map_screen):
             
             map_screen.show_feedback("Ceasefire Accepted!")
             return
+        elif action == "CALL_TO_ARMS":
+            diplomacy_logic.join_faction_wars(map_screen.nation_data, map_screen.player_country, target)
+            del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
+            
+            msg_text = custom_msg if custom_msg else "We answer your call. Our forces will join your wars."
+            diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
+            map_screen.mail_draft_text = ""
+            map_screen.mail_input_active = False
+            
+            map_screen.show_feedback("Joined Allies in War!")
+            map_screen.refresh_relations_map()
+            return
 
     my_faction = map_screen.nation_data[map_screen.player_country].get("faction", "")
     target_faction = map_screen.nation_data[target].get("faction", "")
@@ -142,5 +154,19 @@ def handle_join_wars(map_screen):
     custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
     # --- MODIFIED: Queue the action instead of instant execution ---
     msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, "JOIN_WARS", custom_msg)
+    map_screen.mail_input_active = False
+    map_screen.show_feedback(msg)
+
+def handle_call_to_arms(map_screen):
+    target = map_screen.selected_province.get("owner")
+    if queries.are_at_war(map_screen.player_country, target, map_screen.nation_data):
+        map_screen.show_feedback("Cannot call enemies to arms!")
+        return
+    if not queries.are_in_same_faction(map_screen.player_country, target, map_screen.nation_data):
+        map_screen.show_feedback("You must be in the same faction to call them to arms!")
+        return
+        
+    custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
+    msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, "CALL_TO_ARMS", custom_msg)
     map_screen.mail_input_active = False
     map_screen.show_feedback(msg)

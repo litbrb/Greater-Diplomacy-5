@@ -461,6 +461,9 @@ class Map(GameState):
     def handle_join_wars(self):
         player_diplomacy_actions.handle_join_wars(self)
 
+    def handle_call_to_arms(self):
+        player_diplomacy_actions.handle_call_to_arms(self)
+
     def handle_back_key(self):
         if self.selected_province:
             self.deselect_province()

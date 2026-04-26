@@ -101,7 +101,8 @@ def render_buttons(self):
     self.btn_declare_war = Button(ACTION_BTN_X, ACTION_BTN_START_Y, "medium", "red", "Declare War", self.handle_declare_war)
     self.btn_faction_action = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 3, "medium", "green", "Invite to Faction", self.handle_faction_action)
     self.btn_join_wars = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 2, "medium", "orange", "Join Wars", self.handle_join_wars)
-
+    self.btn_call_to_arms = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y * 4, "medium", "red", "Call to Arms", self.handle_call_to_arms)
+    
     # Spectator God Power Buttons
     self.btn_force_war = Button(ACTION_BTN_X, ACTION_BTN_START_Y, "medium", "red", "Force War", self.force_war_menu)
     self.btn_force_peace = Button(ACTION_BTN_X, ACTION_BTN_START_Y + ACTION_BTN_STEP_Y, "medium", "green", "Force Ceasefire", self.force_peace_menu)
@@ -122,7 +123,7 @@ def render_buttons(self):
     for btn in [
         self.btn_go_build, self.btn_close_info, self.btn_exit_to_menu, self.btn_go_recruit, 
         self.btn_go_orders, self.btn_declare_war, self.btn_faction_action, self.btn_join_wars, self.btn_force_war, 
-        self.btn_force_peace, self.btn_spec_create_fac, self.btn_spec_join_fac, self.btn_spec_invite_fac, 
+        self.btn_call_to_arms, self.btn_force_peace, self.btn_spec_create_fac, self.btn_spec_join_fac, self.btn_spec_invite_fac, 
         self.btn_spec_leave_fac, self.btn_spec_disband_fac, self.btn_spectator
     ]:
         btn.visible = False
@@ -202,10 +203,11 @@ def update_button_states(map_screen):
         getattr(map_screen, 'btn_exit_to_menu', None), getattr(map_screen, 'btn_go_recruit', None), 
         getattr(map_screen, 'btn_go_orders', None), getattr(map_screen, 'btn_declare_war', None), 
         getattr(map_screen, 'btn_faction_action', None), getattr(map_screen, 'btn_join_wars', None), 
-        getattr(map_screen, 'btn_force_war', None), getattr(map_screen, 'btn_force_peace', None), 
-        getattr(map_screen, 'btn_spec_create_fac', None), getattr(map_screen, 'btn_spec_join_fac', None), 
-        getattr(map_screen, 'btn_spec_invite_fac', None), getattr(map_screen, 'btn_spec_leave_fac', None), 
-        getattr(map_screen, 'btn_spec_disband_fac', None), getattr(map_screen, 'btn_spectator', None)
+        getattr(map_screen, 'btn_call_to_arms', None), getattr(map_screen, 'btn_force_war', None), 
+        getattr(map_screen, 'btn_force_peace', None), getattr(map_screen, 'btn_spec_create_fac', None), 
+        getattr(map_screen, 'btn_spec_join_fac', None), getattr(map_screen, 'btn_spec_invite_fac', None), 
+        getattr(map_screen, 'btn_spec_leave_fac', None), getattr(map_screen, 'btn_spec_disband_fac', None), 
+        getattr(map_screen, 'btn_spectator', None)
     }
     
     for el in map_screen.elements:
@@ -289,6 +291,11 @@ def update_button_states(map_screen):
                     map_screen.btn_declare_war.text = "REJECT CEASEFIRE"
                     map_screen.btn_faction_action.visible = True
                     map_screen.btn_faction_action.text = "ACCEPT CEASEFIRE"
+                elif incoming_action == "CALL_TO_ARMS" and incoming_turns > 0:
+                    map_screen.btn_declare_war.visible = True
+                    map_screen.btn_declare_war.text = "REJECT CALL TO ARMS"
+                    map_screen.btn_faction_action.visible = True
+                    map_screen.btn_faction_action.text = "ACCEPT CALL TO ARMS"
                 else:
                     at_war = queries.are_at_war(map_screen.player_country, owner, map_screen.nation_data)
                     in_same_faction = queries.are_in_same_faction(map_screen.player_country, owner, map_screen.nation_data)
@@ -307,7 +314,9 @@ def update_button_states(map_screen):
                         map_screen.btn_declare_war.visible = False
                         target_wars = queries.get_enemies(owner, map_screen.nation_data)
                         player_wars = queries.get_enemies(map_screen.player_country, map_screen.nation_data)
+                        
                         can_join_wars = any(w for w in target_wars if w not in player_wars)
+                        can_call_to_arms = any(w for w in player_wars if w not in target_wars)
                         
                         if can_join_wars:
                             map_screen.btn_join_wars.visible = True
@@ -316,6 +325,13 @@ def update_button_states(map_screen):
                                 map_screen.btn_join_wars.text = get_status_text()
                             else:
                                 map_screen.btn_join_wars.text = "JOIN WARS"
+                                
+                        if can_call_to_arms:
+                            map_screen.btn_call_to_arms.visible = True
+                            if pending_action == "CALL_TO_ARMS":
+                                map_screen.btn_call_to_arms.text = get_status_text()
+                            else:
+                                map_screen.btn_call_to_arms.text = "CALL TO ARMS"
                     else:
                         if pending_action == "WAR_DECLARATION":
                             map_screen.btn_declare_war.visible = True

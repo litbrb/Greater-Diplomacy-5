@@ -1,5 +1,5 @@
 import pygame
-from data.constants import SCREEN_HEIGHT
+from data.constants import SCREEN_HEIGHT, RESOURCE_HUD_START_X, RESOURCE_HUD_SPACING, RESOURCE_HUD_HEIGHT_OFFSET, RESOURCE_HUD_BG_ALPHA
 from data import queries
 
 def draw_bottom_text(map_screen, surface):
@@ -9,7 +9,7 @@ def draw_bottom_text(map_screen, surface):
     if hide_hud:
         return
 
-    hud_y = SCREEN_HEIGHT - 40
+    hud_y = SCREEN_HEIGHT - RESOURCE_HUD_HEIGHT_OFFSET
     
     # Cache logic to prevent calculating economy 60 times a second
     if not hasattr(map_screen, 'econ_cache_time') or pygame.time.get_ticks() - getattr(map_screen, 'econ_cache_time', 0) > 1000:
@@ -33,18 +33,15 @@ def draw_bottom_text(map_screen, surface):
         (f"Fuel: {int(map_screen.player_fuel)} ({fmt_net(total_inc['fuel'], total_upkeep['fuel'])})", (200, 100, 255))
     ]
     
-    start_x = 300
-    spacing = 200
-    
     # Draw Background Box
-    bg_width = (len(resources) * spacing) - 40
+    bg_width = (len(resources) * RESOURCE_HUD_SPACING) - 40
     bg_surf = pygame.Surface((bg_width, 30), pygame.SRCALPHA)
-    bg_surf.fill((0, 0, 0, 200))
+    bg_surf.fill((0, 0, 0, RESOURCE_HUD_BG_ALPHA))
     
-    bg_rect = pygame.Rect(start_x - 15, hud_y - 5, bg_width, 30)
+    bg_rect = pygame.Rect(RESOURCE_HUD_START_X - 15, hud_y - 5, bg_width, 30)
     surface.blit(bg_surf, bg_rect.topleft)
     pygame.draw.rect(surface, (100, 100, 100), bg_rect, 1) 
 
     # Draw Text
     for i, (text, color) in enumerate(resources):
-        surface.blit(map_screen.font.render(text, True, color), (start_x + (i * spacing), hud_y))
+        surface.blit(map_screen.font.render(text, True, color), (RESOURCE_HUD_START_X + (i * RESOURCE_HUD_SPACING), hud_y))

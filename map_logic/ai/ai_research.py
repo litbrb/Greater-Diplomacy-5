@@ -1,6 +1,7 @@
 import json
 import os
-from data.constants import RESEARCH_TEMPLATE_PATH, UNPLAYABLE_NATIONS
+from data.constants import RESEARCH_TEMPLATE_PATH
+from data import queries
 
 def process_ai_research(map_screen):
     """Automates research queueing for AI nations."""
@@ -10,9 +11,10 @@ def process_ai_research(map_screen):
     with open(RESEARCH_TEMPLATE_PATH, "r") as f:
         tech_tree = json.load(f)
 
-    for ai_name, data in map_screen.nation_data.items():
-        if ai_name == map_screen.player_country or ai_name in UNPLAYABLE_NATIONS or not data.get("is_playable"):
-            continue
+    ai_nations = queries.get_active_ai_nations(map_screen)
+
+    for ai_name in ai_nations:
+        data = map_screen.nation_data[ai_name]
 
         queue = data.setdefault("research_queue", [])
         

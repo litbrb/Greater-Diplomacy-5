@@ -3,7 +3,7 @@ import json
 import os
 from gameState import GameState
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DAYS_PER_TURN, BUILDING_DATA_PATH
-from ui_elements import Button
+from ui_elements import Button, draw_resource_string
 from screens.map_related_screens import recruit_ui
 from map_logic.rendering.font_manager import fonts
 from map_logic.rendering import symbol_loader
@@ -201,12 +201,13 @@ class Construction_Screen(GameState):
             
             t = max(1, stats.get('time', DAYS_PER_TURN) // DAYS_PER_TURN)
             
-            self.draw_resource_string(
+            # --- THE FIX: Call the global function instead of self ---
+            draw_resource_string(
                 surface, bar_font, f"Build Time: {t} turns   |   Cost: ",
                 stats.get('cost_materials', 0), stats.get('cost_manpower', 0), stats.get('cost_fuel', 0),
                 bar_rect.x + 15, bar_rect.y + 6, (255, 215, 0)
             )
-            self.draw_resource_string(
+            draw_resource_string(
                 surface, bar_font, f"Yield (Per Turn):   ",
                 stats.get('prod_materials', 0), stats.get('prod_manpower', 0), stats.get('prod_fuel', 0),
                 bar_rect.x + 15, bar_rect.y + 26, (150, 255, 150), is_yield=True

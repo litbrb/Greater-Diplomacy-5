@@ -1,13 +1,12 @@
 import json
 import os
-from data.constants import UNIT_DATA_PATH, BUILDING_DATA_PATH, RESEARCH_TEMPLATE_PATH, UNPLAYABLE_NATIONS, DAYS_PER_TURN
+from data.constants import UNIT_DATA_PATH, BUILDING_DATA_PATH, RESEARCH_TEMPLATE_PATH, DAYS_PER_TURN
 from data import queries
 
 def process_ai_economy_decisions(map_screen):
     """Handles AI unit recruitment and building construction based on economy."""
-    unit_library = queries._get_unit_library() # Use cached version
-        
-    building_library = queries._get_building_library() # Use cached version
+    unit_library = queries._get_unit_library()
+    building_library = queries._get_building_library()
 
     tech_tree = {}
     if os.path.exists(RESEARCH_TEMPLATE_PATH):
@@ -22,10 +21,10 @@ def process_ai_economy_decisions(map_screen):
         if owner:
             nation_provs.setdefault(owner, []).append(prov)
 
-    for ai_name, data in map_screen.nation_data.items():
-        if ai_name == map_screen.player_country or ai_name in UNPLAYABLE_NATIONS or not data.get("is_playable"):
-            continue
+    ai_nations = queries.get_active_ai_nations(map_screen)
 
+    for ai_name in ai_nations:
+        data = map_screen.nation_data[ai_name]
         econ = all_econ.get(ai_name)
         if not econ: continue
 

@@ -24,7 +24,6 @@ def process_ai_grand_strategy(map_screen):
     ai_scores = {}
     
     global_event_data = map_screen.nation_data.get("GLOBAL_EVENTS", {})
-    # FIX: Use the news_flash queue instead of the permanent log
     news_flashes = global_event_data.get("news_flash", [])
     
     hot_nations = set()
@@ -41,13 +40,15 @@ def process_ai_grand_strategy(map_screen):
     tm = map_screen.time_manager
     current_absolute_turn = tm.year * 36 + tm.month_index * 3 + tm.day // 10
 
-    for ai_name, data in map_screen.nation_data.items():
-        # Skip players, dead nations, or unplayable entities
-        if ai_name == map_screen.player_country or ai_name in UNPLAYABLE_NATIONS or not data.get("is_playable"):
-            continue
+    # --- THE FIX: Clean AI Retrieval ---
+    ai_candidates = queries.get_active_ai_nations(map_screen)
+
+    for ai_name in ai_candidates:
+        # Grand strategy requires the nation to actually be alive on the map
         if ai_name not in active_nations:
             continue
 
+        data = map_screen.nation_data[ai_name]
         score = 0
         
         # 1. Economic bias

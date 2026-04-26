@@ -377,3 +377,17 @@ def get_units_in_province(nation, province):
 def has_units_in_province(nation, province):
     """Returns True if the given nation has any units in the target province."""
     return len(get_units_in_province(nation, province)) > 0
+
+def get_active_ai_nations(map_screen):
+    """Returns a list of all playable, active AI nations (excluding the human player)."""
+    from data.constants import UNPLAYABLE_NATIONS
+    
+    ai_nations = []
+    # Account for potential hotseat active_players lists or standard player_country setups
+    human_players = getattr(map_screen, 'active_players', [map_screen.player_country])
+    
+    for name, data in map_screen.nation_data.items():
+        if name not in human_players and name not in UNPLAYABLE_NATIONS and data.get("is_playable"):
+            ai_nations.append(name)
+            
+    return ai_nations

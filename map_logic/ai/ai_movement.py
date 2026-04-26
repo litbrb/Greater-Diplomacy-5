@@ -49,10 +49,8 @@ def _bfs_nearest_target(start_id, target_ids, allowed_prov_ids, id_to_province, 
 
 def process_ai_unit_orders(map_screen):
     """Generates movement orders for AI-controlled units to balance borders or attack."""
-    ai_nations = []
-    for name, data in map_screen.nation_data.items():
-        if name not in getattr(map_screen, 'active_players', []) and name not in UNPLAYABLE_NATIONS:
-            ai_nations.append(name)
+    
+    ai_nations = queries.get_active_ai_nations(map_screen)
 
     # Build a list of which units are where
     nation_units = {n: [] for n in ai_nations}

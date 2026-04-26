@@ -273,33 +273,17 @@ def process_diplomacy_turn(self):
                 if target == country_name:
                     if action == "CREATE_FACTION":
                         finalize_create_faction(self.nation_data, country_name)
-                        log_global_event(self.nation_data, f"{country_name} has formed a new global faction!") # NEW
+                        log_global_event(self.nation_data, f"{country_name} has formed a new global faction!")
                         send_message(self.nation_data, country_name, country_name, "Our new faction has been established.", "DIPLOMACY")
                     elif action == "DISBAND_FACTION":
                         finalize_disband_faction(self.nation_data, country_name)
-                        log_global_event(self.nation_data, f"The faction led by {country_name} has been disbanded.") # NEW
+                        log_global_event(self.nation_data, f"The faction led by {country_name} has been disbanded.")
                         send_message(self.nation_data, country_name, country_name, "Our faction has been disbanded.", "DIPLOMACY")
                     elif action == "LEAVE_FACTION":
                         finalize_faction_leave(self.nation_data, country_name)
-                        log_global_event(self.nation_data, f"{country_name} has abandoned their faction.") # NEW
+                        log_global_event(self.nation_data, f"{country_name} has abandoned their faction.")
                         send_message(self.nation_data, country_name, country_name, "We have left our faction.", "DIPLOMACY")
-                    elif action == "CEASEFIRE":
-                        if is_human_target:
-                            send_message(self.nation_data, target, country_name, "Your ceasefire offer was ignored and has expired.", "DIPLOMACY")
-                        else:
-                            accepted, message = ai_results.get((country_name, target, action), (False, "Timeout."))
-                            if accepted:
-                                finalize_neutral(self.nation_data, country_name, target)
-                            send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
-                    elif action == "CALL_TO_ARMS":
-                        if is_human_target:
-                            send_message(self.nation_data, target, country_name, "Your call to arms was ignored and has expired.", "DIPLOMACY")
-                        else:
-                            accepted, message = ai_results.get((country_name, target, action), (False, "Timeout."))
-                            if accepted:
-                                join_faction_wars(self.nation_data, target, country_name)
-                                log_global_event(self.nation_data, f"ESCALATION: {target} answered the call to arms of {country_name}!")
-                            send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
+                    # (Removed the mistakenly indented CEASEFIRE and CALL_TO_ARMS from here)
                     actions_to_clear.append(target)
                     continue
 
@@ -337,6 +321,18 @@ def process_diplomacy_turn(self):
                         if accepted:
                             finalize_neutral(self.nation_data, country_name, target)
                         send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
+                
+                # ---> MOVE CALL TO ARMS DOWN HERE <---
+                elif action == "CALL_TO_ARMS":
+                    if is_human_target:
+                        send_message(self.nation_data, target, country_name, "Your call to arms was ignored and has expired.", "DIPLOMACY")
+                    else:
+                        accepted, message = ai_results.get((country_name, target, action), (False, "Timeout."))
+                        if accepted:
+                            join_faction_wars(self.nation_data, target, country_name)
+                            log_global_event(self.nation_data, f"ESCALATION: {target} answered the call to arms of {country_name}!")
+                        send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
+                
                 actions_to_clear.append(target)
 
         for t in actions_to_clear:

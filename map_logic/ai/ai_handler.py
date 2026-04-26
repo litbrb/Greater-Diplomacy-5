@@ -119,7 +119,8 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     
     # --- MODIFIED: Ensure 50/50 strict logic regardless of model behavior ---
     accepted = random.choice([True, False])
-    
+    # actually true, always
+    accepted = True
     if mode == "OFF":
         return accepted, "Our diplomats are currently unavailable (AI is OFF)."
 

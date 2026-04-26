@@ -27,8 +27,8 @@ SCREEN_HEIGHT = 720
 
 # --- Province Menu UI Layout (X, Y, Width, Height) ---
 PROVINCE_UI = {
-    "units_box": (860, 70, 210, 350),
-    "buildings_box": (860, 440, 210, 350),
+    "units_box": (860, 70, 210, 250),
+    "buildings_box": (860, 340, 210, 250),
     "faction_box": (SCREEN_WIDTH - 200, 200, 210, 200),
     "mail_box": (SCREEN_WIDTH - 200, 420, 210, 300)
 }

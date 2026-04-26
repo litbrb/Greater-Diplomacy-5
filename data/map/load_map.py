@@ -16,12 +16,21 @@ def _load_default_images(map_obj):
         return base64.b64encode(img_str).decode('utf-8')
         
     for country_name, n_data in map_obj.nation_data.items():
-        if not n_data.get("flag_data"):
-            f_path = f"{FLAGS_DIR}/{country_name}.png"
-            d_path = DEFAULT_FLAG_PATH
+        # --- FLAG LOGIC ---
+        f_path = f"{FLAGS_DIR}/{country_name}.png"
+        d_path = DEFAULT_FLAG_PATH
+        
+        # 1. Prioritize local file if it exists (overwrites old baked data)
+        if os.path.exists(f_path):
             try:
-                if os.path.exists(f_path): img = pygame.image.load(f_path).convert()
-                elif os.path.exists(d_path): img = pygame.image.load(d_path).convert()
+                img = pygame.image.load(f_path).convert()
+                img = pygame.transform.scale(img, (60, 40))
+                n_data["flag_data"] = encode_surf_to_b64(img)
+            except: pass
+        # 2. If no local file, but also no baked data, use default
+        elif not n_data.get("flag_data"):
+            try:
+                if os.path.exists(d_path): img = pygame.image.load(d_path).convert()
                 else: 
                     img = pygame.Surface((60, 40))
                     img.fill((200, 200, 200))
@@ -29,12 +38,22 @@ def _load_default_images(map_obj):
                 n_data["flag_data"] = encode_surf_to_b64(img)
             except: pass
             
-        if not n_data.get("portrait_data"):
-            p_path = f"{PORTRAITS_DIR}/{country_name}.png"
-            d_path = DEFAULT_PORTRAIT_PATH
+        # --- PORTRAIT LOGIC ---
+        p_path = f"{PORTRAITS_DIR}/{country_name}.png"
+        d_path = DEFAULT_PORTRAIT_PATH
+        
+        # 1. Prioritize local file if it exists
+        if os.path.exists(p_path):
             try:
-                if os.path.exists(p_path): img = pygame.image.load(p_path).convert()
-                elif os.path.exists(d_path): img = pygame.image.load(d_path).convert()
+                img = pygame.image.load(p_path).convert()
+                # FIX: Match the 60x60 size used by sidebar_info.py
+                img = pygame.transform.scale(img, (60, 60))
+                n_data["portrait_data"] = encode_surf_to_b64(img)
+            except: pass
+        # 2. If no local file, but also no baked data, use default
+        elif not n_data.get("portrait_data"):
+            try:
+                if os.path.exists(d_path): img = pygame.image.load(d_path).convert()
                 else:
                     # FIX: Match the 60x60 size used by sidebar_info.py
                     img = pygame.Surface((60, 60))

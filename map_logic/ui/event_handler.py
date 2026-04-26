@@ -1,6 +1,6 @@
 import pygame
-from map_logic import map_utils
-from map_logic import edit_province_ownership
+from map_logic.rendering import map_utils
+from map_logic.rendering import edit_province_ownership
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, WATER_NATIONS, UNPLAYABLE_NATIONS
 from map_logic.camera import camera_handler
 

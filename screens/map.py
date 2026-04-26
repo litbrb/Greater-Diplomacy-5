@@ -5,7 +5,7 @@ from data.map import load_map
 from gameState import GameState
 from map_logic.diplomacy import diplomacy_logic
 from map_logic.diplomacy import player_diplomacy_actions
-from map_logic import edit_province_ownership, refresh_map
+from map_logic.rendering import edit_province_ownership
 from map_logic.random_map import random_map_generator
 from map_logic.ui import buttons, event_handler, editor_menus
 from data.map import save_map
@@ -13,7 +13,7 @@ from map_logic import (
     turn_processor
 )
 from map_logic.camera.camera_handler import MapCamera
-from map_logic.rendering import map_renderer
+from map_logic.rendering import map_renderer, refresh_map
 from map_logic.ui import spectator_menus
 from data.constants import (
     SCREEN_WIDTH,

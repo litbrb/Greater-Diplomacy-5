@@ -1,9 +1,11 @@
 import pygame
 from map_logic.rendering import hover_renderer, province_select, overlay_renderer, country_names
-from map_logic.ui import minimap, tooltip, flag_renderer, top_bar_text, resource_hud, ui_bars, feedback_text
-from map_logic.ui import ui_info_popup as unit_info_popup
+from map_logic.ui import minimap
+from map_logic.ui.information import feedback_text, ui_info_popup as unit_info_popup
 from data.constants import SCREEN_WIDTH, SCREEN_HEIGHT, UNPLAYABLE_NATIONS, FEEDBACK_TEXT_OFFSET_X, FEEDBACK_TEXT_Y
 from map_logic.rendering.font_manager import fonts
+from map_logic.ui.bars import flag_renderer, resource_hud, top_bar_text, ui_bars
+from map_logic.ui.information import tooltip
 
 def draw_map_screen(self, surface):
     # --- HOTSEAT MULTIPLAYER OVERRIDE ---

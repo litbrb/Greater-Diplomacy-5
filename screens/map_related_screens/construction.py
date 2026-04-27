@@ -110,26 +110,54 @@ class Construction_Screen(GameState):
         data = self.building_library[b_name]
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
 
-        costs = {
-            "manpower": data.get("cost_manpower", 0),
-            "materials": data.get("cost_materials", 0),
-            "fuel": data.get("cost_fuel", 0)
-        }
-
-        if all(p_data.get(res, 0) >= amount for res, amount in costs.items()):
-            for res, amount in costs.items(): p_data[res] -= amount
+        # --- NEW HELPER FUNCTIONS ---
+        if queries.can_afford(p_data, data):
+            queries.deduct_resources(p_data, data)
+            
             order = {
                 "order_type": "BUILDING",
                 "item_name": b_name,
                 "turns_remaining": max(1, data.get("time", c.DAYS_PER_TURN) // c.DAYS_PER_TURN),
                 "group": data["group"],
-                "refund": costs
+                "refund": {
+                    "materials": data.get("cost_materials", 0),
+                    "manpower": data.get("cost_manpower", 0),
+                    "fuel": data.get("cost_fuel", 0)
+                }
             }
             self.target_province.setdefault("deployment_queue", []).append(order)
             self.map_screen.show_feedback(f"Started {b_name}")
             self.refresh_ui()
         else:
             self.map_screen.show_feedback("Insufficient resources!")
+
+    def cancel_order(self, index):
+        queue = self.target_province.get("deployment_queue", [])
+        if 0 <= index < len(queue):
+            item = queue.pop(index)
+            p_data = self.map_screen.nation_data[self.map_screen.player_country]
+            
+            # --- REFUND LOGIC ---
+            if "refund" in item:
+                # Use the stored costs (Backwards compatibility)
+                for res, amount in item["refund"].items():
+                    p_data[res] = p_data.get(res, 0) + amount
+            else:
+                # Fallback for old save files
+                stats = {}
+                if item.get("order_type") == "BUILDING":
+                    stats = self.building_library.get(item.get("item_name"), {})
+                elif "unit_type" in item:
+                    import json, os
+                    if os.path.exists('data/json/unit_data.json'):
+                        with open('data/json/unit_data.json', 'r') as f:
+                            stats = json.load(f).get(item["unit_type"], {})
+                            
+                # --- NEW HELPER FUNCTION ---
+                queries.refund_resources(p_data, stats)
+
+            self.map_screen.show_feedback("Cancelled & Refunded")
+            self.refresh_ui()
 
     def additional_draw(self, surface):
         if not self.target_province: return
@@ -200,35 +228,6 @@ class Construction_Screen(GameState):
                         return
             for element in self.elements:
                 element.handle_event(event)
-
-    def cancel_order(self, index):
-        queue = self.target_province.get("deployment_queue", [])
-        if 0 <= index < len(queue):
-            item = queue.pop(index)
-            p_data = self.map_screen.nation_data[self.map_screen.player_country]
-            
-            # --- REFUND LOGIC ---
-            if "refund" in item:
-                # Use the stored costs
-                for res, amount in item["refund"].items():
-                    p_data[res] = p_data.get(res, 0) + amount
-            else:
-                # Fallback for old save files
-                stats = {}
-                if item.get("order_type") == "BUILDING":
-                    stats = self.building_library.get(item.get("item_name"), {})
-                elif "unit_type" in item:
-                    import json, os
-                    if os.path.exists('data/json/unit_data.json'):
-                        with open('data/json/unit_data.json', 'r') as f:
-                            stats = json.load(f).get(item["unit_type"], {})
-                            
-                p_data["materials"] = p_data.get("materials", 0) + stats.get("cost_materials", 0)
-                p_data["manpower"] = p_data.get("manpower", 0) + stats.get("cost_manpower", 0)
-                p_data["fuel"] = p_data.get("fuel", 0) + stats.get("cost_fuel", 0)
-
-            self.map_screen.show_feedback("Cancelled & Refunded")
-            self.refresh_ui()
 
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True

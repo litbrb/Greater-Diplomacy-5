@@ -5,8 +5,8 @@ from data import queries
 
 def process_ai_economy_decisions(map_screen):
     """Handles AI unit recruitment and building construction based on economy."""
-    unit_library = queries._get_unit_library()
-    building_library = queries._get_building_library()
+    unit_library = queries.get_unit_library()
+    building_library = queries.get_building_library()
 
     tech_tree = {}
     if os.path.exists(c.RESEARCH_TEMPLATE_PATH):

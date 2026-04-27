@@ -7,13 +7,13 @@ import re
 _cached_unit_library = None
 _cached_building_library = None
 
-def _get_unit_library():
+def get_unit_library(): # Removed the underscore here
     global _cached_unit_library
     if _cached_unit_library is None:
         _cached_unit_library = json.load(open(c.UNIT_DATA_PATH)) if os.path.exists(c.UNIT_DATA_PATH) else {}
     return _cached_unit_library
 
-def _get_building_library():
+def get_building_library(): # Removed the underscore here
     global _cached_building_library
     if _cached_building_library is None:
         _cached_building_library = json.load(open(c.BUILDING_DATA_PATH)) if os.path.exists(c.BUILDING_DATA_PATH) else {}
@@ -166,14 +166,32 @@ def get_highest_infantry(nation_data_block, tech_tree, unit_library):
 # ECONOMY QUERIES
 # ==========================================
 
+def refund_resources(nation_data_block, costs_dict):
+    """Adds refunded costs back to a nation's resource pools safely."""
+    nation_data_block["materials"] = nation_data_block.get("materials", 0) + costs_dict.get("cost_materials", 0)
+    nation_data_block["manpower"] = nation_data_block.get("manpower", 0) + costs_dict.get("cost_manpower", 0)
+    nation_data_block["fuel"] = nation_data_block.get("fuel", 0) + costs_dict.get("cost_fuel", 0)
+
+def deduct_resources(nation_data_block, costs_dict):
+    """Subtracts costs from a nation's resource pools, preventing negative values."""
+    nation_data_block["materials"] = max(0, nation_data_block.get("materials", 0) - costs_dict.get("cost_materials", 0))
+    nation_data_block["manpower"] = max(0, nation_data_block.get("manpower", 0) - costs_dict.get("cost_manpower", 0))
+    nation_data_block["fuel"] = max(0, nation_data_block.get("fuel", 0) - costs_dict.get("cost_fuel", 0))
+
+def can_afford(nation_data_block, costs_dict):
+    """Returns True if the nation has enough resources to cover the costs."""
+    return (nation_data_block.get("materials", 0) >= costs_dict.get("cost_materials", 0) and
+            nation_data_block.get("manpower", 0) >= costs_dict.get("cost_manpower", 0) and
+            nation_data_block.get("fuel", 0) >= costs_dict.get("cost_fuel", 0))
+
 def calculate_all_economies(map_data, nation_data):
     """Standardized economy calculator. Single source of truth for UI and Turn Processor."""
     YIELD_MANPOWER = c.BASE_YIELDS["manpower"]
     YIELD_MATERIALS = c.BASE_YIELDS["materials"]
     YIELD_FUEL = c.BASE_YIELDS["fuel"]
 
-    unit_lib = _get_unit_library()
-    bldg_lib = _get_building_library()
+    unit_lib = get_unit_library()
+    bldg_lib = get_building_library()
 
     # Initialize data structure for all active nations
     econ_data = {}
@@ -390,7 +408,7 @@ def is_naval_unit(unit_type):
     """Checks if a unit is a naval unit based on its type name or unit library stats."""
     if unit_type.startswith("Convoy"):
         return True
-    stats = _get_unit_library().get(unit_type, {})
+    stats = get_unit_library().get(unit_type, {})
     return stats.get("naval_unit", False)
 
 def get_units_in_province(nation, province):

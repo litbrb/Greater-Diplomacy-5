@@ -99,7 +99,7 @@ class Recruit_Screen(GameState):
                     highest_lvl = -1
                     for name, stats in group_units:
                         lvl_str = name.replace(group_name, "").strip()
-                        lvl = self.roman_to_int(lvl_str)
+                        lvl = queries.roman_to_int(self,lvl_str)
                         required_research = max(1, lvl) 
                         if researched_lvl >= required_research:
                             if lvl > highest_lvl:
@@ -146,37 +146,64 @@ class Recruit_Screen(GameState):
         else:
             self.navy_start_y = self.navy_end_y = y_offset
 
-    def roman_to_int(self, s):
-        return queries.roman_to_int(s)
-
     def buy_unit(self, unit_name):
         stats = self.unit_library.get(unit_name)
         if not stats or not self.map_screen: return
 
-        # --- NEW: Check if the province has a Workshop or Factory ---
+        # Check if the province has a Workshop or Factory
         if not queries.has_industry(self.target_province):
             self.map_screen.show_feedback("Requires a Workshop or Factory to recruit!")
             return
-        # ------------------------------------------------------------
 
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
-        costs = {
-            "manpower": stats.get("cost_manpower", 0),
-            "materials": stats.get("cost_materials", 0),
-            "fuel": stats.get("cost_fuel", 0)
-        }
 
-        if all(p_data.get(res, 0) >= amount for res, amount in costs.items()):
-            for res, amount in costs.items(): p_data[res] -= amount
+        # --- NEW HELPER FUNCTIONS ---
+        if queries.can_afford(p_data, stats):
+            queries.deduct_resources(p_data, stats)
+            
+            # Keep the old 'refund' dict formatting so save files don't break!
             order = {
                 "unit_type": unit_name,
                 "turns_remaining": max(1, stats.get("production_time", c.DAYS_PER_TURN) // c.DAYS_PER_TURN),
-                "refund": costs
+                "refund": {
+                    "materials": stats.get("cost_materials", 0),
+                    "manpower": stats.get("cost_manpower", 0),
+                    "fuel": stats.get("cost_fuel", 0)
+                }
             }
             self.target_province.setdefault("deployment_queue", []).append(order)
             self.map_screen.show_feedback(f"Production started: {unit_name}")
+            self.refresh_ui()
         else:
             self.map_screen.show_feedback("Insufficient resources!")
+
+    def cancel_order(self, index):
+        queue = self.target_province.get("deployment_queue", [])
+        if 0 <= index < len(queue):
+            item = queue.pop(index)
+            p_data = self.map_screen.nation_data[self.map_screen.player_country]
+            
+            # --- REFUND LOGIC ---
+            if "refund" in item:
+                # Use the stored costs (Backwards compatibility for existing save files)
+                for res, amount in item["refund"].items():
+                    p_data[res] = p_data.get(res, 0) + amount
+            else:
+                # Fallback for old save files that predate the refund dict
+                stats = {}
+                if "unit_type" in item:
+                    stats = self.unit_library.get(item["unit_type"], {})
+                elif item.get("order_type") == "BUILDING":
+                    import json, os
+                    if os.path.exists(c.BUILDING_DATA_PATH):
+                        with open(c.BUILDING_DATA_PATH, 'r') as f:
+                            stats = json.load(f).get(item.get("item_name"), {})
+                            
+                # --- NEW HELPER FUNCTION ---
+                queries.refund_resources(p_data, stats)
+
+            self.map_screen.show_feedback("Cancelled & Refunded")
+            self.refresh_ui()
 
     def additional_draw(self, surface):
         if not self.target_province: return
@@ -252,35 +279,6 @@ class Recruit_Screen(GameState):
                         return
             for el in self.elements:
                 el.handle_event(event)
-
-    def cancel_order(self, index):
-        queue = self.target_province.get("deployment_queue", [])
-        if 0 <= index < len(queue):
-            item = queue.pop(index)
-            p_data = self.map_screen.nation_data[self.map_screen.player_country]
-            
-            # --- REFUND LOGIC ---
-            if "refund" in item:
-                # Use the stored costs
-                for res, amount in item["refund"].items():
-                    p_data[res] = p_data.get(res, 0) + amount
-            else:
-                # Fallback for old save files
-                stats = {}
-                if "unit_type" in item:
-                    stats = self.unit_library.get(item["unit_type"], {})
-                elif item.get("order_type") == "BUILDING":
-                    import json, os
-                    if os.path.exists(c.BUILDING_DATA_PATH):
-                        with open(c.BUILDING_DATA_PATH, 'r') as f:
-                            stats = json.load(f).get(item.get("item_name"), {})
-                            
-                p_data["materials"] = p_data.get("materials", 0) + stats.get("cost_materials", 0)
-                p_data["manpower"] = p_data.get("manpower", 0) + stats.get("cost_manpower", 0)
-                p_data["fuel"] = p_data.get("fuel", 0) + stats.get("cost_fuel", 0)
-
-            self.map_screen.show_feedback("Cancelled & Refunded")
-            self.refresh_ui()
 
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True

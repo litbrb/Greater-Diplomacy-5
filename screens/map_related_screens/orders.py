@@ -102,9 +102,7 @@ class Orders_Screen(GameState):
             stats = self.unit_library.get(u_type, {})
             p_data = self.map_screen.nation_data[self.map_screen.player_country]
             
-            p_data["materials"] = p_data.get("materials", 0) + stats.get("cost_materials", 0)
-            p_data["manpower"] = p_data.get("manpower", 0) + stats.get("cost_manpower", 0)
-            p_data["fuel"] = p_data.get("fuel", 0) + stats.get("cost_fuel", 0)
+            queries.refund_resources(p_data, stats)
 
             self.map_screen.show_feedback(f"Disbanded {u_type} & Refunded")
             self.selected_unit_index = None

@@ -255,9 +255,17 @@ def process_diplomacy_turn(self):
                     send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "JOIN_WARS":
-                    join_faction_wars(self.nation_data, country_name, target)
-                    log_global_event(self.nation_data, f"ESCALATION: {country_name} has joined the wars of {target}!")
-                    msg_text = custom_msg if custom_msg else "We stand with you. Our forces are joining your wars."
+                    # Hard-enforce faction rules at the engine level
+                    if not queries.are_in_same_faction(country_name, target, self.nation_data):
+                        # Convert invalid join requests into standard war declarations
+                        finalize_war(self.nation_data, country_name, target)
+                        log_global_event(self.nation_data, f"WAR DECLARED: {country_name} has declared war on {target}!")
+                        msg_text = "We have declared WAR upon you!"
+                    else:
+                        join_faction_wars(self.nation_data, country_name, target)
+                        log_global_event(self.nation_data, f"ESCALATION: {country_name} has joined the wars of {target}!")
+                        msg_text = custom_msg if custom_msg else "We stand with you. Our forces are joining your wars."
+                    
                     send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "CALL_TO_ARMS":

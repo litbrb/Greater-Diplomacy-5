@@ -18,7 +18,6 @@ from screens.map_related_screens.economy import Economy_Screen
 from screens.map_related_screens.edit_country import Edit_Country_Screen
 from screens.select_base_map import Select_Base_Map
 from screens.random_setup import Random_Setup
-from screens.map import Map
 
 pygame.display.set_caption("Greater Diplomacy Pygame Edition")
 

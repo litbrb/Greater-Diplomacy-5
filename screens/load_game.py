@@ -118,7 +118,7 @@ class Load_Game(GameState):
         # --- Draw Delete Confirmation Popup ---
         if self.deleting_folder:
             # Dim the background
-            overlay = pygame.Surface((1600, 900), pygame.SRCALPHA)
+            overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 180))
             surface.blit(overlay, (0, 0))
             

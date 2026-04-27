@@ -10,6 +10,7 @@ from ui_elements import Button, process_text_input
 import ui_elements
 from map_logic.rendering.font_manager import fonts
 import data.constants as c
+from ui import buttons
 
 input_box_x = c.EDIT_COUNTRY_UI_X1
 second_right_ui_x = c.EDIT_COUNTRY_UI_X2
@@ -185,39 +186,7 @@ class Edit_Country_Screen(GameState):
             self.map_screen.show_feedback("Failed to export")
 
     def refresh_ui(self):
-
-        icons = ui_elements.UI_ICONS
-
-        self.elements = [
-            Button(20, 20, "small", "red", "Cancel", self.exit_to_map),
-            Button(140, 20, "medium", "green", "Save Changes", self.save_and_exit)
-        ]
-        
-        # Export Buttons
-        self.elements.append(Button(input_box_x, 420, "medium", "blue", "Export Flag", self.export_flag))
-        self.elements.append(Button(second_right_ui_x, 520, "medium", "blue", "Export Portrait", self.export_portrait))
-        
-        # Build Palette Buttons
-        for i, color in enumerate(self.palette):
-            colors_per_row = 8
-            space_between_colors = 45
-            x = right_ui_x + (i % colors_per_row) * space_between_colors
-            y = 150 + (i // colors_per_row) * space_between_colors
-            btn = Button(x, y, "small_square", "grey", "", lambda c=color: self.set_color(c), show_text=False)
-            btn.color = btn.hover_color = color
-            btn.shading = False
-            self.elements.append(btn)
-
-        # Tool Selection Buttons
-        brush_color = "blue" if self.draw_mode == "BRUSH" else "grey"
-        fill_color = "blue" if self.draw_mode == "FILL" else "grey"
-        
-        self.elements.append(Button(right_ui_x, 375, "small_square", brush_color, "Brush", lambda: self.set_tool("BRUSH"), image=icons.get("brush"), show_text=False))
-        self.elements.append(Button(right_ui_x + 120, 375, "small_square", fill_color, "Fill", lambda: self.set_tool("FILL"), image=icons.get("paint"), show_text=False))
-        
-        # Updated Buttons to have both Map Color and Custom Brush Color pickers side-by-side
-        self.elements.append(Button(right_ui_x, 550, "small", "orange", "Map Color", self.pick_map_color))
-        self.elements.append(Button(right_ui_x + 300, 375, "small", "purple", "Brush Color", self.pick_custom_brush_color))
+        buttons.render_edit_country_buttons(self)
 
     def set_color(self, color):
         self.active_color = color

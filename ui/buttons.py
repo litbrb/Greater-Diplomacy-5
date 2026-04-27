@@ -106,10 +106,6 @@ def render_buttons(self):
     self.btn_go_recruit = Button(domestic_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y, "medium_square", "green", "Recruit Menu", self.open_recruit)
     self.btn_go_build = Button(domestic_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 2, "medium_square", "orange", "Construction", self.open_construction)
 
-    self.btn_fac_create = Button(domestic_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "blue", "Create Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "CREATE_FACTION"))
-    self.btn_fac_leave = Button(domestic_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 4, "diplomatic", "orange", "Leave Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "LEAVE_FACTION"))
-    self.btn_fac_disband = Button(domestic_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 5, "diplomatic", "red", "Disband Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "DISBAND_FACTION"))
-
     # Foreign Set
     self.btn_declare_war = Button(diplo_x, c.ACTION_BTN_START_Y, "diplomatic", "red", "Declare War", self.handle_declare_war)
     self.btn_join_wars = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 1, "diplomatic", "orange", "Join Wars", self.handle_join_wars)
@@ -118,6 +114,10 @@ def render_buttons(self):
     self.btn_fac_invite = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "green", "Invite to Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "FACTION_INVITE"))
     self.btn_fac_join_req = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 4, "diplomatic", "green", "Req. Join Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "JOIN_FACTION_REQ"))
     self.btn_fac_kick = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 5, "diplomatic", "red", "Kick from Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "KICK_FACTION_MEMBER"))
+
+    self.btn_fac_create = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 6, "diplomatic", "blue", "Create Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "CREATE_FACTION"))
+    self.btn_fac_leave = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 7, "diplomatic", "orange", "Leave Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "LEAVE_FACTION"))
+    self.btn_fac_disband = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 8, "diplomatic", "red", "Disband Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "DISBAND_FACTION"))
 
     self.btn_accept_req = Button(diplo_x, c.ACTION_BTN_START_Y, "diplomatic", "green", "Accept Request", lambda: player_diplomacy_actions.handle_accept_req(self))
     self.btn_reject_req = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y, "diplomatic", "red", "Reject Request", lambda: player_diplomacy_actions.handle_reject_req(self))
@@ -343,28 +343,12 @@ def update_button_states(map_screen):
                 set_btn(map_screen.btn_go_recruit, True, is_land, "Recruit Menu", "green")
                 set_btn(map_screen.btn_go_build, True, is_land, "Construction", "orange")
 
-                my_faction = map_screen.nation_data[map_screen.player_country].get("faction", "")
-                is_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
-                pending_self, pending_turns = queries.get_diplomatic_status(map_screen.player_country, map_screen.player_country, map_screen.nation_data)
-
-                # Domestic Faction Actions
-                create_enabled = not my_faction
-                create_text = "UNDO CREATE" if pending_self == "CREATE_FACTION" else "Create Faction"
-                set_btn(map_screen.btn_fac_create, True, create_enabled or pending_self == "CREATE_FACTION", create_text, "blue")
-
-                leave_enabled = bool(my_faction and not is_leader)
-                leave_text = "UNDO LEAVE" if pending_self == "LEAVE_FACTION" else "Leave Faction"
-                set_btn(map_screen.btn_fac_leave, True, leave_enabled or pending_self == "LEAVE_FACTION", leave_text, "orange")
-
-                disband_enabled = bool(my_faction and is_leader)
-                disband_text = "UNDO DISBAND" if pending_self == "DISBAND_FACTION" else "Disband Faction"
-                set_btn(map_screen.btn_fac_disband, True, disband_enabled or pending_self == "DISBAND_FACTION", disband_text, "red")
-
                 # Hide foreign buttons
                 for btn in [
                     map_screen.btn_declare_war, map_screen.btn_join_wars, map_screen.btn_call_to_arms, 
                     map_screen.btn_fac_invite, map_screen.btn_fac_join_req, map_screen.btn_fac_kick,
-                    map_screen.btn_accept_req, map_screen.btn_reject_req
+                    map_screen.btn_accept_req, map_screen.btn_reject_req,
+                    map_screen.btn_fac_create, map_screen.btn_fac_leave, map_screen.btn_fac_disband
                 ]:
                     btn.visible = False
 
@@ -374,7 +358,7 @@ def update_button_states(map_screen):
                 # Only "Give Orders" applies here dynamically from the domestic side
                 set_btn(map_screen.btn_go_orders, True, has_player_units, "Give Orders", "blue")
                 
-                for btn in [map_screen.btn_go_recruit, map_screen.btn_go_build, map_screen.btn_fac_create, map_screen.btn_fac_leave, map_screen.btn_fac_disband]:
+                for btn in [map_screen.btn_go_recruit, map_screen.btn_go_build]:
                     btn.visible = False
 
                 incoming_action, incoming_turns = queries.get_diplomatic_status(owner, map_screen.player_country, map_screen.nation_data)
@@ -386,10 +370,16 @@ def update_button_states(map_screen):
                 def get_status_text(base):
                     return f"UNDO {base}" if is_sending else "WAITING..."
 
+                # Define these variables up high so everything can use them
+                my_faction = map_screen.nation_data[map_screen.player_country].get("faction", "")
+                target_faction = map_screen.nation_data[owner].get("faction", "")
+                i_am_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
+                target_is_leader = queries.is_faction_leader(owner, map_screen.nation_data)
+
                 # Handle Incoming Action Override
-                if incoming_turns > 0 and incoming_action in ["FACTION_INVITE", "JOIN_FACTION_REQ", "CEASEFIRE", "CALL_TO_ARMS"]:
+                if incoming_turns > 0 and incoming_action in ["FACTION_INVITE", "JOIN_FACTION_REQ", "CEASEFIRE", "CALL_TO_ARMS", "CREATE_FACTION"]:
                     # Hide the standard action array
-                    for btn in [map_screen.btn_declare_war, map_screen.btn_join_wars, map_screen.btn_call_to_arms, map_screen.btn_fac_invite, map_screen.btn_fac_join_req, map_screen.btn_fac_kick]:
+                    for btn in [map_screen.btn_declare_war, map_screen.btn_join_wars, map_screen.btn_call_to_arms, map_screen.btn_fac_invite, map_screen.btn_fac_join_req, map_screen.btn_fac_kick, map_screen.btn_fac_create, map_screen.btn_fac_leave, map_screen.btn_fac_disband]:
                         btn.visible = False
                         
                     action_name = incoming_action.replace("_", " ")
@@ -420,10 +410,6 @@ def update_button_states(map_screen):
                     set_btn(map_screen.btn_call_to_arms, True, can_call_to_arms or pending_action == "CALL_TO_ARMS", ca_text, "red")
 
                     # Invite to Faction
-                    my_faction = map_screen.nation_data[map_screen.player_country].get("faction", "")
-                    target_faction = map_screen.nation_data[owner].get("faction", "")
-                    i_am_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
-                    
                     can_invite = bool(my_faction and i_am_leader and not target_faction and not at_war)
                     inv_text = get_status_text("INVITE") if pending_action == "FACTION_INVITE" else "Invite to Faction"
                     set_btn(map_screen.btn_fac_invite, True, can_invite or pending_action == "FACTION_INVITE", inv_text, "green")
@@ -437,6 +423,21 @@ def update_button_states(map_screen):
                     can_kick = bool(in_same_faction and i_am_leader)
                     kick_text = get_status_text("KICK") if pending_action == "KICK_FACTION_MEMBER" else "Kick from Faction"
                     set_btn(map_screen.btn_fac_kick, True, can_kick or pending_action == "KICK_FACTION_MEMBER", kick_text, "red")
+
+                    # Create Faction
+                    can_create_fac = bool(not my_faction and not target_faction and not at_war)
+                    create_text = get_status_text("CREATE") if pending_action == "CREATE_FACTION" else "Create Faction"
+                    set_btn(map_screen.btn_fac_create, True, can_create_fac or pending_action == "CREATE_FACTION", create_text, "blue")
+
+                    # Leave Faction
+                    can_leave_fac = bool(my_faction and in_same_faction and not i_am_leader and target_is_leader)
+                    leave_text = get_status_text("LEAVE") if pending_action == "LEAVE_FACTION" else "Leave Faction"
+                    set_btn(map_screen.btn_fac_leave, True, can_leave_fac or pending_action == "LEAVE_FACTION", leave_text, "orange")
+
+                    # Disband Faction
+                    can_disband_fac = bool(my_faction and i_am_leader and in_same_faction)
+                    disband_text = get_status_text("DISBAND") if pending_action == "DISBAND_FACTION" else "Disband Faction"
+                    set_btn(map_screen.btn_fac_disband, True, can_disband_fac or pending_action == "DISBAND_FACTION", disband_text, "red")
 
             else:
                 # --- UNCLAIMED / WATER ---

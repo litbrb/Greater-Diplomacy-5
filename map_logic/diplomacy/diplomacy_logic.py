@@ -188,19 +188,19 @@ def process_diplomacy_turn(self):
             action = info.get("action", "")
             turns = info.get("turns", 0)
 
-            is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION", "CREATE_FACTION"]
+            is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION"]
 
             # We want to process unilateral actions on turn 0, and proposals on turn 1
             if (is_unilateral and turns == 0) or (not is_unilateral and turns == 1):
                 is_human_target = target in getattr(self, 'active_players', [])
                 if not is_human_target:
-                    if action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER"]:
+                    if action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
                         ai_tasks.append({"sender": country_name, "target": target, "action": action})
                     elif action.startswith("MSG:") and turns == 1:
                         ai_tasks.append({"sender": country_name, "target": target, "action": "CUSTOM_MSG", "content": action[4:]})
 
                 # Cache members immediately and queue their AI reactions
-                if target == country_name and action in ["LEAVE_FACTION", "DISBAND_FACTION"] and turns == 0:
+                if action in ["LEAVE_FACTION", "DISBAND_FACTION"] and turns == 0:
                     fac = self.nation_data[country_name].get("faction", "")
                     members = queries.get_faction_members(fac, self.nation_data) if fac else []
                     info["cached_members"] = members
@@ -225,7 +225,7 @@ def process_diplomacy_turn(self):
             futures = {}
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
-                if task["action"] in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "LEAVE_FACTION", "DISBAND_FACTION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER"]:
+                if task["action"] in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "LEAVE_FACTION", "DISBAND_FACTION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
                     future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"])
                     futures[future] = task
                 elif task["action"] == "CUSTOM_MSG":
@@ -250,7 +250,7 @@ def process_diplomacy_turn(self):
             turns = info.get("turns", 0)
             custom_msg = info.get("message", "")
 
-            is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION", "CREATE_FACTION"]
+            is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION"]
 
             if turns == 0:
                 if action == "WAR_DECLARATION":
@@ -295,9 +295,7 @@ def process_diplomacy_turn(self):
                     send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "CREATE_FACTION":
-                    finalize_create_faction(self.nation_data, country_name)
-                    log_global_event(self.nation_data, f"{country_name} has formed a new global faction!")
-                    msg_text = custom_msg if custom_msg else "We are establishing a new faction."
+                    msg_text = custom_msg if custom_msg else "We propose establishing a new faction together."
                     send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
                     
                 elif action == "DISBAND_FACTION":
@@ -484,6 +482,18 @@ def process_diplomacy_turn(self):
                         if accepted:
                             join_faction_wars(self.nation_data, target, country_name)
                             log_global_event(self.nation_data, f"ESCALATION: {target} answered the call to arms of {country_name}!")
+                        send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
+                    actions_to_clear.append(target)
+
+                elif action == "CREATE_FACTION":
+                    if is_human_target:
+                        send_message(self.nation_data, target, country_name, "Your proposal to create a faction was ignored and has expired.", "DIPLOMACY")
+                    else:
+                        accepted, message = ai_results.get((country_name, target, action), (False, "Timeout."))
+                        if accepted:
+                            finalize_create_faction(self.nation_data, country_name)
+                            finalize_faction_join(self.nation_data, country_name, target)
+                            log_global_event(self.nation_data, f"{country_name} and {target} have formed a new global faction!")
                         send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
                     actions_to_clear.append(target)
 

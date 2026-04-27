@@ -14,10 +14,6 @@ def handle_declare_war(map_screen):
 def handle_specific_action(map_screen, action_type):
     """A clean, generic handler replacing the overloaded faction button logic."""
     target = map_screen.selected_province.get("owner")
-    
-    # If it's a domestic action, the target is implicitly the player's own country
-    if action_type in ["CREATE_FACTION", "LEAVE_FACTION", "DISBAND_FACTION"]:
-        target = map_screen.player_country
         
     custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
 
@@ -86,6 +82,18 @@ def handle_accept_req(map_screen):
             msg_text = custom_msg if custom_msg else "We accepted your request to join."
             diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
             map_screen.show_feedback("Faction Expanded!")
+
+        elif action == "CREATE_FACTION":
+            if my_faction:
+                map_screen.show_feedback("Must leave your current faction first!")
+                return
+            diplomacy_logic.finalize_create_faction(map_screen.nation_data, target)
+            diplomacy_logic.finalize_faction_join(map_screen.nation_data, target, map_screen.player_country)
+            del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
+            
+            msg_text = custom_msg if custom_msg else "We agreed to form a faction with you."
+            diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
+            map_screen.show_feedback("Faction Formed!")
 
         elif action == "CEASEFIRE":
             diplomacy_logic.finalize_neutral(map_screen.nation_data, map_screen.player_country, target)

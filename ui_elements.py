@@ -44,6 +44,7 @@ class Button:
         self.is_pressed = False
         
         self.is_selected = False
+        self.disabled = False
 
     def draw(self, surface):
         if not self.visible: return
@@ -52,7 +53,8 @@ class Button:
         is_hovered = self.rect.collidepoint(mouse_pos)
         
         current_color = self.color
-        if self.is_pressed and is_hovered: current_color = self.pressed_color
+        if getattr(self, 'disabled', False): current_color = c.UI_COLORS["grey"][0]
+        elif self.is_pressed and is_hovered: current_color = self.pressed_color
         elif is_hovered: current_color = self.hover_color
         
         # 1. Background Gradient & Outline
@@ -67,7 +69,10 @@ class Button:
             border_color = (255, 215, 0) # Gold Highlight
             border_thickness = 3
         else:
-            border_color = (255, 255, 255) if is_hovered else (20, 20, 20)
+            if getattr(self, 'disabled', False):
+                border_color = (100, 100, 100) # Dimmer border
+            else:
+                border_color = (255, 255, 255) if is_hovered else (20, 20, 20)
             border_thickness = 2
             
         pygame.draw.rect(surface, border_color, self.rect, border_thickness)
@@ -117,7 +122,7 @@ class Button:
             pygame.draw.line(surface, (r, g, b), (rect.x, rect.y + i), (rect.right - 1, rect.y + i))
 
     def handle_event(self, event):
-        if not self.visible: return
+        if not self.visible or getattr(self, 'disabled', False): return
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.rect.collidepoint(event.pos):

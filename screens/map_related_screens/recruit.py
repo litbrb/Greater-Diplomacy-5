@@ -99,7 +99,10 @@ class Recruit_Screen(GameState):
                     highest_lvl = -1
                     for name, stats in group_units:
                         lvl_str = name.replace(group_name, "").strip()
-                        lvl = queries.roman_to_int(self,lvl_str)
+                        
+                        # THE FIX: Removed 'self' from the function arguments
+                        lvl = queries.roman_to_int(lvl_str)
+                        
                         required_research = max(1, lvl) 
                         if researched_lvl >= required_research:
                             if lvl > highest_lvl:

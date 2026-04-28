@@ -247,6 +247,14 @@ class Edit_Country_Screen(GameState):
 
     def set_tool(self, tool):
         self.draw_mode = tool
+        """
+        # If we click the picker while it's already active, toggle it off and grab the brush
+        if tool == "PICKER" and self.draw_mode == "PICKER":
+            self.draw_mode = "BRUSH"
+        else:
+            self.draw_mode = tool
+        """
+            
         self.refresh_ui()
 
     def save_state(self):
@@ -412,7 +420,18 @@ class Edit_Country_Screen(GameState):
         # Render Active Color Indicator ("selected")
         color_x = c.SCREEN_WIDTH - 150
         color_y = 70
-        pygame.draw.rect(surface, self.active_color, (color_x, color_y, 60, 60))
+        
+        if self.active_color == (0, 0, 0, 0):
+            # Draw a dark background and blit the red line icon over it
+            pygame.draw.rect(surface, (40, 40, 40), (color_x, color_y, 60, 60))
+            red_line_icon = ui_elements.UI_ICONS.get("red_line")
+            if red_line_icon:
+                # Scale it slightly smaller than the box so the border still looks clean
+                scaled_icon = pygame.transform.scale(red_line_icon, (50, 50))
+                surface.blit(scaled_icon, (color_x + 5, color_y + 5))
+        else:
+            pygame.draw.rect(surface, self.active_color, (color_x, color_y, 60, 60))
+            
         pygame.draw.rect(surface, (255, 255, 255), (color_x, color_y, 60, 60), 2)
         surface.blit(normal_font.render("Selected", True, (200, 200, 200)), (color_x, color_y - 20))
 

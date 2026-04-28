@@ -50,7 +50,7 @@ def render_buttons(self):
             # --- EDITOR TOOLS ---
             self.elements.extend([
                 # Unified Left Bar Buttons
-                Button(c.LEFT_UI_BAR_X, c.BTN_ECONOMY_Y, "left_ui_bar", "orange", "Economy", econ_callback),
+                Button(c.LEFT_UI_BAR_X, c.BTN_ECONOMY_Y, "left_ui_bar", "orange", "Country Economy", econ_callback),
                 Button(c.LEFT_UI_BAR_X, c.BTN_RESEARCH_Y, "left_ui_bar", "blue", "R&D", research_callback, image=icons.get("research")),
 
                 Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Save", self.save_map_data),
@@ -85,7 +85,7 @@ def render_buttons(self):
             # Hide the management tools while the AI is moving
             if not viewing_ai:
                 self.elements.extend([
-                    Button(c.LEFT_UI_BAR_X, c.BTN_ECONOMY_Y, "medium_square", "orange", "Economy", econ_callback, image=icons.get("faction"), show_text=False),
+                    Button(c.LEFT_UI_BAR_X, c.BTN_ECONOMY_Y, "medium_square", "orange", "Country Economy", econ_callback, image=icons.get("faction"), show_text=False),
                     Button(c.LEFT_UI_BAR_X, c.BTN_RESEARCH_Y, "medium_square", "blue", "R&D", research_callback, image=icons.get("research"), show_text=False),
                     Button(c.LEFT_UI_BAR_X, c.BTN_SAVE_Y, "medium_square", "green", "Save", self.save_map_data, image=icons.get("save"), show_text=False),
                     Button(c.LEFT_UI_BAR_X, c.BTN_EDIT_NATION_Y, "medium_square", "orange", "Edit Nation", self.open_edit_country, image=icons.get("brush"), show_text=False),
@@ -193,7 +193,7 @@ def update_button_states(map_screen):
                            "Rel Refresh", "Core Refresh", "Data Refresh", "Fac Refresh",
                            "Set Date", "Core Brush", "Cores", "Auto-Core", "Unit",
                            "R&D", "Reset", "Save", "Load", "Nation", "Building",
-                           "Refresh", "Exit", "View Mode", "Units", "Economy", "Blank",
+                           "Refresh", "Exit", "View Mode", "Units", "Country Economy", "Blank",
                            "Resource", "Resources", "Sync Units", "Diplomacy", "Names"]:
                 el.visible = True
             

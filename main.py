@@ -127,6 +127,13 @@ class Controller:
             elif next_state_name == "MESSAGES":
                 self.states["MESSAGES"].start_messages(map_ref)
 
+        if next_state_name == "SETTINGS":
+            # If we entered settings from the map, tell it to return to the map
+            if previous_state == self.states["MAP"]:
+                self.states["SETTINGS"].return_state = "MAP"
+            else:
+                self.states["SETTINGS"].return_state = "MENU"
+
         # 2. Map Persistence
         if next_state_name == "MAP":
             if previous_state == self.states["RANDOM_SETUP"]:

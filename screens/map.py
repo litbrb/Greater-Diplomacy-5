@@ -536,6 +536,9 @@ class Map(GameState):
     def open_economy_screen(self):
         self.next_state, self.done = "ECONOMY", True
 
+    def open_settings(self):
+        self.next_state, self.done = "SETTINGS", True
+
     # --- Tkinter Wrappers (Imported from editor_menus.py) ---
     def editor_load_map(self):
         editor_menus.editor_load_map(self)

@@ -12,6 +12,7 @@ class Settings(GameState):
         super().__init__()
         self.controller = controller
         self.bg_color = (40, 40, 40)
+        self.return_state = "MENU"
         
         self.volume = self.controller.volume 
         self.num_players = getattr(self.controller, 'num_players', 1)
@@ -124,7 +125,8 @@ class Settings(GameState):
         api_key_to_save = getattr(self.controller, 'api_key', '')
         immersion_to_save = getattr(self.controller, 'ai_immersion_level', 'FULL')
         keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, api_key_to_save, immersion_to_save)
-        self.next_state = "MENU"
+        
+        self.next_state = getattr(self, 'return_state', 'MENU') # <--- Use the tracked state instead of hardcoding "MENU"
         self.done = True
 
     def handle_back_key(self):

@@ -57,6 +57,10 @@ class Edit_Country_Screen(GameState):
         self.draw_mode = "BRUSH" # Can be "BRUSH" or "FILL"
         self.active_input = None # "COUNTRY_NAME", "NAME", or "TITLE"
         
+        self.is_drawing = False
+        self.history = []
+        self.history_index = -1
+        
         self.country_name = ""
         self.leader_name = ""
         self.leader_title = ""
@@ -135,6 +139,10 @@ class Edit_Country_Screen(GameState):
         else:
             self.portrait_surf.fill((255, 255, 255))
             
+        # Initialize History
+        self.history = [(self.flag_surf.copy(), self.portrait_surf.copy())]
+        self.history_index = 0
+            
         self.refresh_ui()
 
     def pick_map_color(self):
@@ -200,6 +208,7 @@ class Edit_Country_Screen(GameState):
             try:
                 new_img = pygame.image.load(file_path).convert()
                 self.flag_surf = pygame.transform.scale(new_img, self.flag_size)
+                self.save_state()
                 self.map_screen.show_feedback("Flag Imported!")
             except Exception as e:
                 self.map_screen.show_feedback("Failed to import flag.")
@@ -219,6 +228,7 @@ class Edit_Country_Screen(GameState):
             try:
                 new_img = pygame.image.load(file_path).convert()
                 self.portrait_surf = pygame.transform.scale(new_img, self.portrait_size)
+                self.save_state()
                 self.map_screen.show_feedback("Portrait Imported!")
             except Exception as e:
                 self.map_screen.show_feedback("Failed to import portrait.")
@@ -232,6 +242,28 @@ class Edit_Country_Screen(GameState):
     def set_tool(self, tool):
         self.draw_mode = tool
         self.refresh_ui()
+
+    def save_state(self):
+        """Saves the current drawing for undo/redo."""
+        # Cut off any redo history if we make a new action
+        self.history = self.history[:self.history_index + 1]
+        self.history.append((self.flag_surf.copy(), self.portrait_surf.copy()))
+        if len(self.history) > 30: # Limit history to 30 steps
+            self.history.pop(0)
+        else:
+            self.history_index += 1
+            
+    def undo(self):
+        if self.history_index > 0:
+            self.history_index -= 1
+            self.flag_surf = self.history[self.history_index][0].copy()
+            self.portrait_surf = self.history[self.history_index][1].copy()
+
+    def redo(self):
+        if self.history_index < len(self.history) - 1:
+            self.history_index += 1
+            self.flag_surf = self.history[self.history_index][0].copy()
+            self.portrait_surf = self.history[self.history_index][1].copy()
 
     def save_and_exit(self):
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
@@ -309,7 +341,14 @@ class Edit_Country_Screen(GameState):
                 self.active_input = None
             
             # Fire a drawing execute on click
+            if self.flag_rect.collidepoint(mx, my) or self.portrait_rect.collidepoint(mx, my):
+                self.is_drawing = True
             self.execute_draw(mx, my, is_click=True)
+            
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if getattr(self, "is_drawing", False):
+                self.is_drawing = False
+                self.save_state()
 
         # 2. Continuous Drawing Logic (Dragging)
         elif event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0]:
@@ -317,13 +356,21 @@ class Edit_Country_Screen(GameState):
             self.execute_draw(mx, my, is_click=False)
 
         # 3. Keyboard Logic
-        if self.active_input:
-            if self.active_input == "COUNTRY_NAME":
-                self.country_name, _ = process_text_input(event, self.country_name, max_length=25)
-            elif self.active_input == "NAME":
-                self.leader_name, _ = process_text_input(event, self.leader_name, max_length=20)
-            elif self.active_input == "TITLE":
-                self.leader_title, _ = process_text_input(event, self.leader_title, max_length=20)
+        elif event.type == pygame.KEYDOWN:
+            mods = pygame.key.get_mods()
+            # Handle Undo / Redo
+            if event.key == pygame.K_z and (mods & pygame.KMOD_CTRL or mods & pygame.KMOD_GUI):
+                self.undo()
+            elif event.key == pygame.K_y and (mods & pygame.KMOD_CTRL or mods & pygame.KMOD_GUI):
+                self.redo()
+            else:
+                if self.active_input:
+                    if self.active_input == "COUNTRY_NAME":
+                        self.country_name, _ = process_text_input(event, self.country_name, max_length=25)
+                    elif self.active_input == "NAME":
+                        self.leader_name, _ = process_text_input(event, self.leader_name, max_length=20)
+                    elif self.active_input == "TITLE":
+                        self.leader_title, _ = process_text_input(event, self.leader_title, max_length=20)
 
     def additional_draw(self, surface):
         title_font = fonts.get("title")

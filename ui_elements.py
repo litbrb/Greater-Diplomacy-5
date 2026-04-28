@@ -1,4 +1,5 @@
 import pygame
+import pygame.scrap
 import data.constants as c
 from map_logic.rendering.font_manager import fonts
 from map_logic.rendering import symbol_loader
@@ -202,6 +203,28 @@ def process_text_input(event, current_text, max_length=None, validation_func=Non
         return current_text, "SUBMIT"
     elif event.key == pygame.K_ESCAPE:
         return current_text, "CANCEL"
+    elif event.key == pygame.K_v and (pygame.key.get_mods() & pygame.KMOD_CTRL or pygame.key.get_mods() & pygame.KMOD_GUI):
+        # Handle Ctrl+V (or CMD+V) Paste
+        try:
+            if not pygame.scrap.get_init():
+                pygame.scrap.init()
+            clip_bytes = pygame.scrap.get(pygame.SCRAP_TEXT)
+            if clip_bytes:
+                clip_str = clip_bytes.decode('utf-8', errors='ignore').replace('\x00', '')
+                for char in clip_str:
+                    # Check length constraint before adding the char
+                    if max_length is not None and len(current_text) >= max_length:
+                        break
+                        
+                    # Check character validity
+                    if validation_func:
+                        if validation_func(char):
+                            current_text += char
+                    elif char.isprintable(): # Default safe check
+                        current_text += char
+        except Exception as e:
+            print(f"Paste Error: {e}")
+        return current_text, "TYPING"
     else:
         # Check length constraint
         if max_length is not None and len(current_text) >= max_length:

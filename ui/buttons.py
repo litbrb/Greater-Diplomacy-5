@@ -97,7 +97,7 @@ def render_buttons(self):
 
 
     # ======================================================================== #
-    #                       CONTEXTUAL PROVINCE MENUS                          #
+    #                         CONTEXTUAL PROVINCE MENUS                        #
     # ======================================================================== #
     
     # --- PROVINCE MENU ACTION BUTTONS ---
@@ -158,7 +158,7 @@ def render_buttons(self):
 
 
 # ============================================================================ #
-#                           DYNAMIC BUTTON UPDATES                             #
+#                            DYNAMIC BUTTON UPDATES                            #
 # ============================================================================ #
 
 def update_button_states(map_screen):
@@ -493,3 +493,7 @@ def render_edit_country_buttons(edit_screen):
     # Updated Buttons to have both Map Color and Custom Brush Color pickers side-by-side
     edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X3, 550, "small", "orange", "Map Color", edit_screen.pick_map_color))
     edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X3 + 300, 375, "small", "purple", "Brush Color", edit_screen.pick_custom_brush_color))
+
+    # --- ADDED UNDO/REDO BUTTONS ---
+    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X3, 440, "small", "grey", "Undo", edit_screen.undo))
+    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X3 + 120, 440, "small", "grey", "Redo", edit_screen.redo))

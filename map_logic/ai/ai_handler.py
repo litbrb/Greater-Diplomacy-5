@@ -175,7 +175,8 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         system_prompt = (
             "You are an AI playing a grand strategy game. You act as the leader of your nation. "
             f"You have just received the following unilateral declaration: {action_context} "
-            "There is no proposal to accept or reject. You must react to this news in character. "
+            #             "There is no proposal to accept or reject. You must react to this news in character. "
+            "There is no proposal to accept or reject. You must send a reply to the country that sent you this declaration in character. "
             "Reply ONLY with a valid JSON object matching this schema: "
             '{"message": "In-character dialogue reacting to the event in english"}'
         )

@@ -374,7 +374,7 @@ class Map(GameState):
                 self.player_country = self.active_players[0]
                 
                 # --- Show loading screen and explicitly refresh maps ---
-                self.draw_turn_loading_screen("AI is thinking...")
+                self.draw_turn_loading_screen("Processing Turn...")
                 turn_processor.prepare_turn(self)
                 self.refresh_political_map() 
                 self.refresh_relations_map() 
@@ -387,7 +387,7 @@ class Map(GameState):
                 self.show_feedback(f"AI Strategy generated in {elapsed_seconds:.2f}s")
                 print(f"[PERFORMANCE] Phase 1 (Multiplayer) completed in {elapsed_seconds:.2f} seconds.")
         else:
-            self.draw_turn_loading_screen("AI is thinking...")
+            self.draw_turn_loading_screen("Processing Turn...")
             turn_processor.prepare_turn(self)
             self.refresh_political_map()    
             self.refresh_relations_map()    

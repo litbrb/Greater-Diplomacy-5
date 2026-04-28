@@ -465,9 +465,12 @@ def render_edit_country_buttons(edit_screen):
         Button(140, 20, "medium", "green", "Save Changes", edit_screen.save_and_exit)
     ]
     
-    # Export Buttons
-    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X1, 420, "medium", "blue", "Export Flag", edit_screen.export_flag))
-    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X2, 520, "medium", "blue", "Export Portrait", edit_screen.export_portrait))
+    # Export / Import Buttons
+    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X1, 420, "small_square", "blue", "Export Flag", edit_screen.export_flag, image=icons.get("export"), show_text=False))
+    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X1 + 50, 420, "small_square", "green", "Import Flag", edit_screen.import_flag, image=icons.get("import"), show_text=False))
+    
+    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X2, 520, "small_square", "blue", "Export Portrait", edit_screen.export_portrait, image=icons.get("export"), show_text=False))
+    edit_screen.elements.append(Button(c.EDIT_COUNTRY_UI_X2 + 50, 520, "small_square", "green", "Import Portrait", edit_screen.import_portrait, image=icons.get("import"), show_text=False))
     
     # Build Palette Buttons
     for i, color in enumerate(edit_screen.palette):

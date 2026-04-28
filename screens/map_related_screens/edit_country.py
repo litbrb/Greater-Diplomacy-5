@@ -4,7 +4,7 @@ import base64
 import os
 from pathlib import Path
 import tkinter as tk 
-from tkinter import colorchooser 
+from tkinter import colorchooser, filedialog
 from gameState import GameState
 from ui_elements import Button, process_text_input
 import ui_elements
@@ -185,6 +185,44 @@ class Edit_Country_Screen(GameState):
         except Exception as e:
             self.map_screen.show_feedback("Failed to export")
 
+    def import_flag(self):
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True)
+        file_path = filedialog.askopenfilename(
+            title="Select Flag Image",
+            filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp")]
+        )
+        root.destroy()
+        pygame.event.pump() # Clears any phantom mouse clicks Tkinter leaves behind
+
+        if file_path:
+            try:
+                new_img = pygame.image.load(file_path).convert()
+                self.flag_surf = pygame.transform.scale(new_img, self.flag_size)
+                self.map_screen.show_feedback("Flag Imported!")
+            except Exception as e:
+                self.map_screen.show_feedback("Failed to import flag.")
+
+    def import_portrait(self):
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True)
+        file_path = filedialog.askopenfilename(
+            title="Select Portrait Image",
+            filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp")]
+        )
+        root.destroy()
+        pygame.event.pump()
+
+        if file_path:
+            try:
+                new_img = pygame.image.load(file_path).convert()
+                self.portrait_surf = pygame.transform.scale(new_img, self.portrait_size)
+                self.map_screen.show_feedback("Portrait Imported!")
+            except Exception as e:
+                self.map_screen.show_feedback("Failed to import portrait.")
+
     def refresh_ui(self):
         buttons.render_edit_country_buttons(self)
 
@@ -261,9 +299,9 @@ class Edit_Country_Screen(GameState):
         # 1. Text Input Selection Logic
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mx, my = event.pos
-            if pygame.Rect(input_box_x, 450, 300, 40).collidepoint(mx, my):
+            if pygame.Rect(input_box_x, 500, 300, 40).collidepoint(mx, my):
                 self.active_input = "COUNTRY_NAME"
-            elif pygame.Rect(input_box_x, 550, 300, 40).collidepoint(mx, my):
+            elif pygame.Rect(input_box_x, 575, 300, 40).collidepoint(mx, my):
                 self.active_input = "NAME"
             elif pygame.Rect(input_box_x, 650, 300, 40).collidepoint(mx, my):
                 self.active_input = "TITLE"
@@ -330,14 +368,14 @@ class Edit_Country_Screen(GameState):
         # Draw Text Inputs
         
         def draw_input_box(y_pos, label_text, input_state, value):
-            surface.blit(heading_font.render(label_text, True, (200, 200, 200)), (input_box_x, y_pos - 40))
+            surface.blit(normal_font.render(label_text, True, (200, 200, 200)), (input_box_x, y_pos - 20))
             rect = pygame.Rect(input_box_x, y_pos, 300, 40)
             color = (200, 255, 200) if self.active_input == input_state else (100, 100, 100)
             pygame.draw.rect(surface, color, rect, 2)
             surface.blit(normal_font.render(value + ("|" if self.active_input == input_state else ""), True, (255, 255, 255)), (input_box_x + 10, y_pos + 10))
 
-        draw_input_box(450, "Country Name:", "COUNTRY_NAME", self.country_name)
-        draw_input_box(550, "Leader Name:", "NAME", self.leader_name)
+        draw_input_box(500, "Country Name:", "COUNTRY_NAME", self.country_name)
+        draw_input_box(575, "Leader Name:", "NAME", self.leader_name)
         draw_input_box(650, "Leader Title:", "TITLE", self.leader_title)
 
     def handle_back_key(self):

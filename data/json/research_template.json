@@ -1,6 +1,6 @@
 {
     "infantry_type": { "category": "INFANTRY", "max_lvl": 23, "cost": 300, "req": {}, "years": [1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885, 1890, 1895, 1900, 1904, 1908, 1912, 1916, 1920, 1924, 1928, 1932, 1936, 1940, 1944, 1948] },
-    "cavalry": { "category": "INFANTRY", "max_lvl": 1, "cost": 300, "req": {}, "years": [1850] },
+    "cavalry": { "category": "INFANTRY", "max_lvl": 1, "cost": 300, "req": {}, "years": [1900] },
     "civilian_car": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {}, "years": [1905] },
     "ww1_armored_car": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {"civilian_car": 1}, "years": [1910] },
     "ww1_tank": { "category": "TANKS", "max_lvl": 1, "cost": 300, "req": {"ww1_armored_car": 1}, "years": [1915] },
@@ -11,8 +11,8 @@
     "main_battle_tank": { "category": "TANKS", "max_lvl": 3, "cost": 300, "req": {"OR": [{"medium_tank": 3}, {"heavy_tank": 3}]}, "years": [1945, 1950, 1955] },
     "carrack": { "category": "NAVY", "max_lvl": 1, "cost": 300, "req": {}, "years": [1850] },
     "ironclad": { "category": "NAVY", "max_lvl": 1, "cost": 300, "req": {"carrack": 1}, "years": [1860] },
-    "pre-dreadnaught": { "category": "NAVY", "max_lvl": 1, "cost": 300, "req": {"ironclad": 1}, "years": [1880] },
-    "dreadnaught": { "category": "NAVY", "max_lvl": 1, "cost": 300, "req": {"pre-dreadnaught": 1}, "years": [1900] },
+    "pre-dreadnaught": { "category": "NAVY", "max_lvl": 1, "cost": 300, "req": {"ironclad": 1}, "years": [1900] },
+    "dreadnaught": { "category": "NAVY", "max_lvl": 1, "cost": 300, "req": {"pre-dreadnaught": 1}, "years": [1905] },
     "destroyer": { "category": "NAVY", "max_lvl": 8, "cost": 300, "req": {"dreadnaught": 1}, "years": [1910, 1916, 1922, 1928, 1934, 1940, 1946, 1952] },
     "aircraft_carrier": { "category": "NAVY", "max_lvl": 4, "cost": 300, "req": {"destroyer": 1}, "years": [1920, 1930, 1940, 1950] },
     "workshop": { "category": "INDUSTRY", "max_lvl": 5, "cost": 300, "req": {}, "years": [1850, 1860, 1870, 1880, 1890] },

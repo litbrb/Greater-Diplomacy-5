@@ -65,20 +65,26 @@ def draw_tooltip(self, surface):
                 lines.append("No Natural Resources")
 
     elif self.secondary_mode == "ECONOMY":
+        # Base production from the tile itself dynamically pulled from config
+        lines.append(f"Base Yield: +{c.BASE_YIELDS['manpower']}Man, +{c.BASE_YIELDS['materials']}Mat, +{c.BASE_YIELDS['fuel']}Fuel")
+
         buildings = prov.get("buildings", [])
-        if not buildings:
-            # Base production from the tile itself dynamically pulled from config
-            lines.append(f"Base Yield: +{c.BASE_YIELDS['manpower']}Man, +{c.BASE_YIELDS['materials']}Mat, +{c.BASE_YIELDS['fuel']}Fuel")
-        else:
+        if buildings:
             lines.append("--- Buildings ---")
+            bldg_lib = queries.get_building_library()
             for b in buildings:
-                # Determine production text based on building name
-                prod_hint = ""
-                if "Workshop" in b or "Factory" in b:
-                    prod_hint = "(+Materials)"
-                elif "Refinery" in b:
-                    prod_hint = "(+Fuel)"
+                # Determine production text dynamically based on building stats
+                stats = bldg_lib.get(b, {})
+                p_mat = stats.get('prod_materials', 0)
+                p_man = stats.get('prod_manpower', 0)
+                p_fuel = stats.get('prod_fuel', 0)
                 
+                yields = []
+                if p_man > 0: yields.append(f"+{p_man}Man")
+                if p_mat > 0: yields.append(f"+{p_mat}Mat")
+                if p_fuel > 0: yields.append(f"+{p_fuel}Fuel")
+                
+                prod_hint = f"({', '.join(yields)})" if yields else ""
                 lines.append(f"- {b} {prod_hint}")
 
     # 3. Render the Tooltip

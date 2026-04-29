@@ -149,6 +149,17 @@ AI_THINKING_COOLDOWN = 0 # how long does an ai have to wait before thinking agai
 RESEARCH_TIMELINE_SPACING = 80 # Width between years on the research timeline
 
 # ==========================================
+# UNIT OBSOLESCENCE
+# ==========================================
+OBSOLESCENCE_RULES = {
+    "WW1 Armored Car": ["armored_car"],
+    "WW1 Tank": ["medium_tank", "heavy_tank"],
+    "Carrack": ["ironclad"],
+    "Ironclad": ["pre-dreadnought"],
+    "Pre-Dreadnought": ["dreadnought"]
+}
+
+# ==========================================
 # GLOBAL COLORS & PALETTES
 # ==========================================
 

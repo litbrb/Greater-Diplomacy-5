@@ -433,8 +433,6 @@ def has_units_in_province(nation, province):
 
 def get_active_ai_nations(map_screen):
     """Returns a list of all playable, active AI nations (excluding the human player)."""
-    
-    
     ai_nations = []
     # Account for potential hotseat active_players lists or standard player_country setups
     human_players = getattr(map_screen, 'active_players', [map_screen.player_country])
@@ -444,3 +442,8 @@ def get_active_ai_nations(map_screen):
             ai_nations.append(name)
             
     return ai_nations
+
+def is_unit_obsolete(group_name, player_research):
+    """Checks if a unit group is obsolete based on researched techs."""
+    obsoleting_techs = c.OBSOLESCENCE_RULES.get(group_name, [])
+    return any(player_research.get(tech, 0) >= 1 for tech in obsoleting_techs)

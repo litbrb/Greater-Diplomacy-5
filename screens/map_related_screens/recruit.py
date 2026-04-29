@@ -74,9 +74,7 @@ class Recruit_Screen(GameState):
             nonlocal y_offset
             for group_name in groups:
                 # --- OBSOLESCENCE CHECKS ---
-                if group_name == "WW1 Armored Car" and player_research.get("armored_car", 0) >= 1:
-                    continue
-                if group_name == "WW1 Tank" and (player_research.get("medium_tank", 0) >= 1 or player_research.get("heavy_tank", 0) >= 1):
+                if queries.is_unit_obsolete(group_name, player_research):
                     continue
                 # ---------------------------
 

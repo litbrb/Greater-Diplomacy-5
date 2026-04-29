@@ -110,9 +110,11 @@ EDITOR_BOT_BTN_STEP_X = 110
 
 # --- Province Menu UI Layout (X, Y, Width, Height) ---
 PROVINCE_UI = {
-    "faction_box": (5, 300, 150, 300),
+    "diplomatic_box": (10, 150, 140, 450),
     "mail_box": (400, 300, 150, 300)
 }
+
+DIPLOMATIC_INFO_TITLE = "Diplomatic Info"
 
 # --- Sidebar Info Panel ---
 SIDEBAR_INFO_X = 900

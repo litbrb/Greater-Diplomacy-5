@@ -4,7 +4,7 @@ import data.constants as c
 from data import queries
 
 # --- Define the split boxes using the centralized constants ---
-fac_rect = pygame.Rect(*c.PROVINCE_UI["faction_box"])
+dip_rect = pygame.Rect(*c.PROVINCE_UI["diplomatic_box"])
 mail_rect = pygame.Rect(*c.PROVINCE_UI["mail_box"])
 
 def draw_unit_info(self, surface):
@@ -14,45 +14,47 @@ def draw_unit_info(self, surface):
     owner = self.selected_province.get("owner", "Unclaimed")
     is_foreign = queries.is_foreign_playable(owner, self.player_country, self.nation_data)
 
-    # --- Foreign Info (Faction & Mail) ---
-    if is_foreign:
-        # Faction Box (Replaced Relations Box)
-        pygame.draw.rect(surface, (40, 30, 40), fac_rect)
-        pygame.draw.rect(surface, (150, 100, 250), fac_rect, 2)
+    # --- Diplomatic Info (Faction & Wars) ---
+    if owner not in c.UNPLAYABLE_NATIONS:
+        # Diplomatic Box (Replaced Faction Box)
+        pygame.draw.rect(surface, (40, 30, 40), dip_rect)
+        pygame.draw.rect(surface, (150, 100, 250), dip_rect, 2)
 
-        fac_title = self.font.render("Faction Info", True, (255, 255, 255))
-        surface.blit(fac_title, (fac_rect.x + 10, fac_rect.y + 10))
+        dip_title = self.font.render(c.DIPLOMATIC_INFO_TITLE, True, (255, 255, 255))
+        surface.blit(dip_title, (dip_rect.x + 10, dip_rect.y + 10))
         
         faction_name = self.nation_data.get(owner, {}).get("faction", "")
-        y_offset = fac_rect.y + 40
+        y_offset = dip_rect.y + 40
         
         if not faction_name:
-            surface.blit(self.small_font.render("No Faction", True, (150, 150, 150)), (fac_rect.x + 10, y_offset))
+            surface.blit(self.small_font.render("No Faction", True, (150, 150, 150)), (dip_rect.x + 10, y_offset))
             y_offset += 30
         else:
-            surface.blit(self.small_font.render(faction_name, True, (100, 255, 100)), (fac_rect.x + 10, y_offset))
+            surface.blit(self.small_font.render(faction_name, True, (100, 255, 100)), (dip_rect.x + 10, y_offset))
             y_offset += 20
             
             members = queries.get_faction_members(faction_name, self.nation_data)
             for m in members[:4]:
                 m_display = self.nation_data.get(m, {}).get("name", m)
-                surface.blit(self.small_font.render(f" - {m_display}", True, (200, 200, 200)), (fac_rect.x + 10, y_offset))
+                surface.blit(self.small_font.render(f" - {m_display}", True, (200, 200, 200)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
                 
             if len(members) > 4:
-                surface.blit(self.small_font.render(f" + {len(members)-4} more", True, (150, 150, 150)), (fac_rect.x + 10, y_offset))
+                surface.blit(self.small_font.render(f" + {len(members)-4} more", True, (150, 150, 150)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
 
         # Keep war info so players know who this nation is fighting
         wars = queries.get_enemies(owner, self.nation_data)
         if wars:
-            surface.blit(self.small_font.render("At War With:", True, (255, 100, 100)), (fac_rect.x + 10, y_offset))
+            surface.blit(self.small_font.render("At War With:", True, (255, 100, 100)), (dip_rect.x + 10, y_offset))
             y_offset += 20
             for w in wars[:2]:
                 w_disp = self.nation_data.get(w, {}).get("name", w)
-                surface.blit(self.small_font.render(f" - {w_disp}", True, (200, 200, 200)), (fac_rect.x + 10, y_offset))
+                surface.blit(self.small_font.render(f" - {w_disp}", True, (200, 200, 200)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
 
+    # --- Foreign Info (Mail Box) ---
+    if is_foreign:
         # Mail Box
         pygame.draw.rect(surface, (30, 40, 50), mail_rect)
         pygame.draw.rect(surface, (100, 200, 250), mail_rect, 2)

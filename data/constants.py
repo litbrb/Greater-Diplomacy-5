@@ -126,6 +126,8 @@ ACTION_BTN_X = 200
 ACTION_BTN_START_Y = 225
 ACTION_BTN_STEP_Y = 40
 
+ORDER_BTN_X = 600
+
 # ==========================================
 # GAME RULES & TIMING
 # ==========================================

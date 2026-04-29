@@ -53,7 +53,7 @@ class Orders_Screen(GameState):
             order_type = active_unit.get("order", {}).get("type", "")
 
             # Disband Button using standard action button position
-            btn_disband = Button(c.ACTION_BTN_X, 150, "medium", "red", "Disband", self.disband_unit)
+            btn_disband = Button(c.ORDER_BTN_X, 150, "medium", "red", "Disband", self.disband_unit)
             self.elements.append(btn_disband)
 
             # --- NEW: Combat Check ---
@@ -72,24 +72,24 @@ class Orders_Screen(GameState):
             if order_type == "CONVERT":
                 txt = f"Cancel Convert ({active_unit['order'].get('turns_left', 0)} turns)"
                 # Changed to a clickable red button pointing to our new cancel method
-                btn_conv = Button(c.ACTION_BTN_X, 220, "medium", "red", txt, self.cancel_conversion)
+                btn_conv = Button(c.ORDER_BTN_X, 220, "medium", "red", txt, self.cancel_conversion)
                 self.elements.append(btn_conv)
             elif is_convoy: # Check if it starts with Convoy
                 if in_combat:
-                    btn_conv = Button(c.ACTION_BTN_X, 220, "medium", "grey", "In Combat!", lambda: None)
+                    btn_conv = Button(c.ORDER_BTN_X, 220, "medium", "grey", "In Combat!", lambda: None)
                 elif not is_water:
-                    btn_conv = Button(c.ACTION_BTN_X, 220, "medium", "blue", "To Land Unit", self.convert_unit)
+                    btn_conv = Button(c.ORDER_BTN_X, 220, "medium", "blue", "To Land Unit", self.convert_unit)
                 else:
-                    btn_conv = Button(c.ACTION_BTN_X, 220, "medium", "grey", "Must be on Land", lambda: None)
+                    btn_conv = Button(c.ORDER_BTN_X, 220, "medium", "grey", "Must be on Land", lambda: None)
                 self.elements.append(btn_conv)
             else:
                 if not is_naval:
                     if in_combat:
-                        btn_conv = Button(c.ACTION_BTN_X, 220, "medium", "grey", "In Combat!", lambda: None)
+                        btn_conv = Button(c.ORDER_BTN_X, 220, "medium", "grey", "In Combat!", lambda: None)
                     elif is_coastal or is_water:
-                        btn_conv = Button(c.ACTION_BTN_X, 220, "medium", "blue", "To Convoy", self.convert_unit)
+                        btn_conv = Button(c.ORDER_BTN_X, 220, "medium", "blue", "To Convoy", self.convert_unit)
                     else:
-                        btn_conv = Button(c.ACTION_BTN_X, 220, "medium", "grey", "Must be Coastal", lambda: None)
+                        btn_conv = Button(c.ORDER_BTN_X, 220, "medium", "grey", "Must be Coastal", lambda: None)
                     self.elements.append(btn_conv)
 
     def disband_unit(self):

@@ -120,7 +120,7 @@ DIPLOMATIC_INFO_TITLE = "Diplomatic Info"
 SIDEBAR_INFO_X = 900
 SIDEBAR_INFO_Y = 70
 SIDEBAR_INFO_WIDTH = 300
-SIDEBAR_INFO_HEIGHT = 600 # Increased from 450 to accommodate the buildings list
+SIDEBAR_INFO_HEIGHT = 640 # Increased to accommodate the new terrain image and buildings list
 
 # --- Action Buttons UI Layout ---
 ACTION_BTN_X = 200
@@ -204,6 +204,7 @@ MSG_NOTIFICATION_COLOR = (255, 50, 50)
 
 # Directories
 ASSETS_DIR = "assets/images"
+TERRAINS_DIR = "assets/terrains" # Added terrains directory
 BACKGROUNDS_DIR = "assets/backgrounds"
 FLAGS_DIR = "assets/flags"
 PORTRAITS_DIR = "assets/portraits"

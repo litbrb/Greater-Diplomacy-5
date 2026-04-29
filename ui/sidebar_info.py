@@ -1,8 +1,10 @@
 import pygame
 import base64
+import os
 import data.constants as c
 from map_logic.rendering.font_manager import fonts
 from data import queries
+from ui.bars import ui_bars
 
 # Define the area for the sidebar info panel utilizing constants
 info_rect = pygame.Rect(c.SIDEBAR_INFO_X, c.SIDEBAR_INFO_Y, c.SIDEBAR_INFO_WIDTH, c.SIDEBAR_INFO_HEIGHT)
@@ -31,14 +33,39 @@ def draw_sidebar_info(self, surface):
     owner_data = self.nation_data.get(owner_id, {})
     owner_display = owner_data.get("name", owner_id).upper()
 
+    # --- NEW: Draw Terrain Image ---
+    terrain_filename = f"{terrain}.png"
+    terrain_path = os.path.join(c.TERRAINS_DIR, terrain_filename)
+    
+    # Fallback if image doesn't exist (e.g. try Title Case or use Unknown.png)
+    if not os.path.exists(terrain_path):
+        terrain_filename_title = f"{terrain.title()}.png"
+        terrain_path_title = os.path.join(c.TERRAINS_DIR, terrain_filename_title)
+        if os.path.exists(terrain_path_title):
+            terrain_filename = terrain_filename_title
+        else:
+            terrain_filename = "Unknown.png"
+            
+    terrain_img = ui_bars.get_ui_image(terrain_filename, directory=c.TERRAINS_DIR)
+    
+    # Scale to fit the sidebar width with a small padding
+    img_size = c.SIDEBAR_INFO_WIDTH - 20
+    terrain_img = pygame.transform.scale(terrain_img, (img_size, img_size))
+    
+    img_x = info_rect.x + 10
+    img_y = info_rect.y + 10
+    
+    surface.blit(terrain_img, (img_x, img_y))
+    pygame.draw.rect(surface, (100, 100, 100), (img_x, img_y, img_size, img_size), 2)
+
     # 4. Render Basic Information Lines
     info_lines = [
         f"Province ID: {province['id']}",
         f"Owner: {owner_display}",
-        f"Terrain: {terrain.upper()}"
+        f"Terrain: {terrain.replace('_', ' ').upper()}"
     ]
     
-    current_y = 80
+    current_y = img_y + img_size + 10
     text_x = c.SIDEBAR_INFO_X + 10
     
     for i, line in enumerate(info_lines):

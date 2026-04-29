@@ -189,17 +189,13 @@ def update_button_states(map_screen):
         for btn in ed_btns:
             btn.visible = True
 
-        def set_ed_color(btn, mode, active_color):
-            if getattr(map_screen, "editor_mode", "") == mode:
-                btn.color, btn.hover_color = active_color
-            else:
-                btn.color, btn.hover_color = (100, 100, 100)
-
-        set_ed_color(map_screen.btn_ed_resource, "RESOURCE", (150, 0, 150))
-        set_ed_color(map_screen.btn_ed_nation, "NATION", (0, 150, 0))
-        set_ed_color(map_screen.btn_ed_building, "BUILDING", (0, 100, 200))
-        set_ed_color(map_screen.btn_ed_core, "CORE", (200, 100, 100))
-        set_ed_color(map_screen.btn_ed_unit, "UNIT", (200, 0, 0))
+        # Use the cleaner 'is_selected' gold border instead of overriding raw RGB values
+        current_mode = getattr(map_screen, "editor_mode", "")
+        map_screen.btn_ed_resource.is_selected = (current_mode == "RESOURCE")
+        map_screen.btn_ed_nation.is_selected = (current_mode == "NATION")
+        map_screen.btn_ed_building.is_selected = (current_mode == "BUILDING")
+        map_screen.btn_ed_core.is_selected = (current_mode == "CORE")
+        map_screen.btn_ed_unit.is_selected = (current_mode == "UNIT")
 
     else:
         viewing_ai = getattr(map_screen, 'viewing_ai_moves', False)

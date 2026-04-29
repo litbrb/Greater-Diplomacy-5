@@ -8,9 +8,6 @@ from map_logic.rendering.font_manager import fonts
 from map_logic.rendering import symbol_loader
 from data import queries
 
-minimum_year = c.START_YEAR
-maximum_year = 2000
-
 class Research_Screen(GameState):
     def __init__(self):
         super().__init__()
@@ -299,9 +296,9 @@ class Research_Screen(GameState):
         start_year = int((-self.scroll_x - (c.SCREEN_WIDTH // 2)) / self.pixels_per_year) + current_year - 5
         end_year = int((c.SCREEN_WIDTH - self.scroll_x - (c.SCREEN_WIDTH // 2)) / self.pixels_per_year) + current_year + 5
 
-        # --- NEW: Clamp the visual tick marks ---
-        start_year = max(minimum_year, start_year)
-        end_year = min(maximum_year + 1, end_year) # +1 so maximum_year is included
+        # --- Clamp the visual tick marks ---
+        start_year = max(c.START_YEAR, start_year)
+        end_year = min(c.END_YEAR + 1, end_year) # +1 so the actual END_YEAR is drawn
         # ----------------------------------------
 
         for year in range(start_year, end_year):
@@ -501,12 +498,12 @@ class Research_Screen(GameState):
                 curr_y += 28
 
     def enforce_scroll_bounds(self):
-        """Prevents the timeline from scrolling past minimum_year or maximum_year."""
+        """Prevents the timeline from scrolling past the defined START_YEAR or END_YEAR."""
         if self.map_screen:
             current_year = self.map_screen.time_manager.year
             # Negative scroll moves the camera to future years (right), positive to past years (left)
-            min_scroll_x = -((maximum_year - current_year) * self.pixels_per_year)
-            max_scroll_x = -((minimum_year - current_year) * self.pixels_per_year)
+            min_scroll_x = -((c.END_YEAR - current_year) * self.pixels_per_year)
+            max_scroll_x = -((c.START_YEAR - current_year) * self.pixels_per_year)
             
             self.target_scroll_x = max(min_scroll_x, min(self.target_scroll_x, max_scroll_x))
             self.scroll_x = max(min_scroll_x, min(self.scroll_x, max_scroll_x))

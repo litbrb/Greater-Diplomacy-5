@@ -133,6 +133,7 @@ ORDER_BTN_X = 600
 # ==========================================
 
 START_YEAR = 1900
+END_YEAR = 2000
 AI_THINKING_COOLDOWN = 0 # how long does an ai have to wait before thinking again
 
 # ==========================================

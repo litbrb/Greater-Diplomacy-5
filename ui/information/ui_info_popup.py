@@ -53,6 +53,7 @@ def draw_unit_info(self, surface):
                 surface.blit(self.small_font.render(f" - {w_disp}", True, (200, 200, 200)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
 
+    """
     # --- Foreign Info (Mail Box) ---
     if is_foreign:
         # Mail Box
@@ -111,3 +112,4 @@ def draw_unit_info(self, surface):
         if not locked:
             instr = self.small_font.render("Click to edit. Enter to save.", True, (150, 150, 150))
             surface.blit(instr, (mail_rect.x + 10, mail_rect.y + 230))
+        """

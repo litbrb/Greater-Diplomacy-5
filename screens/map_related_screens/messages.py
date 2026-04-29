@@ -15,11 +15,14 @@ class Messages_Screen(GameState):
         self.compose_text = ""
         self.drafts = [] 
         self.draft_edit_rects = []
+        
         self.scroll_y = 0
+        self.max_msg_scroll = 0 # Tracks how high we can scroll in the thread
         
         self.contact_scroll_y = 0
         self.max_contact_scroll = 0
         self.is_dragging_contacts = False
+        self.is_dragging_messages = False # Tracks dragging inside the message pane
         
         self.show_all_contacts = False
 
@@ -30,8 +33,10 @@ class Messages_Screen(GameState):
         self.drafts = []
         self.draft_edit_rects = []
         self.scroll_y = 0
+        self.max_msg_scroll = 0
         self.contact_scroll_y = 0
         self.is_dragging_contacts = False
+        self.is_dragging_messages = False
         self.show_all_contacts = False
         self.refresh_ui()
 
@@ -157,21 +162,36 @@ class Messages_Screen(GameState):
                 self.contact_scroll_y = max(self.max_contact_scroll, min(0, self.contact_scroll_y))
                 self.refresh_ui() 
             else:
-                self.scroll_y = min(0, self.scroll_y + event.y * 30)
+                self.scroll_y += event.y * 40
+                self.scroll_y = max(0, min(self.scroll_y, self.max_msg_scroll))
 
         # --- Drag to Scroll Logic ---
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if mx < c.MSG_LEFT_PANE_W:
                 self.is_dragging_contacts = True
+            elif self.selected_recipient and my < c.SCREEN_HEIGHT - c.MSG_INPUT_H:
+                # Ensure we aren't dragging when we're actually trying to click 'Delete Draft'
+                clicked_del = False
+                if hasattr(self, 'draft_edit_rects'):
+                    for del_rect, _ in self.draft_edit_rects:
+                        if del_rect.collidepoint(mx, my):
+                            clicked_del = True
+                            break
+                if not clicked_del:
+                    self.is_dragging_messages = True
         
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             self.is_dragging_contacts = False
+            self.is_dragging_messages = False
             
         elif event.type == pygame.MOUSEMOTION:
             if getattr(self, 'is_dragging_contacts', False):
                 self.contact_scroll_y += event.rel[1]
                 self.contact_scroll_y = max(self.max_contact_scroll, min(0, self.contact_scroll_y))
                 self.refresh_ui() 
+            elif getattr(self, 'is_dragging_messages', False):
+                self.scroll_y -= event.rel[1] # Subtract so dragging down pulls up newer messages
+                self.scroll_y = max(0, min(self.scroll_y, self.max_msg_scroll))
                 
         # --- Text Input Logic ---
         if self.selected_recipient:
@@ -216,7 +236,7 @@ class Messages_Screen(GameState):
             self.elements.append(btn)
             y_off += 60
 
-            display_list = [c for c in playable if c not in history_contacts]
+            display_list = [n for n in playable if n not in history_contacts]
             for country in display_list:
                 btn = Button(20, y_off, "medium", "grey", country, lambda c_name=country: self.select_new_contact(c_name))
                 self.elements.append(btn)
@@ -226,7 +246,7 @@ class Messages_Screen(GameState):
             self.elements.append(btn)
             y_off += 60
 
-            display_list = [c for c in playable if c in history_contacts]
+            display_list = [n for n in playable if n in history_contacts]
             for country in display_list:
                 color = "green" if self.selected_recipient == country else "grey"
                 
@@ -310,19 +330,14 @@ class Messages_Screen(GameState):
         txt_surf = font_small.render(self.compose_text + "|", True, (255, 255, 255))
         surface.blit(txt_surf, (input_rect.x + 20, input_rect.y + 30))
 
-        current_y = input_rect.y - 20 + self.scroll_y
-        self.draft_edit_rects = []
-        
-        # Render iterating backwards (Newest -> Oldest), drawing bottom -> up
+        # --- PRE-CALCULATE SIZES TO ESTABLISH MAX SCROLL CEILING ---
+        processed_messages = []
+        total_h = 20
+        max_width = int((c.SCREEN_WIDTH - c.MSG_LEFT_PANE_W) * 0.6)
+
         for msg in reversed(display_thread):
-            is_player = msg['is_player']
-            is_draft = msg.get('is_draft', False)
-            is_diplo = msg.get('is_diplo', False)
-            
             words = msg['content'].split(" ")
             lines, current_line = [], ""
-            max_width = int((c.SCREEN_WIDTH - c.MSG_LEFT_PANE_W) * 0.6)
-            
             for word in words:
                 test_line = current_line + word + " "
                 if font_small.size(test_line)[0] < max_width:
@@ -334,11 +349,38 @@ class Messages_Screen(GameState):
 
             box_height = 20 + (len(lines) * 20)
             box_width = max([font_small.size(l)[0] for l in lines] + [100]) + 30
-            
+            total_h += box_height + 15
+
+            processed_messages.append({
+                "msg_data": msg,
+                "lines": lines,
+                "box_height": box_height,
+                "box_width": box_width
+            })
+
+        self.max_msg_scroll = max(0, total_h - input_rect.y + 20)
+        self.scroll_y = max(0, min(self.scroll_y, self.max_msg_scroll))
+
+        current_y = input_rect.y - 20 + self.scroll_y
+        self.draft_edit_rects = []
+        
+        # Render iterating backwards (Newest -> Oldest), drawing bottom -> up
+        for p_msg in processed_messages:
+            msg = p_msg["msg_data"]
+            lines = p_msg["lines"]
+            box_height = p_msg["box_height"]
+            box_width = p_msg["box_width"]
+
             current_y -= box_height
             
-            if current_y + box_height < 0:
+            # Culling check - don't draw boxes rendering completely off the top or bottom of the screen
+            if current_y + box_height < 0 or current_y > c.SCREEN_HEIGHT:
+                current_y -= 15
                 continue 
+
+            is_player = msg['is_player']
+            is_draft = msg.get('is_draft', False)
+            is_diplo = msg.get('is_diplo', False)
 
             if is_player:
                 box_x = c.SCREEN_WIDTH - box_width - 30

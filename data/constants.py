@@ -130,6 +130,16 @@ ACTION_BTN_STEP_Y = 33
 ORDER_BTN_X = 600
 
 # ==========================================
+# SETTINGS
+# ==========================================
+
+# --- Settings UI Layout ---
+SETTINGS_API_BOX_X = 150
+SETTINGS_API_BOX_Y = SCREEN_HEIGHT - 50
+SETTINGS_API_BOX_W = 300
+SETTINGS_API_BOX_H = 40
+
+# ==========================================
 # GAME RULES & TIMING
 # ==========================================
 

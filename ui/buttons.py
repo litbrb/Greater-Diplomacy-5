@@ -1,5 +1,6 @@
+import pygame
 import ui_elements
-from ui_elements import Button
+from ui_elements import Button, Slider
 import data.constants as c
 from data import queries
 from map_logic.diplomacy import player_diplomacy_actions
@@ -175,7 +176,7 @@ def update_button_states(map_screen):
         btn.is_selected = is_active
 
     # ==================================================================== #
-    #                     EDITOR & GAMEPLAY TOOLS                          #
+    #                       EDITOR & GAMEPLAY TOOLS                        #
     # ==================================================================== #
     if map_screen.is_editor:
         ed_btns = [
@@ -218,7 +219,7 @@ def update_button_states(map_screen):
     map_screen.btn_close_info.visible = is_sel
 
     # ======================================================================== #
-    #                       PROVINCE INTERACTION LOGIC                         #
+    #                        PROVINCE INTERACTION LOGIC                        #
     # ======================================================================== #
     if is_sel:
         owner = map_screen.selected_province.get("owner", "Unclaimed")
@@ -365,4 +366,64 @@ def render_edit_country_buttons(edit_screen):
         Button(c.EDIT_COUNTRY_UI_X3 + 100, 600, "small", "orange", "Map Color", edit_screen.pick_map_color),
         Button(c.EDIT_COUNTRY_UI_X3 + 125, 80, "small_square", "purple", "Brush Color", edit_screen.pick_custom_brush_color, image=icons.get("star"), show_text=False),
         Button(c.EDIT_COUNTRY_UI_X3 + 175, 80, "small_square", "purple", "Null Color", lambda: edit_screen.set_color((0, 0, 0, 0)), image=icons.get("red_line"), show_text=False)
+    ])
+
+def render_settings_buttons(settings_screen):
+    """Renders the buttons and sliders for the Settings screen."""
+    back_key_name = pygame.key.name(settings_screen.controller.keybinds.get("BACK", pygame.K_ESCAPE)).upper()
+    back_btn_text = f"Back Key: {back_key_name}"
+    if settings_screen.listening_for == "BACK":
+        back_btn_text = "Press any key..."
+
+    orders_key_name = pygame.key.name(settings_screen.controller.keybinds.get("ORDERS", pygame.K_q)).upper()
+    orders_btn_text = f"Orders Key: {orders_key_name}"
+    if settings_screen.listening_for == "ORDERS":
+        orders_btn_text = "Press any key..."
+
+    settings_screen.elements = [
+        Button(50, 50, "small", "red", "Back", settings_screen.go_back),
+        Button("centered", 100, "medium", "blue", "Toggle Fullscreen", settings_screen.toggle_full),
+    ]
+
+    # --- MASTER AI TOGGLE BUTTON ---
+    # Reverted to the original Red/Green color shifting behavior
+    ai_is_on = settings_screen.ai_mode != "OFF"
+    toggle_color = "green" if ai_is_on else "red"
+    toggle_text = "AI: ON" if ai_is_on else "AI: OFF"
+    settings_screen.elements.append(Button(10, c.SCREEN_HEIGHT - 50, "small", toggle_color, toggle_text, settings_screen.toggle_ai_enabled))
+
+    # --- Only render the sub-options if AI is currently turned ON ---
+    if ai_is_on:
+        # AI Mode Toggles (Original base colors + yellow border when selected)
+        btn_gem = Button(120, c.SCREEN_HEIGHT - 150, "small", "blue", "AI: GEMINI", lambda: settings_screen.set_ai_mode("GEMINI"))
+        btn_gem.is_selected = (settings_screen.ai_mode == "GEMINI")
+        settings_screen.elements.append(btn_gem)
+
+        btn_oll = Button(120, c.SCREEN_HEIGHT - 200, "small", "blue", "AI: OLLAMA", lambda: settings_screen.set_ai_mode("OLLAMA"))
+        btn_oll.is_selected = (settings_screen.ai_mode == "OLLAMA")
+        settings_screen.elements.append(btn_oll)
+
+        # --- AI IMMERSION BUTTONS (Original base colors + yellow border when selected) ---
+        btn_lite = Button(10, c.SCREEN_HEIGHT - 150, "small", "red", "LITE AI", lambda: settings_screen.set_ai_immersion_level("LITE"))
+        btn_lite.is_selected = (settings_screen.ai_immersion_level == "LITE")
+        settings_screen.elements.append(btn_lite)
+
+        btn_full = Button(10, c.SCREEN_HEIGHT - 200, "small", "red", "FULL AI", lambda: settings_screen.set_ai_immersion_level("FULL"))
+        btn_full.is_selected = (settings_screen.ai_immersion_level == "FULL")
+        settings_screen.elements.append(btn_full)
+
+    # --- API KEY CLEAR BUTTON (Only if Gemini is selected) ---
+    if settings_screen.ai_mode == "GEMINI":
+        settings_screen.elements.append(Button(c.SETTINGS_API_BOX_X + c.SETTINGS_API_BOX_W + 20, c.SETTINGS_API_BOX_Y, "small", "red", "Clear", settings_screen.clear_api_key))
+
+    # Sliders
+    settings_screen.volume_slider = Slider(200, 320, 200, "Volume", settings_screen.volume, settings_screen.set_volume)
+    settings_screen.player_slider = Slider(200, 400, 200, f"Players: {settings_screen.num_players}", (settings_screen.num_players - 1) / 7.0, settings_screen.set_players)
+
+    settings_screen.elements.extend([
+        settings_screen.volume_slider,
+        settings_screen.player_slider,
+        Button("centered", 430, "large", "grey", back_btn_text, lambda: settings_screen.start_listening("BACK")),
+        Button("centered", 520, "large", "grey", orders_btn_text, lambda: settings_screen.start_listening("ORDERS")),
+        Button("centered", 610, "medium", "blue", "Reset Keybinds", settings_screen.reset_defaults)
     ])

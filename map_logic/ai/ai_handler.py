@@ -15,7 +15,7 @@ def get_api_key():
                 key = data.get("api_key", "")
                 if key: return key
         except: pass
-    return "AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o"
+    return ""
 
 def get_ai_mode():
     """Reads the settings config to see which AI is active."""

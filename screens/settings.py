@@ -1,11 +1,10 @@
 import pygame
 import ui_elements
 from gameState import GameState
-from ui_elements import Button, Slider
 from data.io import keybind_io
-import tkinter as tk
-from tkinter import simpledialog
 import data.constants as c
+from ui import buttons
+from map_logic.rendering.font_manager import fonts
 
 class Settings(GameState):
     def __init__(self, controller):
@@ -21,8 +20,14 @@ class Settings(GameState):
         self.ai_immersion_level = getattr(self.controller, 'ai_immersion_level', 'FULL')
         self.ai_modes = ["OFF", "GEMINI", "OLLAMA"]
         
+        # Remember the last active AI mode so we can toggle back to it from OFF
+        self.last_ai_mode = self.ai_mode if self.ai_mode != "OFF" else "GEMINI"
+        
         self.fullscreen = False
         self.listening_for = None
+
+        self.api_input_active = False
+        self.api_key_text = getattr(self.controller, 'api_key', '')
 
         self.refresh_ui()
 
@@ -35,18 +40,6 @@ class Settings(GameState):
     def set_ai_mode(self, mode):
         self.ai_mode = mode
         self.controller.ai_mode = mode
-        
-        # Open a text prompt if Gemini is selected
-        if mode == "GEMINI":
-            root = tk.Tk()
-            root.withdraw()
-            root.attributes("-topmost", True)
-            new_key = simpledialog.askstring("API Key", "Paste your custom Gemini API Key\n(Leave blank to keep current):")
-            if new_key:
-                self.controller.api_key = new_key
-            root.destroy()
-            pygame.event.pump() # Clear ghost clicks
-
         self.refresh_ui()
 
     def set_ai_immersion_level(self, level):
@@ -54,57 +47,20 @@ class Settings(GameState):
         self.controller.ai_immersion_level = level
         self.refresh_ui()
 
+    def clear_api_key(self):
+        self.api_key_text = ""
+        self.controller.api_key = ""
+
     def refresh_ui(self):
-        back_key_name = pygame.key.name(self.controller.keybinds.get("BACK", pygame.K_ESCAPE)).upper()
-        back_btn_text = f"Back Key: {back_key_name}"
-        if self.listening_for == "BACK":
-            back_btn_text = "Press any key..."
+        buttons.render_settings_buttons(self)
 
-        orders_key_name = pygame.key.name(self.controller.keybinds.get("ORDERS", pygame.K_q)).upper()
-        orders_btn_text = f"Orders Key: {orders_key_name}"
-        if self.listening_for == "ORDERS":
-            orders_btn_text = "Press any key..."
-    
-        self.elements = [
-            Button(50, 50, "small", "red", "Back", self.go_back),
-            Button("centered", 100, "medium", "blue", "Toggle Fullscreen", self.toggle_full),
-        ]
-        
-        # --- NEW VERTICAL AI BUTTONS ---
-        c_off = "green" if self.ai_mode == "OFF" else "grey"
-        self.elements.append(Button("centered", 180, "medium", c_off, "AI: OFF", lambda: self.set_ai_mode("OFF")))
-        
-        c_gem = "green" if self.ai_mode == "GEMINI" else "grey"
-        self.elements.append(Button("centered", 240, "medium", c_gem, "AI: GEMINI", lambda: self.set_ai_mode("GEMINI")))
-        
-        c_oll = "green" if self.ai_mode == "OLLAMA" else "grey"
-        self.elements.append(Button("centered", 300, "medium", c_oll, "AI: OLLAMA", lambda: self.set_ai_mode("OLLAMA")))
-
-        # --- AI IMMERSION BUTTONS ---
-        c_lite = "green" if self.ai_immersion_level == "LITE" else "grey"
-        self.elements.append(Button((c.SCREEN_WIDTH/2) + 150, 210, "medium", c_lite, "LITE AI", lambda: self.set_ai_immersion_level("LITE")))
-
-        c_full = "green" if self.ai_immersion_level == "FULL" else "grey"
-        self.elements.append(Button((c.SCREEN_WIDTH/2) + 150, 270, "medium", c_full, "FULL AI", lambda: self.set_ai_immersion_level("FULL")))
-
-        # Store explicit references to the sliders instead of trusting indices
-        self.volume_slider = Slider(200, 420, 200, "Volume", self.volume, self.set_volume)
-        self.player_slider = Slider(200, 500, 200, f"Players: {self.num_players}", (self.num_players - 1) / 7.0, self.set_players)
-
-        # Adjust the Y positions of the remaining elements slightly lower
-        self.elements.extend([
-            self.volume_slider,
-            self.player_slider,
-            Button("centered", 430, "large", "grey", back_btn_text, lambda: self.start_listening("BACK")),
-            Button("centered", 520, "large", "grey", orders_btn_text, lambda: self.start_listening("ORDERS")),
-            Button("centered", 610, "medium", "blue", "Reset Keybinds", self.reset_defaults)
-        ])
-
-    def toggle_ai(self):
-        idx = self.ai_modes.index(self.ai_mode)
-        self.ai_mode = self.ai_modes[(idx + 1) % len(self.ai_modes)]
-        self.controller.ai_mode = self.ai_mode
-        self.refresh_ui()
+    # Replaces the old cycle toggle with a strict ON/OFF toggle
+    def toggle_ai_enabled(self):
+        if self.ai_mode == "OFF":
+            self.set_ai_mode(self.last_ai_mode)
+        else:
+            self.last_ai_mode = self.ai_mode
+            self.set_ai_mode("OFF")
 
     def start_listening(self, action):
         self.listening_for = action
@@ -119,12 +75,64 @@ class Settings(GameState):
         keybind_io.save_settings(default_keys, self.volume, self.num_players, self.ai_mode, api_key, immersion)
         self.refresh_ui()
         
+    def handle_events(self, events):
+        # Override to catch clicks on the API box before the elements get them
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                # Only check for API box collision if Gemini is currently active
+                if self.ai_mode == "GEMINI":
+                    mx, my = event.pos
+                    api_rect = pygame.Rect(c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y, c.SETTINGS_API_BOX_W, c.SETTINGS_API_BOX_H)
+                    if api_rect.collidepoint(mx, my):
+                        self.api_input_active = True
+                    else:
+                        self.api_input_active = False
+                else:
+                    self.api_input_active = False
+
+            # Pass down to elements
+            for el in self.elements:
+                el.handle_event(event)
+
+            self.additional_events(event)
+
     def additional_events(self, event):
         if self.listening_for and event.type == pygame.KEYDOWN:
             self.controller.keybinds[self.listening_for] = event.key
             keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, getattr(self.controller, 'api_key', ''), getattr(self.controller, 'ai_immersion_level', 'FULL'))
             self.listening_for = None
             self.refresh_ui()
+
+        # Only process keyboard input for the API box if Gemini is active
+        elif getattr(self, "api_input_active", False) and self.ai_mode == "GEMINI":
+            self.api_key_text, status = ui_elements.process_text_input(
+                event, self.api_key_text, max_length=150
+            )
+            self.controller.api_key = self.api_key_text.strip()
+
+    def additional_draw(self, surface):
+        # Draw API Box ONLY if Gemini is active
+        if self.ai_mode == "GEMINI":
+            font = fonts.get("normal")
+
+            label_surf = font.render("Gemini API Key (Required for Gemini Mode):", True, (200, 200, 200))
+            surface.blit(label_surf, (c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y - 25))
+
+            api_rect = pygame.Rect(c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y, c.SETTINGS_API_BOX_W, c.SETTINGS_API_BOX_H)
+            bg_color = (60, 60, 80) if self.api_input_active else (20, 20, 30)
+            pygame.draw.rect(surface, bg_color, api_rect)
+            pygame.draw.rect(surface, (150, 150, 150), api_rect, 1)
+
+            display_text = self.api_key_text
+            if self.api_input_active:
+                display_text += "|"
+
+            txt_surf = font.render(display_text, True, (255, 255, 255))
+            
+            # Simple clipping in case the key exceeds the box visually
+            surface.set_clip(api_rect.inflate(-10, -10))
+            surface.blit(txt_surf, (api_rect.x + 5, api_rect.y + 10))
+            surface.set_clip(None)
 
     def set_players(self, val):
         self.num_players = 1 + int(val * 7)
@@ -139,7 +147,7 @@ class Settings(GameState):
         immersion_to_save = getattr(self.controller, 'ai_immersion_level', 'FULL')
         keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, api_key_to_save, immersion_to_save)
         
-        self.next_state = getattr(self, 'return_state', 'MENU') # <--- Use the tracked state instead of hardcoding "MENU"
+        self.next_state = getattr(self, 'return_state', 'MENU')
         self.done = True
 
     def handle_back_key(self):

@@ -124,7 +124,7 @@ def call_ollama(system_prompt, user_prompt):
         print(f"Ollama Python Error: {e}")
         return None
 
-def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type):
+def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg=""):
     mode = get_ai_mode()
     immersion = get_ai_immersion_level()
     
@@ -171,6 +171,10 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
             action_context = f"{sender_nation} has broken their alliance with us!"
         elif action_type == "KICK_FACTION_MEMBER":
             action_context = f"{sender_nation} has expelled us from the faction!"
+        
+        # FIX: Append the custom message to the context so the AI can actually read it
+        if custom_msg:
+            action_context += f" They included this official message: '{custom_msg}'"
             
         system_prompt = (
             "You are an AI playing a grand strategy game. You act as the leader of your nation. "
@@ -269,10 +273,20 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
         reply_json = json.loads(response.text)
+        
+        # Add this guardrail right after loading the JSON:
+        ai_action = reply_json.get("action", "NONE")
+        act_target = reply_json.get("action_target", "NONE")
+        if ai_action == "WAR_DECLARATION":
+            from data import queries
+            if queries.are_at_war(ai_nation, act_target, nation_data):
+                print(f"[AI GUARDRAIL] Prevented {ai_nation} from declaring war on existing enemy {act_target}.")
+                ai_action = "NONE"
+
         return {
             "message": reply_json.get("message", c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
-            "action": reply_json.get("action", "NONE"),
-            "action_target": reply_json.get("action_target", "NONE"),
+            "action": ai_action,
+            "action_target": act_target,
             "follow_up_action": reply_json.get("follow_up_action", "NONE"),
             "follow_up_target": reply_json.get("follow_up_target", "NONE")
         }

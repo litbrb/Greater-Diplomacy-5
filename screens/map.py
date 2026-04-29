@@ -476,6 +476,14 @@ class Map(GameState):
 
     def additional_draw(self, surface): 
         map_renderer.draw_map_screen(self, surface)
+
+    # ADD THIS NEW FUNCTION RIGHT HERE
+    def draw(self, surface):
+        # 1. Call the base GameState draw (this draws the map, UI panels, AND buttons)
+        super().draw(surface)
+        
+        # 2. Draw the notification badges on the absolute top layer
+        map_renderer.draw_badges(self, surface)
     
     def refresh_nation_data(self):
         from data.io import country_io

@@ -379,6 +379,16 @@ def is_diplomat_busy(sender, target, nation_data):
         return True
     return False
 
+def get_unread_message_count(nation, nation_data):
+    """Returns the total number of unread messages for a nation."""
+    inbox = nation_data.get(nation, {}).get("inbox", [])
+    return sum(1 for msg in inbox if not msg.get("read", False))
+
+def has_free_research_slots(nation, nation_data):
+    """Returns True if the nation is researching fewer than 2 techs."""
+    queue = nation_data.get(nation, {}).get("research_queue", [])
+    return len(queue) < 2
+
 # ==========================================
 # STRING & UNIT QUERIES
 # ==========================================

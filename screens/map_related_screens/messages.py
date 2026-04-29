@@ -1,227 +1,180 @@
+# --- IN screens/map_related_screens/messages.py ---
 import pygame
 from gameState import GameState
 import data.constants as c
-from ui_elements import Button
+from ui_elements import Button, process_text_input
 from map_logic.rendering.font_manager import fonts
 from map_logic.diplomacy import diplomacy_logic
 from data import queries
-from ui_elements import Button, process_text_input
 
 class Messages_Screen(GameState):
     def __init__(self):
         super().__init__()
-        self.bg_color = (25, 25, 35)
+        self.bg_color = c.MSG_BG_DARK
         self.map_screen = None
-        self.active_tab = "INBOX" # INBOX or COMPOSE
         self.selected_recipient = None
         self.compose_text = ""
         self.scroll_y = 0
+        self.contact_scroll_y = 0
 
     def start_messages(self, map_ref):
         self.map_screen = map_ref
-        self.active_tab = "INBOX"
+        self.selected_recipient = None
         self.compose_text = ""
         self.scroll_y = 0
-        self.refresh_ui()
-
-    def set_tab(self, tab):
-        self.active_tab = tab
-        self.scroll_y = 0
+        self.contact_scroll_y = 0
         self.refresh_ui()
 
     def select_recipient(self, target):
         self.selected_recipient = target
-        
-        # --- NEW: Use clean draft check ---
+        self.scroll_y = 0  # Reset scroll for new chat history
+        # Mark all messages from this target as read
+        p_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+        for msg in p_data.get("inbox", []):
+            if msg.get("sender") == target:
+                msg["read"] = True
+                
+        # Load any existing draft
         self.compose_text = queries.get_message_draft(self.map_screen.player_country, target, self.map_screen.nation_data)
         self.refresh_ui()
 
     def send_message(self):
         if self.selected_recipient and self.compose_text.strip():
             msg = diplomacy_logic.queue_text_message(self.map_screen.nation_data, self.map_screen.player_country, self.selected_recipient, self.compose_text)
+            self.compose_text = "" # Clear box instantly on send
             self.map_screen.show_feedback(msg)
-            self.refresh_ui() # Stay on compose tab so they can see it saved
-        else:
-            self.map_screen.show_feedback("Message cannot be empty!")
-
-    def clear_draft(self):
-        if self.selected_recipient:
-            msg = diplomacy_logic.cancel_text_message(self.map_screen.nation_data, self.map_screen.player_country, self.selected_recipient)
-            self.map_screen.show_feedback(msg)
-            self.compose_text = ""
             self.refresh_ui()
 
     def additional_events(self, event):
-        if self.active_tab == "COMPOSE" and self.selected_recipient:
-            locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
-            
-            if not locked:
-                self.compose_text, status = process_text_input(event, self.compose_text, max_length=70)
-                if status == "SUBMIT":
-                    self.send_message()
-                        
-        elif self.active_tab == "INBOX":
-            if event.type == pygame.MOUSEWHEEL:
+        # Determine which pane we are scrolling in based on mouse X
+        mx, my = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEWHEEL:
+            if mx < c.MSG_LEFT_PANE_W:
+                self.contact_scroll_y = min(0, self.contact_scroll_y + event.y * 30)
+            else:
                 self.scroll_y = min(0, self.scroll_y + event.y * 30)
 
+        # Text Input Logic
+        if self.selected_recipient:
+            locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
+            if not locked:
+                self.compose_text, status = process_text_input(event, self.compose_text, max_length=150)
+                if status == "SUBMIT":
+                    self.send_message()
+
+    def refresh_ui(self):
+        self.elements = [Button(20, 20, "small", "red", "Exit", self.exit_to_map)]
+        if not self.map_screen: return
+        
+        # Populate Contact List Buttons
+        active_nations = set([prov.get("owner") for prov in self.map_screen.map_data.values() if prov.get("owner") not in c.UNPLAYABLE_NATIONS])
+        playable = [country for country, d in self.map_screen.nation_data.items() if d.get("is_playable") and country != self.map_screen.player_country and country in active_nations]
+        playable.sort()
+
+        y_off = 80 + self.contact_scroll_y
+        for country in playable:
+            color = "green" if self.selected_recipient == country else "grey"
+            
+            # Check for unread messages specifically from this contact
+            p_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+            unread = sum(1 for m in p_data.get("inbox", []) if m.get("sender") == country and not m.get("read", False))
+            
+            display_text = f"{country} ({unread})" if unread > 0 else country
+            if unread > 0 and self.selected_recipient != country:
+                color = "red" # Highlight contacts with unread messages
+
+            btn = Button(20, y_off, "medium", color, display_text, lambda c_name=country: self.select_recipient(c_name))
+            self.elements.append(btn)
+            y_off += 60
+
+        # Send Button in the Input Area
+        if self.selected_recipient:
+            locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
+            btn_x = c.SCREEN_WIDTH - 150
+            btn_y = c.SCREEN_HEIGHT - c.MSG_INPUT_H + 15
+            if locked:
+                self.elements.append(Button(btn_x, btn_y, "small", "grey", "Diplomat Busy", lambda: None))
+            else:
+                self.elements.append(Button(btn_x, btn_y, "small", "blue", "Send", self.send_message))
+
     def additional_draw(self, surface):
-        font_title = fonts.get("heading1")
+        if not self.map_screen: return
         font_med = fonts.get("heading2")
         font_small = fonts.get("normal")
 
-        if self.active_tab == "INBOX":
-            title = font_title.render("INBOX", True, (255, 255, 255))
-            surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
+        # --- LEFT PANE: Contacts Background ---
+        left_pane_rect = pygame.Rect(0, 0, c.MSG_LEFT_PANE_W, c.SCREEN_HEIGHT)
+        pygame.draw.rect(surface, c.MSG_BG_LIGHT, left_pane_rect)
+        pygame.draw.line(surface, (100, 100, 100), (c.MSG_LEFT_PANE_W, 0), (c.MSG_LEFT_PANE_W, c.SCREEN_HEIGHT), 2)
 
-            p_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
-            inbox = p_data.get("inbox", [])
+        # --- RIGHT PANE: Chat History ---
+        if not self.selected_recipient:
+            txt = font_med.render("Select a nation to view communications.", True, (150, 150, 150))
+            surface.blit(txt, (c.MSG_LEFT_PANE_W + 50, c.SCREEN_HEIGHT // 2))
+            return
 
-            if not inbox:
-                txt = font_med.render("No messages.", True, (150, 150, 150))
-                surface.blit(txt, (50, 100))
+        p_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+        inbox = p_data.get("inbox", [])
+        
+        # Filter thread and reverse to draw bottom-to-top (newest at bottom)
+        thread = [m for m in inbox if m.get("sender") == self.selected_recipient or m.get("sender") == f"To: {self.selected_recipient}"]
+        
+        # Draw Input Box Background
+        input_rect = pygame.Rect(c.MSG_LEFT_PANE_W, c.SCREEN_HEIGHT - c.MSG_INPUT_H, c.SCREEN_WIDTH - c.MSG_LEFT_PANE_W, c.MSG_INPUT_H)
+        pygame.draw.rect(surface, c.MSG_BG_LIGHT, input_rect)
+        pygame.draw.line(surface, (100, 100, 100), (c.MSG_LEFT_PANE_W, input_rect.y), (c.SCREEN_WIDTH, input_rect.y), 2)
+
+        # Draw Current Draft Text
+        txt_surf = font_small.render(self.compose_text + "|", True, (255, 255, 255))
+        surface.blit(txt_surf, (input_rect.x + 20, input_rect.y + 30))
+
+        # Render Messages (Bottom to Top)
+        current_y = input_rect.y - 20 + self.scroll_y
+        
+        for msg in thread:
+            is_player = msg['sender'].startswith("To: ")
+            
+            # Word Wrap Logic
+            words = msg['content'].split(" ")
+            lines, current_line = [], ""
+            max_width = int((c.SCREEN_WIDTH - c.MSG_LEFT_PANE_W) * 0.6) # Max 60% of chat width
+            
+            for word in words:
+                test_line = current_line + word + " "
+                if font_small.size(test_line)[0] < max_width:
+                    current_line = test_line
+                else:
+                    lines.append(current_line)
+                    current_line = word + " "
+            if current_line: lines.append(current_line)
+
+            box_height = 20 + (len(lines) * 20)
+            box_width = max([font_small.size(l)[0] for l in lines] + [100]) + 30
+            
+            current_y -= box_height
+            
+            if current_y + box_height < 0:
+                continue # Cull messages off-screen above
+
+            # Align right if player, left if AI
+            if is_player:
+                box_x = c.SCREEN_WIDTH - box_width - 30
+                color = c.MSG_BUBBLE_PLAYER
             else:
-                y_pos = 100 + self.scroll_y
-                for msg in inbox:
-                    # 1. Calculate word wrapping
-                    words = msg['content'].split(" ")
-                    lines = []
-                    current_line = ""
-                    max_width = (c.SCREEN_WIDTH - 100) - 40 # 40 for text padding
-                    
-                    for word in words:
-                        test_line = current_line + word + " "
-                        if font_small.size(test_line)[0] < max_width:
-                            current_line = test_line
-                        else:
-                            lines.append(current_line)
-                            current_line = word + " "
-                    if current_line:
-                        lines.append(current_line)
+                box_x = c.MSG_LEFT_PANE_W + 30
+                color = c.MSG_BUBBLE_AI
 
-                    # 2. Calculate dynamic box height based on number of lines
-                    box_height = 45 + (len(lines) * 20) + 15
-                    box_height = max(80, box_height) # Ensure it's at least 80px tall
-
-                    # 3. Draw if it's on screen
-                    if y_pos + box_height > 80 and y_pos < c.SCREEN_HEIGHT:
-                        rect = pygame.Rect(50, y_pos, c.SCREEN_WIDTH - 100, box_height)
-                        pygame.draw.rect(surface, (40, 40, 50), rect)
-                        pygame.draw.rect(surface, (100, 100, 200), rect, 2)
-
-                        if msg['sender'].startswith("To: "):
-                            sender_txt = font_med.render(msg['sender'], True, (150, 255, 150))
-                        else:
-                            sender_txt = font_med.render(f"From: {msg['sender']}", True, (200, 200, 255))
-
-                        surface.blit(sender_txt, (rect.x + 20, rect.y + 10))
-                        
-                        # 4. Render each line of text
-                        ly = rect.y + 45
-                        for l in lines:
-                            surface.blit(font_small.render(l, True, (255, 255, 255)), (rect.x + 20, ly))
-                            ly += 20
-                            
-                    # Move down for the next message box
-                    y_pos += box_height + 20
-
-        elif self.active_tab == "COMPOSE":
-            title = font_title.render("COMPOSE MESSAGE", True, (255, 255, 255))
-            surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
-
-            if self.selected_recipient:
-                # --- NEW: Use clean status check ---
-                action, turns = queries.get_diplomatic_status(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
-
-                is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION"]
-                if is_unilateral and turns > 0:
-                    action = ""
-                    turns = 0
-
-                # Dynamic Status Logic
-                status_text = "Drafting new message to:"
-                if turns > 0:
-                    status_text = "Awaiting response from:"
-                elif isinstance(action, str) and action.startswith("MSG:"):
-                    status_text = "Editing queued message to:"
-                elif isinstance(action, str) and action:
-                    status_text = "Diplomat already deployed to:"
-
-                prompt = font_med.render(f"{status_text} {self.selected_recipient}", True, (200, 255, 200))
-                surface.blit(prompt, (50, c.SCREEN_HEIGHT - 180))
-
-                # Hide text input if locked
-                if turns == 0 and not (isinstance(action, str) and action and not action.startswith("MSG:")):
-                    input_rect = pygame.Rect(50, c.SCREEN_HEIGHT - 140, c.SCREEN_WIDTH - 480, 60)
-                    pygame.draw.rect(surface, (20, 20, 20), input_rect)
-                    pygame.draw.rect(surface, (255, 255, 255), input_rect, 2)
-
-                    txt_surf = font_med.render(self.compose_text + "|", True, (255, 255, 255))
-                    surface.blit(txt_surf, (input_rect.x + 10, input_rect.y + 15))
-
-    # --- UI Elements Refresh Update ---
-    # Put this at the end of the file to override the default refresh_ui rendering
-    def refresh_ui(self):
-        self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
-
-        self.elements.append(Button(200, 20, "medium", "blue" if self.active_tab == "INBOX" else "grey", "Inbox", lambda: self.set_tab("INBOX")))
-        self.elements.append(Button(420, 20, "medium", "blue" if self.active_tab == "COMPOSE" else "grey", "Compose", lambda: self.set_tab("COMPOSE")))
-
-        if self.active_tab == "COMPOSE":
-            y_off = 100
+            # Draw Bubble
+            bubble_rect = pygame.Rect(box_x, current_y, box_width, box_height)
+            pygame.draw.rect(surface, color, bubble_rect, border_radius=10)
             
-            # Scan map for living nations
-            active_nations = set()
-            for prov in self.map_screen.map_data.values():
-                owner = prov.get("owner")
-                if owner and owner not in c.UNPLAYABLE_NATIONS:
-                    active_nations.add(owner)
-            
-            playable = [country for country, d in self.map_screen.nation_data.items() 
-                        if d.get("is_playable") and country != self.map_screen.player_country and country in active_nations]
-            
-            playable.sort()
-            
-            # Grab player data once to check for pending messages
-            player_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
-            
-            for i, country in enumerate(playable):
-                x_off = 50 + (i % 5) * 220
-                row_y = y_off + (i // 5) * 60
+            # Draw Text
+            ly = current_y + 10
+            for l in lines:
+                surface.blit(font_small.render(l, True, (255, 255, 255)), (box_x + 15, ly))
+                ly += 20
                 
-                # Check for pending messages to this country
-                pending = player_data.get("pending_diplomacy", {}).get(country, {})
-                action = pending.get("action", "") if isinstance(pending, dict) else pending
-                
-                if self.selected_recipient == country:
-                    color = "green"
-                elif isinstance(action, str) and action.startswith("MSG:"):
-                    color = "green"
-                else:
-                    color = "grey"
-                    
-                self.elements.append(Button(x_off, row_y, "medium", color, country, lambda c_name=country: self.select_recipient(c_name)))
-
-            # DYNAMIC DRAFT BUTTONS
-            if self.selected_recipient:
-                player_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
-                pending = player_data.get("pending_diplomacy", {}).get(self.selected_recipient, {})
-                action = pending.get("action", "") if isinstance(pending, dict) else pending
-                turns = pending.get("turns", 0) if isinstance(pending, dict) else 0
-
-                is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION"]
-                if is_unilateral and turns > 0:
-                    action = ""
-                    turns = 0
-
-                if turns > 0:
-                    self.elements.append(Button(c.SCREEN_WIDTH - 300, c.SCREEN_HEIGHT - 80, "large", "grey", "Message in Transit", lambda: None))
-                elif isinstance(action, str) and action.startswith("MSG:"):
-                    self.elements.append(Button(c.SCREEN_WIDTH - 420, c.SCREEN_HEIGHT - 80, "medium", "orange", "Update Draft", self.send_message))
-                    self.elements.append(Button(c.SCREEN_WIDTH - 200, c.SCREEN_HEIGHT - 80, "medium", "red", "Clear Draft", self.clear_draft))
-                elif isinstance(action, str) and action:
-                    self.elements.append(Button(c.SCREEN_WIDTH - 300, c.SCREEN_HEIGHT - 80, "large", "grey", "Diplomat Busy", lambda: None))
-                else:
-                    self.elements.append(Button(c.SCREEN_WIDTH - 250, c.SCREEN_HEIGHT - 80, "medium", "orange", "Queue Message", self.send_message))
+            current_y -= 15 # Padding between messages
 
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True

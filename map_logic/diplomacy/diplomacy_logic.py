@@ -189,13 +189,17 @@ def process_diplomacy_turn(self):
 
             action = info.get("action", "")
             turns = info.get("turns", 0)
+            
+            # ---> ADD THIS LINE RIGHT HERE <---
+            custom_msg = info.get("message", "")
 
             # EVERY ACTION NOW EVALUATES ON TURN 1
             if turns == 1:
                 is_human_target = target in getattr(self, 'active_players', [])
                 if not is_human_target:
                     if action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
-                        ai_tasks.append({"sender": country_name, "target": target, "action": action})
+                        # FIX: Pass the custom message into the task dictionary
+                        ai_tasks.append({"sender": country_name, "target": target, "action": action, "content": custom_msg})
                     elif action.startswith("MSG:"):
                         ai_tasks.append({"sender": country_name, "target": target, "action": "CUSTOM_MSG", "content": action[4:]})
 
@@ -222,12 +226,14 @@ def process_diplomacy_turn(self):
             pygame.display.flip()
 
         import concurrent.futures
-        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        # FIX: Blast the max_workers open so if the user targets 20 countries, it hits 20 threads.
+        with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
             futures = {}
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
                 if task["action"] in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "LEAVE_FACTION", "DISBAND_FACTION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
-                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"])
+                    # FIX: Pass task["content"] to evaluate_diplomatic_proposal
+                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""))
                     futures[future] = task
                 elif task["action"] == "CUSTOM_MSG":
                     future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"])
@@ -265,9 +271,10 @@ def process_diplomacy_turn(self):
                 
                 elif action == "JOIN_WARS":
                     if not queries.are_in_same_faction(country_name, target, self.nation_data):
-                        finalize_war(self.nation_data, country_name, target)
-                        log_global_event(self.nation_data, f"WAR DECLARED: {country_name} has declared war on {target}!")
-                        msg_text = "We have declared WAR upon you!"
+                        msg_text = "We wanted to join your wars, but our lack of formal alliance prevents it."
+                        # Do NOT call finalize_war here!
+                        # TODO: if the ai tries to do this can it be reinterpreted as a regular declaration of war on someone else maybe
+                        # actually wait does join wars join multiple wars?
                     else:
                         join_faction_wars(self.nation_data, country_name, target)
                         log_global_event(self.nation_data, f"ESCALATION: {country_name} has joined the wars of {target}!")

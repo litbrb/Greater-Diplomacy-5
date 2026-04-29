@@ -12,10 +12,10 @@ def render_buttons(self):
     # ==================================================================== #
     #                          MAP VIEW TOGGLES                            #
     # ==================================================================== #
-    self.btn_refresh_pol = Button(c.SCREEN_WIDTH - 520, c.TOP_BAR_UI_CENTER_Y, "small", "grey", "Pol Refresh", self.refresh_political_map)
-    self.btn_refresh_rel = Button(c.SCREEN_WIDTH - 420, c.TOP_BAR_UI_CENTER_Y, "small", "grey", "Rel Refresh", self.refresh_relations_map)
-    self.btn_refresh_core = Button(c.SCREEN_WIDTH - 320, c.TOP_BAR_UI_CENTER_Y, "small", "grey", "Core Refresh", self.refresh_cores_map)
-    self.btn_refresh_fac = Button(c.SCREEN_WIDTH - 220, c.TOP_BAR_UI_CENTER_Y, "small", "grey", "Fac Refresh", self.refresh_factions_map)
+    self.btn_refresh_pol = Button(c.SCREEN_WIDTH - 520, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Pol Ref", self.refresh_political_map)
+    self.btn_refresh_rel = Button(c.SCREEN_WIDTH - 420, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Rel Ref", self.refresh_relations_map)
+    self.btn_refresh_core = Button(c.SCREEN_WIDTH - 320, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Core Ref", self.refresh_cores_map)
+    self.btn_refresh_fac = Button(c.SCREEN_WIDTH - 220, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Fac Ref", self.refresh_factions_map)
 
     self.btn_view_terrain = Button(c.VIEW_BTN_START_X, c.VIEW_BTN_ROW1_Y, "small_square", "green", "Terrain", self.set_terrain, image=icons.get("terrain"), show_text=False)
     self.btn_view_political = Button(c.VIEW_BTN_START_X + c.VIEW_BTN_STEP_X, c.VIEW_BTN_ROW1_Y, "small_square", "green", "Political", self.set_political, image=icons.get("political"), show_text=False)

@@ -75,6 +75,7 @@ class Controller:
             "circle": symbol_loader.get_symbol("Circle", 1.5),
             "triangle": symbol_loader.get_symbol("Triangle", 1.5),
             "line": symbol_loader.get_symbol("Line", 1.5),
+            "paper": symbol_loader.get_symbol("Paper", 3),
             "economy(the_economy_of_a_country_to_be_unusually_specific)": symbol_loader.get_symbol("Money", 0.5)
         }
 

@@ -181,9 +181,6 @@ KEY_REPEAT_INTERVAL = 40
 OBSOLESCENCE_RULES = {
     "WW1 Armored Car": ["armored_car"],
     "WW1 Tank": ["medium_tank", "heavy_tank"],
-    "Carrack": ["ironclad"],
-    "Ironclad": ["pre-dreadnought"],
-    "Pre-Dreadnought": ["dreadnought"]
 }
 
 # ==========================================

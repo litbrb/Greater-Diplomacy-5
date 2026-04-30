@@ -130,7 +130,6 @@ def randomize_all_provinces(map_screen, settings):
         with open(template_path, "r") as f:
             struct = json.load(f)
             res_template = {tech: 0 for tech in struct.keys()}
-            if "carrack" in res_template: res_template["carrack"] = 1
             if "infantry_type" in res_template: res_template["infantry_type"] = 1
             if "cavalry" in res_template: res_template["cavalry"] = 1
 

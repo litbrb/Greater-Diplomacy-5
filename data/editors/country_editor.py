@@ -89,14 +89,13 @@ class CountryEditor:
             res_dict = {tech: 0 for tech in struct.keys()}
             
             # The basics that you start natively with
-            if "carrack" in res_dict: res_dict["carrack"] = 1
             if "infantry_type" in res_dict: res_dict["infantry_type"] = 1
             if "cavalry" in res_dict: res_dict["cavalry"] = 1
                 
             return res_dict
             
-        # Hardcoded fallback including carrack
-        return {"infantry_type": 1, "cavalry": 1, "carrack": 1}
+        # Hardcoded fallback
+        return {"infantry_type": 1, "cavalry": 1}
 
     def bulk_reset_template(self):
         """Synchronizes all countries to have every tech defined in the template."""

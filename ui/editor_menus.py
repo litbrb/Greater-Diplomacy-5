@@ -699,7 +699,6 @@ def open_map_research_editor(self):
             fresh_template = {tech: (1800 if data["max_lvl"] == 9999 else 0) for tech, data in struct.items()}
             
             # --- Initialize base tech ---
-            if "carrack" in fresh_template: fresh_template["carrack"] = 1
             if "infantry_type" in fresh_template: fresh_template["infantry_type"] = 1
             if "cavalry" in fresh_template: fresh_template["cavalry"] = 1
 

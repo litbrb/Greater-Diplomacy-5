@@ -48,7 +48,7 @@ class Research_Screen(GameState):
             "medium_tank": 450, "main_battle_tank": 450,
             "heavy_tank": 550,
             "destroyer": 250,
-            "carrack": 350, "ironclad": 350, "pre-dreadnaught": 350, "dreadnaught": 350,
+            "dreadnaught": 350,
             "aircraft_carrier": 450,
             "workshop": 250, "basic_factory": 250, "factory": 250,
             "bergius_process": 400, "synthetic_fuel_experiments": 400, "fuel_refining": 400
@@ -111,9 +111,6 @@ class Research_Screen(GameState):
         if tech_key == "civilian_car": return "Civilian Car"
         if tech_key == "ww1_armored_car": return "WW1 Armored Car"
         if tech_key == "ww1_tank": return "WW1 Tank"
-        if tech_key == "carrack": return "Carrack"
-        if tech_key == "ironclad": return "Ironclad"
-        if tech_key == "pre-dreadnaught": return "Pre-Dreadnought"
         if tech_key == "dreadnaught": return "Dreadnought"
         if tech_key == "bergius_process": return "Bergius Process"
         if tech_key == "synthetic_fuel_experiments": return "Synthetic Fuel Experiments"

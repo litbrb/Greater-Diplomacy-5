@@ -153,7 +153,7 @@ class Settings(GameState):
         font = fonts.get("normal")
         
         if self.ai_mode == "GEMINI":
-            label_surf = font.render("Gemini API Key (Required for Gemini Mode):", True, (200, 200, 200))
+            label_surf = font.render("Paste Gemini API Key:", True, (200, 200, 200))
             surface.blit(label_surf, (c.SETTINGS_GEMINI_BOX_X, c.SETTINGS_GEMINI_BOX_Y - 25))
 
             gemini_rect = pygame.Rect(c.SETTINGS_GEMINI_BOX_X, c.SETTINGS_GEMINI_BOX_Y, c.SETTINGS_GEMINI_BOX_W, c.SETTINGS_GEMINI_BOX_H)
@@ -187,7 +187,7 @@ class Settings(GameState):
             surface.set_clip(None)
             
         elif self.ai_mode == "CHATGPT":
-            label_surf = font.render("ChatGPT API Key:", True, (200, 200, 200))
+            label_surf = font.render("Paste ChatGPT API Key:", True, (200, 200, 200))
             surface.blit(label_surf, (c.SETTINGS_CHATGPT_BOX_X, c.SETTINGS_CHATGPT_BOX_Y - 25))
 
             gpt_rect = pygame.Rect(c.SETTINGS_CHATGPT_BOX_X, c.SETTINGS_CHATGPT_BOX_Y, c.SETTINGS_CHATGPT_BOX_W, c.SETTINGS_CHATGPT_BOX_H)
@@ -204,7 +204,7 @@ class Settings(GameState):
             surface.set_clip(None)
             
         elif self.ai_mode == "CLAUDE":
-            label_surf = font.render("Claude API Key:", True, (200, 200, 200))
+            label_surf = font.render("Paste Claude API Key:", True, (200, 200, 200))
             surface.blit(label_surf, (c.SETTINGS_CLAUDE_BOX_X, c.SETTINGS_CLAUDE_BOX_Y - 25))
 
             claude_rect = pygame.Rect(c.SETTINGS_CLAUDE_BOX_X, c.SETTINGS_CLAUDE_BOX_Y, c.SETTINGS_CLAUDE_BOX_W, c.SETTINGS_CLAUDE_BOX_H)

@@ -3,10 +3,12 @@
         "BACK": "escape",
         "ORDERS": "q"
     },
-    "volume": 0.2,
+    "volume": 0.205,
     "num_players": 1,
-    "ai_mode": "OLLAMA",
+    "ai_mode": "OFF",
     "gemini_api_key": "AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o",
-    "ai_immersion_level": "LITE",
+    "chatgpt_api_key": "",
+    "claude_api_key": "",
+    "ai_immersion_level": "FULL",
     "ollama_model": "llama3"
 }

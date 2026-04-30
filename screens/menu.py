@@ -1,12 +1,14 @@
 import ui_elements
 from gameState import GameState
 from ui_elements import Button
+import data.constants as c
 
 class Menu(GameState):
     def __init__(self):
         super().__init__()
         self.bg_color = (10, 10, 40) # Midnight Blue
-        
+        self.bg_image_path = c.MENU_BG_FILE 
+
         self.elements = [
             Button("centered", "centered - 80", "medium", "green", "New Game", self.new_game),
             Button("centered", "centered", "medium", "green", "Load Game", self.load_game),

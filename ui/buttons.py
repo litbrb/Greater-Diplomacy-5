@@ -365,6 +365,9 @@ def render_edit_country_buttons(edit_screen):
     ])
 
 def render_settings_buttons(settings_screen):
+
+    keybind_x = c.SCREEN_WIDTH - 250
+
     """Renders the buttons and sliders for the Settings screen."""
     back_key_name = pygame.key.name(settings_screen.controller.keybinds.get("BACK", pygame.K_ESCAPE)).upper()
     back_btn_text = f"Back Key: {back_key_name}"
@@ -378,7 +381,7 @@ def render_settings_buttons(settings_screen):
 
     settings_screen.elements = [
         Button(50, 50, "small", "red", "Back", settings_screen.go_back),
-        Button("centered", 100, "medium", "blue", "Toggle Fullscreen", settings_screen.toggle_full),
+        Button(keybind_x, 100, "medium", "blue", "Toggle Fullscreen", settings_screen.toggle_full),
     ]
 
     # --- MASTER AI TOGGLE BUTTON ---
@@ -390,19 +393,19 @@ def render_settings_buttons(settings_screen):
     # --- Only render the sub-options if AI is currently turned ON ---
     if ai_is_on:
         # AI Mode Toggles 
-        btn_gem = Button(120, c.SCREEN_HEIGHT - 150, "small", "blue", "AI: GEMINI", lambda: settings_screen.set_ai_mode("GEMINI"))
+        btn_gem = Button(120, c.SCREEN_HEIGHT - 150, "small", "blue", "GEMINI", lambda: settings_screen.set_ai_mode("GEMINI"))
         btn_gem.is_selected = (settings_screen.ai_mode == "GEMINI")
         settings_screen.elements.append(btn_gem)
 
-        btn_oll = Button(120, c.SCREEN_HEIGHT - 200, "small", "blue", "AI: OLLAMA", lambda: settings_screen.set_ai_mode("OLLAMA"))
+        btn_oll = Button(120, c.SCREEN_HEIGHT - 200, "small", "blue", "OLLAMA", lambda: settings_screen.set_ai_mode("OLLAMA"))
         btn_oll.is_selected = (settings_screen.ai_mode == "OLLAMA")
         settings_screen.elements.append(btn_oll)
 
-        btn_gpt = Button(230, c.SCREEN_HEIGHT - 150, "small", "blue", "AI: CHATGPT", lambda: settings_screen.set_ai_mode("CHATGPT"))
+        btn_gpt = Button(230, c.SCREEN_HEIGHT - 150, "small", "blue", "CHATGPT", lambda: settings_screen.set_ai_mode("CHATGPT"))
         btn_gpt.is_selected = (settings_screen.ai_mode == "CHATGPT")
         settings_screen.elements.append(btn_gpt)
 
-        btn_claude = Button(230, c.SCREEN_HEIGHT - 200, "small", "blue", "AI: CLAUDE", lambda: settings_screen.set_ai_mode("CLAUDE"))
+        btn_claude = Button(230, c.SCREEN_HEIGHT - 200, "small", "blue", "CLAUDE", lambda: settings_screen.set_ai_mode("CLAUDE"))
         btn_claude.is_selected = (settings_screen.ai_mode == "CLAUDE")
         settings_screen.elements.append(btn_claude)
 
@@ -426,13 +429,13 @@ def render_settings_buttons(settings_screen):
         settings_screen.elements.append(Button(c.SETTINGS_CLAUDE_BOX_X + c.SETTINGS_CLAUDE_BOX_W + 20, c.SETTINGS_CLAUDE_BOX_Y, "small", "red", "Clear", settings_screen.clear_claude_api_key))
 
     # Sliders
-    settings_screen.volume_slider = Slider(200, 320, 200, "Volume", settings_screen.volume, settings_screen.set_volume)
-    settings_screen.player_slider = Slider(200, 400, 200, f"Players: {settings_screen.num_players}", (settings_screen.num_players - 1) / 7.0, settings_screen.set_players)
+    settings_screen.volume_slider = Slider(keybind_x, 320, 200, "Volume", settings_screen.volume, settings_screen.set_volume)
+    settings_screen.player_slider = Slider(keybind_x, 400, 200, f"Players: {settings_screen.num_players}", (settings_screen.num_players - 1) / 7.0, settings_screen.set_players)
 
     settings_screen.elements.extend([
         settings_screen.volume_slider,
         settings_screen.player_slider,
-        Button("centered", 430, "large", "grey", back_btn_text, lambda: settings_screen.start_listening("BACK")),
-        Button("centered", 520, "large", "grey", orders_btn_text, lambda: settings_screen.start_listening("ORDERS")),
-        Button("centered", 610, "medium", "blue", "Reset Keybinds", settings_screen.reset_defaults)
+        Button(keybind_x, 530, "medium", "grey", back_btn_text, lambda: settings_screen.start_listening("BACK")),
+        Button(keybind_x, 590, "medium", "grey", orders_btn_text, lambda: settings_screen.start_listening("ORDERS")),
+        Button(keybind_x, 650, "medium", "red", "Reset Keybinds", settings_screen.reset_defaults)
     ])

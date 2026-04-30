@@ -1,7 +1,74 @@
 import pygame
 import math
-
+from data import queries
 from map_logic.rendering import symbol_loader
+
+def draw_combat_bubbles(self_map, surface):
+    """Draws combat indicators on the map to visualize predicted battles."""
+    predictions = queries.get_combat_predictions(self_map.map_data, self_map.nation_data, self_map.id_to_province)
+    cam = self_map.camera
+    
+    for pred in predictions:
+        player_atk = 0
+        enemy_atk = 0
+        involved = False
+        
+        if pred["type"] == "meeting":
+            side1 = pred["side1"]
+            side2 = pred["side2"]
+            atk1 = sum(u.get("attack", 5) for u in side1)
+            atk2 = sum(u.get("attack", 5) for u in side2)
+            
+            s1_owner = side1[0]["owner"] if side1 else ""
+            s2_owner = side2[0]["owner"] if side2 else ""
+            
+            if s1_owner == self_map.player_country:
+                player_atk, enemy_atk, involved = atk1, atk2, True
+            elif s2_owner == self_map.player_country:
+                player_atk, enemy_atk, involved = atk2, atk1, True
+                
+            p1 = self_map.id_to_province[pred["loc"][0]]["center"]
+            p2 = self_map.id_to_province[pred["loc"][1]]["center"]
+            cx = (p1[0] + p2[0]) / 2
+            cy = (p1[1] + p2[1]) / 2
+            
+        else:
+            forces = pred["forces"]
+            for owner, units in forces.items():
+                atk = sum(u.get("attack", 5) for u in units)
+                if owner == self_map.player_country:
+                    player_atk += atk
+                    involved = True
+                elif queries.are_at_war(self_map.player_country, owner, self_map.nation_data):
+                    enemy_atk += atk
+                    
+            prov = self_map.id_to_province[pred["loc"]]
+            cx, cy = prov["center"]
+            
+        # Determine Color Based on Simulation
+        if not involved:
+            color = (255, 255, 0) # Yellow (Spectating)
+        elif player_atk > enemy_atk:
+            color = (0, 255, 0) # Green (Winning)
+        elif enemy_atk > player_atk:
+            color = (255, 0, 0) # Red (Losing)
+        else:
+            color = (255, 255, 0) # Yellow (Draw)
+            
+        offsets = [0, -self_map.map_w, self_map.map_w] if self_map.loop_map else [0]
+        for offset in offsets:
+            sx = int((cx + offset - cam.pos.x) * cam.zoom)
+            sy = int((cy - cam.pos.y) * cam.zoom) + self_map.top_ui_height
+            
+            if -50 < sx < surface.get_width() + 50 and 0 < sy < surface.get_height():
+                radius = int(20 * cam.zoom)
+                
+                # Render Bubble
+                bubble = pygame.Surface((radius*2, radius*2), pygame.SRCALPHA)
+                pygame.draw.circle(bubble, color + (120,), (radius, radius), radius)
+                pygame.draw.circle(bubble, color, (radius, radius), max(1, int(3 * cam.zoom)))
+                
+                surface.blit(bubble, (sx - radius, sy - radius))
 
 def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255, 255, 0), alpha=255):
     """Draws a multi-segment path with lines underneath circles and a triangle at the end."""
@@ -108,6 +175,11 @@ def draw_overlay_content(self, surface):
     """Orchestrates what icons/symbols to draw over the map."""
     if self.secondary_mode == "BLANK":
         return
+
+    # --- NEW: Render Combat Prediction Bubbles ---
+    if self.secondary_mode == "UNITS" or self.map_mode == "POLITICAL":
+        draw_combat_bubbles(self, surface)
+    # ---------------------------------------------
 
     for color_key, province in self.map_data.items():
         cx, cy = province["center"]

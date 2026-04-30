@@ -36,6 +36,12 @@ def resolve_turn(self):
     
     print("[SYSTEM] Executing Unit Orders & Combat...")
     process_conversions(self)
+    
+    # --- NEW: Pre-Movement Combat Mechanics ---
+    process_pinning(self)
+    process_meeting_engagements(self)
+    # ------------------------------------------
+    
     process_movement(self)
     process_combat(self)
     check_for_post_combat_captures(self)
@@ -54,6 +60,82 @@ def process_next_turn(self):
     """Legacy compatibility just in case it's called elsewhere."""
     prepare_turn(self)
     resolve_turn(self)
+
+def process_pinning(self):
+    """Rule: Units being attacked from a tile must defend the tile they're on, unless moving to friendly territory."""
+    incoming_attacks = {}
+    for province in self.map_data.values():
+        for unit in province.get("units", []):
+            order = unit.get("order")
+            if order and order.get("type") == "MOVE" and order.get("path"):
+                dest_id = order["path"][0]
+                dest_prov = self.id_to_province.get(dest_id)
+                if dest_prov and queries.is_hostile_territory(unit["owner"], dest_prov.get("owner", "Unclaimed"), self.nation_data):
+                    incoming_attacks.setdefault(dest_id, []).append(unit)
+
+    for province in self.map_data.values():
+        for unit in province.get("units", []):
+            order = unit.get("order")
+            if order and order.get("type") == "MOVE" and order.get("path"):
+                dest_id = order["path"][0]
+                dest_prov = self.id_to_province.get(dest_id)
+                
+                # If moving to hostile territory, check if we are pinned by an incoming attack
+                if dest_prov and queries.is_hostile_territory(unit["owner"], dest_prov.get("owner", "Unclaimed"), self.nation_data):
+                    attackers = incoming_attacks.get(province["id"], [])
+                    hostile_attackers = [a for a in attackers if queries.are_at_war(unit["owner"], a["owner"], self.nation_data)]
+                    
+                    if hostile_attackers:
+                        # Pinned! Cannot attack outwards. Must defend.
+                        order["path"] = []
+
+def process_meeting_engagements(self):
+    """Rule: If 2 units move into each other, let them engage in combat in between the tiles."""
+    incoming = {}
+    for prov in self.map_data.values():
+        for u in prov.get("units", []):
+            order = u.get("order")
+            if order and order.get("type") == "MOVE" and order.get("path"):
+                dest_id = order["path"][0]
+                incoming.setdefault(dest_id, []).append((u, prov["id"], prov))
+
+    processed_pairs = set()
+    for dest_id, attackers in incoming.items():
+        for u_a, origin_a_id, prov_a in attackers:
+            crossers = []
+            for u_b, orig_b_id, prov_b in incoming.get(origin_a_id, []):
+                if orig_b_id == dest_id and queries.are_at_war(u_a["owner"], u_b["owner"], self.nation_data):
+                    crossers.append((u_b, prov_b))
+            
+            if crossers:
+                pair = tuple(sorted([origin_a_id, dest_id]))
+                if pair not in processed_pairs:
+                    processed_pairs.add(pair)
+                    
+                    prov1 = self.id_to_province[pair[0]]
+                    prov2 = self.id_to_province[pair[1]]
+                    
+                    units1 = [u for u in prov1.get("units", []) if u.get("order", {}).get("path", [None])[0] == pair[1]]
+                    units2 = [u for u in prov2.get("units", []) if u.get("order", {}).get("path", [None])[0] == pair[0]]
+                    
+                    atk1 = sum(u.get("attack", 5) for u in units1)
+                    atk2 = sum(u.get("attack", 5) for u in units2)
+                    
+                    apply_group_damage(atk2, units1)
+                    apply_group_damage(atk1, units2)
+                    
+                    # Retreat Logic: The loser's path is cleared so they stay on their original tile (free movement)
+                    if atk1 > atk2:
+                        for u in units2: u["order"]["path"] = []
+                    elif atk2 > atk1:
+                        for u in units1: u["order"]["path"] = []
+                    else:
+                        # Draw: both bounce back
+                        for u in units1: u["order"]["path"] = []
+                        for u in units2: u["order"]["path"] = []
+                        
+                    prov1["units"] = [u for u in prov1["units"] if u.get("health", 0) > 0]
+                    prov2["units"] = [u for u in prov2["units"] if u.get("health", 0) > 0]
 
 def process_conversions(self):
     """Processes the 1-turn timer for transferring units into Convoys and back."""

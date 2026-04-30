@@ -453,3 +453,65 @@ def is_unit_obsolete(group_name, player_research):
     """Checks if a unit group is obsolete based on researched techs."""
     obsoleting_techs = c.OBSOLESCENCE_RULES.get(group_name, [])
     return any(player_research.get(tech, 0) >= 1 for tech in obsoleting_techs)
+
+# ==========================================
+# PREDICTION QUERIES (UI & RENDERING)
+# ==========================================
+
+def get_combat_predictions(map_data, nation_data, id_to_province):
+    """Generates predictions for meeting engagements and province clashes."""
+    predictions = []
+    incoming = {} # dest_id -> list of (unit, origin_id)
+    
+    # 1. Map all incoming movements
+    for prov in map_data.values():
+        for u in prov.get("units", []):
+            order = u.get("order")
+            if order and order.get("type") == "MOVE" and order.get("path"):
+                dest_id = order["path"][0]
+                incoming.setdefault(dest_id, []).append((u, prov["id"]))
+                
+    # 2. Find Meeting Engagements (Crossing Paths)
+    processed_pairs = set()
+    for dest_id, attackers in incoming.items():
+        for u_a, origin_a_id in attackers:
+            crossers = [u_b for u_b, orig_b in incoming.get(origin_a_id, []) 
+                        if orig_b == dest_id and are_at_war(u_a["owner"], u_b["owner"], nation_data)]
+            if crossers:
+                pair = tuple(sorted([origin_a_id, dest_id]))
+                if pair not in processed_pairs:
+                    processed_pairs.add(pair)
+                    side1 = [u for u, o in incoming.get(dest_id, []) if o == origin_a_id]
+                    side2 = [u for u, o in incoming.get(origin_a_id, []) if o == dest_id]
+                    predictions.append({
+                        "type": "meeting",
+                        "loc": pair,
+                        "side1": side1,
+                        "side2": side2
+                    })
+                    
+    # 3. Find Province Clashes (Static Defenders vs Incoming Attackers)
+    for prov in map_data.values():
+        prov_id = prov["id"]
+        defenders = prov.get("units", [])
+        attackers = [u for u, o in incoming.get(prov_id, [])]
+        
+        forces_by_owner = {}
+        for u in defenders + attackers:
+            forces_by_owner.setdefault(u["owner"], []).append(u)
+            
+        owners = list(forces_by_owner.keys())
+        clash = False
+        for i in range(len(owners)):
+            for j in range(i+1, len(owners)):
+                if are_at_war(owners[i], owners[j], nation_data):
+                    clash = True
+                    break
+        if clash:
+            predictions.append({
+                "type": "province",
+                "loc": prov_id,
+                "forces": forces_by_owner
+            })
+            
+    return predictions

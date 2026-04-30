@@ -167,11 +167,11 @@ def handle_map_events(self, event):
                         new_unit = {
                             "type": self.brush_unit,
                             "owner": owner,
-                            "health": unit_stats.get("health", 100),
-                            "max_health": unit_stats.get("health", 100),
-                            "speed": unit_stats.get("speed", 1),
-                            "attack": unit_stats.get("attack", 5),
-                            "defense": unit_stats.get("defense", 0),
+                            "health": unit_stats.get("health", c.DEFAULT_UNIT_HP),
+                            "max_health": unit_stats.get("health", c.DEFAULT_UNIT_HP),
+                            "speed": unit_stats.get("speed", c.DEFAULT_UNIT_SPD),
+                            "attack": unit_stats.get("attack", c.DEFAULT_UNIT_ATK),
+                            "defense": unit_stats.get("defense", c.DEFAULT_UNIT_DEF),
                             "level": 0,
                             "order": {"type": "MOVE", "path": []}
                         }

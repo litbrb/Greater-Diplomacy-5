@@ -217,6 +217,7 @@ SIZES = {
 # ==========================================
 # MESSAGING APP UI
 # ==========================================
+
 MSG_LEFT_PANE_W = 280
 MSG_INPUT_H = 80
 MSG_BG_DARK = (25, 25, 30)
@@ -226,6 +227,27 @@ MSG_BUBBLE_PLAYER_DIPLO = (180, 60, 60) # Added: Player diplomatic red
 MSG_BUBBLE_AI = (60, 60, 80)
 MSG_BUBBLE_AI_DIPLO = (200, 100, 0) # Added: AI diplomatic orange
 MSG_NOTIFICATION_COLOR = (255, 50, 50)
+
+# ==========================================
+# CAMERA & MAP RENDERING
+# ==========================================
+MAX_CAMERA_ZOOM = 10.0
+OCEAN_DARK_BLUE = (10, 20, 40)
+OCEAN_LIGHT_BLUE = (40, 100, 180)
+
+# Toggle this to False if you want to strictly hide names on areas <= 3 provinces
+SHOW_SMALL_TERRITORY_NAMES = False
+NAME_FADE_START = 4.0
+NAME_FADE_WINDOW = 1.5
+
+# ==========================================
+# DEFAULT UNIT STATS (Fallbacks)
+# ==========================================
+
+DEFAULT_UNIT_HP = 100
+DEFAULT_UNIT_ATK = 5
+DEFAULT_UNIT_DEF = 0
+DEFAULT_UNIT_SPD = 1
 
 # ==========================================
 # FILE PATHS

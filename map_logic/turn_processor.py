@@ -516,10 +516,10 @@ def process_queues(self):
                 unit_type = item["unit_type"]
                 stats = unit_library.get(unit_type, {})
                 
-                max_health = stats.get("health", 100)
-                attack = stats.get("attack", 5)
-                defense = stats.get("defense", 0)
-                speed = stats.get("speed", 1)
+                max_health = stats.get("health", c.DEFAULT_UNIT_HP)
+                attack = stats.get("attack", c.DEFAULT_UNIT_ATK)
+                defense = stats.get("defense", c.DEFAULT_UNIT_DEF)
+                speed = stats.get("speed", c.DEFAULT_UNIT_SPD)
 
                 new_unit_data = {
                     "type": unit_type,

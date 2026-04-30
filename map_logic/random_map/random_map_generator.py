@@ -193,11 +193,11 @@ def randomize_all_provinces(map_screen, settings):
         return {
             "type": u_name,
             "owner": nation,
-            "health": stats.get("health", 100),
-            "max_health": stats.get("health", 100),
-            "speed": stats.get("speed", 1),
-            "attack": stats.get("attack", 5),
-            "defense": stats.get("defense", 0),
+            "health": stats.get("health", c.DEFAULT_UNIT_HP),
+            "max_health": stats.get("health", c.DEFAULT_UNIT_HP),
+            "speed": stats.get("speed", c.DEFAULT_UNIT_SPD),
+            "attack": stats.get("attack", c.DEFAULT_UNIT_ATK),
+            "defense": stats.get("defense", c.DEFAULT_UNIT_DEF),
             "level": 0,
             "order": {"type": "MOVE", "path": []}
         }

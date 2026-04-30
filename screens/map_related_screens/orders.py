@@ -18,13 +18,7 @@ class Orders_Screen(GameState):
         self.cancel_rects = []
         
         # Load unit library so we can check unit stats (like naval_unit) dynamically
-        self.unit_library = self.load_unit_data()
-
-    def load_unit_data(self):
-        path = c.UNIT_DATA_PATH
-        if os.path.exists(path):
-            with open(path, 'r') as f: return json.load(f)
-        return {}
+        self.unit_library = queries.get_unit_library()
     
     def start_with_province(self, province, map_ref):
         self.target_province = province

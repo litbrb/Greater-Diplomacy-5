@@ -30,12 +30,6 @@ class Research_Screen(GameState):
 
         self.setup_nodes()
 
-    def load_json(self, path):
-        if os.path.exists(path):
-            with open(path, "r") as f: return json.load(f)
-        print(f"Error: {path} not found!")
-        return {}
-
     def setup_nodes(self):
         """Dynamically positions nodes based on their associated year."""
         

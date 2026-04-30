@@ -13,7 +13,7 @@ class MapCamera:
     def handle_input(self, event, self_map, on_ui):
         if event.type == pygame.MOUSEWHEEL:
             zoom_change = event.y * (0.1 * self.target_zoom)
-            max_zoom = 10.0
+            max_zoom = c.MAX_CAMERA_ZOOM
             self.target_zoom = max(self_map.min_zoom, min(self.target_zoom + zoom_change, max_zoom))
 
         if event.type == pygame.MOUSEMOTION and event.buttons[2] and not on_ui:
@@ -63,9 +63,9 @@ def get_dynamic_ocean_color(camera, min_zoom):
     else:
         t = 0.0
 
-    dark_blue = (10, 20, 40)
-    light_blue = (40, 100, 180)
-
+    dark_blue = c.OCEAN_DARK_BLUE
+    light_blue = c.OCEAN_LIGHT_BLUE
+    
     r = int(dark_blue[0] + t * (light_blue[0] - dark_blue[0]))
     g = int(dark_blue[1] + t * (light_blue[1] - dark_blue[1]))
     b = int(dark_blue[2] + t * (light_blue[2] - dark_blue[2]))

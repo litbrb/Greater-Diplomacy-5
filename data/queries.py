@@ -2,6 +2,8 @@ import json
 import os
 import data.constants as c
 import re
+import base64
+import pygame
 
 # --- CACHE LIBRARIES ---
 _cached_unit_library = None
@@ -201,6 +203,12 @@ def get_highest_infantry(nation_data_block, tech_tree, unit_library):
         return u_name
     return f"Infantry Type {c.START_YEAR}"
 
+def check_tech_requirements(res_levels, reqs):
+    """Centralized tech requirement checker."""
+    if not reqs: return True
+    if "OR" in reqs:
+        return any(res_levels.get(k, 0) >= v for sub in reqs["OR"] for k, v in sub.items())
+    return all(res_levels.get(k, 0) >= v for k, v in reqs.items())
 
 # ==========================================
 # ECONOMY QUERIES
@@ -553,3 +561,25 @@ def get_combat_predictions(map_data, nation_data, id_to_province):
             })
             
     return predictions
+
+# ==========================================
+# IMAGE ENCODING / DECODING
+# ==========================================
+def encode_surf_to_b64(surf, fmt="RGBA"):
+    """Encodes a pygame surface to a Base64 string."""
+    img_str = pygame.image.tostring(surf, fmt)
+    return base64.b64encode(img_str).decode('utf-8')
+
+def decode_b64_to_surf(b64_str, size):
+    """Decodes a Base64 string back into a pygame surface."""
+    try:
+        img_bytes = base64.b64decode(b64_str)
+        # Check if the save file is using the new RGBA format or the old RGB format
+        if len(img_bytes) == size[0] * size[1] * 4:
+            return pygame.image.fromstring(img_bytes, size, "RGBA")
+        else:
+            return pygame.image.fromstring(img_bytes, size, "RGB").convert_alpha()
+    except:
+        surf = pygame.Surface(size, pygame.SRCALPHA)
+        surf.fill((255, 255, 255, 255))
+        return surf

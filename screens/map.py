@@ -439,11 +439,11 @@ class Map(GameState):
                 if u_type in unit_library:
                     stats = unit_library[u_type]
                     
-                    unit["max_health"] = stats.get("health", 100)
-                    unit["health"] = stats.get("health", 100)
-                    unit["attack"] = stats.get("attack", 5)
-                    unit["defense"] = stats.get("defense", 0)
-                    unit["speed"] = stats.get("speed", 1)
+                    unit["max_health"] = stats.get("health", c.DEFAULT_UNIT_HP)
+                    unit["health"] = stats.get("health", c.DEFAULT_UNIT_HP)
+                    unit["attack"] = stats.get("attack", c.DEFAULT_UNIT_ATK)
+                    unit["defense"] = stats.get("defense", c.DEFAULT_UNIT_DEF)
+                    unit["speed"] = stats.get("speed", c.DEFAULT_UNIT_SPD)
                     
                     updated_count += 1
                     

@@ -23,12 +23,6 @@ class Construction_Screen(GameState):
         self.other_start_y = self.other_end_y = 0
         self.fuel_start_y = self.fuel_end_y = 0
 
-    def load_building_data(self):
-        path = c.BUILDING_DATA_PATH
-        if os.path.exists(path):
-            with open(path, 'r') as f: return json.load(f)
-        return {}
-
     def start_with_province(self, province, map_ref):
         self.target_province = province
         self.map_screen = map_ref

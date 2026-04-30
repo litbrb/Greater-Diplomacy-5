@@ -30,17 +30,6 @@ class Recruit_Screen(GameState):
         self.tank_start_y = self.tank_end_y = 0
         self.navy_start_y = self.navy_end_y = 0
 
-    def load_json(self, path):
-        if os.path.exists(path):
-            with open(path, 'r') as f: return json.load(f)
-        return {}
-
-    def load_unit_data(self):
-        path = c.UNIT_DATA_PATH
-        if os.path.exists(path):
-            with open(path, 'r') as f: return json.load(f)
-        return {}
-
     def get_group_name(self, name):
         # We strip the year off the infantry so they all group properly!
         return queries.get_base_unit_name(name)

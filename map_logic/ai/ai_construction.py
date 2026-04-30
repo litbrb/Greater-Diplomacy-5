@@ -8,9 +8,7 @@ def process_ai_economy_decisions(map_screen):
     unit_library = queries.get_unit_library()
     building_library = queries.get_building_library()
 
-    tech_tree = {}
-    if os.path.exists(c.RESEARCH_TEMPLATE_PATH):
-        with open(c.RESEARCH_TEMPLATE_PATH, 'r') as f: tech_tree = json.load(f)
+    tech_tree = queries.get_tech_tree()
 
     all_econ = queries.calculate_all_economies(map_screen.map_data, map_screen.nation_data)
 

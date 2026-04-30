@@ -8,8 +8,7 @@ def process_ai_research(map_screen):
     if not os.path.exists(c.RESEARCH_TEMPLATE_PATH): 
         return
         
-    with open(c.RESEARCH_TEMPLATE_PATH, "r") as f:
-        tech_tree = json.load(f)
+    tech_tree = queries.get_tech_tree()
 
     ai_nations = queries.get_active_ai_nations(map_screen)
 

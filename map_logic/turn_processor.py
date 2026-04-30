@@ -479,11 +479,6 @@ def process_queues(self):
     # REPLACE DISK I/O WITH CACHED QUERIES
     unit_library = queries.get_unit_library()
     building_library = queries.get_building_library()
-    
-    if os.path.exists(unit_stats_path):
-        with open(unit_stats_path, 'r') as f: unit_library = json.load(f)
-    if os.path.exists(building_stats_path):
-        with open(building_stats_path, 'r') as f: building_library = json.load(f)
 
     for province in self.map_data.values():
         queue = province.get("deployment_queue", [])

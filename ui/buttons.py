@@ -412,6 +412,11 @@ def render_settings_buttons(settings_screen):
     if settings_screen.ai_mode == "GEMINI":
         settings_screen.elements.append(Button(c.SETTINGS_API_BOX_X + c.SETTINGS_API_BOX_W + 20, c.SETTINGS_API_BOX_Y, "small", "red", "Clear", settings_screen.clear_api_key))
 
+    # --- OLLAMA MODEL CLEAR BUTTON (Only if Ollama is selected) ---
+    if settings_screen.ai_mode == "OLLAMA":
+        # We use the OLLAMA box coordinates so it lines up perfectly with the input field
+        settings_screen.elements.append(Button(c.SETTINGS_OLLAMA_BOX_X + c.SETTINGS_OLLAMA_BOX_W + 20, c.SETTINGS_OLLAMA_BOX_Y, "small", "red", "Clear", settings_screen.clear_ollama_model))
+
     # Sliders
     settings_screen.volume_slider = Slider(200, 320, 200, "Volume", settings_screen.volume, settings_screen.set_volume)
     settings_screen.player_slider = Slider(200, 400, 200, f"Players: {settings_screen.num_players}", (settings_screen.num_players - 1) / 7.0, settings_screen.set_players)

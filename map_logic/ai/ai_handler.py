@@ -101,11 +101,21 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
         
     return context
 
+def get_ollama_model():
+    """Reads the settings config to see which Ollama model is requested."""
+    if os.path.exists(c.SETTINGS_CONFIG_PATH):
+        try:
+            with open(c.SETTINGS_CONFIG_PATH, "r") as f:
+                data = json.load(f)
+                return data.get("ollama_model", "llama3")
+        except: pass
+    return "llama3"
+
 def call_ollama(system_prompt, user_prompt):
     """Helper to hit local Ollama instance."""
     url = "http://localhost:11434/api/chat"
     payload = {
-        "model": "llama3", # Make sure this matches exactly what you downloaded!
+        "model": get_ollama_model(), # Pull dynamically instead of hardcoding "llama3"
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}

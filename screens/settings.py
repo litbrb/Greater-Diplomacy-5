@@ -29,6 +29,9 @@ class Settings(GameState):
         self.api_input_active = False
         self.api_key_text = getattr(self.controller, 'api_key', '')
 
+        self.ollama_input_active = False
+        self.ollama_model_text = getattr(self.controller, 'ollama_model', 'llama3')
+
         self.refresh_ui()
 
     def update(self):
@@ -51,6 +54,10 @@ class Settings(GameState):
         self.api_key_text = ""
         self.controller.api_key = ""
 
+    def clear_ollama_model(self):
+        self.ollama_model_text = ""
+        self.controller.ollama_model = ""
+
     def refresh_ui(self):
         buttons.render_settings_buttons(self)
 
@@ -69,26 +76,39 @@ class Settings(GameState):
     def reset_defaults(self):
         default_keys = {"BACK": pygame.K_ESCAPE, "ORDERS": pygame.K_q}
         self.controller.keybinds = default_keys
-        # Safely fetch api_key and immersion to ensure we don't accidentally wipe them
+        # Safely fetch api_key, immersion, and ollama_model to ensure we don't accidentally wipe them
         api_key = getattr(self.controller, 'api_key', '')
         immersion = getattr(self.controller, 'ai_immersion_level', 'FULL')
-        keybind_io.save_settings(default_keys, self.volume, self.num_players, self.ai_mode, api_key, immersion)
+        ollama = getattr(self.controller, 'ollama_model', 'llama3')
+        keybind_io.save_settings(default_keys, self.volume, self.num_players, self.ai_mode, api_key, immersion, ollama)
         self.refresh_ui()
         
     def handle_events(self, events):
         # Override to catch clicks on the API box before the elements get them
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mx, my = event.pos
+                
                 # Only check for API box collision if Gemini is currently active
                 if self.ai_mode == "GEMINI":
-                    mx, my = event.pos
                     api_rect = pygame.Rect(c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y, c.SETTINGS_API_BOX_W, c.SETTINGS_API_BOX_H)
                     if api_rect.collidepoint(mx, my):
                         self.api_input_active = True
                     else:
                         self.api_input_active = False
+                    self.ollama_input_active = False
+                    
+                # Check for Ollama box collision if Ollama is currently active
+                elif self.ai_mode == "OLLAMA":
+                    ollama_rect = pygame.Rect(c.SETTINGS_OLLAMA_BOX_X, c.SETTINGS_OLLAMA_BOX_Y, c.SETTINGS_OLLAMA_BOX_W, c.SETTINGS_OLLAMA_BOX_H)
+                    if ollama_rect.collidepoint(mx, my):
+                        self.ollama_input_active = True
+                    else:
+                        self.ollama_input_active = False
+                    self.api_input_active = False
                 else:
                     self.api_input_active = False
+                    self.ollama_input_active = False
 
             # Pass down to elements
             for el in self.elements:
@@ -99,7 +119,7 @@ class Settings(GameState):
     def additional_events(self, event):
         if self.listening_for and event.type == pygame.KEYDOWN:
             self.controller.keybinds[self.listening_for] = event.key
-            keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, getattr(self.controller, 'api_key', ''), getattr(self.controller, 'ai_immersion_level', 'FULL'))
+            keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, getattr(self.controller, 'api_key', ''), getattr(self.controller, 'ai_immersion_level', 'FULL'), getattr(self.controller, 'ollama_model', 'llama3'))
             self.listening_for = None
             self.refresh_ui()
 
@@ -109,12 +129,19 @@ class Settings(GameState):
                 event, self.api_key_text, max_length=150
             )
             self.controller.api_key = self.api_key_text.strip()
+            
+        # Process keyboard input for the Ollama box if Ollama is active
+        elif getattr(self, "ollama_input_active", False) and self.ai_mode == "OLLAMA":
+            self.ollama_model_text, status = ui_elements.process_text_input(
+                event, self.ollama_model_text, max_length=50
+            )
+            self.controller.ollama_model = self.ollama_model_text.strip()
 
     def additional_draw(self, surface):
+        font = fonts.get("normal")
+        
         # Draw API Box ONLY if Gemini is active
         if self.ai_mode == "GEMINI":
-            font = fonts.get("normal")
-
             label_surf = font.render("Gemini API Key (Required for Gemini Mode):", True, (200, 200, 200))
             surface.blit(label_surf, (c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y - 25))
 
@@ -133,6 +160,26 @@ class Settings(GameState):
             surface.set_clip(api_rect.inflate(-10, -10))
             surface.blit(txt_surf, (api_rect.x + 5, api_rect.y + 10))
             surface.set_clip(None)
+            
+        # Draw Ollama Box ONLY if Ollama is active
+        elif self.ai_mode == "OLLAMA":
+            label_surf = font.render("Ollama Model Name (e.g. llama3, phi3):", True, (200, 200, 200))
+            surface.blit(label_surf, (c.SETTINGS_OLLAMA_BOX_X, c.SETTINGS_OLLAMA_BOX_Y - 25))
+
+            ollama_rect = pygame.Rect(c.SETTINGS_OLLAMA_BOX_X, c.SETTINGS_OLLAMA_BOX_Y, c.SETTINGS_OLLAMA_BOX_W, c.SETTINGS_OLLAMA_BOX_H)
+            bg_color = (60, 60, 80) if self.ollama_input_active else (20, 20, 30)
+            pygame.draw.rect(surface, bg_color, ollama_rect)
+            pygame.draw.rect(surface, (150, 150, 150), ollama_rect, 1)
+
+            display_text = self.ollama_model_text
+            if self.ollama_input_active:
+                display_text += "|"
+
+            txt_surf = font.render(display_text, True, (255, 255, 255))
+            
+            surface.set_clip(ollama_rect.inflate(-10, -10))
+            surface.blit(txt_surf, (ollama_rect.x + 5, ollama_rect.y + 10))
+            surface.set_clip(None)
 
     def set_players(self, val):
         self.num_players = 1 + int(val * 7)
@@ -142,10 +189,11 @@ class Settings(GameState):
             self.player_slider.text = f"Players: {self.num_players}"
 
     def save_and_go_back(self):
-        # Ensure we pass the api_key and immersion level when saving
+        # Ensure we pass the api_key, immersion level, and ollama_model when saving
         api_key_to_save = getattr(self.controller, 'api_key', '')
         immersion_to_save = getattr(self.controller, 'ai_immersion_level', 'FULL')
-        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, api_key_to_save, immersion_to_save)
+        ollama_to_save = getattr(self.controller, 'ollama_model', 'llama3')
+        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, api_key_to_save, immersion_to_save, ollama_to_save)
         
         self.next_state = getattr(self, 'return_state', 'MENU')
         self.done = True

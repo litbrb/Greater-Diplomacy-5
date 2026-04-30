@@ -139,6 +139,12 @@ SETTINGS_API_BOX_Y = SCREEN_HEIGHT - 50
 SETTINGS_API_BOX_W = 300
 SETTINGS_API_BOX_H = 40
 
+# Add the Ollama box coordinates (we can reuse the same spot since they toggle)
+SETTINGS_OLLAMA_BOX_X = 150
+SETTINGS_OLLAMA_BOX_Y = SCREEN_HEIGHT - 50
+SETTINGS_OLLAMA_BOX_W = 300
+SETTINGS_OLLAMA_BOX_H = 40
+
 # ==========================================
 # GAME RULES & TIMING
 # ==========================================

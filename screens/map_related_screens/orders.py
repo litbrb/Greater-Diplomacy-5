@@ -211,7 +211,8 @@ class Orders_Screen(GameState):
 
     def handle_events(self, events):
         for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            # FIX: Added 'and event.button == 1' so scrolling the wheel doesn't cancel orders
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for rect, idx in self.cancel_rects:
                     if rect.collidepoint(event.pos):
                         self.cancel_unit_order(idx)
@@ -221,9 +222,24 @@ class Orders_Screen(GameState):
             self.additional_events(event)
 
     def additional_events(self, event):
+        mx, my = pygame.mouse.get_pos()
+        
+        # --- NEW: Camera Controls (Zooming and Panning) ---
+        on_ui = False
+        units = self.target_province.get("units", [])
+        player_units = [u for u in units if u.get("owner") == self.map_screen.player_country]
+        if player_units:
+            # Use the same background rect math from additional_draw to mask the UI
+            bg_rect = pygame.Rect(80, 130, 500, len(player_units) * 60 + 40)
+            if bg_rect.collidepoint(mx, my):
+                on_ui = True
+                
+        # Pass scroll and pan events to your centralized map camera
+        if event.type in (pygame.MOUSEWHEEL, pygame.MOUSEMOTION):
+            self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
+
         # --- Dynamic Map Hover Update ---
         if event.type == pygame.MOUSEMOTION:
-            mx, my = event.pos
             cam = self.map_screen.camera
             wx = ((mx / cam.zoom) + cam.pos.x) % self.map_screen.map_w
             wy = ((my - self.map_screen.top_ui_height) / cam.zoom) + cam.pos.y
@@ -248,7 +264,8 @@ class Orders_Screen(GameState):
                 self.map_screen.hover_glow_surf = None
 
         # --- Standard Order Placement Click ---
-        if event.type == pygame.MOUSEBUTTONDOWN and self.selected_unit_index is not None:
+        # FIX: Added 'and event.button == 1' to ignore scroll wheel (buttons 4/5) and right clicks
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.selected_unit_index is not None:
             dest = self.get_clicked_province(event.pos)
             if not dest: return
 
@@ -491,7 +508,13 @@ class Orders_Screen(GameState):
                         
                     # Use the owner's color to draw the cursor hover with correct alpha logic
                     overlay_renderer.draw_movement_path(surface, self.map_screen, last_node, [hovered["id"]], color=preview_color, alpha=preview_alpha)
-
+    def update(self):
+        super().update()
+        # Ensure the camera keeps running its smooth zoom/pan lerp math 
+        # even when the Orders screen is the active state
+        if self.map_screen:
+            self.map_screen.camera.update(self.map_screen, c.SCREEN_HEIGHT)
+            
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True
     

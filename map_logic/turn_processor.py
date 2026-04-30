@@ -121,8 +121,9 @@ def process_meeting_engagements(self):
                     prov1 = self.id_to_province[pair[0]]
                     prov2 = self.id_to_province[pair[1]]
                     
-                    units1 = [u for u in prov1.get("units", []) if u.get("order", {}).get("path", [None])[0] == pair[1]]
-                    units2 = [u for u in prov2.get("units", []) if u.get("order", {}).get("path", [None])[0] == pair[0]]
+                    # --- FIX: Safely check if the path has elements before grabbing index 0 ---
+                    units1 = [u for u in prov1.get("units", []) if u.get("order", {}).get("path") and u["order"]["path"][0] == pair[1]]
+                    units2 = [u for u in prov2.get("units", []) if u.get("order", {}).get("path") and u["order"]["path"][0] == pair[0]]
                     
                     atk1 = sum(u.get("attack", 5) for u in units1)
                     atk2 = sum(u.get("attack", 5) for u in units2)
@@ -130,7 +131,7 @@ def process_meeting_engagements(self):
                     apply_group_damage(atk2, units1)
                     apply_group_damage(atk1, units2)
                     
-                    # --- NEW: Lock them in combat so they don't slide past each other ---
+                    # Lock them in combat so they don't slide past each other
                     for u in units1 + units2:
                         u["_combat_locked"] = True
                     

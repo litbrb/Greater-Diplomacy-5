@@ -25,8 +25,8 @@ class Settings(GameState):
         self.fullscreen = False
         self.listening_for = None
 
-        self.api_input_active = False
-        self.api_key_text = getattr(self.controller, 'api_key', '')
+        self.gemini_input_active = False
+        self.gemini_api_key_text = getattr(self.controller, 'gemini_api_key', '')
 
         self.ollama_input_active = False
         self.ollama_model_text = getattr(self.controller, 'ollama_model', 'llama3')
@@ -54,9 +54,9 @@ class Settings(GameState):
         self.controller.ai_immersion_level = level
         self.refresh_ui()
 
-    def clear_api_key(self):
-        self.api_key_text = ""
-        self.controller.api_key = ""
+    def clear_gemini_api_key(self):
+        self.gemini_api_key_text = ""
+        self.controller.gemini_api_key = ""
 
     def clear_ollama_model(self):
         self.ollama_model_text = ""
@@ -88,13 +88,13 @@ class Settings(GameState):
         default_keys = {"BACK": pygame.K_ESCAPE, "ORDERS": pygame.K_q}
         self.controller.keybinds = default_keys
         
-        api_key = getattr(self.controller, 'api_key', '')
+        gemini_api_key = getattr(self.controller, 'gemini_api_key', '')
         chatgpt_key = getattr(self.controller, 'chatgpt_api_key', '')
         claude_key = getattr(self.controller, 'claude_api_key', '')
         immersion = getattr(self.controller, 'ai_immersion_level', 'FULL')
         ollama = getattr(self.controller, 'ollama_model', 'llama3')
         
-        keybind_io.save_settings(default_keys, self.volume, self.num_players, self.ai_mode, api_key, chatgpt_key, claude_key, immersion, ollama)
+        keybind_io.save_settings(default_keys, self.volume, self.num_players, self.ai_mode, gemini_api_key, chatgpt_key, claude_key, immersion, ollama)
         self.refresh_ui()
         
     def handle_events(self, events):
@@ -104,23 +104,23 @@ class Settings(GameState):
                 
                 # Input Box Handling
                 if self.ai_mode == "GEMINI":
-                    api_rect = pygame.Rect(c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y, c.SETTINGS_API_BOX_W, c.SETTINGS_API_BOX_H)
-                    self.api_input_active = api_rect.collidepoint(mx, my)
+                    gemini_rect = pygame.Rect(c.SETTINGS_GEMINI_BOX_X, c.SETTINGS_GEMINI_BOX_Y, c.SETTINGS_GEMINI_BOX_W, c.SETTINGS_GEMINI_BOX_H)
+                    self.gemini_input_active = gemini_rect.collidepoint(mx, my)
                     self.ollama_input_active = self.chatgpt_input_active = self.claude_input_active = False
                 elif self.ai_mode == "OLLAMA":
                     ollama_rect = pygame.Rect(c.SETTINGS_OLLAMA_BOX_X, c.SETTINGS_OLLAMA_BOX_Y, c.SETTINGS_OLLAMA_BOX_W, c.SETTINGS_OLLAMA_BOX_H)
                     self.ollama_input_active = ollama_rect.collidepoint(mx, my)
-                    self.api_input_active = self.chatgpt_input_active = self.claude_input_active = False
+                    self.gemini_input_active = self.chatgpt_input_active = self.claude_input_active = False
                 elif self.ai_mode == "CHATGPT":
                     chatgpt_rect = pygame.Rect(c.SETTINGS_CHATGPT_BOX_X, c.SETTINGS_CHATGPT_BOX_Y, c.SETTINGS_CHATGPT_BOX_W, c.SETTINGS_CHATGPT_BOX_H)
                     self.chatgpt_input_active = chatgpt_rect.collidepoint(mx, my)
-                    self.api_input_active = self.ollama_input_active = self.claude_input_active = False
+                    self.gemini_input_active = self.ollama_input_active = self.claude_input_active = False
                 elif self.ai_mode == "CLAUDE":
                     claude_rect = pygame.Rect(c.SETTINGS_CLAUDE_BOX_X, c.SETTINGS_CLAUDE_BOX_Y, c.SETTINGS_CLAUDE_BOX_W, c.SETTINGS_CLAUDE_BOX_H)
                     self.claude_input_active = claude_rect.collidepoint(mx, my)
-                    self.api_input_active = self.ollama_input_active = self.chatgpt_input_active = False
+                    self.gemini_input_active = self.ollama_input_active = self.chatgpt_input_active = False
                 else:
-                    self.api_input_active = self.ollama_input_active = self.chatgpt_input_active = self.claude_input_active = False
+                    self.gemini_input_active = self.ollama_input_active = self.chatgpt_input_active = self.claude_input_active = False
 
             for el in self.elements:
                 el.handle_event(event)
@@ -129,13 +129,13 @@ class Settings(GameState):
     def additional_events(self, event):
         if self.listening_for and event.type == pygame.KEYDOWN:
             self.controller.keybinds[self.listening_for] = event.key
-            keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, getattr(self.controller, 'api_key', ''), getattr(self.controller, 'chatgpt_api_key', ''), getattr(self.controller, 'claude_api_key', ''), getattr(self.controller, 'ai_immersion_level', 'FULL'), getattr(self.controller, 'ollama_model', 'llama3'))
+            keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, getattr(self.controller, 'gemini_api_key', ''), getattr(self.controller, 'chatgpt_api_key', ''), getattr(self.controller, 'claude_api_key', ''), getattr(self.controller, 'ai_immersion_level', 'FULL'), getattr(self.controller, 'ollama_model', 'llama3'))
             self.listening_for = None
             self.refresh_ui()
 
-        elif getattr(self, "api_input_active", False) and self.ai_mode == "GEMINI":
-            self.api_key_text, status = ui_elements.process_text_input(event, self.api_key_text, max_length=150)
-            self.controller.api_key = self.api_key_text.strip()
+        elif getattr(self, "gemini_input_active", False) and self.ai_mode == "GEMINI":
+            self.gemini_api_key_text, status = ui_elements.process_text_input(event, self.gemini_api_key_text, max_length=150)
+            self.controller.gemini_api_key = self.gemini_api_key_text.strip()
             
         elif getattr(self, "ollama_input_active", False) and self.ai_mode == "OLLAMA":
             self.ollama_model_text, status = ui_elements.process_text_input(event, self.ollama_model_text, max_length=50)
@@ -154,19 +154,19 @@ class Settings(GameState):
         
         if self.ai_mode == "GEMINI":
             label_surf = font.render("Gemini API Key (Required for Gemini Mode):", True, (200, 200, 200))
-            surface.blit(label_surf, (c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y - 25))
+            surface.blit(label_surf, (c.SETTINGS_GEMINI_BOX_X, c.SETTINGS_GEMINI_BOX_Y - 25))
 
-            api_rect = pygame.Rect(c.SETTINGS_API_BOX_X, c.SETTINGS_API_BOX_Y, c.SETTINGS_API_BOX_W, c.SETTINGS_API_BOX_H)
-            bg_color = (60, 60, 80) if self.api_input_active else (20, 20, 30)
-            pygame.draw.rect(surface, bg_color, api_rect)
-            pygame.draw.rect(surface, (150, 150, 150), api_rect, 1)
+            gemini_rect = pygame.Rect(c.SETTINGS_GEMINI_BOX_X, c.SETTINGS_GEMINI_BOX_Y, c.SETTINGS_GEMINI_BOX_W, c.SETTINGS_GEMINI_BOX_H)
+            bg_color = (60, 60, 80) if self.gemini_input_active else (20, 20, 30)
+            pygame.draw.rect(surface, bg_color, gemini_rect)
+            pygame.draw.rect(surface, (150, 150, 150), gemini_rect, 1)
 
-            display_text = self.api_key_text
-            if self.api_input_active: display_text += "|"
+            display_text = self.gemini_api_key_text
+            if self.gemini_input_active: display_text += "|"
 
             txt_surf = font.render(display_text, True, (255, 255, 255))
-            surface.set_clip(api_rect.inflate(-10, -10))
-            surface.blit(txt_surf, (api_rect.x + 5, api_rect.y + 10))
+            surface.set_clip(gemini_rect.inflate(-10, -10))
+            surface.blit(txt_surf, (gemini_rect.x + 5, gemini_rect.y + 10))
             surface.set_clip(None)
             
         elif self.ai_mode == "OLLAMA":
@@ -227,13 +227,13 @@ class Settings(GameState):
             self.player_slider.text = f"Players: {self.num_players}"
 
     def save_and_go_back(self):
-        api_key_to_save = getattr(self.controller, 'api_key', '')
+        gemini_to_save = getattr(self.controller, 'gemini_api_key', '')
         chatgpt_to_save = getattr(self.controller, 'chatgpt_api_key', '')
         claude_to_save = getattr(self.controller, 'claude_api_key', '')
         immersion_to_save = getattr(self.controller, 'ai_immersion_level', 'FULL')
         ollama_to_save = getattr(self.controller, 'ollama_model', 'llama3')
         
-        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, api_key_to_save, chatgpt_to_save, claude_to_save, immersion_to_save, ollama_to_save)
+        keybind_io.save_settings(self.controller.keybinds, self.volume, self.num_players, self.ai_mode, gemini_to_save, chatgpt_to_save, claude_to_save, immersion_to_save, ollama_to_save)
         
         self.next_state = getattr(self, 'return_state', 'MENU')
         self.done = True

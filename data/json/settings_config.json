@@ -6,7 +6,7 @@
     "volume": 0.2,
     "num_players": 1,
     "ai_mode": "OLLAMA",
-    "api_key": "AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o",
+    "gemini_api_key": "AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o",
     "ai_immersion_level": "LITE",
     "ollama_model": "llama3"
 }

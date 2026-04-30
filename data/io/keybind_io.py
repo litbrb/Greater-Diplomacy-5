@@ -5,7 +5,7 @@ import data.constants as c
 
 CONFIG_PATH = c.SETTINGS_CONFIG_PATH
 
-def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI", api_key="", chatgpt_api_key="", claude_api_key="", ai_immersion_level="FULL", ollama_model="llama3"):
+def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI", gemini_api_key="", chatgpt_api_key="", claude_api_key="", ai_immersion_level="FULL", ollama_model="llama3"):
     """Converts key codes to strings and saves along with volume/players/AI/API/Ollama to JSON."""
     readable_binds = {}
     for action, key_code in keybind_dict.items():
@@ -16,7 +16,7 @@ def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI", api_key
         "volume": volume,
         "num_players": num_players,
         "ai_mode": ai_mode,
-        "api_key": api_key,
+        "gemini_api_key": gemini_api_key,
         "chatgpt_api_key": chatgpt_api_key,
         "claude_api_key": claude_api_key,
         "ai_immersion_level": ai_immersion_level,
@@ -56,13 +56,14 @@ def load_settings(default_binds, default_volume=0.5):
         # NEW: Safely get num_players (default to 1 if it's an old save)
         saved_num_players = saved_data.get("num_players", 1) if isinstance(saved_data, dict) else 1
         saved_ai_mode = saved_data.get("ai_mode", "GEMINI") if isinstance(saved_data, dict) else "GEMINI"
-        saved_api_key = saved_data.get("api_key", "") if isinstance(saved_data, dict) else ""
+        # Fallback to old "api_key" if "gemini_api_key" doesn't exist
+        saved_gemini_api_key = saved_data.get("gemini_api_key", saved_data.get("api_key", "")) if isinstance(saved_data, dict) else ""
         saved_chatgpt_api_key = saved_data.get("chatgpt_api_key", "") if isinstance(saved_data, dict) else ""
         saved_claude_api_key = saved_data.get("claude_api_key", "") if isinstance(saved_data, dict) else ""
         saved_ai_immersion = saved_data.get("ai_immersion_level", "FULL") if isinstance(saved_data, dict) else "FULL"
         saved_ollama_model = saved_data.get("ollama_model", "llama3") if isinstance(saved_data, dict) else "llama3"
                 
-        return loaded_binds, saved_vol, saved_num_players, saved_ai_mode, saved_api_key, saved_chatgpt_api_key, saved_claude_api_key, saved_ai_immersion, saved_ollama_model
+        return loaded_binds, saved_vol, saved_num_players, saved_ai_mode, saved_gemini_api_key, saved_chatgpt_api_key, saved_claude_api_key, saved_ai_immersion, saved_ollama_model
     except Exception as e:
         print(f"Error loading settings: {e}")
         return default_binds, default_volume, 1, "GEMINI", "", "", "", "FULL", "llama3"

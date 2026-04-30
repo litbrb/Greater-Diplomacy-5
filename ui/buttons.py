@@ -417,7 +417,7 @@ def render_settings_buttons(settings_screen):
 
     # --- API KEY CLEAR BUTTONS ---
     if settings_screen.ai_mode == "GEMINI":
-        settings_screen.elements.append(Button(c.SETTINGS_API_BOX_X + c.SETTINGS_API_BOX_W + 20, c.SETTINGS_API_BOX_Y, "small", "red", "Clear", settings_screen.clear_api_key))
+        settings_screen.elements.append(Button(c.SETTINGS_GEMINI_BOX_X + c.SETTINGS_GEMINI_BOX_W + 20, c.SETTINGS_GEMINI_BOX_Y, "small", "red", "Clear", settings_screen.clear_gemini_api_key))
     elif settings_screen.ai_mode == "OLLAMA":
         settings_screen.elements.append(Button(c.SETTINGS_OLLAMA_BOX_X + c.SETTINGS_OLLAMA_BOX_W + 20, c.SETTINGS_OLLAMA_BOX_Y, "small", "red", "Clear", settings_screen.clear_ollama_model))
     elif settings_screen.ai_mode == "CHATGPT":

@@ -6,13 +6,13 @@ from google import genai
 from google.genai import types
 import data.constants as c
 
-def get_api_key():
+def get_gemini_api_key():
     """Helper to dynamically fetch the saved key."""
     if os.path.exists(c.SETTINGS_CONFIG_PATH):
         try:
             with open(c.SETTINGS_CONFIG_PATH, "r") as f:
                 data = json.load(f)
-                key = data.get("api_key", "")
+                key = data.get("gemini_api_key", data.get("api_key", ""))
                 if key: return key
         except: pass
     return ""
@@ -238,7 +238,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
 
     # Fallback to Gemini
     try:
-        client = genai.Client(api_key=get_api_key())
+        client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=f"{system_prompt}\n\n{user_prompt}",
@@ -305,7 +305,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
         return { "message": c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE" }
 
     try:
-        client = genai.Client(api_key=get_api_key())
+        client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=f"{system_prompt}\n\n{user_prompt}",

@@ -17,6 +17,22 @@ def get_api_key():
         except: pass
     return ""
 
+def get_chatgpt_api_key():
+    if os.path.exists(c.SETTINGS_CONFIG_PATH):
+        try:
+            with open(c.SETTINGS_CONFIG_PATH, "r") as f:
+                return json.load(f).get("chatgpt_api_key", "")
+        except: pass
+    return ""
+
+def get_claude_api_key():
+    if os.path.exists(c.SETTINGS_CONFIG_PATH):
+        try:
+            with open(c.SETTINGS_CONFIG_PATH, "r") as f:
+                return json.load(f).get("claude_api_key", "")
+        except: pass
+    return ""
+
 def get_ai_mode():
     """Reads the settings config to see which AI is active."""
     if os.path.exists(c.SETTINGS_CONFIG_PATH):
@@ -143,6 +159,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     # actually true, always
     accepted = True
     # hey so please don't remove the stuff above or this comment its useful for testing if the ai can accept things without breaking the game
+    # (i swear to god if you remove these comments...)
 
     if mode == "OFF" or immersion == "LITE":
         if action_type == "WAR_DECLARATION":
@@ -212,6 +229,12 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         if result:
             return accepted, result.get("message", c.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"])
         return accepted, c.AI_FALLBACK_RESPONSES["OLLAMA_ERROR"]
+    elif mode == "CHATGPT":
+        print("[LLM] Custom ChatGPT hook to be placed here.")
+        return accepted, c.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]
+    elif mode == "CLAUDE":
+        print("[LLM] Custom Claude hook to be placed here.")
+        return accepted, c.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]
 
     # Fallback to Gemini
     try:
@@ -274,6 +297,12 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE"
         }
+    elif mode == "CHATGPT":
+        print("[LLM] Custom ChatGPT hook to be placed here.")
+        return { "message": c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE" }
+    elif mode == "CLAUDE":
+        print("[LLM] Custom Claude hook to be placed here.")
+        return { "message": c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE" }
 
     try:
         client = genai.Client(api_key=get_api_key())

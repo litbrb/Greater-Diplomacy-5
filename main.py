@@ -86,7 +86,7 @@ class Controller:
         }
 
         # 2. Load settings (Keybinds, Volume, Players, AI Mode, API Key, Immersion Level, & Ollama Model)
-        self.keybinds, self.volume, self.num_players, self.ai_mode, self.api_key, self.ai_immersion_level, self.ollama_model = keybind_io.load_settings(default_keys, 0.5)
+        self.keybinds, self.volume, self.num_players, self.ai_mode, self.api_key, self.chatgpt_api_key, self.claude_api_key, self.ai_immersion_level, self.ollama_model = keybind_io.load_settings(default_keys, 0.5)
 
         # 3. Apply volume to global sounds on boot
         if ui_elements.click_sound:

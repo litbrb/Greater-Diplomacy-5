@@ -68,38 +68,54 @@ def process_ai_economy_decisions(map_screen):
         # If the AI has an excess hoard of materials, invest it back into factories
         if data.get("materials", 0) > 15000:
             res_levels = data.get("research", {})
-            best_bldg = None
             
-            # Find highest unlocked industrial building
-            if res_levels.get("factory", 0) > 0:
-                best_bldg = f"Factory Lvl {res_levels['factory']}"
-            elif res_levels.get("basic_factory", 0) > 0:
-                best_bldg = "Basic Factory"
-            else:
-                # If they haven't researched actual factories yet, build the best workshop
-                best_bldg = "Workshop Lvl 5"
+            # Fetch the dynamic list of industry buildings in order
+            industry_b_list = [b for b, d in building_library.items() if d.get("group") == "industry"]
 
-            if best_bldg and best_bldg in building_library:
-                b_stats = building_library[best_bldg]
-                c_mat = b_stats.get("cost_materials", 0)
-                c_fuel = b_stats.get("cost_fuel", 0)
-                
-                if data.get("materials", 0) >= c_mat and data.get("fuel", 0) >= c_fuel:
-                    # Find a province that doesn't already have an industry building
-                    valid_provs = [p for p in my_provs if not any(b_stats["group"] == building_library.get(b, {}).get("group") for b in p.get("buildings", []))]
-                    # Double check the queue so it doesn't build two at once
-                    valid_provs = [p for p in valid_provs if not any(q.get("group") == b_stats["group"] for q in p.get("deployment_queue", []))]
+            for prov in my_provs:
+                current_buildings = prov.get("buildings", [])
+                queue = prov.get("deployment_queue", [])
 
-                    if valid_provs:
-                        target_prov = valid_provs[0]
+                # Double check the queue so it doesn't build two at once in the same province
+                if any(q.get("group") == "industry" for q in queue):
+                    continue
+
+                owned_industry = [b for b in current_buildings if building_library.get(b, {}).get("group") == "industry"]
+                target_bldg = None
+
+                # Find the next sequential upgrade for this specific province
+                if not owned_industry:
+                    target_bldg = industry_b_list[0] if industry_b_list else None
+                else:
+                    for i, b_name in enumerate(industry_b_list):
+                        if b_name in owned_industry:
+                            if i + 1 < len(industry_b_list):
+                                target_bldg = industry_b_list[i+1]
+
+                if target_bldg:
+                    # Check if the AI actually has the research required for this next tier
+                    req_tech, req_lvl = queries.get_building_required_tech(target_bldg)
+                    if req_tech and res_levels.get(req_tech, 0) < req_lvl:
+                        continue # Lacks the research to build this next tier, try another province
+
+                    # We have the tech and the physical foundation, now check costs
+                    b_stats = building_library[target_bldg]
+                    c_mat = b_stats.get("cost_materials", 0)
+                    c_fuel = b_stats.get("cost_fuel", 0)
+
+                    if data.get("materials", 0) >= c_mat and data.get("fuel", 0) >= c_fuel:
                         data["materials"] -= c_mat
                         data["fuel"] -= c_fuel
-                        
+
                         order = {
                             "order_type": "BUILDING",
-                            "item_name": best_bldg,
+                            "item_name": target_bldg,
                             "turns_remaining": max(1, b_stats.get("time", c.DAYS_PER_TURN) // c.DAYS_PER_TURN),
                             "group": b_stats["group"],
                             "refund": {"materials": c_mat, "manpower": 0, "fuel": c_fuel}
                         }
-                        target_prov.setdefault("deployment_queue", []).append(order)
+                        prov.setdefault("deployment_queue", []).append(order)
+                        
+                        # Successfully queued a building. Break out of the loop so it only queues one per turn 
+                        # to avoid instantly draining its treasury on 30 workshops at once.
+                        break

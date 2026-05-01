@@ -336,8 +336,3 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE"
         }
-
-def decide_grand_strategy(nation_data, active_nations, ai_nation, current_date):
-    """Asks the LLM what diplomatic actions it wants to take this turn based on global context."""
-    # --- PROACTIVE AI REMOVED ---
-    return []

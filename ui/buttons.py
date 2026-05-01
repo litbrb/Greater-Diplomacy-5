@@ -206,7 +206,10 @@ def update_button_states(map_screen):
 
     else:
         viewing_ai = getattr(map_screen, 'viewing_ai_moves', False)
-        map_screen.btn_next_turn.visible = not is_sel
+        is_thinking = getattr(map_screen, 'ai_is_thinking', False) # Check our new flag
+
+        # Hide/disable the button if we are thinking
+        map_screen.btn_next_turn.visible = not is_sel and not is_thinking
         map_screen.btn_next_turn.text = "Resolve Turn" if viewing_ai else "Next Turn"
         map_screen.btn_next_turn.color, map_screen.btn_next_turn.hover_color = c.UI_COLORS["red" if viewing_ai else "purple"]
 

@@ -11,21 +11,25 @@ def prepare_turn(self):
     print("\n" + "="*40)
     print("--- [PHASE 1] AI PREPARATION START ---")
     
-    # --- PROACTIVE AI REMOVED ---
-    # print("[SYSTEM] Running AI Grand Strategy...")
-    # ai_diplomacy.process_ai_grand_strategy(self)
-    
+    self.loading_status_text = "Processing Pending Diplomacy..."
     print("[SYSTEM] Processing Pending Diplomacy...")
     diplomacy_logic.process_diplomacy_turn(self)
     
+    # We clear the task bar here so it swaps back to the spinner
+    self.ai_total_tasks = 0 
+    
+    self.loading_status_text = "Running AI Research..."
     print("[SYSTEM] Running AI Research...")
     ai_research.process_ai_research(self)
     
+    self.loading_status_text = "Running AI Economy & Construction..."
     print("[SYSTEM] Running AI Economy & Construction...")
     ai_construction.process_ai_economy_decisions(self)
     
+    self.loading_status_text = "Generating AI Movement Orders..."
     print("[SYSTEM] Generating AI Movement Orders...")
     ai_movement.process_ai_unit_orders(self)
+    
     print("--- [PHASE 1] COMPLETE ---")
 
 def resolve_turn(self):

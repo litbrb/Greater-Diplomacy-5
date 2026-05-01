@@ -212,37 +212,37 @@ def process_diplomacy_turn(self):
                         if m != country_name and m not in getattr(self, 'active_players', []):
                             ai_tasks.append({"sender": country_name, "target": m, "action": action})
 
-    # --- 3. LOADING SCREEN & EXECUTE AI THREADS ---
+    # --- 3. EXECUTE AI THREADS ---
     ai_results = {}
     if ai_tasks:
-        surf = pygame.display.get_surface()
-        if surf:
-            font = fonts.get("title")
-            txt = font.render(f"Waiting for {len(ai_tasks)} AI nations to respond...", True, (255, 200, 50))
-            surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 + 20)))
-            sub_font = fonts.get("normal")
-            sub_txt = sub_font.render("Generating responses... Please do not close the game.", True, (150, 150, 150))
-            surf.blit(sub_txt, sub_txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 + 60)))
-            pygame.display.flip()
-
         import concurrent.futures
-        # FIX: Blast the max_workers open so if the user targets 20 countries, it hits 20 threads.
+        
+        # --- NEW: Setup the progress bar trackers ---
+        self.ai_total_tasks = len(ai_tasks)
+        self.ai_completed_tasks = 0
+        self.loading_status_text = f"Awaiting LLM Responses ({self.ai_completed_tasks}/{self.ai_total_tasks})..."
+        
         with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
             futures = {}
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
                 if task["action"] in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "LEAVE_FACTION", "DISBAND_FACTION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
-                    # FIX: Pass task["content"] to evaluate_diplomatic_proposal
                     future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""))
                     futures[future] = task
                 elif task["action"] == "CUSTOM_MSG":
                     future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"])
                     futures[future] = task
+                    
             for future in concurrent.futures.as_completed(futures):
                 task = futures[future]
                 try:
                     ai_results[(task["sender"], task["target"], task["action"])] = future.result()
-                except Exception as e: print(f"Thread error: {e}")
+                except Exception as e: 
+                    print(f"Thread error: {e}")
+                    
+                # --- NEW: Increment the progress bar as each thread finishes ---
+                self.ai_completed_tasks += 1
+                self.loading_status_text = f"Awaiting LLM Responses ({self.ai_completed_tasks}/{self.ai_total_tasks})..."
 
     # --- 4. STANDARD RESOLUTION (APPLY AI RESULTS) ---
     delayed_responses = [] # Store AI actions here to queue them for the next turn

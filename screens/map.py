@@ -2,6 +2,7 @@
 import pygame
 import random
 import math
+import threading
 
 # Data & Constants
 import data.constants as c
@@ -29,6 +30,16 @@ class Map(GameState):
         self.active_players = getattr(self, 'active_players', []) # Usually empty on boot unless loaded from save
         self.current_player_index = getattr(self, 'current_player_index', 0)
         self.show_player_ready_screen = False
+
+       # --- BACKGROUND PROCESSING FLAGS ---
+        self.ai_is_thinking = False
+        self.ai_processing_complete = False
+        
+        # --- NEW PROGRESS BAR TRACKERS ---
+        self.loading_status_text = "Waiting..."
+        self.ai_total_tasks = 0
+        self.ai_completed_tasks = 0
+        self.loading_spinner_angle = 0
 
         self.brush_building = "None" 
         self.brush_unit = "None"    
@@ -335,13 +346,17 @@ class Map(GameState):
     def reset_view(self): 
         self.camera.target_zoom, self.camera.target_pos = self.min_zoom, pygame.Vector2(0, 0)
 
-    # 3. INTERCEPT NEXT TURN
+    # --- THE THREADED ADVANCE TIME FIX ---
     def advance_time(self):
-        turn_start_time = pygame.time.get_ticks() # Start the stopwatch
+        self.turn_start_time = pygame.time.get_ticks() 
         
-        # PHASE 2: Resolve the turn if we are currently viewing AI moves
+        # PHASE 2: Resolve the turn if we are currently viewing AI moves (Runs Synchronously)
         if getattr(self, 'viewing_ai_moves', False):
-            self.draw_turn_loading_screen("Resolving Orders...")
+            # THE FIX: Set the text, pass the actual surface, and force a frame flip
+            self.loading_status_text = "Resolving Orders..."
+            self.draw_turn_loading_screen(pygame.display.get_surface())
+            pygame.display.flip()
+            
             turn_processor.resolve_turn(self)
             self.refresh_political_map()
             self.refresh_relations_map()
@@ -355,7 +370,7 @@ class Map(GameState):
             buttons.render_buttons(self) 
             
             # --- TIMER FEEDBACK ---
-            elapsed_seconds = (pygame.time.get_ticks() - turn_start_time) / 1000.0
+            elapsed_seconds = (pygame.time.get_ticks() - self.turn_start_time) / 1000.0
             self.show_feedback(f"Turn resolved in {elapsed_seconds:.2f}s")
             print(f"[PERFORMANCE] Phase 2 completed in {elapsed_seconds:.2f} seconds.")
             return
@@ -372,46 +387,73 @@ class Map(GameState):
                 # All players have gone, loop back to player 1 and PREPARE the turn!
                 self.current_player_index = 0
                 self.player_country = self.active_players[0]
-                
-                # --- Show loading screen and explicitly refresh maps ---
-                self.draw_turn_loading_screen("Processing Turn...")
-                turn_processor.prepare_turn(self)
-                self.refresh_political_map() 
-                self.refresh_relations_map() 
-                
-                self.viewing_ai_moves = True
-                buttons.render_buttons(self) 
-                
-                # --- TIMER FEEDBACK ---
-                elapsed_seconds = (pygame.time.get_ticks() - turn_start_time) / 1000.0
-                self.show_feedback(f"AI Strategy generated in {elapsed_seconds:.2f}s")
-                print(f"[PERFORMANCE] Phase 1 (Multiplayer) completed in {elapsed_seconds:.2f} seconds.")
+                self._trigger_ai_thread()
         else:
-            self.draw_turn_loading_screen("Processing Turn...")
-            turn_processor.prepare_turn(self)
-            self.refresh_political_map()    
-            self.refresh_relations_map()    
-            self.viewing_ai_moves = True
-            buttons.render_buttons(self) 
+            self._trigger_ai_thread()
             
-            # --- TIMER FEEDBACK ---
-            elapsed_seconds = (pygame.time.get_ticks() - turn_start_time) / 1000.0
-            self.show_feedback(f"AI Strategy generated in {elapsed_seconds:.2f}s")
-            print(f"[PERFORMANCE] Phase 1 (Singleplayer) completed in {elapsed_seconds:.2f} seconds.")
+    def _trigger_ai_thread(self):
+        """Helper to lock the UI and start the background thread."""
+        self.ai_is_thinking = True
+        self.loading_status_text = "Initializing Turn..."
+        self.ai_total_tasks = 0
+        self.ai_completed_tasks = 0
+        
+        # Fire and forget the background process
+        threading.Thread(target=self._run_ai_processing_thread, daemon=True).start()
+        
+    def _run_ai_processing_thread(self):
+        """This runs in the background. Pygame keeps running!"""
+        turn_processor.prepare_turn(self)
+        self.ai_processing_complete = True # Signal the main thread we are done
 
-    def draw_turn_loading_screen(self, text="Processing Turn & Updating Map..."):
-        # Draws an overlay informing the player the turn is processing.
-        surf = pygame.display.get_surface()
-        if surf:
-            overlay = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
-            overlay.fill((0, 0, 0, 200))
-            surf.blit(overlay, (0, 0))
+    def draw_turn_loading_screen(self, surface):
+        """Draws a dynamic overlay informing the player the turn is processing."""
+        overlay = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 200))
+        surface.blit(overlay, (0, 0))
 
-            font = fonts.get("title")
-            txt = font.render(text, True, (255, 255, 255))
-            surf.blit(txt, txt.get_rect(center=(surf.get_width()//2, surf.get_height()//2 - 40)))
+        center_x = surface.get_width() // 2
+        center_y = surface.get_height() // 2
 
-            pygame.display.flip()
+        # 1. Draw Title Text
+        font = fonts.get("title")
+        txt = font.render(self.loading_status_text, True, (255, 255, 255))
+        surface.blit(txt, txt.get_rect(center=(center_x, center_y - 60)))
+
+        # 2. Draw Progress Bar (Only if we have tasks to track)
+        if self.ai_total_tasks > 0:
+            bar_w = 400
+            bar_h = 30
+            bar_x = center_x - (bar_w // 2)
+            bar_y = center_y
+            
+            # Background
+            pygame.draw.rect(surface, (40, 40, 60), (bar_x, bar_y, bar_w, bar_h), border_radius=5)
+            
+            # Fill
+            progress_ratio = self.ai_completed_tasks / float(self.ai_total_tasks)
+            fill_w = int(bar_w * progress_ratio)
+            if fill_w > 0:
+                pygame.draw.rect(surface, (100, 200, 100), (bar_x, bar_y, fill_w, bar_h), border_radius=5)
+                
+            # Outline
+            pygame.draw.rect(surface, (200, 200, 200), (bar_x, bar_y, bar_w, bar_h), 2, border_radius=5)
+
+            # Percentage Text
+            pct_txt = fonts.get("normal").render(f"{int(progress_ratio * 100)}%", True, (255, 255, 255))
+            surface.blit(pct_txt, pct_txt.get_rect(center=(center_x, bar_y + 15)))
+        else:
+            # 3. Draw a spinning loading wheel if we are just doing general processing
+            import math
+            self.loading_spinner_angle = (self.loading_spinner_angle + 5) % 360
+            radius = 20
+            
+            # Calculate a pulsing arc
+            start_rad = math.radians(self.loading_spinner_angle)
+            end_rad = math.radians(self.loading_spinner_angle + 270) # 3/4 circle
+            
+            arc_rect = pygame.Rect(center_x - radius, center_y - radius, radius * 2, radius * 2)
+            pygame.draw.arc(surface, (100, 200, 255), arc_rect, start_rad, end_rad, 5)
 
     def show_feedback(self, text): 
         self.feedback_text, self.feedback_timer = text, pygame.time.get_ticks()
@@ -421,16 +463,12 @@ class Map(GameState):
         event_handler.handle_map_events(self, event)
 
     def sync_units_to_data(self):
-        # Forces all units currently on the map to adopt the stats from unit_data.json.
-        import json, os
-        unit_path = 'data/json/unit_data.json'
+        # OPTIMIZATION FIX: Use the cached queries instead of reading the JSON
+        unit_library = queries.get_unit_library()
         
-        if not os.path.exists(unit_path):
-            self.show_feedback("Error: unit_data.json not found!")
+        if not unit_library:
+            self.show_feedback("Error: unit library not found!")
             return
-            
-        with open(unit_path, 'r') as f:
-            unit_library = json.load(f)
             
         updated_count = 0
         for province in self.map_data.values():
@@ -477,14 +515,17 @@ class Map(GameState):
     def additional_draw(self, surface): 
         map_renderer.draw_map_screen(self, surface)
 
-    # ADD THIS NEW FUNCTION RIGHT HERE
     def draw(self, surface):
-        # 1. Call the base GameState draw (this draws the map, UI panels, AND buttons)
+        # Call the base GameState draw
         super().draw(surface)
         
-        # 2. Draw the notification badges on the absolute top layer
+        # Draw badges
         map_renderer.draw_badges(self, surface)
-    
+        
+        # THE FIX: Inject the loading screen into the main rendering pipeline
+        if getattr(self, 'ai_is_thinking', False):
+            self.draw_turn_loading_screen(surface)
+
     def refresh_nation_data(self):
         from data.io import country_io
         new_data = country_io.load_all_country_data()
@@ -663,12 +704,29 @@ class Map(GameState):
 
     # --- Pygame Core Loop Updates ---
     def update(self):
+        super().update()
         self.camera.update(self, c.SCREEN_HEIGHT)
 
         if getattr(self, 'show_player_ready_screen', False):
             for el in self.elements:
                 el.visible = False
             return
+
+        # --- THE FIX: CATCH THE THREAD COMPLETION FLAG ---
+        if getattr(self, 'ai_processing_complete', False):
+            self.ai_processing_complete = False
+            self.ai_is_thinking = False
+            
+            # NOW it is safe to do the things that affect the screen
+            self.refresh_political_map()
+            self.refresh_relations_map()
+            self.viewing_ai_moves = True
+            
+            buttons.render_buttons(self)
+            
+            elapsed_seconds = (pygame.time.get_ticks() - self.turn_start_time) / 1000.0
+            self.show_feedback(f"AI Strategy generated in {elapsed_seconds:.2f}s")
+            print(f"[PERFORMANCE] Phase 1 completed in {elapsed_seconds:.2f} seconds.")
 
         # 1. Update Ocean Color
         from map_logic.camera import camera_handler

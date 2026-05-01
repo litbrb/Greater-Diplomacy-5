@@ -33,7 +33,7 @@ FEEDBACK_TEXT_Y = 220
 # Economy Data
 BASE_YIELDS = {
     "manpower": 50,
-    "materials": 20,
+    "materials": 10,
     "fuel": 0
 }
 

@@ -1,7 +1,7 @@
 import pygame
 import data.constants as c
 from gameState import GameState
-from ui_elements import Button, draw_resource_string
+from ui_elements import Button, draw_resource_string, draw_combat_stats
 from screens.map_related_screens import recruit_ui
 from map_logic.rendering.font_manager import fonts
 from map_logic.rendering import symbol_loader
@@ -358,8 +358,13 @@ class Production_Screen(GameState):
             else:
                 t = max(1, stats.get('production_time', c.DAYS_PER_TURN) // c.DAYS_PER_TURN)
                 draw_resource_string(surface, bar_font, f"Deploy: {t} turns   |   Cost: ", stats.get('cost_materials', 0), stats.get('cost_manpower', 0), stats.get('cost_fuel', 0), bar_rect.x + 15, bar_rect.y + 6, (255, 215, 0))
-                txt2 = f"Combat Stats:   ⚔️ATK: {stats.get('attack', 0)}   🛡️DEF: {stats.get('defense', 0)}   ❤️HP: {stats.get('health', 0)}   ⚡SPD: {stats.get('speed', 0)}"
-                surface.blit(bar_font.render(txt2, True, (200, 200, 200)), (bar_rect.x + 15, bar_rect.y + 26))
+                
+                # --- MODIFIED COMBAT STATS STRING ---
+                draw_combat_stats(
+                    surface, bar_font, "Combat Stats:   ", 
+                    stats.get('attack', 0), stats.get('defense', 0), stats.get('health', 0), stats.get('speed', 0), 
+                    bar_rect.x + 15, bar_rect.y + 26, (200, 200, 200)
+                )
 
         # --- STATIC OVERLAYS ---
         # Draw header overlay block to hide scrolling units that go too high

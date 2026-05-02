@@ -1,9 +1,7 @@
 import pygame
-import json
-import os
 from gameState import GameState
 import data.constants as c
-from ui_elements import Button, draw_resource_string
+from ui_elements import Button, draw_resource_string, draw_combat_stats
 from map_logic.rendering.font_manager import fonts
 from map_logic.rendering import symbol_loader
 from data import queries
@@ -407,52 +405,100 @@ class Research_Screen(GameState):
             actual_turns += 1
             
         if actual_turns > base_time:
-            warn_txt = font_small.render(f"⚠️ Ahead of Time Penalty! Estimated Actual Time: ~{actual_turns} turns", True, (255, 100, 100))
-            surface.blit(warn_txt, (panel_rect.x + 200, panel_rect.y + 130))
+            # --- MODIFIED WARNING LOGIC ---
+            warn_x = panel_rect.x + 200
+            warn_icon = symbol_loader.SYMBOLS.get(c.ICON_WARNING)
+            if warn_icon:
+                icon_h = max(16, font_small.get_height())
+                warn_icon = pygame.transform.smoothscale(warn_icon, (icon_h, icon_h))
+                surface.blit(warn_icon, (warn_x, panel_rect.y + 130 + 2))
+                warn_x += icon_h + 5
+                
+            warn_txt = font_small.render(f"Ahead of Time Penalty! Estimated Actual Time: ~{actual_turns} turns", True, (255, 100, 100))
+            surface.blit(warn_txt, (warn_x, panel_rect.y + 130))
         # --------------------------------
 
         y_off = panel_rect.y + 170 # Shifted down slightly to make room for the warning text
         display_name = self.active_modal["display_name"]
+        tech_key = self.active_modal["tech_key"]
+        level = self.active_modal["level"]
         
-        if display_name in self.unit_library:
-            s = self.unit_library[display_name]
-            
-            txt1 = f"Combat Stats:   ⚔️ ATK: {s.get('attack',0)}   🛡️ DEF: {s.get('defense',0)}   ❤️ HP: {s.get('health',0)}   ⚡ SPD: {s.get('speed',0)}"
-            surface.blit(font_small.render(txt1, True, (200, 200, 200)), (panel_rect.x + 200, y_off))
+        # Show what this tech unlocks
+        unlocks = queries.get_tech_unlocks(tech_key, level)
+        if unlocks:
+            txt_unlock = f"Unlocks: {', '.join(unlocks)}"
+            surface.blit(font_small.render(txt_unlock, True, (150, 255, 150)), (panel_rect.x + 200, y_off))
             y_off += 30
             
-            draw_resource_string(
-                surface, font_small, "Production Cost:   ",
-                s.get('cost_materials', 0), s.get('cost_manpower', 0), s.get('cost_fuel', 0),
-                panel_rect.x + 200, y_off, (200, 200, 200)
-            )
-            y_off += 30
+        # Collect entities to show stats for (both the tech itself AND anything it unlocks)
+        entities_to_show = []
+        if display_name in self.unit_library or display_name in self.building_library:
+            entities_to_show.append(display_name)
             
-        elif display_name in self.building_library:
-            s = self.building_library[display_name]
-            
-            # Using the standardized math here as well for read-only menus!
-            txt1 = f"Construction Time: {max(1, s.get('time',0) // c.DAYS_PER_TURN)} turns"
-            surface.blit(font_small.render(txt1, True, (200, 200, 200)), (panel_rect.x + 200, y_off))
-            y_off += 30
-            
-            draw_resource_string(
-                surface, font_small, "Yield (Per Turn):   ",
-                s.get('prod_materials', 0), s.get('prod_manpower', 0), s.get('prod_fuel', 0),
-                panel_rect.x + 200, y_off, (150, 255, 150), is_yield=True
-            )
-            y_off += 30
-            
-            draw_resource_string(
-                surface, font_small, "Construction Cost:   ",
-                s.get('cost_materials', 0), s.get('cost_manpower', 0), s.get('cost_fuel', 0),
-                panel_rect.x + 200, y_off, (200, 200, 200)
-            )
-            y_off += 30
-        else:
+        for unlock in unlocks:
+            if unlock in self.unit_library or unlock in self.building_library:
+                if unlock not in entities_to_show:
+                    entities_to_show.append(unlock)
+                    
+        # Fallback if there are no stats and no string unlocks
+        if not entities_to_show and not unlocks:
             txt1 = "Advanced statistical data unavailable."
             surface.blit(font_small.render(txt1, True, (150, 150, 150)), (panel_rect.x + 200, y_off))
             y_off += 30
+            
+        # Draw stats for all relevant entities dynamically
+        for entity in entities_to_show:
+            # Draw a sub-header if the tech unlocks multiple things or if the unlocked item has a different name than the tech
+            if entity != display_name or len(entities_to_show) > 1:
+                surface.blit(font_small.render(f"Stats for {entity}:", True, (255, 215, 0)), (panel_rect.x + 200, y_off))
+                y_off += 25
+                
+            if entity in self.unit_library:
+                s = self.unit_library[entity]
+                
+                # --- MODIFIED COMBAT STATS STRING ---
+                draw_combat_stats(
+                    surface, font_small, "Combat Stats:   ", 
+                    s.get('attack', 0), s.get('defense', 0), s.get('health', 0), s.get('speed', 0), 
+                    panel_rect.x + 200, y_off, (200, 200, 200)
+                )
+                y_off += 30
+                
+                draw_resource_string(
+                    surface, font_small, "Production Cost:   ",
+                    s.get('cost_materials', 0), s.get('cost_manpower', 0), s.get('cost_fuel', 0),
+                    panel_rect.x + 200, y_off, (200, 200, 200)
+                )
+                y_off += 30
+                
+            elif entity in self.building_library:
+                s = self.building_library[entity]
+                
+                txt1 = f"Construction Time: {max(1, s.get('time',0) // c.DAYS_PER_TURN)} turns"
+                surface.blit(font_small.render(txt1, True, (200, 200, 200)), (panel_rect.x + 200, y_off))
+                y_off += 30
+                
+                draw_resource_string(
+                    surface, font_small, "Yield (Per Turn):   ",
+                    s.get('prod_materials', 0), s.get('prod_manpower', 0), s.get('prod_fuel', 0),
+                    panel_rect.x + 200, y_off, (150, 255, 150), is_yield=True
+                )
+                y_off += 30
+                
+                draw_resource_string(
+                    surface, font_small, "Construction Cost:   ",
+                    s.get('cost_materials', 0), s.get('cost_manpower', 0), s.get('cost_fuel', 0),
+                    panel_rect.x + 200, y_off, (200, 200, 200)
+                )
+                y_off += 30
+                
+            y_off += 10 # Padding between items
+        else:
+            # Fallback ONLY if there's no unit, no building, and no programmatic unlocks
+            if not unlocks:
+                txt1 = "Advanced statistical data unavailable."
+                surface.blit(font_small.render(txt1, True, (150, 150, 150)), (panel_rect.x + 200, y_off))
+                y_off += 30
 
     def render_completed_text_list(self, surface):
         player_data = self.map_screen.nation_data[self.map_screen.player_country]

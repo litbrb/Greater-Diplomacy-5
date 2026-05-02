@@ -214,6 +214,21 @@ def get_building_required_tech(b_name):
         return "recruitment_buildings", int(b_name.split()[-1])
     return None, 0
 
+def get_tech_unlocks(tech_key, level):
+    """Returns a list of strings detailing what this tech unlocks."""
+    unlocks = []
+    bldg_lib = get_building_library()
+    for b_name in bldg_lib.keys():
+        req_tech, req_lvl = get_building_required_tech(b_name)
+        if req_tech == tech_key and req_lvl == level:
+            unlocks.append(b_name)
+            
+    # Hardcoded logic bonuses
+    if tech_key == "bergius_process" and level == 1:
+        unlocks.append(f"+{c.BERGIUS_FUEL_BONUS} Base Fuel/Turn")
+        
+    return unlocks
+
 def get_highest_infantry(nation_data_block, tech_tree, unit_library):
     """Finds the highest level infantry unit the nation has researched."""
     res_lvl = nation_data_block.get("research", {}).get("infantry_type", 1)
@@ -311,12 +326,17 @@ def calculate_all_economies(map_data, nation_data):
 
     # Initialize data structure for all active nations
     econ_data = {}
-    for name in nation_data.keys():
+    for name, n_data in nation_data.items():
+        # Fetch Bergius bonus
+        bergius_bonus = 0
+        if n_data.get("research", {}).get("bergius_process", 0) > 0:
+            bergius_bonus = c.BERGIUS_FUEL_BONUS
+
         econ_data[name] = {
             "breakdown": {
-                "manpower": {"core": 0, "non_core": 0, "buildings": 0, "resources": 0},
-                "materials": {"core": 0, "non_core": 0, "buildings": 0, "resources": 0},
-                "fuel": {"core": 0, "non_core": 0, "buildings": 0, "resources": 0}
+                "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
+                "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
+                "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0}
             },
             "upkeep": {"manpower": 0, "materials": 0, "fuel": 0},
             "total_inc": {"manpower": 0, "materials": 0, "fuel": 0}

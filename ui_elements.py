@@ -280,3 +280,29 @@ def draw_resource_string(surface, font, base_text, mat, man, fuel, x, y, color, 
         fallback_text = "None" if is_yield else "Free"
         val_surf = font.render(fallback_text, True, color)
         surface.blit(val_surf, (curr_x, y))
+
+def draw_combat_stats(surface, font, base_text, atk, df, hp, spd, x, y, color):
+    """Helper function to blit combat stat icons directly into the string."""
+    base_surf = font.render(base_text, True, color)
+    surface.blit(base_surf, (x, y))
+    curr_x = x + base_surf.get_width()
+
+    icons = [
+        (c.ICON_ATTACK, atk, "ATK:"), 
+        (c.ICON_DEFENSE, df, "DEF:"), 
+        (c.ICON_HEALTH, hp, "HP:"), 
+        (c.ICON_SPEED, spd, "SPD:")
+    ]
+
+    for icon_name, val, prefix in icons:
+        icon_surf = symbol_loader.SYMBOLS.get(icon_name)
+        if icon_surf:
+            # Scale the icon to roughly match the height of the font
+            icon_h = max(16, font.get_height())
+            icon_surf = pygame.transform.smoothscale(icon_surf, (icon_h, icon_h))
+            surface.blit(icon_surf, (curr_x, y + 2))
+            curr_x += icon_h + 4
+        
+        val_surf = font.render(f"{prefix} {val}   ", True, color)
+        surface.blit(val_surf, (curr_x, y))
+        curr_x += val_surf.get_width()

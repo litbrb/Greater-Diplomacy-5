@@ -37,6 +37,14 @@ BASE_YIELDS = {
     "fuel": 1
 }
 
+COUNTRY_BASE_YIELDS = {
+    "manpower": 100,
+    "materials": 100,
+    "fuel": 0
+}
+
+BERGIUS_FUEL_BONUS = 100
+
 UPKEEP_MODIFIERS = {
     "manpower": 0.10,
     "materials": 0.05,
@@ -278,6 +286,15 @@ ICON_CONSTRUCTION = "Hammer"
 ICON_DISBANDING = "Disbanding"
 OVERLAY_STATUS_ICON_SCALE = 0.6
 OVERLAY_STATUS_ICON_ALPHA = 180  # 0 to 255 transparency scale
+
+# ==========================================
+# STAT ICONS
+# ==========================================
+ICON_ATTACK = "Attack"
+ICON_DEFENSE = "Shield"
+ICON_HEALTH = "Heart"
+ICON_SPEED = "Lightning"
+ICON_WARNING = "Warning"
 
 # ==========================================
 # AI RECRUITMENT PREFERENCES

@@ -108,11 +108,16 @@ def process_ai_unit_orders(map_screen):
         enemy_targets = set()
         all_enemy_coasts = set()
         enemy_coastal_waters = set()
+        unclaimed_targets = set()
+        all_unclaimed_coasts = set() # --- NEW: Global coastal unclaimed ---
 
-        # Locate all enemy coastal provinces globally for naval targeting and invasions
-        if enemies:
-            for prov in map_screen.map_data.values():
-                if prov.get("owner") in enemies and prov.get("is_coastal", False):
+        # Locate coastal provinces globally for naval targeting and island hopping
+        # Un-indented so it runs even during peacetime!
+        for prov in map_screen.map_data.values():
+            if prov.get("is_coastal", False):
+                owner = prov.get("owner", "Unclaimed")
+                
+                if enemies and owner in enemies:
                     all_enemy_coasts.add(prov["id"])
                     
                     # Find adjacent water tiles for ships to blockade from
@@ -120,6 +125,10 @@ def process_ai_unit_orders(map_screen):
                         n_prov = map_screen.id_to_province.get(n_id)
                         if n_prov and n_prov.get("terrain") in c.WATER_TERRAINS:
                             enemy_coastal_waters.add(n_id)
+                            
+                # --- NEW: Identify unclaimed islands globally ---
+                elif owner in ["Unclaimed", "None", ""]:
+                    all_unclaimed_coasts.add(prov["id"])
 
         for prov in my_provs:
             is_war_border = False
@@ -131,10 +140,14 @@ def process_ai_unit_orders(map_screen):
                 if not n_prov: continue
                 if n_prov.get("terrain") in c.WATER_TERRAINS: continue # Ignore water for basic land movement
 
-                n_owner = n_prov.get("owner")
+                n_owner = n_prov.get("owner", "Unclaimed") # Fallback to Unclaimed
                 if n_owner in enemies:
                     is_war_border = True
                     enemy_targets.add(n_id)
+                # --- NEW: Identify Unclaimed Land ---
+                elif n_owner in ["Unclaimed", "None", ""]: 
+                    unclaimed_targets.add(n_id)
+                # ------------------------------------
                 # Ignore water and ignore faction members when deciding where to place peacetime border guards
                 elif n_owner != ai_name and n_owner not in c.WATER_NATIONS and not queries.are_in_same_faction(ai_name, n_owner, map_screen.nation_data):
                     is_peace_border = True
@@ -150,10 +163,10 @@ def process_ai_unit_orders(map_screen):
 
         # Determine where units should be
         if at_war:
-            target_destinations = list(enemy_targets) + list(all_enemy_coasts)
+            target_destinations = list(enemy_targets) + list(all_enemy_coasts) + list(unclaimed_targets) + list(all_unclaimed_coasts)
         else:
             # Include coasts but peace borders still naturally pull units first if we prioritize them
-            target_destinations = list(peace_borders) + list(coastal_borders)
+            target_destinations = list(unclaimed_targets) + list(all_unclaimed_coasts) + list(peace_borders) + list(coastal_borders)
 
         # If no targets (e.g. island with no neighbors), skip
         if not target_destinations:
@@ -202,6 +215,21 @@ def process_ai_unit_orders(map_screen):
                 continue
             # -----------------------------------
             
+            # --- NEW: Unclaimed Territory Grab ---
+            # If adjacent to an unclaimed tile, prioritize it immediately
+            adjacent_unclaimed = [n for n in prov.get("neighbors", []) if n in unclaimed_targets]
+            if adjacent_unclaimed and not is_naval_combatant:
+                best_adj = min(adjacent_unclaimed, key=lambda t: target_assignments.get(t, 0))
+                
+                speed = unit.get("speed", 1)
+                unit["order"]["path"] = [best_adj] # Move directly into unclaimed territory
+                
+                target_assignments[best_adj] = target_assignments.get(best_adj, 0) + 1
+                if curr_id in target_assignments:
+                    target_assignments[curr_id] -= 1
+                continue
+            # -------------------------------------
+
             # 1. Peacetime Anti-Shuffle
             # If we are holding a border and we are the ONLY unit here, hold the line.
             if not at_war and not is_naval_combatant and curr_id in target_assignments:

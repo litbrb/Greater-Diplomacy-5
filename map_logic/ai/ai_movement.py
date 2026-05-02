@@ -218,6 +218,11 @@ def process_ai_unit_orders(map_screen):
             # --- NEW: Unclaimed Territory Grab ---
             # If adjacent to an unclaimed tile, prioritize it immediately
             adjacent_unclaimed = [n for n in prov.get("neighbors", []) if n in unclaimed_targets]
+            
+            # PREVENT ILLEGAL CONVOY MOVES
+            if is_convoy:
+                adjacent_unclaimed = [n for n in adjacent_unclaimed if queries.can_convoy_enter(prov, map_screen.id_to_province.get(n))]
+
             if adjacent_unclaimed and not is_naval_combatant:
                 best_adj = min(adjacent_unclaimed, key=lambda t: target_assignments.get(t, 0))
                 
@@ -241,6 +246,11 @@ def process_ai_unit_orders(map_screen):
             # instead of walking sideways down the border to balance numbers.
             if at_war and not is_naval_combatant:
                 adjacent_targets = [n for n in prov.get("neighbors", []) if n in target_destinations and n in enemy_targets]
+                
+                # PREVENT ILLEGAL CONVOY ATTACKS
+                if is_convoy:
+                    adjacent_targets = [n for n in adjacent_targets if queries.can_convoy_enter(prov, map_screen.id_to_province.get(n))]
+
                 if adjacent_targets:
                     # Pick the adjacent enemy with the least attackers currently assigned
                     best_adj = min(adjacent_targets, key=lambda t: target_assignments.get(t, 0))
@@ -308,7 +318,16 @@ def process_ai_unit_orders(map_screen):
                 else:
                     # Truncate the AI's path to match its actual movement speed
                     speed = unit.get("speed", 1)
-                    unit["order"]["path"] = path[:speed]
+                    
+                    # PREVENT LAND UNITS QUEUEING INTO OCEAN MID-MOVE
+                    final_path = []
+                    for step_id in path[:speed]:
+                        step_prov = map_screen.id_to_province.get(step_id)
+                        if not is_convoy and not is_naval_combatant and step_prov and step_prov.get("terrain") in c.WATER_TERRAINS:
+                            break # Stop at the coast, explicitly convert next turn
+                        final_path.append(step_id)
+
+                    unit["order"]["path"] = final_path
                 
                 # Tell the system this unit is taking this target, reducing its priority for the next unit
                 if curr_id in assignments:

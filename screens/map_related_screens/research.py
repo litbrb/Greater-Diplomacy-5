@@ -51,7 +51,8 @@ class Research_Screen(GameState):
             "carrack": 350, "ironclad": 350, "pre-dreadnought": 350, "dreadnought": 350,
             "aircraft_carrier": 450,
             "workshop": 250, "basic_factory": 250, "factory": 250,
-            "bergius_process": 400, "synthetic_fuel_experiments": 400, "fuel_refining": 400
+            "bergius_process": 400, "synthetic_fuel_experiments": 400, "fuel_refining": 400,
+            "basic_recruitment": 550, "recruitment_buildings": 550
         }
 
         self.nodes = {"INFANTRY": [], "TANKS": [], "NAVY": [], "INDUSTRY": []}
@@ -118,6 +119,8 @@ class Research_Screen(GameState):
         if tech_key == "bergius_process": return "Bergius Process"
         if tech_key == "synthetic_fuel_experiments": return "Synthetic Fuel Experiments"
         if tech_key == "basic_factory": return "Basic Factory"
+        if tech_key == "basic_recruitment": return "Basic Recruitment Center"
+        if tech_key == "recruitment_buildings": return f"Recruitment Building Lvl {lvl}"
         
         base_name = tech_key.replace('_', ' ').title()
         

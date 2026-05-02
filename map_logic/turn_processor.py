@@ -42,7 +42,7 @@ def resolve_turn(self):
         if "at_war_with" in data:
             data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
     # ------------------------------
-
+    
     days_to_advance = c.DAYS_PER_TURN
     self.time_manager.process_time(days_to_advance)
     
@@ -59,6 +59,9 @@ def resolve_turn(self):
     process_combat(self)
     check_for_post_combat_captures(self)
     
+    # --- NEW: Kill orphaned units and ghost wars ---
+    process_dead_nations(self)
+    
     print("[SYSTEM] Calculating Economy & Processing Queues...")
     process_economy(self)
     
@@ -68,6 +71,28 @@ def resolve_turn(self):
     process_national_research(self)
     print("--- [PHASE 2] COMPLETE ---")
     print("="*40 + "\n")
+
+def process_dead_nations(self):
+    """Removes units belonging to nations that no longer control any territory and updates wars."""
+    living_nations = queries.get_living_nations(self.map_data)
+
+    # 1. Disband orphaned units of dead nations
+    for province in self.map_data.values():
+        surviving_units = []
+        for unit in province.get("units", []):
+            owner = unit.get("owner")
+            # Keep the unit if it belongs to an unplayable faction (like Ocean) or an alive nation
+            if owner in c.UNPLAYABLE_NATIONS or owner in living_nations:
+                surviving_units.append(unit)
+        
+        # Overwrite the province units with only the survivors
+        province["units"] = surviving_units
+
+    # 2. Instantly clean up ghost wars so surviving nations stop treating them as active threats
+    # (We run this again here because check_for_post_combat_captures just changed who is alive)
+    for nation, data in self.nation_data.items():
+        if "at_war_with" in data:
+            data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
 
 def process_disbands(self):
     """Processes the 1-turn timer for disbanding units and refunds their cost."""

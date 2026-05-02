@@ -169,35 +169,52 @@ def process_ai_economy_decisions(map_screen):
         if data.get("materials", 0) > 15000:
             res_levels = data.get("research", {})
             
-            # Fetch the dynamic list of industry buildings in order
+            # Fetch the dynamic lists
             industry_b_list = [b for b, d in building_library.items() if d.get("group") == "industry"]
+            refinery_b_list = [b for b, d in building_library.items() if d.get("group") == "refinery"]
+            recruit_b_list = [b for b, d in building_library.items() if d.get("group") == "recruitment"]
 
             for prov in my_provs:
                 current_buildings = prov.get("buildings", [])
                 queue = prov.get("deployment_queue", [])
 
                 # Double check the queue so it doesn't build two at once in the same province
-                if any(q.get("group") == "industry" for q in queue):
+                if any(q.get("group") in ["industry", "refinery", "recruitment"] for q in queue):
                     continue
 
-                owned_industry = [b for b in current_buildings if building_library.get(b, {}).get("group") == "industry"]
                 target_bldg = None
+                has_factory = queries.has_basic_factory(prov)
+                
+                # Expand AI's building options dynamically based on the tile's current capacity
+                groups_to_check = [industry_b_list]
+                if has_factory:
+                    groups_to_check.extend([refinery_b_list, recruit_b_list])
+                    
+                import random
+                random.shuffle(groups_to_check)
 
-                # Find the next sequential upgrade for this specific province
-                if not owned_industry:
-                    target_bldg = industry_b_list[0] if industry_b_list else None
-                else:
-                    for i, b_name in enumerate(industry_b_list):
-                        if b_name in owned_industry:
-                            if i + 1 < len(industry_b_list):
-                                target_bldg = industry_b_list[i+1]
+                for b_list in groups_to_check:
+                    if not b_list: continue
+                    group_id = building_library[b_list[0]].get("group")
+                    owned_in_group = [b for b in current_buildings if building_library.get(b, {}).get("group") == group_id]
+
+                    if not owned_in_group:
+                        target_bldg = b_list[0]
+                    else:
+                        for i, b_name in enumerate(b_list):
+                            if b_name in owned_in_group:
+                                if i + 1 < len(b_list):
+                                    target_bldg = b_list[i+1]
+
+                    if target_bldg:
+                        # Check if the AI actually has the research required for this next tier
+                        req_tech, req_lvl = queries.get_building_required_tech(target_bldg)
+                        if req_tech and res_levels.get(req_tech, 0) < req_lvl:
+                            target_bldg = None # Lacks the research, clear and check the next group
+                            continue
+                        break # Found a valid, fully-researched building!
 
                 if target_bldg:
-                    # Check if the AI actually has the research required for this next tier
-                    req_tech, req_lvl = queries.get_building_required_tech(target_bldg)
-                    if req_tech and res_levels.get(req_tech, 0) < req_lvl:
-                        continue # Lacks the research to build this next tier, try another province
-
                     # We have the tech and the physical foundation, now check costs
                     b_stats = building_library[target_bldg]
                     c_mat = b_stats.get("cost_materials", 0)

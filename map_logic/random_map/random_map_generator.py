@@ -172,20 +172,35 @@ def randomize_all_provinces(map_screen, settings):
     for lvl in range(1, ref_lvl + 1):
         allowed_refineries.append(f"Synthetic Refinery Lvl {lvl}")
 
+    allowed_recruitment = []
+    if baseline_tech.get("basic_recruitment", 0) > 0:
+        allowed_recruitment.append("Basic Recruitment Center")
+        
+    rec_lvl = baseline_tech.get("recruitment_buildings", 0)
+    for lvl in range(1, rec_lvl + 1):
+        allowed_recruitment.append(f"Recruitment Building Lvl {lvl}")
+
     # Give out random resources and buildings
     for prov in valid_land_provinces:
         if random.random() < 0.15:
             res_type = random.choice(["Iron", "Coal", "Oil"])
             prov["resources"] = {res_type: random.randint(20, 80)}
             
-        # Only spawn buildings if the era permits it
-        # Appending allows them to safely co-exist on the same tile
         prov.setdefault("buildings", [])
+        has_factory = False
+        
         if allowed_factories and random.random() < 0.10:
-            prov["buildings"].append(random.choice(allowed_factories))
+            fac = random.choice(allowed_factories)
+            prov["buildings"].append(fac)
+            if "Basic Factory" in fac or "Factory Lvl" in fac:
+                has_factory = True
             
-        if allowed_refineries and random.random() < 0.05:
-            prov["buildings"].append(random.choice(allowed_refineries))
+        # Guarantee refineries/recruitment centers only spawn where basic factories exist
+        if has_factory:
+            if allowed_refineries and random.random() < 0.30:
+                prov["buildings"].append(random.choice(allowed_refineries))
+            if allowed_recruitment and random.random() < 0.30:
+                prov["buildings"].append(random.choice(allowed_recruitment))
 
     # --- Step D: Guarantee Minimums & Garrison Units ---
     unit_library = {}

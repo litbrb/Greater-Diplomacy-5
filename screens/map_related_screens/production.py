@@ -78,7 +78,7 @@ class Production_Screen(GameState):
         x_pos = 50
 
         # --- BUILDING LOGIC ---
-        bldg_groups = {"Other": ["industry"], "Fuel": ["refinery"]}
+        bldg_groups = {"Other": ["industry"], "Fuel": ["refinery"], "Recruitment": ["recruitment"]}
         
         def process_building_categories(cat_groups, is_fuel):
             nonlocal y_offset
@@ -103,6 +103,11 @@ class Production_Screen(GameState):
                     if req_tech and player_research.get(req_tech, 0) < req_lvl:
                         continue 
 
+                    # --- ENFORCE FACTORY DEPENDENCY ---
+                    if data["group"] in ["refinery", "recruitment"]:
+                        if not queries.has_basic_factory(self.target_province):
+                            continue
+
                     if is_building:
                         btn_txt = "Building..."
                         cb = lambda: None
@@ -111,6 +116,7 @@ class Production_Screen(GameState):
                         btn_txt = target
                         cb = lambda t=target: self.start_construction(t)
                         btn_color = "purple" if is_fuel else "orange"
+                        if data["group"] == "recruitment": btn_color = "red"
 
                     btn = Button(x_pos, y_offset, "medium", btn_color, btn_txt, cb)
                     btn.base_y = y_offset
@@ -129,6 +135,11 @@ class Production_Screen(GameState):
         self.fuel_start_y = y_offset
         process_building_categories(bldg_groups["Fuel"], is_fuel=True)
         self.fuel_end_y = y_offset
+
+        y_offset += 30
+        self.recruit_start_y = y_offset
+        process_building_categories(bldg_groups["Recruitment"], is_fuel=False)
+        self.recruit_end_y = y_offset
         y_offset += 30
 
         # --- UNIT LOGIC ---
@@ -300,6 +311,14 @@ class Production_Screen(GameState):
             pygame.draw.rect(surface, (150, 50, 200), navy_rect, 2)
             lbl = fonts.get("heading2").render("FUEL REFINERIES", True, (200, 100, 255))
             surface.blit(lbl, (40, self.fuel_start_y + scroll - 45))
+
+        # Recruitment (Red)
+        if getattr(self, 'recruit_end_y', 0) > getattr(self, 'recruit_start_y', 0):
+            recruit_rect = pygame.Rect(30, self.recruit_start_y + scroll - 15, 840, self.recruit_end_y - self.recruit_start_y + 15)
+            pygame.draw.rect(surface, (60, 30, 30), recruit_rect)
+            pygame.draw.rect(surface, (200, 50, 50), recruit_rect, 2)
+            lbl = fonts.get("heading2").render("RECRUITMENT CENTERS", True, (255, 100, 100))
+            surface.blit(lbl, (40, self.recruit_start_y + scroll - 45))
 
         # Infantry (Green)
         if self.infantry_end_y > self.infantry_start_y:

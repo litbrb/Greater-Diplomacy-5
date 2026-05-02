@@ -194,6 +194,10 @@ def has_industry(province):
     """Returns True if the province contains a Workshop or Factory."""
     return get_industry(province) > 0
 
+def has_basic_factory(province):
+    """Returns True if the province contains a Basic Factory or better."""
+    return get_industry(province) >= 6
+
 def get_building_required_tech(b_name):
     """Maps building names to their respective research tree requirements."""
     if "Basic Factory" in b_name:
@@ -204,6 +208,10 @@ def get_building_required_tech(b_name):
         return "synthetic_fuel_experiments", 1
     if "Synthetic Refinery" in b_name:
         return "fuel_refining", int(b_name.split()[-1])
+    if "Basic Recruitment" in b_name:
+        return "basic_recruitment", 1
+    if "Recruitment Building Lvl" in b_name:
+        return "recruitment_buildings", int(b_name.split()[-1])
     return None, 0
 
 def get_highest_infantry(nation_data_block, tech_tree, unit_library):

@@ -189,6 +189,12 @@ def process_ai_unit_orders(map_screen):
                 
         naval_destinations = list(enemy_coastal_waters) + list(friendly_convoys)
         naval_assignments = {t_id: 0 for t_id in naval_destinations}
+        
+        # --- NEW: Convoy Escort Priority ---
+        # Apply a massive negative weight so warships heavily prioritize covering active convoys
+        for c_id in friendly_convoys:
+            if c_id in naval_assignments:
+                naval_assignments[c_id] -= c.AI_CONVOY_ESCORT_WEIGHT
 
         # Pre-count units already AT the targets so we don't over-assign
         for unit, prov in units_info:

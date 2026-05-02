@@ -98,77 +98,84 @@ def process_ai_economy_decisions(map_screen):
         # If current upkeep is below the desired percentage of income, build units!
         elif ratio_mat < target_mat and ratio_man < target_man and ratio_fuel < target_fuel:
             
-            # --- NEW: Guard Target Calculation ---
+            # --- NEW: Guard Target & Dynamic Naval Calculation ---
             infantry_count = 0
             naval_count = 0
             tank_count = 0
-            guard_targets = 0
-            coastal_targets = 0
+            land_border_count = 0
+            sea_border_count = 0
             
             for prov in my_provs:
-                # Count existing and queued units
+                # Count existing units
                 for u in prov.get("units", []):
                     if u.get("owner") == ai_name:
                         u_type = u.get("type", "")
                         if "Infantry" in u_type:
                             infantry_count += 1
-                        elif "Tank" in u_type or "Armored" in u_type:  
+                        elif "Tank" in u_type or "Armored" in u_type or u_type == "Cavalry":  
                             tank_count += 1
                         elif queries.is_naval_unit(u_type) and not u_type.startswith("Convoy"):
                             naval_count += 1
+                
+                # Count queued units
                 for q in prov.get("deployment_queue", []):
                     q_type = q.get("unit_type", "")
                     if "Infantry" in q_type:
                         infantry_count += 1
-                    elif "Tank" in q_type or "Armored" in q_type:  
+                    elif "Tank" in q_type or "Armored" in q_type or q_type == "Cavalry":  
                         tank_count += 1
                     elif queries.is_naval_unit(q_type) and not q_type.startswith("Convoy"):
                         naval_count += 1
                 
-                # Check neighbors for foreign borders
-                is_border = False
+                # Check neighbors to determine land/sea ratios
+                is_land_border = False
+                is_coast = False
                 for n_id in prov.get("neighbors", []):
                     n_prov = map_screen.id_to_province.get(n_id)
-                    if n_prov and n_prov.get("terrain") not in c.WATER_TERRAINS and n_prov.get("owner") != ai_name:
-                        is_border = True
-                        break
-                        
-                if is_border:
-                    guard_targets += 1
-                elif prov.get("is_coastal", False):
-                    coastal_targets += 1
+                    if n_prov:
+                        if n_prov.get("terrain") in c.WATER_TERRAINS:
+                            is_coast = True
+                        elif n_prov.get("owner") != ai_name and n_prov.get("owner") not in c.WATER_NATIONS:
+                            is_land_border = True
+                            
+                if is_land_border:
+                    land_border_count += 1
+                if is_coast:
+                    sea_border_count += 1
             
-            total_guard_needed = guard_targets + coastal_targets
+            total_borders = land_border_count + sea_border_count
+            target_navy_ratio = 0.0
+            
+            if total_borders > 0:
+                # If they have a tiny coast BUT they have land borders to focus on, ignore the navy.
+                if sea_border_count < c.AI_MIN_COAST_FOR_NAVY and land_border_count > 0:
+                    target_navy_ratio = 0.0
+                else:
+                    # Otherwise, proceed with the normal ratio (this protects tiny island nations)
+                    target_navy_ratio = min(c.AI_MAX_NAVY_RATIO, sea_border_count / total_borders)
+            
+            total_units = infantry_count + tank_count + naval_count
+            current_navy_ratio = naval_count / max(1, total_units)
             
             # --- THE FIX: Dynamic Army Composition Ratio ---
             # If materials are plentiful compared to manpower, the ratio shrinks (build more tanks).
             # If manpower is massive compared to materials, the ratio grows (build more infantry).
             # Uses c.AI_INFANTRY_TO_TANK_RATIO so balanced economies respect your constants file.
             mat_to_man_ratio = inc_man / max(1.0, inc_mat)
-            dynamic_ratio = max(1, int(mat_to_man_ratio * c.AI_INFANTRY_TO_TANK_RATIO))
+            dynamic_tank_ratio = max(1, int(mat_to_man_ratio * c.AI_INFANTRY_TO_TANK_RATIO))
             
             unit_name_to_build = None
 
-            # 1. Force a tank if our infantry ratio is too high (safely prevents ZeroDivisionError)
-            if (infantry_count / max(1, tank_count)) > dynamic_ratio:
-                unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
-                
-            # 2. Otherwise, fulfill guard needs
-            elif infantry_count < total_guard_needed:
-                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library)
-                
-            # 3. Naval checks
-            elif coastal_targets > 0 and naval_count < coastal_targets * 1.5:
-                # Prioritize naval deployment if coasts are undefended and ratio is low
+            # 1. Naval Check (Priority if below ratio)
+            if current_navy_ratio < target_navy_ratio:
                 unit_name_to_build = queries.get_best_naval_unit(data.get("research", {}), unit_library)
-                if not unit_name_to_build: # Fallback to offensive land units if no naval tech
-                    unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
-                    
-            # 4. Default to offensive
-            else:
-                unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
 
-            if not unit_name_to_build: # Fallback if no offensive tech is researched
+            # 2. Force a tank if our infantry ratio is too high
+            if not unit_name_to_build and (infantry_count / max(1, tank_count)) > dynamic_tank_ratio:
+                unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
+                
+            # 3. Default to Infantry / Guard
+            if not unit_name_to_build:
                 unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library)
 
             unit_stats = unit_library.get(unit_name_to_build, {})
@@ -182,6 +189,16 @@ def process_ai_economy_decisions(map_screen):
             # --- NEW: Filter to coastal factories only if building a naval unit ---
             is_naval_recruit = queries.is_naval_unit(unit_name_to_build)
             valid_recruit_provs = [p for p in factory_provs if p.get("is_coastal", False)] if is_naval_recruit else factory_provs
+            
+            # --- Fallback if AI tries to build a ship but has no coastal factories ---
+            if is_naval_recruit and not valid_recruit_provs:
+                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library)
+                unit_stats = unit_library.get(unit_name_to_build, {})
+                cost_mat = unit_stats.get("cost_materials", 0)
+                cost_man = unit_stats.get("cost_manpower", 0)
+                cost_fuel = unit_stats.get("cost_fuel", 0)
+                is_naval_recruit = False
+                valid_recruit_provs = factory_provs
             
             # Can we afford the upfront cost AND have a valid province?
             if valid_recruit_provs and data.get("materials", 0) >= cost_mat and data.get("manpower", 0) >= cost_man and data.get("fuel", 0) >= cost_fuel:

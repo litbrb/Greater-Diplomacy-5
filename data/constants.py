@@ -327,6 +327,11 @@ AI_INFANTRY_TO_TANK_RATIO = 4
 
 AI_WAR_UPKEEP_MULTIPLIER = 1.5
 
+AI_MAX_NAVY_RATIO = 0.2 # Maximum percentage of an AI's army that can be navy
+AI_CONVOY_ESCORT_WEIGHT = 5 # Negative weight to pull pathing warships towards convoys
+
+AI_MIN_COAST_FOR_NAVY = 8 # Tiles needed to justify building a navy
+
 # ==========================================
 # FILE PATHS
 # ==========================================

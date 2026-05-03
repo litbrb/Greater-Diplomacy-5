@@ -202,19 +202,37 @@ def randomize_all_provinces(map_screen, settings):
             if allowed_recruitment and random.random() < 0.30:
                 prov["buildings"].append(random.choice(allowed_recruitment))
 
-    # --- Step D: Guarantee Minimums & Garrison Units ---
-    unit_library = {}
-    unit_stats_path = c.UNIT_DATA_PATH
-    if os.path.exists(unit_stats_path):
-        with open(unit_stats_path, 'r') as f:
-            unit_library = json.load(f)
+    # --- Step D: Guarantee Minimum Buildings ---
+    for nation in active_nations:
+        owned_provs = [p for p in valid_land_provinces if p["owner"] == nation]
+        if not owned_provs: continue
 
-    # Helper function to get the correct infantry name for a nation's tech level
-    def get_infantry_type(nation):
-        res_lvl = map_screen.nation_data[nation]["research"].get("infantry_type", 1)
-        inf_years = struct.get("infantry_type", {}).get("years", [c.START_YEAR])
-        year_val = inf_years[min(res_lvl - 1, len(inf_years)-1)]
-        return f"Infantry Type {year_val}"
+        has_factory = False
+        refinery_provs = []
+
+        for prov in owned_provs:
+            bldgs = prov.get("buildings", [])
+            
+            # Check if province contains an industrial building
+            if any("Factory" in b for b in bldgs):
+                has_factory = True
+                
+            if any("Refinery" in b for b in bldgs):
+                refinery_provs.append(prov)
+        
+        # If the nation randomly got zero factories, guarantee them one
+        if not has_factory:
+            # Safely prioritize merging it with an existing refinery to save map space
+            target_prov = random.choice(refinery_provs) if refinery_provs else random.choice(owned_provs)
+            bldg_to_add = random.choice(allowed_factories) if allowed_factories else c.DEFAULT_STARTING_FACTORY
+            target_prov.setdefault("buildings", []).append(bldg_to_add)
+
+    # --- Step E: Generate Starting Armies & Spread Across Borders ---
+    unit_library = queries.get_unit_library()
+    tech_tree = queries.get_tech_tree()
+
+    # Calculate starting economy so we can budget the starting armies
+    all_econ = queries.calculate_all_economies(map_screen.map_data, map_screen.nation_data)
 
     # Helper to generate a fresh unit dictionary so pointers aren't shared across provinces
     def generate_unit(nation, u_name):
@@ -235,32 +253,134 @@ def randomize_all_provinces(map_screen, settings):
         owned_provs = [p for p in valid_land_provinces if p["owner"] == nation]
         if not owned_provs: continue
 
-        infantry_name = get_infantry_type(nation)
-        has_factory = False
-        refinery_provs = []
+        data = map_screen.nation_data[nation]
+        econ = all_econ.get(nation)
+        if not econ: continue
 
+        # 1. Establish the Budget
+        inc_man = econ["total_inc"]["manpower"]
+        inc_mat = econ["total_inc"]["materials"]
+        inc_fuel = econ["total_inc"]["fuel"]
+
+        target_man = inc_man * getattr(c, 'AI_UPKEEP_TARGETS', {"manpower": 0.60}).get("manpower", 0.60)
+        target_mat = inc_mat * getattr(c, 'AI_UPKEEP_TARGETS', {"materials": 0.40}).get("materials", 0.40)
+        target_fuel = inc_fuel * getattr(c, 'AI_UPKEEP_TARGETS', {"fuel": 0.50}).get("fuel", 0.50)
+
+        # 2. Get highest unlocked tech
+        res_levels = data.get("research", {})
+        best_inf = queries.get_highest_infantry(data, tech_tree, unit_library)
+        best_tank = queries.get_best_offensive_unit(res_levels, unit_library)
+        best_navy = queries.get_best_naval_unit(res_levels, unit_library)
+
+        # 3. Identify physical boundaries for deployment
+        border_provs = []
+        coastal_provs = []
         for prov in owned_provs:
-            bldgs = prov.get("buildings", [])
-            
-            # Check if province contains an industrial building
-            if any("Factory" in b for b in bldgs):
-                has_factory = True
-                
-            if any("Refinery" in b for b in bldgs):
-                refinery_provs.append(prov)
+            if prov.get("is_coastal", False):
+                coastal_provs.append(prov)
 
-            if any("Factory" in b or "Refinery" in b for b in bldgs):
-                prov.setdefault("units", []).append(generate_unit(nation, infantry_name))
+            # Check if it touches anything not owned by this nation
+            for n_id in prov.get("neighbors", []):
+                n_prov = map_screen.id_to_province.get(n_id)
+                if n_prov and n_prov.get("owner") != nation and n_prov.get("terrain") not in c.WATER_TERRAINS:
+                    border_provs.append(prov)
+                    break # Already flagged as a border, move to next province
+
+        # Fallback if it's a completely isolated island with no land borders
+        if not border_provs:
+            border_provs = owned_provs
+
+        # 4. Draft the Army Composition
+        units_to_spawn = []
+        upk_man, upk_mat, upk_fuel = 0, 0, 0
+
+        mat_to_man_ratio = inc_man / max(1.0, inc_mat)
+        dynamic_tank_ratio = max(1, int(mat_to_man_ratio * getattr(c, 'AI_INFANTRY_TO_TANK_RATIO', 4)))
+
+        total_borders = len(border_provs) + len(coastal_provs)
+        target_navy_ratio = 0.0
         
-        # If the nation randomly got zero factories, guarantee them one + a garrison unit
-        if not has_factory:
-            # Safely prioritize merging it with an existing refinery to save map space
-            target_prov = random.choice(refinery_provs) if refinery_provs else random.choice(owned_provs)
-            bldg_to_add = random.choice(allowed_factories) if allowed_factories else c.DEFAULT_STARTING_FACTORY
-            target_prov.setdefault("buildings", []).append(bldg_to_add)
-            
-            # Grant a garrison if the tile didn't already get one from the refinery checks above
-            if target_prov not in refinery_provs:
-                target_prov.setdefault("units", []).append(generate_unit(nation, infantry_name))
+        if total_borders > 0:
+            if len(coastal_provs) < getattr(c, 'AI_MIN_COAST_FOR_NAVY', 8) and len(border_provs) > 0:
+                target_navy_ratio = 0.0
+            else:
+                target_navy_ratio = min(getattr(c, 'AI_MAX_NAVY_RATIO', 0.2), len(coastal_provs) / total_borders)
+
+        inf_count, tank_count, navy_count = 0, 0, 0
+        failsafe = 0
+
+        # Purchase loop: Stop when budget maxes out or if we hit the limit
+        while failsafe < 500:
+            failsafe += 1
+            total_units = inf_count + tank_count + navy_count
+            current_navy_ratio = navy_count / max(1, total_units)
+
+            unit_to_buy = None
+            if current_navy_ratio < target_navy_ratio and best_navy:
+                unit_to_buy = best_navy
+            elif best_tank and (inf_count / max(1, tank_count)) > dynamic_tank_ratio:
+                unit_to_buy = best_tank
+            else:
+                unit_to_buy = best_inf
+
+            if not unit_to_buy: break
+
+            stats = unit_library.get(unit_to_buy, {})
+            u_man = stats.get("cost_manpower", 0) * c.UPKEEP_MODIFIERS["manpower"]
+            u_mat = stats.get("cost_materials", 0) * c.UPKEEP_MODIFIERS["materials"]
+            u_fuel = stats.get("cost_fuel", 0) * c.UPKEEP_MODIFIERS["fuel"]
+
+            if upk_man + u_man <= target_man and upk_mat + u_mat <= target_mat and upk_fuel + u_fuel <= target_fuel:
+                units_to_spawn.append(unit_to_buy)
+                upk_man += u_man
+                upk_mat += u_mat
+                upk_fuel += u_fuel
+
+                if unit_to_buy == best_navy: navy_count += 1
+                elif unit_to_buy == best_tank: tank_count += 1
+                else: inf_count += 1
+            else:
+                # If we couldn't afford the preferred unit (like an expensive tank), fallback to infantry
+                if unit_to_buy != best_inf:
+                    stats = unit_library.get(best_inf, {})
+                    u_man = stats.get("cost_manpower", 0) * c.UPKEEP_MODIFIERS["manpower"]
+                    u_mat = stats.get("cost_materials", 0) * c.UPKEEP_MODIFIERS["materials"]
+                    u_fuel = stats.get("cost_fuel", 0) * c.UPKEEP_MODIFIERS["fuel"]
+                    
+                    if upk_man + u_man <= target_man and upk_mat + u_mat <= target_mat and upk_fuel + u_fuel <= target_fuel:
+                        units_to_spawn.append(best_inf)
+                        upk_man += u_man
+                        upk_mat += u_mat
+                        upk_fuel += u_fuel
+                        inf_count += 1
+                    else:
+                        break
+                else:
+                    break
+
+        # Guarantee at least 1 unit to prevent a totally defenseless nation
+        if not units_to_spawn:
+            units_to_spawn.append(best_inf)
+
+        # 5. Distribute Units Evenly Across Borders
+        random.shuffle(border_provs)
+        random.shuffle(coastal_provs)
+
+        border_idx = 0
+        coast_idx = 0
+
+        for u_name in units_to_spawn:
+            stats = unit_library.get(u_name, {})
+            is_naval = stats.get("naval_unit", False)
+
+            # Route naval units strictly to coasts, otherwise put them on land borders
+            if is_naval and coastal_provs:
+                target_prov = coastal_provs[coast_idx % len(coastal_provs)]
+                coast_idx += 1
+            else:
+                target_prov = border_provs[border_idx % len(border_provs)]
+                border_idx += 1
+
+            target_prov.setdefault("units", []).append(generate_unit(nation, u_name))
 
     map_screen.show_feedback(f"Randomized {target_country_count} evenly sized nations for {start_year}!")

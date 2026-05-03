@@ -66,6 +66,59 @@ def get_country_data():
 # DIPLOMACY & COMBAT QUERIES
 # ==========================================
 
+def get_military_strength(nation, map_data):
+    """Calculates rough military strength of a nation based on unit stats."""
+    strength = 0
+    for prov in map_data.values():
+        for u in prov.get("units", []):
+            if u.get("owner") == nation:
+                # Simple formula: attack + defense + (health / 10)
+                strength += u.get("attack", 0) + u.get("defense", 0) + (u.get("health", 0) / 10)
+    return strength
+
+def get_nations_holding_our_cores(nation, map_data):
+    """Returns a set of foreign nations that own territory where the given nation has a core."""
+    targets = set()
+    for prov in map_data.values():
+        owner = prov.get("owner")
+        if owner and owner != nation and owner not in c.UNPLAYABLE_NATIONS:
+            if nation in prov.get("cores", []):
+                targets.add(owner)
+    return targets
+
+def get_border_strength(nation_a, nation_b, map_data, id_to_province):
+    """Calculates the military strength of both nations localized to their shared border."""
+    strength_a = 0
+    strength_b = 0
+    
+    border_provs_a = set()
+    border_provs_b = set()
+    
+    for prov in map_data.values():
+        owner = prov.get("owner")
+        if owner == nation_a:
+            for n_id in prov.get("neighbors", []):
+                n_prov = id_to_province.get(n_id)
+                if n_prov and n_prov.get("owner") == nation_b:
+                    border_provs_a.add(prov["id"])
+                    border_provs_b.add(n_id)
+                    
+    for prov_id in border_provs_a:
+        prov = id_to_province.get(prov_id)
+        if prov:
+            for u in prov.get("units", []):
+                if u.get("owner") == nation_a:
+                    strength_a += u.get("attack", 0) + u.get("defense", 0) + (u.get("health", 0) / 10)
+                    
+    for prov_id in border_provs_b:
+        prov = id_to_province.get(prov_id)
+        if prov:
+            for u in prov.get("units", []):
+                if u.get("owner") == nation_b:
+                    strength_b += u.get("attack", 0) + u.get("defense", 0) + (u.get("health", 0) / 10)
+                    
+    return strength_a, strength_b
+
 def are_at_war(nation_a, nation_b, nation_data):
     """Returns True if nation_b is in nation_a's war list."""
     return nation_b in nation_data.get(nation_a, {}).get("at_war_with", [])

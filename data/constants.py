@@ -306,6 +306,12 @@ ICON_SPEED = "Lightning"
 ICON_WARNING = "Warning"
 
 # ==========================================
+# AI PROACTIVE DIPLOMACY THRESHOLDS
+# ==========================================
+
+AI_WAR_STRENGTH_THRESHOLD = 1.2 # AI must be 20% stronger overall to declare war
+
+# ==========================================
 # AI RECRUITMENT PREFERENCES
 # ==========================================
 
@@ -402,5 +408,7 @@ AI_FALLBACK_RESPONSES = {
     "CALL_TO_ARMS_IGNORED": "Your call to arms was ignored and has expired.",
     "CANT_JOIN_FACTION": "We cannot join a new faction while we are already bound to our own treaties.",
     "NOT_AT_WAR": "We would offer military aid to {target}, but they are not currently at war.",
-    "KICKED_FROM_FACTION": "We will not forget being expelled from the alliance."
+    "KICKED_FROM_FACTION": "We will not forget being expelled from the alliance.",
+    "PROACTIVE_JOIN_WAR": "May we join you in your war?",
+    "PROACTIVE_DECLARE_WAR": "Your occupation of our rightful territory ends now!"
 }

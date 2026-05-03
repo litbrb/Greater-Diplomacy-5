@@ -303,3 +303,68 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE"
         }
+
+def decide_grand_strategy(nation_data, active_nations, ai_nation, current_date):
+    """Allows the AI to proactively decide to shift relations, declare war, or form factions."""
+    mode = get_ai_mode()
+    if mode == "OFF" or get_ai_immersion_level() == "LITE":
+        return []
+
+    print(f"[LLM CALL] {ai_nation} is pondering its grand strategy... (Mode: {mode})")
+    context = get_world_context(nation_data, active_nations, ai_nation, current_date=current_date)
+    
+    system_prompt = (
+        "You are an AI playing a grand strategy game. Evaluate the world context and decide your next major diplomatic move. "
+        "You can choose to do nothing, declare war, propose an alliance (invite to faction), or shift relations. "
+        "Valid actions: 'NONE', 'WAR_DECLARATION', 'FACTION_INVITE', 'JOIN_FACTION_REQ', 'MODIFY_RELATION', 'CUSTOM_MSG'. "
+        "If choosing an action, you MUST provide a 'target' (a valid country name) and a 'message' to send them. "
+        "If choosing 'MODIFY_RELATION', provide an 'amount' between -50 and 50 instead of a message. "
+        "Reply ONLY with a JSON array of action objects. Example: "
+        '[{"action": "WAR_DECLARATION", "target": "Rome", "message": "Your time has come!"}] or [] for nothing.'
+    )
+    
+    if mode == "OLLAMA":
+        result = call_ollama(system_prompt, context)
+        return result if isinstance(result, list) else []
+    elif mode == "CHATGPT" or mode == "CLAUDE":
+        return [] # Add custom hooks later
+
+    try:
+        client = genai.Client(api_key=get_gemini_api_key())
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=f"{system_prompt}\n\n{context}",
+            config=types.GenerateContentConfig(response_mime_type="application/json")
+        )
+        reply_json = json.loads(response.text)
+        return reply_json if isinstance(reply_json, list) else []
+    except Exception as e:
+        print(f"Gemini Grand Strategy Error: {e}")
+        return []
+
+def generate_proactive_text(ai_nation, target_nation, action_context):
+    """Generates a quick one-liner for proactive hardcoded AI actions."""
+    mode = get_ai_mode()
+    if mode == "OFF" or get_ai_immersion_level() == "LITE":
+        return None 
+        
+    system_prompt = (
+        f"You are the leader of {ai_nation}. Write a single, brief sentence to {target_nation} "
+        f"about {action_context}. Do not include quotes. Reply strictly with a JSON object: "
+        '{"message": "Your text here"}'
+    )
+    
+    if mode == "OLLAMA":
+        result = call_ollama(system_prompt, "Generate message.")
+        return result.get("message") if result else None
+
+    try:
+        client = genai.Client(api_key=get_gemini_api_key())
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=system_prompt,
+            config=types.GenerateContentConfig(response_mime_type="application/json")
+        )
+        return json.loads(response.text).get("message")
+    except Exception:
+        return None

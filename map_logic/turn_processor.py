@@ -18,6 +18,15 @@ def prepare_turn(self):
     # We clear the task bar here so it swaps back to the spinner
     self.ai_total_tasks = 0 
     
+    # --- NEW: Basic Proactive AI & Grand Strategy ---
+    self.loading_status_text = "Running Proactive AI..."
+    print("[SYSTEM] Running Proactive AI...")
+    ai_diplomacy.process_basic_proactive_ai(self)
+    
+    #self.loading_status_text = "Running Grand Strategy AI..."
+    #print("[SYSTEM] Running Grand Strategy AI...")
+    #ai_diplomacy.process_ai_grand_strategy(self)
+    
     self.loading_status_text = "Running AI Research..."
     print("[SYSTEM] Running AI Research...")
     ai_research.process_ai_research(self)

@@ -135,6 +135,7 @@ PROVINCE_UI = {
 }
 
 DIPLOMATIC_INFO_TITLE = "Diplomatic Info"
+MAX_DIPLOMACY_DISPLAY = 10 # <-- Added this constant to prevent hardcoding display limits
 
 # --- Sidebar Info Panel ---
 SIDEBAR_INFO_X = 900

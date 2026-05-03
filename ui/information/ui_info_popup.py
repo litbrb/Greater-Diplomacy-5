@@ -34,13 +34,15 @@ def draw_unit_info(self, surface):
             y_offset += 20
             
             members = queries.get_faction_members(faction_name, self.nation_data)
-            for m in members[:4]:
+            # Use the new constant here
+            for m in members[:c.MAX_DIPLOMACY_DISPLAY]:
                 m_display = self.nation_data.get(m, {}).get("name", m)
                 surface.blit(self.small_font.render(f" - {m_display}", True, (200, 200, 200)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
                 
-            if len(members) > 4:
-                surface.blit(self.small_font.render(f" + {len(members)-4} more", True, (150, 150, 150)), (dip_rect.x + 10, y_offset))
+            if len(members) > c.MAX_DIPLOMACY_DISPLAY:
+                # Updated the fallback text
+                surface.blit(self.small_font.render("(...and more)", True, (150, 150, 150)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
 
         # Keep war info so players know who this nation is fighting
@@ -48,68 +50,13 @@ def draw_unit_info(self, surface):
         if wars:
             surface.blit(self.small_font.render("At War With:", True, (255, 100, 100)), (dip_rect.x + 10, y_offset))
             y_offset += 20
-            for w in wars[:2]:
+            # Use the new constant here
+            for w in wars[:c.MAX_DIPLOMACY_DISPLAY]:
                 w_disp = self.nation_data.get(w, {}).get("name", w)
                 surface.blit(self.small_font.render(f" - {w_disp}", True, (200, 200, 200)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
 
-    """
-    # --- Foreign Info (Mail Box) ---
-    if is_foreign:
-        # Mail Box
-        pygame.draw.rect(surface, (30, 40, 50), mail_rect)
-        pygame.draw.rect(surface, (100, 200, 250), mail_rect, 2)
-
-        mail_title = self.font.render("Direct Message", True, (255, 255, 255))
-        surface.blit(mail_title, (mail_rect.x + 10, mail_rect.y + 10))
-        
-        # --- Check status cleanly ---
-        action, turns = queries.get_diplomatic_status(self.player_country, owner, self.nation_data)
-        locked = queries.is_diplomat_busy(self.player_country, owner, self.nation_data)
-
-        is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION"]
-        if is_unilateral and turns > 0:
-            action = ""
-            turns = 0
-
-        status_text = "Drafting..."
-        if turns > 0:
-            status_text = "In Transit / Awaiting"
-        elif locked:
-            status_text = "Diplomat Busy"
-
-        status_surf = self.small_font.render(status_text, True, (200, 255, 200) if not locked else (255, 200, 100))
-        surface.blit(status_surf, (mail_rect.x + 10, mail_rect.y + 40))
-
-        # Text input area
-        input_bg = pygame.Rect(mail_rect.x + 10, mail_rect.y + 70, mail_rect.width - 20, 150)
-        input_color = (60, 60, 80) if getattr(self, "mail_input_active", False) else (20, 20, 30)
-        pygame.draw.rect(surface, input_color, input_bg)
-        pygame.draw.rect(surface, (150, 150, 150), input_bg, 1)
-
-        # Word wrap text
-        draft_text = getattr(self, "mail_draft_text", "")
-        if getattr(self, "mail_input_active", False): draft_text += "|"
-        
-        words = draft_text.split(" ")
-        lines = []
-        current_line = ""
-        for word in words:
-            test_line = current_line + word + " "
-            if self.small_font.size(test_line)[0] < input_bg.width - 10:
-                current_line = test_line
-            else:
-                lines.append(current_line)
-                current_line = word + " "
-        lines.append(current_line)
-
-        ly = input_bg.y + 5
-        for l in lines:
-            surface.blit(self.small_font.render(l, True, (255, 255, 255)), (input_bg.x + 5, ly))
-            ly += 20
-
-        # Instructions
-        if not locked:
-            instr = self.small_font.render("Click to edit. Enter to save.", True, (150, 150, 150))
-            surface.blit(instr, (mail_rect.x + 10, mail_rect.y + 230))
-        """
+            if len(wars) > c.MAX_DIPLOMACY_DISPLAY:
+                # Updated the fallback text
+                surface.blit(self.small_font.render("(...and more)", True, (150, 150, 150)), (dip_rect.x + 10, y_offset))
+                y_offset += 20

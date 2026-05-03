@@ -16,6 +16,7 @@ VISUAL_WATER_MAPPING = {
 
 # Handy list to check if terrain is water in several movement/combat files
 WATER_TERRAINS = ["ocean", "coastal_sea", "inland_sea", "lakes"]
+OCEAN_TERRAINS = ["ocean", "coastal_sea", "inland_sea"]
 
 # Owner groupings for logic and UI checks
 WATER_NATIONS = ["Ocean", "Lakes"]

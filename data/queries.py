@@ -275,6 +275,14 @@ def has_basic_factory(province):
     """Returns True if the province contains a Basic Factory or better."""
     return get_industry(province) >= 6
 
+def borders_ocean(province, id_to_province):
+    """Returns True if the province borders at least one non-lake water tile."""
+    for n_id in province.get("neighbors", []):
+        n_prov = id_to_province.get(n_id)
+        if n_prov and n_prov.get("terrain") in c.OCEAN_TERRAINS:
+            return True
+    return False
+
 def get_building_required_tech(b_name):
     """Maps building names to their respective research tree requirements."""
     if "Basic Factory" in b_name:

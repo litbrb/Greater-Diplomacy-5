@@ -133,7 +133,7 @@ def process_ai_economy_decisions(map_screen):
                 for n_id in prov.get("neighbors", []):
                     n_prov = map_screen.id_to_province.get(n_id)
                     if n_prov:
-                        if n_prov.get("terrain") in c.WATER_TERRAINS:
+                        if n_prov.get("terrain") in c.OCEAN_TERRAINS:
                             is_coast = True
                         elif n_prov.get("owner") != ai_name and n_prov.get("owner") not in c.WATER_NATIONS:
                             is_land_border = True
@@ -188,7 +188,10 @@ def process_ai_economy_decisions(map_screen):
             
             # --- NEW: Filter to coastal factories only if building a naval unit ---
             is_naval_recruit = queries.is_naval_unit(unit_name_to_build)
-            valid_recruit_provs = [p for p in factory_provs if p.get("is_coastal", False)] if is_naval_recruit else factory_provs
+            if is_naval_recruit:
+                valid_recruit_provs = [p for p in factory_provs if p.get("is_coastal", False) and queries.borders_ocean(p, map_screen.id_to_province)]
+            else:
+                valid_recruit_provs = factory_provs
             
             # --- Fallback if AI tries to build a ship but has no coastal factories ---
             if is_naval_recruit and not valid_recruit_provs:

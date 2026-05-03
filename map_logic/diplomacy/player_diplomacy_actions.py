@@ -75,7 +75,7 @@ def handle_accept_req(map_screen):
             del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
             
             msg_text = custom_msg if custom_msg else "We accepted your faction invitation."
-            diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
+            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
             map_screen.show_feedback("Joined Faction!")
 
         elif action == "JOIN_FACTION_REQ":
@@ -86,7 +86,7 @@ def handle_accept_req(map_screen):
             del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
             
             msg_text = custom_msg if custom_msg else "We accepted your request to join."
-            diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
+            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
             map_screen.show_feedback("Faction Expanded!")
 
         elif action == "CREATE_FACTION":
@@ -98,21 +98,21 @@ def handle_accept_req(map_screen):
             del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
             
             msg_text = custom_msg if custom_msg else "We agreed to form a faction with you."
-            diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
+            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
             map_screen.show_feedback("Faction Formed!")
 
         elif action == "CEASEFIRE":
             diplomacy_logic.finalize_neutral(map_screen.nation_data, map_screen.player_country, target)
             del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
             msg_text = custom_msg if custom_msg else "We accepted your ceasefire terms."
-            diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
+            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
             map_screen.show_feedback("Ceasefire Accepted!")
 
         elif action == "CALL_TO_ARMS":
             diplomacy_logic.join_faction_wars(map_screen.nation_data, map_screen.player_country, target)
             del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
             msg_text = custom_msg if custom_msg else "We answer your call. Our forces will join your wars."
-            diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, msg_text, "DIPLOMACY")
+            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
             map_screen.show_feedback("Joined Allies in War!")
 
         map_screen.mail_draft_text = ""
@@ -127,7 +127,7 @@ def handle_reject_req(map_screen):
 
     if incoming_turns > 0:
         del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
-        diplomacy_logic.send_message(map_screen.nation_data, map_screen.player_country, target, f"We rejected your {action.replace('_', ' ').lower()}.", "DIPLOMACY")
+        diplomacy_logic.send_message(map_screen, map_screen.player_country, target, f"We rejected your {action.replace('_', ' ').lower()}.", "DIPLOMACY")
         map_screen.show_feedback("Request Rejected!")
         map_screen.mail_input_active = False
 

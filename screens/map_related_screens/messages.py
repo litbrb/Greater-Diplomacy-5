@@ -276,6 +276,7 @@ class Messages_Screen(GameState):
         if not self.map_screen: return
         font_med = fonts.get("heading2")
         font_small = fonts.get("normal")
+        font_tiny = fonts.get("tiny")
 
         left_pane_rect = pygame.Rect(0, 0, c.MSG_LEFT_PANE_W, c.SCREEN_HEIGHT)
         pygame.draw.rect(surface, c.MSG_BG_LIGHT, left_pane_rect)
@@ -295,14 +296,18 @@ class Messages_Screen(GameState):
         for msg in reversed(inbox):
             if msg.get("sender") == self.selected_recipient or msg.get("sender") == f"To: {self.selected_recipient}":
                 # Detect newlines and split them back into multiple visual bubbles automatically
-                for sub_text in msg["content"].split("\n"):
-                    if sub_text.strip():
-                        display_thread.append({
-                            "content": sub_text, 
-                            "is_player": msg["sender"].startswith("To: "), 
-                            "is_draft": False,
-                            "is_diplo": msg.get("type") == "DIPLOMACY"
-                        })
+                lines_split = [t for t in msg["content"].split("\n") if t.strip()]
+                for idx, sub_text in enumerate(lines_split):
+                    # Only append the date to the first bubble if it's a split message
+                    show_date = msg.get("date", "") if idx == 0 else ""
+                    
+                    display_thread.append({
+                        "content": sub_text, 
+                        "is_player": msg["sender"].startswith("To: "), 
+                        "is_draft": False,
+                        "is_diplo": msg.get("type") == "DIPLOMACY",
+                        "date": show_date
+                    })
                         
         # Check if there is an active diplomatic action pending for this target
         pending = p_data.get("pending_diplomacy", {}).get(self.selected_recipient, {})
@@ -320,7 +325,8 @@ class Messages_Screen(GameState):
                     "is_player": True, 
                     "is_draft": True, 
                     "draft_idx": i,
-                    "is_diplo": is_diplo_action
+                    "is_diplo": is_diplo_action,
+                    "date": "" # Drafts don't have official dates yet
                 })
         
         input_rect = pygame.Rect(c.MSG_LEFT_PANE_W, c.SCREEN_HEIGHT - c.MSG_INPUT_H, c.SCREEN_WIDTH - c.MSG_LEFT_PANE_W, c.MSG_INPUT_H)
@@ -348,6 +354,9 @@ class Messages_Screen(GameState):
             if current_line: lines.append(current_line)
 
             box_height = 20 + (len(lines) * 20)
+            if msg.get("date"):
+                box_height += 25 # Reserve space above the bubble for the date
+                
             box_width = max([font_small.size(l)[0] for l in lines] + [100]) + 30
             total_h += box_height + 15
 
@@ -381,13 +390,28 @@ class Messages_Screen(GameState):
             is_player = msg['is_player']
             is_draft = msg.get('is_draft', False)
             is_diplo = msg.get('is_diplo', False)
+            date_str = msg.get("date", "")
+
+            draw_y = current_y
+            
+            # --- Render Date Header ---
+            if date_str:
+                date_surf = font_tiny.render(date_str, True, (130, 130, 150))
+                if is_player:
+                    surface.blit(date_surf, (c.SCREEN_WIDTH - date_surf.get_width() - 30, draw_y))
+                else:
+                    surface.blit(date_surf, (c.MSG_LEFT_PANE_W + 30, draw_y))
+                draw_y += 20 # Push the physical bubble down 20px so it sits under the text
+
+            # Only color the physical bubble, excluding the space we reserved for the date
+            bubble_h = box_height - (25 if date_str else 0)
 
             if is_player:
                 box_x = c.SCREEN_WIDTH - box_width - 30
                 color = c.MSG_BUBBLE_PLAYER_DIPLO if is_diplo else c.MSG_BUBBLE_PLAYER
                 
                 if is_draft:
-                    del_rect = pygame.Rect(box_x - 35, current_y + box_height//2 - 12, 25, 25)
+                    del_rect = pygame.Rect(box_x - 35, draw_y + bubble_h//2 - 12, 25, 25)
                     self.draft_edit_rects.append((del_rect, msg['draft_idx']))
                     
                     pygame.draw.rect(surface, (150, 0, 0), del_rect, border_radius=5)
@@ -396,13 +420,13 @@ class Messages_Screen(GameState):
                 box_x = c.MSG_LEFT_PANE_W + 30
                 color = c.MSG_BUBBLE_AI_DIPLO if is_diplo else c.MSG_BUBBLE_AI
 
-            bubble_rect = pygame.Rect(box_x, current_y, box_width, box_height)
+            bubble_rect = pygame.Rect(box_x, draw_y, box_width, bubble_h)
             pygame.draw.rect(surface, color, bubble_rect, border_radius=10)
             
             if is_draft:
                 pygame.draw.rect(surface, (255, 215, 0), bubble_rect, 2, border_radius=10)
             
-            ly = current_y + 10
+            ly = draw_y + 10
             for l in lines:
                 surface.blit(font_small.render(l, True, (255, 255, 255)), (box_x + 15, ly))
                 ly += 20

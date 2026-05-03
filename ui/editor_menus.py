@@ -606,7 +606,7 @@ def open_spectator_messages(self):
 
     root = tk.Tk()
     root.title("Global Messages Overview")
-    root.geometry("1000x500")
+    root.geometry("1100x500")
     root.attributes("-topmost", True)
     self.menu_active = True
 
@@ -634,16 +634,18 @@ def open_spectator_messages(self):
                     rowheight=28,
                     font=('Arial', 10))
 
-    columns = ("Sender", "Receiver", "Type", "Message")
+    columns = ("Date", "Sender", "Receiver", "Type", "Message")
     tree = ttk.Treeview(root, columns=columns, show="headings")
     
+    tree.heading("Date", text="Date")
     tree.heading("Sender", text="Sender")
     tree.heading("Receiver", text="Receiver")
     tree.heading("Type", text="Type")
     tree.heading("Message", text="Message")
     
-    tree.column("Sender", width=150, anchor="center")
-    tree.column("Receiver", width=150, anchor="center")
+    tree.column("Date", width=130, anchor="center")
+    tree.column("Sender", width=120, anchor="center")
+    tree.column("Receiver", width=120, anchor="center")
     tree.column("Type", width=100, anchor="center")
     tree.column("Message", width=550, anchor="w")
     
@@ -651,34 +653,69 @@ def open_spectator_messages(self):
     tree.tag_configure('evenrow', background='#ffffff')
     tree.tag_configure('oddrow', background='#f2f2f2') 
 
-    # Populate
-    row_idx = 0
+    # --- Gather & Sort Messages Chronologically ---
+    all_msgs = []
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    
     for c_name, data in self.nation_data.items():
         if data.get("is_playable"):
             inbox = data.get("inbox", [])
             for msg in inbox:
                 sender = msg.get("sender", "")
+                
                 # Avoid duplicates (sent messages are stored as "To: Receiver" in sender's inbox)
                 if not sender.startswith("To: "):
-                    tag = 'evenrow' if row_idx % 2 == 0 else 'oddrow'
-                    tree.insert("", tk.END, values=(
-                        sender,
-                        c_name,
-                        msg.get("type", "TEXT"),
-                        msg.get("content", "")
-                    ), tags=(tag,))
-                    row_idx += 1
+                    date_str = msg.get("date", "Unknown")
+                    
+                    # Parse the date string back into a sortable absolute day value
+                    sort_val = 0
+                    try:
+                        if date_str != "Unknown":
+                            parts = date_str.replace(",", "").replace(" AD", "").split(" ")
+                            if len(parts) >= 3:
+                                d = int(parts[0])
+                                m = months.index(parts[1]) if parts[1] in months else 0
+                                y = int(parts[2])
+                                sort_val = (y * 360) + (m * 30) + d
+                    except Exception:
+                        pass
+                        
+                    all_msgs.append({
+                        "date": date_str,
+                        "sender": sender,
+                        "receiver": c_name,
+                        "type": msg.get("type", "TEXT"),
+                        "content": msg.get("content", ""),
+                        "sort_val": sort_val
+                    })
+                    
+    # Sort by the calculated time value (Oldest at the top, newest at the bottom)
+    all_msgs.sort(key=lambda x: x["sort_val"])
+
+    # Populate the UI
+    row_idx = 0
+    for m in all_msgs:
+        tag = 'evenrow' if row_idx % 2 == 0 else 'oddrow'
+        tree.insert("", tk.END, values=(
+            m["date"],
+            m["sender"],
+            m["receiver"],
+            m["type"],
+            m["content"]
+        ), tags=(tag,))
+        row_idx += 1
 
     scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
     tree.configure(yscroll=scrollbar.set)
     scrollbar.pack(side="right", fill="y")
     tree.pack(fill="both", expand=True)
 
+    import pygame
     while self.menu_active:
         try:
             root.update()
             pygame.event.pump()
-        except:
+        except Exception:
             break
 
 def open_map_research_editor(self):

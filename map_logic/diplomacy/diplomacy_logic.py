@@ -86,7 +86,10 @@ def cancel_text_message(nation_data, player_name, target_name):
         return "Draft cleared."
     return "No drafted message to clear."
 
-def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
+def send_message(map_screen, sender, receiver, content, msg_type="TEXT"):
+    nation_data = map_screen.nation_data
+    date_str = map_screen.time_manager.get_date_string()
+    
     # 1. Deliver the message to the receiver
     receiver_data = nation_data.get(receiver)
     if receiver_data:
@@ -94,7 +97,7 @@ def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
             receiver_data["inbox"] = []
         
         receiver_data["inbox"].insert(0, {
-            "sender": sender, "content": content, "type": msg_type, "read": False
+            "sender": sender, "content": content, "type": msg_type, "read": False, "date": date_str
         })
 
     # 2. Save a "Sent" copy to the sender's inbox
@@ -104,7 +107,7 @@ def send_message(nation_data, sender, receiver, content, msg_type="TEXT"):
             sender_data["inbox"] = []
             
         sender_data["inbox"].insert(0, {
-            "sender": f"To: {receiver}", "content": content, "type": msg_type, "read": True 
+            "sender": f"To: {receiver}", "content": content, "type": msg_type, "read": True, "date": date_str
         })
 
 def process_diplomacy_turn(self):
@@ -151,27 +154,27 @@ def process_diplomacy_turn(self):
                 if a_action == "JOIN_FACTION_REQ" and b_action == "FACTION_INVITE":
                     finalize_faction_join(self.nation_data, nation_b, nation_a)
                     log_global_event(self.nation_data, f"{nation_a} and {nation_b} have united their factions!")
-                    send_message(self.nation_data, nation_a, nation_b, "Our requests crossed paths. We are now united!", "DIPLOMACY")
-                    send_message(self.nation_data, nation_b, nation_a, "Our requests crossed paths. We are now united!", "DIPLOMACY")
+                    send_message(self, nation_a, nation_b, "Our requests crossed paths. We are now united!", "DIPLOMACY")
+                    send_message(self, nation_b, nation_a, "Our requests crossed paths. We are now united!", "DIPLOMACY")
                     del a_data[nation_b]
                     del b_data[nation_a]
                 elif b_action == "JOIN_FACTION_REQ" and a_action == "FACTION_INVITE":
                     finalize_faction_join(self.nation_data, nation_a, nation_b)
-                    send_message(self.nation_data, nation_a, nation_b, "Our requests crossed paths. We are now united!", "DIPLOMACY")
-                    send_message(self.nation_data, nation_b, nation_a, "Our requests crossed paths. We are now united!", "DIPLOMACY")
+                    send_message(self, nation_a, nation_b, "Our requests crossed paths. We are now united!", "DIPLOMACY")
+                    send_message(self, nation_b, nation_a, "Our requests crossed paths. We are now united!", "DIPLOMACY")
                     del a_data[nation_b]
                     del b_data[nation_a]
                 elif a_action == "WAR_DECLARATION" and b_action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ"]:
-                    send_message(self.nation_data, nation_a, nation_b, f"Your diplomat proposing a {b_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
+                    send_message(self, nation_a, nation_b, f"Your diplomat proposing a {b_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
                     del b_data[nation_a] 
                 elif b_action == "WAR_DECLARATION" and a_action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ"]:
-                    send_message(self.nation_data, nation_b, nation_a, f"Your diplomat proposing a {a_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
+                    send_message(self, nation_b, nation_a, f"Your diplomat proposing a {a_action.split('_')[0].lower()} was executed. We are at WAR!", "DIPLOMACY")
                     del a_data[nation_b]
                 elif a_action == "CEASEFIRE" and b_action == "CEASEFIRE":
                     finalize_neutral(self.nation_data, nation_a, nation_b)
                     log_global_event(self.nation_data, f"{nation_a} and {nation_b} have signed a mutual ceasefire.")
-                    send_message(self.nation_data, nation_a, nation_b, "Mutual ceasefire agreements signed.", "DIPLOMACY")
-                    send_message(self.nation_data, nation_b, nation_a, "Mutual ceasefire agreements signed.", "DIPLOMACY")
+                    send_message(self, nation_a, nation_b, "Mutual ceasefire agreements signed.", "DIPLOMACY")
+                    send_message(self, nation_b, nation_a, "Mutual ceasefire agreements signed.", "DIPLOMACY")
                     del a_data[nation_b]
                     del b_data[nation_a]
 
@@ -189,8 +192,6 @@ def process_diplomacy_turn(self):
 
             action = info.get("action", "")
             turns = info.get("turns", 0)
-            
-            # ---> ADD THIS LINE RIGHT HERE <---
             custom_msg = info.get("message", "")
 
             # EVERY ACTION NOW EVALUATES ON TURN 1
@@ -198,7 +199,6 @@ def process_diplomacy_turn(self):
                 is_human_target = target in getattr(self, 'active_players', [])
                 if not is_human_target:
                     if action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
-                        # FIX: Pass the custom message into the task dictionary
                         ai_tasks.append({"sender": country_name, "target": target, "action": action, "content": custom_msg})
                     elif action.startswith("MSG:"):
                         ai_tasks.append({"sender": country_name, "target": target, "action": "CUSTOM_MSG", "content": action[4:]})
@@ -217,7 +217,6 @@ def process_diplomacy_turn(self):
     if ai_tasks:
         import concurrent.futures
         
-        # --- NEW: Setup the progress bar trackers ---
         self.ai_total_tasks = len(ai_tasks)
         self.ai_completed_tasks = 0
         self.loading_status_text = f"Awaiting LLM Responses ({self.ai_completed_tasks}/{self.ai_total_tasks})..."
@@ -240,7 +239,6 @@ def process_diplomacy_turn(self):
                 except Exception as e: 
                     print(f"Thread error: {e}")
                     
-                # --- NEW: Increment the progress bar as each thread finishes ---
                 self.ai_completed_tasks += 1
                 self.loading_status_text = f"Awaiting LLM Responses ({self.ai_completed_tasks}/{self.ai_total_tasks})..."
 
@@ -267,7 +265,7 @@ def process_diplomacy_turn(self):
                     finalize_war(self.nation_data, country_name, target)
                     log_global_event(self.nation_data, f"WAR DECLARED: {country_name} has declared war on {target}!")
                     msg_text = custom_msg if custom_msg else "We have declared WAR upon you!"
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "JOIN_WARS":
                     if not queries.are_in_same_faction(country_name, target, self.nation_data):
@@ -279,33 +277,33 @@ def process_diplomacy_turn(self):
                         join_faction_wars(self.nation_data, country_name, target)
                         log_global_event(self.nation_data, f"ESCALATION: {country_name} has joined the wars of {target}!")
                         msg_text = custom_msg if custom_msg else "We stand with you. Our forces are joining your wars."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "CALL_TO_ARMS":
                     msg_text = custom_msg if custom_msg else "We request your aid in our ongoing conflicts!"
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "BREAK_ALLIANCE":
                     finalize_neutral(self.nation_data, country_name, target)
                     log_global_event(self.nation_data, f"{country_name} has broken their alliance with {target}.")
                     msg_text = custom_msg if custom_msg else "We have broken our alliance."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 # DELIVER messages to inbox on Turn 0
                 elif action.startswith("MSG:"):
-                    send_message(self.nation_data, country_name, target, action[4:], "TEXT")
+                    send_message(self, country_name, target, action[4:], "TEXT")
                 
                 elif action == "FACTION_INVITE":
                     msg_text = custom_msg if custom_msg else "We invite your nation to join our faction."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "CEASEFIRE":
                     msg_text = custom_msg if custom_msg else "We offer terms for a ceasefire."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "CREATE_FACTION":
                     msg_text = custom_msg if custom_msg else "We propose establishing a new faction together."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                     
                 elif action == "DISBAND_FACTION":
                     fac = self.nation_data[country_name].get("faction", "")
@@ -313,13 +311,13 @@ def process_diplomacy_turn(self):
                     finalize_disband_faction(self.nation_data, country_name)
                     log_global_event(self.nation_data, f"The faction led by {country_name} has been disbanded.")
                     msg_text = custom_msg if custom_msg else "We are dissolving our faction."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
 
                 elif action == "KICK_FACTION_MEMBER":
                     finalize_faction_kick(self.nation_data, country_name, target)
                     log_global_event(self.nation_data, f"FACTION EXPULSION: {country_name} has kicked {target} from the faction!")
                     msg_text = custom_msg if custom_msg else "You have been expelled from our faction."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
 
                 elif action == "LEAVE_FACTION":
                     fac = self.nation_data[country_name].get("faction", "")
@@ -327,11 +325,11 @@ def process_diplomacy_turn(self):
                     finalize_faction_leave(self.nation_data, country_name)
                     log_global_event(self.nation_data, f"{country_name} has abandoned their faction.")
                     msg_text = custom_msg if custom_msg else "We are withdrawing from the faction."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
                     
                 elif action == "JOIN_FACTION_REQ":
                     msg_text = custom_msg if custom_msg else "We formally request to join your faction."
-                    send_message(self.nation_data, country_name, target, msg_text, "DIPLOMACY")
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
 
                 # Cleanup or increment
                 if country_name not in getattr(self, 'active_players', []) and action.startswith("MSG:"):
@@ -353,12 +351,11 @@ def process_diplomacy_turn(self):
                                     accepted, msg_text = ai_results.get((country_name, m, action), (False, c.AI_FALLBACK_RESPONSES.get("FACTION_DISBANDED", "It is a shame to see our alliance broken.")))
                                 else:
                                     accepted, msg_text = ai_results.get((country_name, m, action), (False, c.AI_FALLBACK_RESPONSES.get("FACTION_ABANDONED", "We will not forget your abandonment.")))
-                                # Send the reaction instantly
-                                send_message(self.nation_data, m, country_name, msg_text, "DIPLOMACY")
+                                send_message(self, m, country_name, msg_text, "DIPLOMACY")
                                 
                     elif not is_human_target:
                         accepted, message = ai_results.get((country_name, target, action), (False, c.AI_FALLBACK_RESPONSES.get("GENERIC_MESSAGE", "Message received.")))
-                        send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
+                        send_message(self, target, country_name, message, "DIPLOMACY")
                         
                     actions_to_clear.append(target)
 
@@ -418,14 +415,14 @@ def process_diplomacy_turn(self):
                                     for enemy in target_enemies:
                                         delayed_responses.append((target, enemy, "WAR_DECLARATION", 0, "We have declared WAR upon you!"))
                                 else:
-                                    send_message(self.nation_data, target, country_name, f"We would offer military aid to {act_target}, but they are not currently at war.", "DIPLOMACY")
+                                    send_message(self, target, country_name, f"We would offer military aid to {act_target}, but they are not currently at war.", "DIPLOMACY")
                                 
                         elif ai_action == "LEAVE_FACTION":
                             delayed_responses.append((target, target, "LEAVE_FACTION", 0, ""))
                             
                         elif ai_action == "JOIN_FACTION_REQ":
                             if self.nation_data[target].get("faction", ""):
-                                send_message(self.nation_data, target, country_name, "We cannot join a new faction while we are already bound to our own treaties.", "DIPLOMACY")
+                                send_message(self, target, country_name, "We cannot join a new faction while we are already bound to our own treaties.", "DIPLOMACY")
                             else:
                                 delayed_responses.append((target, act_target, "JOIN_FACTION_REQ", 0, "We formally request to join your faction."))
                         
@@ -436,17 +433,14 @@ def process_diplomacy_turn(self):
                             ai_queue.append({"target": final_f_up_target, "action": follow_up})
                             log_global_event(self.nation_data, f"RUMOR: Internal shuffling suggests {target} is preparing further diplomatic moves regarding {f_up_target}...")
                         
-                        # FIX: Check if the AI decided to take a diplomatic action. If not, send as a regular grey TEXT message.
                         msg_type = "TEXT" if ai_action == "NONE" else "DIPLOMACY"
-                        
-                        # Instantly deliver the text response!
-                        send_message(self.nation_data, target, country_name, msg_text, msg_type)
+                        send_message(self, target, country_name, msg_text, msg_type)
                     
                     actions_to_clear.append(target)
 
                 elif action in ["FACTION_INVITE", "JOIN_FACTION_REQ", "CEASEFIRE", "CALL_TO_ARMS", "CREATE_FACTION"]:
                     if is_human_target:
-                        send_message(self.nation_data, target, country_name, "Your proposal was ignored and has expired.", "DIPLOMACY")
+                        send_message(self, target, country_name, "Your proposal was ignored and has expired.", "DIPLOMACY")
                     else:
                         accepted, message = ai_results.get((country_name, target, action), (False, "Timeout."))
                         if accepted:
@@ -464,8 +458,7 @@ def process_diplomacy_turn(self):
                                 finalize_faction_join(self.nation_data, country_name, target)
                                 log_global_event(self.nation_data, f"{country_name} and {target} have formed a new global faction!")
                         
-                        # Instantly deliver the response!
-                        send_message(self.nation_data, target, country_name, message, "DIPLOMACY")
+                        send_message(self, target, country_name, message, "DIPLOMACY")
                     actions_to_clear.append(target)
 
         for t in actions_to_clear:

@@ -23,10 +23,6 @@ def prepare_turn(self):
     print("[SYSTEM] Running Proactive AI...")
     ai_diplomacy.process_basic_proactive_ai(self)
     
-    #self.loading_status_text = "Running Grand Strategy AI..."
-    #print("[SYSTEM] Running Grand Strategy AI...")
-    #ai_diplomacy.process_ai_grand_strategy(self)
-    
     self.loading_status_text = "Running AI Research..."
     print("[SYSTEM] Running AI Research...")
     ai_research.process_ai_research(self)

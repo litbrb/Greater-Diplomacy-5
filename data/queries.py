@@ -598,11 +598,25 @@ def is_diplomat_busy(sender, target, nation_data):
 
 def get_unread_message_count(nation, nation_data):
     """Returns the total number of unread messages for a nation."""
+    # If the user is the spectator, count unread messages across ALL playable nations
+    if nation == "Spectator":
+        total_unread = 0
+        for n_data in nation_data.values():
+            if n_data.get("is_playable", False):
+                inbox = n_data.get("inbox", [])
+                total_unread += sum(1 for msg in inbox if not msg.get("spectator_read", False))
+        return total_unread
+        
+    # Standard logic for normal players
     inbox = nation_data.get(nation, {}).get("inbox", [])
     return sum(1 for msg in inbox if not msg.get("read", False))
 
 def has_free_research_slots(nation, nation_data):
     """Returns True if the nation is researching fewer than 2 techs."""
+    # Prevent the research notification from popping up for the Spectator or Ocean
+    if nation in c.UNPLAYABLE_NATIONS:
+        return False
+        
     queue = nation_data.get(nation, {}).get("research_queue", [])
     return len(queue) < 2
 
@@ -732,6 +746,7 @@ def get_combat_predictions(map_data, nation_data, id_to_province):
 # ==========================================
 # IMAGE ENCODING / DECODING
 # ==========================================
+
 def encode_surf_to_b64(surf, fmt="RGBA"):
     """Encodes a pygame surface to a Base64 string."""
     img_str = pygame.image.tostring(surf, fmt)

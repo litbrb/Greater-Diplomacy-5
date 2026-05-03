@@ -649,6 +649,9 @@ def open_spectator_messages(self):
         if data.get("is_playable"):
             inbox = data.get("inbox", [])
             for msg in inbox:
+                # Mark as read for the spectator so the notification badge clears
+                msg["spectator_read"] = True
+                
                 sender = msg.get("sender", "")
                 
                 # Avoid duplicates (sent messages are stored as "To: Receiver" in sender's inbox)

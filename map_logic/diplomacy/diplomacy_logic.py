@@ -97,7 +97,8 @@ def send_message(map_screen, sender, receiver, content, msg_type="TEXT"):
             receiver_data["inbox"] = []
         
         receiver_data["inbox"].insert(0, {
-            "sender": sender, "content": content, "type": msg_type, "read": False, "date": date_str
+            "sender": sender, "content": content, "type": msg_type, 
+            "read": False, "spectator_read": False, "date": date_str
         })
 
     # 2. Save a "Sent" copy to the sender's inbox
@@ -107,7 +108,8 @@ def send_message(map_screen, sender, receiver, content, msg_type="TEXT"):
             sender_data["inbox"] = []
             
         sender_data["inbox"].insert(0, {
-            "sender": f"To: {receiver}", "content": content, "type": msg_type, "read": True, "date": date_str
+            "sender": f"To: {receiver}", "content": content, "type": msg_type, 
+            "read": True, "spectator_read": True, "date": date_str
         })
 
 def process_diplomacy_turn(self):

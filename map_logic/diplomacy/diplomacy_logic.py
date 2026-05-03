@@ -221,15 +221,18 @@ def process_diplomacy_turn(self):
         self.ai_completed_tasks = 0
         self.loading_status_text = f"Awaiting LLM Responses ({self.ai_completed_tasks}/{self.ai_total_tasks})..."
         
+        # --- Get human players for FULL AI optimization ---
+        human_players = getattr(self, 'active_players', [self.player_country])
+        
         with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
             futures = {}
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
                 if task["action"] in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "LEAVE_FACTION", "DISBAND_FACTION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
-                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""))
+                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""), human_players)
                     futures[future] = task
                 elif task["action"] == "CUSTOM_MSG":
-                    future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"])
+                    future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"], human_players)
                     futures[future] = task
                     
             for future in concurrent.futures.as_completed(futures):

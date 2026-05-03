@@ -433,6 +433,10 @@ def render_settings_buttons(settings_screen):
         btn_full.is_selected = (settings_screen.ai_immersion_level == "FULL")
         settings_screen.elements.append(btn_full)
 
+        btn_abs = Button(10, c.SCREEN_HEIGHT - 250, "small", "red", "ABSOLUTE AI", lambda: settings_screen.set_ai_immersion_level("ABSOLUTE"))
+        btn_abs.is_selected = (settings_screen.ai_immersion_level == "ABSOLUTE")
+        settings_screen.elements.append(btn_abs)
+
     # --- API KEY CLEAR BUTTONS ---
     if settings_screen.ai_mode == "GEMINI":
         settings_screen.elements.append(Button(c.SETTINGS_GEMINI_BOX_X + c.SETTINGS_GEMINI_BOX_W + 20, c.SETTINGS_GEMINI_BOX_Y, "small", "red", "Clear", settings_screen.clear_gemini_api_key))

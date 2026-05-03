@@ -117,9 +117,15 @@ def call_ollama(system_prompt, user_prompt):
         print(f"Ollama Python Error: {e}")
         return None
 
-def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg=""):
+def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg="", human_players=None):
+    if human_players is None:
+        human_players = []
+
     mode = get_ai_mode()
     immersion = get_ai_immersion_level()
+    
+    # Check if this is an AI talking to an AI
+    is_ai_to_ai = (ai_nation not in human_players) and (sender_nation not in human_players)
     
     # Ensure 50/50 strict logic regardless of model behavior
     accepted = random.choice([True, False])
@@ -128,7 +134,10 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     # hey so please don't remove the stuff above or this comment its useful for testing if the ai can accept things without breaking the game
     # (i swear to god if you remove these comments...)
 
-    if mode == "OFF" or immersion == "LITE":
+    # Apply LITE / FULL AI rules
+    use_lite_logic = (mode == "OFF") or (immersion == "LITE") or (immersion == "FULL" and is_ai_to_ai)
+
+    if use_lite_logic:
         if action_type == "WAR_DECLARATION":
             fallback = c.AI_FALLBACK_RESPONSES.get("BETRAYAL", "You will regret this betrayal.")
         elif action_type == "LEAVE_FACTION":
@@ -217,9 +226,17 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         print(f"Gemini Error: {e}")
         return accepted, c.AI_FALLBACK_RESPONSES["API_ERROR"]
 
-def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content):
+def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content, human_players=None):
+    if human_players is None:
+        human_players = []
+
     mode = get_ai_mode()
-    if mode == "OFF":
+    immersion = get_ai_immersion_level()
+    
+    is_ai_to_ai = (ai_nation not in human_players) and (sender_nation not in human_players)
+    use_lite_logic = (mode == "OFF") or (immersion == "LITE") or (immersion == "FULL" and is_ai_to_ai)
+
+    if use_lite_logic:
         return {
             "message": c.AI_FALLBACK_RESPONSES["AI_OFF_MESSAGE"], 
             "action": "NONE", "action_target": "NONE", 
@@ -304,10 +321,18 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             "follow_up_action": "NONE", "follow_up_target": "NONE"
         }
 
-def generate_proactive_text(ai_nation, target_nation, action_context):
+def generate_proactive_text(ai_nation, target_nation, action_context, human_players=None):
     """Generates a quick one-liner for proactive hardcoded AI actions."""
+    if human_players is None:
+        human_players = []
+        
     mode = get_ai_mode()
-    if mode == "OFF" or get_ai_immersion_level() == "LITE":
+    immersion = get_ai_immersion_level()
+    
+    is_ai_to_ai = (ai_nation not in human_players) and (target_nation not in human_players)
+    use_lite_logic = (mode == "OFF") or (immersion == "LITE") or (immersion == "FULL" and is_ai_to_ai)
+    
+    if use_lite_logic:
         return None 
         
     system_prompt = (

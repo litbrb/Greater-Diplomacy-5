@@ -34,11 +34,14 @@ class Map(GameState):
        # --- BACKGROUND PROCESSING FLAGS ---
         self.ai_is_thinking = False
         self.ai_processing_complete = False
+        self.thread_error = None
         
         # --- NEW PROGRESS BAR TRACKERS ---
         self.loading_status_text = "Waiting..."
-        self.ai_total_tasks = 0
-        self.ai_completed_tasks = 0
+        self.proactive_tasks_total = 0
+        self.proactive_tasks_completed = 0
+        self.responsive_tasks_total = 0
+        self.responsive_tasks_completed = 0
         self.loading_spinner_angle = 0
 
         self.brush_building = "None" 
@@ -402,16 +405,26 @@ class Map(GameState):
         """Helper to lock the UI and start the background thread."""
         self.ai_is_thinking = True
         self.loading_status_text = "Initializing Turn..."
-        self.ai_total_tasks = 0
-        self.ai_completed_tasks = 0
+        
+        # Reset trackers for the new turn
+        self.proactive_tasks_total = 0
+        self.proactive_tasks_completed = 0
+        self.responsive_tasks_total = 0
+        self.responsive_tasks_completed = 0
         
         # Fire and forget the background process
         threading.Thread(target=self._run_ai_processing_thread, daemon=True).start()
         
     def _run_ai_processing_thread(self):
         """This runs in the background. Pygame keeps running!"""
-        turn_processor.prepare_turn(self)
-        self.ai_processing_complete = True # Signal the main thread we are done
+        try:
+            turn_processor.prepare_turn(self)
+        except Exception as e:
+            import traceback
+            self.thread_error = traceback.format_exc()
+            print(f"BACKGROUND CRASH CAUGHT:\n{self.thread_error}")
+        finally:
+            self.ai_processing_complete = True # Always signal the main thread we are done
 
     def draw_turn_loading_screen(self, surface):
         """Draws a dynamic overlay informing the player the turn is processing."""
@@ -425,30 +438,39 @@ class Map(GameState):
         # 1. Draw Title Text
         font = fonts.get("title")
         txt = font.render(self.loading_status_text, True, (255, 255, 255))
-        surface.blit(txt, txt.get_rect(center=(center_x, center_y - 60)))
+        surface.blit(txt, txt.get_rect(center=(center_x, center_y - 120)))
 
-        # 2. Draw Progress Bar (Only if we have tasks to track)
-        if self.ai_total_tasks > 0:
+        # 2. Draw Progress Bars (Only if we have tasks to track)
+        if self.proactive_tasks_total > 0 or self.responsive_tasks_total > 0:
             bar_w = 400
             bar_h = 30
             bar_x = center_x - (bar_w // 2)
-            bar_y = center_y
             
-            # Background
-            pygame.draw.rect(surface, (40, 40, 60), (bar_x, bar_y, bar_w, bar_h), border_radius=5)
-            
-            # Fill
-            progress_ratio = self.ai_completed_tasks / float(self.ai_total_tasks)
-            fill_w = int(bar_w * progress_ratio)
-            if fill_w > 0:
-                pygame.draw.rect(surface, (100, 200, 100), (bar_x, bar_y, fill_w, bar_h), border_radius=5)
-                
-            # Outline
-            pygame.draw.rect(surface, (200, 200, 200), (bar_x, bar_y, bar_w, bar_h), 2, border_radius=5)
+            def draw_bar(y_pos, label, completed, total):
+                # Label
+                lbl_txt = fonts.get("normal").render(label, True, (200, 200, 200))
+                surface.blit(lbl_txt, (bar_x, y_pos - 25))
 
-            # Percentage Text
-            pct_txt = fonts.get("normal").render(f"{int(progress_ratio * 100)}%", True, (255, 255, 255))
-            surface.blit(pct_txt, pct_txt.get_rect(center=(center_x, bar_y + 15)))
+                # Background
+                pygame.draw.rect(surface, (40, 40, 60), (bar_x, y_pos, bar_w, bar_h), border_radius=5)
+
+                if total > 0:
+                    progress_ratio = completed / float(total)
+                    fill_w = int(bar_w * progress_ratio)
+                    if fill_w > 0:
+                        pygame.draw.rect(surface, (100, 200, 100), (bar_x, y_pos, fill_w, bar_h), border_radius=5)
+
+                    pct_txt = fonts.get("normal").render(f"{int(progress_ratio * 100)}%", True, (255, 255, 255))
+                    surface.blit(pct_txt, pct_txt.get_rect(center=(center_x, y_pos + 15)))
+
+                # Outline
+                pygame.draw.rect(surface, (200, 200, 200), (bar_x, y_pos, bar_w, bar_h), 2, border_radius=5)
+
+            if self.proactive_tasks_total > 0:
+                draw_bar(center_y - 40, "Generating Grand Strategy:", self.proactive_tasks_completed, self.proactive_tasks_total)
+
+            if self.responsive_tasks_total > 0:
+                draw_bar(center_y + 40, "Generating Responses:", self.responsive_tasks_completed, self.responsive_tasks_total)
         else:
             # 3. Draw a spinning loading wheel if we are just doing general processing
             import math
@@ -719,6 +741,10 @@ class Map(GameState):
         if getattr(self, 'ai_processing_complete', False):
             self.ai_processing_complete = False
             self.ai_is_thinking = False
+            
+            # --- NEW: Abort if the thread crashed! ---
+            if getattr(self, 'thread_error', None):
+                return
             
             # NOW it is safe to do the things that affect the screen
             if getattr(self, 'skip_ai_view', False):

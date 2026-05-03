@@ -218,15 +218,21 @@ def process_diplomacy_turn(self):
     ai_results = {}
     if ai_tasks:
         import concurrent.futures
+        from map_logic.ai import ai_handler # Import this to safely check the mode
         
-        self.ai_total_tasks = len(ai_tasks)
-        self.ai_completed_tasks = 0
-        self.loading_status_text = f"Awaiting LLM Responses ({self.ai_completed_tasks}/{self.ai_total_tasks})..."
+        self.responsive_tasks_total = len(ai_tasks)
+        self.responsive_tasks_completed = 0
+        self.loading_status_text = "Awaiting LLM Responses..."
         
         # --- Get human players for FULL AI optimization ---
         human_players = getattr(self, 'active_players', [self.player_country])
         
-        with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
+        # --- THE FIX: Throttle concurrency for local Ollama to prevent server crashes ---
+        current_ai_mode = ai_handler.get_ai_mode()
+        # ok but what if we could go higher than 25 threads that would be so cool
+        max_threads = 1 if current_ai_mode == "OLLAMA" else 25
+        
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_threads) as executor:
             futures = {}
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
@@ -244,8 +250,8 @@ def process_diplomacy_turn(self):
                 except Exception as e: 
                     print(f"Thread error: {e}")
                     
-                self.ai_completed_tasks += 1
-                self.loading_status_text = f"Awaiting LLM Responses ({self.ai_completed_tasks}/{self.ai_total_tasks})..."
+                self.responsive_tasks_completed += 1
+                self.loading_status_text = f"Awaiting LLM Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})..."
 
     # --- 4. STANDARD RESOLUTION (APPLY AI RESULTS) ---
     delayed_responses = [] # Store AI actions here to queue them for the next turn

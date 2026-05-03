@@ -9,16 +9,12 @@ def prepare_turn(self):
     print("\n" + "="*40)
     print("--- [PHASE 1] AI PREPARATION START ---")
     
-    # We clear the task bar here so it swaps back to the spinner
-    self.ai_total_tasks = 0 
+    # We explicitly DO NOT clear the proactive tracking variables here anymore
+    # so they stay frozen at 100% on the screen while the second bar fills up!
     
     # --- NEW: Basic Proactive AI & Grand Strategy ---
     print("[SYSTEM] Running Proactive AI...")
     ai_diplomacy.process_basic_proactive_ai(self)
-    
-    # Reset the task bar to 0 so the UI swaps back to the loading spinner 
-    # for the non-LLM intensive background steps
-    self.ai_total_tasks = 0 
     
     self.loading_status_text = "Running AI Research..."
     print("[SYSTEM] Running AI Research...")
@@ -33,8 +29,6 @@ def prepare_turn(self):
     ai_movement.process_ai_unit_orders(self)
     
     # MOVED: Diplomacy is now processed AFTER AI movement generation.
-    # This prevents the AI from attacking on the exact same turn it declares war,
-    # ensuring both the player and the AI start the NEXT turn with the same "At War" state.
     self.loading_status_text = "Processing Pending Diplomacy..."
     print("[SYSTEM] Processing Pending Diplomacy...")
     diplomacy_logic.process_diplomacy_turn(self)

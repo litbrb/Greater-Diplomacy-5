@@ -11,15 +11,13 @@ def process_basic_proactive_ai(map_screen):
     human_players = getattr(map_screen, 'active_players', [map_screen.player_country])
 
     # --- Trigger the UI Progress Bar ---
-    map_screen.ai_total_tasks = len(ai_nations)
-    map_screen.ai_completed_tasks = 0
-    # Change the text to reflect map evaluation, not LLM API calls
-    map_screen.loading_status_text = f"Evaluating AI Grand Strategy ({map_screen.ai_completed_tasks}/{map_screen.ai_total_tasks})..."
+    map_screen.proactive_tasks_total = len(ai_nations)
+    map_screen.proactive_tasks_completed = 0
+    map_screen.loading_status_text = "Evaluating AI Grand Strategy..."
 
     for ai_name in ai_nations:
         if ai_name not in active_nations:
-            map_screen.ai_completed_tasks += 1
-            map_screen.loading_status_text = f"Evaluating AI Grand Strategy ({map_screen.ai_completed_tasks}/{map_screen.ai_total_tasks})..."
+            map_screen.proactive_tasks_completed += 1
             continue
 
         data = map_screen.nation_data[ai_name]
@@ -100,5 +98,5 @@ def process_basic_proactive_ai(map_screen):
                         break
                         
         # --- Update Progress Bar ---
-        map_screen.ai_completed_tasks += 1
-        map_screen.loading_status_text = f"Evaluating AI Grand Strategy ({map_screen.ai_completed_tasks}/{map_screen.ai_total_tasks})..."
+        map_screen.proactive_tasks_completed += 1
+        map_screen.loading_status_text = f"Evaluating AI Grand Strategy ({map_screen.proactive_tasks_completed}/{map_screen.proactive_tasks_total})..."

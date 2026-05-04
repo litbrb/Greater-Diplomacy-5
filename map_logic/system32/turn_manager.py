@@ -1,7 +1,7 @@
 import pygame
 import threading
-from map_logic import turn_processor
-from map_logic.rendering import loading_screen
+from map_logic.system32 import turn_processor
+from map_logic.system32 import loading_screen
 from ui import buttons
 import traceback
 

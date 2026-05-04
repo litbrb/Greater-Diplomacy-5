@@ -1,11 +1,12 @@
 import pygame
+from map_logic.system32 import turn_manager
 import ui_elements
 from ui_elements import Button, Slider
 import data.constants as c
 from data import queries
 
 # New imports for the refactored logic modules
-from map_logic import turn_manager, player_setup
+from map_logic import player_setup
 from map_logic.diplomacy import player_diplomacy_actions
 from ui import event_handler, spectator_menus, editor_menus
 

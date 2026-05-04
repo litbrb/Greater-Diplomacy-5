@@ -25,10 +25,73 @@ def process_basic_proactive_ai(map_screen):
         my_faction = data.get("faction", "")
         my_enemies = data.get("at_war_with", [])
         
-        # --- 1. Faction War Joining Logic ---
+        # --- 0. Decrement Diplomatic Cooldowns ---
+        if "diplo_cooldowns" in data:
+            for target, actions in list(data["diplo_cooldowns"].items()):
+                for act, cd in list(actions.items()):
+                    if cd > 0:
+                        actions[act] -= 1
+                    elif cd == 0:
+                        # Clean up finished cooldowns
+                        del actions[act]
+                if not actions:
+                    del data["diplo_cooldowns"][target]
+
+        is_already_at_war = len(my_enemies) > 0
+        
+        # --- 1. Unreachable Ceasefire Logic ---
+        if is_already_at_war:
+            for enemy in my_enemies:
+                if enemy not in active_nations: continue
+                if not queries.is_nation_reachable(ai_name, enemy, map_screen.map_data, map_screen.id_to_province, map_screen.nation_data):
+                    if not queries.is_ai_diplo_on_cooldown(ai_name, enemy, "CEASEFIRE", map_screen.nation_data):
+                        existing = pending.get(enemy, {})
+                        turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+                        
+                        if enemy not in pending or turns == 0:
+                            action_context = f"offering a ceasefire because our nations cannot physically reach each other"
+                            llm_msg = ai_handler.generate_proactive_text(ai_name, enemy, action_context, human_players)
+                            msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("GENERIC_MESSAGE", "We offer terms for a ceasefire.")
+                            
+                            pending[enemy] = {
+                                "action": "CEASEFIRE",
+                                "turns": 0,
+                                "message": msg
+                            }
+                            queries.set_ai_diplo_cooldown(ai_name, enemy, "CEASEFIRE", map_screen.nation_data)
+                            break # Act once per turn to avoid conflicts
+
+        # --- 2. Call to Arms Logic ---
+        if is_already_at_war and my_faction:
+            faction_members = queries.get_faction_members(my_faction, map_screen.nation_data)
+            for member in faction_members:
+                if member == ai_name or member not in active_nations: continue
+                
+                member_enemies = map_screen.nation_data[member].get("at_war_with", [])
+                unshared_wars = [e for e in my_enemies if e not in member_enemies and e in active_nations]
+                
+                if unshared_wars:
+                    if not queries.is_ai_diplo_on_cooldown(ai_name, member, "CALL_TO_ARMS", map_screen.nation_data):
+                        existing = pending.get(member, {})
+                        turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+                        
+                        if member not in pending or turns == 0:
+                            target_enemy = unshared_wars[0]
+                            action_context = f"calling you to arms in our war against {target_enemy}"
+                            llm_msg = ai_handler.generate_proactive_text(ai_name, member, action_context, human_players)
+                            msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("GENERIC_MESSAGE", "We request your aid in our ongoing conflicts!")
+                            
+                            pending[member] = {
+                                "action": "CALL_TO_ARMS",
+                                "turns": 0,
+                                "message": msg
+                            }
+                            queries.set_ai_diplo_cooldown(ai_name, member, "CALL_TO_ARMS", map_screen.nation_data)
+                            break # Act once per turn to avoid conflicts
+
+        # --- 3. Faction War Joining Logic ---
         if my_faction:
             faction_members = queries.get_faction_members(my_faction, map_screen.nation_data)
-            
             for member in faction_members:
                 if member == ai_name:
                     continue
@@ -37,18 +100,12 @@ def process_basic_proactive_ai(map_screen):
                 unshared_wars = [e for e in member_enemies if e not in my_enemies and e in active_nations]
                 
                 if unshared_wars:
-                    asked_dict = data.setdefault("asked_to_join_wars", {})
-                    asked_enemies = asked_dict.setdefault(member, [])
-                    
-                    new_targets = [e for e in unshared_wars if e not in asked_enemies]
-                    
-                    if new_targets:
-                        target_enemy = new_targets[0]
+                    target_enemy = unshared_wars[0]
+                    if not queries.is_ai_diplo_on_cooldown(ai_name, member, "JOIN_WARS", map_screen.nation_data):
                         existing = pending.get(member, {})
                         turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
                         
                         if member not in pending or turns == 0:
-                            # Try to generate flavor text first
                             action_context = f"mobilizing our forces to join your war against {target_enemy}"
                             llm_msg = ai_handler.generate_proactive_text(ai_name, member, action_context, human_players)
                             msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("PROACTIVE_JOIN_WAR", "Brothers, let us join your fight.")
@@ -58,46 +115,47 @@ def process_basic_proactive_ai(map_screen):
                                 "turns": 0,
                                 "message": msg
                             }
-                            asked_enemies.append(target_enemy)
+                            queries.set_ai_diplo_cooldown(ai_name, member, "JOIN_WARS", map_screen.nation_data)
                             break # Act once per turn to avoid conflicts
 
-        # --- 2. Declare War for Cores Logic (Border Check Only) ---
-        targets_holding_cores = queries.get_nations_holding_our_cores(ai_name, map_screen.map_data)
-        
-        if targets_holding_cores:
-            # ONLY look at nations we actually share a physical border with
-            my_neighbors = queries.get_neighboring_nations(ai_name, map_screen.map_data, map_screen.id_to_province)
-            valid_border_targets = [t for t in targets_holding_cores if t in my_neighbors]
+        # --- 4. Declare War for Cores Logic (Border Check Only) ---
+        if not is_already_at_war:
+            targets_holding_cores = queries.get_nations_holding_our_cores(ai_name, map_screen.map_data)
             
-            for target in valid_border_targets:
-                if target not in active_nations: continue
-                if target in my_enemies: continue
-                if queries.are_in_same_faction(ai_name, target, map_screen.nation_data): continue
+            if targets_holding_cores:
+                # ONLY look at nations we actually share a physical border with
+                my_neighbors = queries.get_neighboring_nations(ai_name, map_screen.map_data, map_screen.id_to_province)
+                valid_border_targets = [t for t in targets_holding_cores if t in my_neighbors]
                 
-                # Check localized border strength instead of global strength
-                my_border_str, target_border_str = queries.get_border_strength(ai_name, target, map_screen.map_data, map_screen.id_to_province)
-                
-                # Prevent division by zero if they have literally no troops on the border
-                target_border_str = max(1, target_border_str)
-                
-                if my_border_str >= (target_border_str * c.AI_WAR_STRENGTH_THRESHOLD):
-                    existing = pending.get(target, {})
-                    turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+                for target in valid_border_targets:
+                    if target not in active_nations: continue
+                    if target in my_enemies: continue
+                    if queries.are_in_same_faction(ai_name, target, map_screen.nation_data): continue
                     
-                    if target not in pending or turns == 0:
-                        # Try to generate flavor text first
-                        action_context = f"declaring war on {target} to reclaim our rightful core territory"
-                        llm_msg = ai_handler.generate_proactive_text(ai_name, target, action_context, human_players)
-                        msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
+                    # Check localized border strength instead of global strength
+                    my_border_str, target_border_str = queries.get_border_strength(ai_name, target, map_screen.map_data, map_screen.id_to_province)
+                    
+                    # Prevent division by zero if they have literally no troops on the border
+                    target_border_str = max(1, target_border_str)
+                    
+                    if my_border_str >= (target_border_str * c.AI_WAR_STRENGTH_THRESHOLD):
+                        if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
+                            existing = pending.get(target, {})
+                            turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+                            
+                            if target not in pending or turns == 0:
+                                action_context = f"declaring war on {target} to reclaim our rightful core territory"
+                                llm_msg = ai_handler.generate_proactive_text(ai_name, target, action_context, human_players)
+                                msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
 
-                        pending[target] = {
-                            "action": "WAR_DECLARATION",
-                            "turns": 0,
-                            "message": msg
-                        }
-                        break
+                                pending[target] = {
+                                    "action": "WAR_DECLARATION",
+                                    "turns": 0,
+                                    "message": msg
+                                }
+                                queries.set_ai_diplo_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data)
+                                break
                         
         # --- Update Progress Bar ---
         map_screen.proactive_tasks_completed += 1
-        # map_screen.this_will_cause_an_error += 1
         map_screen.loading_status_text = f"Evaluating AI Grand Strategy ({map_screen.proactive_tasks_completed}/{map_screen.proactive_tasks_total})..."

@@ -762,3 +762,59 @@ def decode_b64_to_surf(b64_str, size):
         surf = pygame.Surface(size, pygame.SRCALPHA)
         surf.fill((255, 255, 255, 255))
         return surf
+
+# ==========================================
+# NEW DIPLOMATIC SPAM/REACHABILITY QUERIES
+# ==========================================
+
+def is_nation_reachable(nation_a, target_nation, map_data, id_to_province, nation_data):
+    """Determines if a nation can physically reach another via land borders (including faction borders) or sea."""
+    nation_a_faction = nation_data.get(nation_a, {}).get("faction", "")
+    friendly_nations = {nation_a}
+    if nation_a_faction:
+        friendly_nations.update(get_faction_members(nation_a_faction, nation_data))
+        
+    target_faction = nation_data.get(target_nation, {}).get("faction", "")
+    enemy_nations = {target_nation}
+    if target_faction:
+        enemy_nations.update(get_faction_members(target_faction, nation_data))
+        
+    friendly_has_coast = False
+    target_has_coast = False
+    
+    for prov in map_data.values():
+        owner = prov.get("owner")
+        
+        # Check if any friendly nation touches any enemy nation
+        if owner in friendly_nations:
+            if prov.get("is_coastal", False):
+                friendly_has_coast = True
+                
+            for n_id in prov.get("neighbors", []):
+                n_prov = id_to_province.get(n_id)
+                if n_prov and n_prov.get("owner") in enemy_nations:
+                    return True # Direct land connection found
+                    
+        # Keep an eye out for enemy coasts globally too
+        if owner in enemy_nations and prov.get("is_coastal", False):
+            target_has_coast = True
+            
+    if friendly_has_coast and target_has_coast:
+        return True # Both can access the ocean and therefore reach each other
+        
+    return False
+
+def is_ai_diplo_on_cooldown(sender, target, action, nation_data):
+    """Checks if a specific proactive diplomatic action is on cooldown."""
+    cooldowns = nation_data.get(sender, {}).get("diplo_cooldowns", {})
+    target_cooldowns = cooldowns.get(target, {})
+    return target_cooldowns.get(action, 0) != 0
+
+def set_ai_diplo_cooldown(sender, target, action, nation_data, duration=None):
+    """Sets a cooldown for a proactive diplomatic action to prevent spamming."""
+    if duration is None:
+        duration = c.AI_DIPLO_COOLDOWN
+    
+    cooldowns = nation_data.setdefault(sender, {}).setdefault("diplo_cooldowns", {})
+    target_cooldowns = cooldowns.setdefault(target, {})
+    target_cooldowns[action] = duration

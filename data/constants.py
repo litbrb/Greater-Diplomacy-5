@@ -319,6 +319,7 @@ GEMINI_MODEL_NAME = "gemini-2.5-flash"
 # ==========================================
 
 AI_WAR_STRENGTH_THRESHOLD = 1.2 # AI must be 20% stronger overall to declare war
+AI_DIPLO_COOLDOWN = -1 # How many turns before AI can retry a rejected/ignored proactive diplomatic action. -1 means infinite.
 
 # ==========================================
 # AI RECRUITMENT PREFERENCES

@@ -18,9 +18,10 @@ def render_buttons(self):
     # ==================================================================== #
     #                          MAP VIEW TOGGLES                            #
     # ==================================================================== #
-    self.btn_refresh_pol = Button(c.SCREEN_WIDTH - 520, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Pol Ref", self.refresh_political_map)
-    self.btn_refresh_rel = Button(c.SCREEN_WIDTH - 420, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Rel Ref", self.refresh_relations_map)
-    self.btn_refresh_core = Button(c.SCREEN_WIDTH - 320, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Core Ref", self.refresh_cores_map)
+    self.btn_refresh_text = Button(c.SCREEN_WIDTH - 420, c.TOP_BAR_UI_CENTER_Y, "small_square", "blue", "Txt Ref", self.update_country_centers)
+    self.btn_refresh_pol = Button(c.SCREEN_WIDTH - 370, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Pol Ref", self.refresh_political_map)
+    self.btn_refresh_rel = Button(c.SCREEN_WIDTH - 320, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Rel Ref", self.refresh_relations_map)
+    self.btn_refresh_core = Button(c.SCREEN_WIDTH - 270, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Core Ref", self.refresh_cores_map)
     self.btn_refresh_fac = Button(c.SCREEN_WIDTH - 220, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Fac Ref", self.refresh_factions_map)
 
     self.btn_view_terrain = Button(c.VIEW_BTN_START_X, c.VIEW_BTN_ROW1_Y, "small_square", "green", "Terrain", lambda: self.set_map_layer("TERRAIN"), image=icons.get("terrain"), show_text=False)
@@ -120,7 +121,7 @@ def render_buttons(self):
 
     # --- Append all explicitly defined buttons into the elements list ---
     self.elements.extend([
-        self.btn_refresh_pol, self.btn_refresh_rel, self.btn_refresh_core, self.btn_refresh_fac,
+        self.btn_refresh_text, self.btn_refresh_pol, self.btn_refresh_rel, self.btn_refresh_core, self.btn_refresh_fac,
         self.btn_view_terrain, self.btn_view_political, self.btn_view_relations, self.btn_view_cores, self.btn_view_factions,
         self.btn_view_resources, self.btn_view_blank, self.btn_view_units, self.btn_view_economy, self.btn_toggle_names,
         self.btn_ed_econ, self.btn_ed_rd, self.btn_ed_save, self.btn_ed_load, self.btn_ed_nation,
@@ -171,6 +172,7 @@ def update_button_states(map_screen):
     # ==================================================================== #
     #                        VIEW TOGGLES SELECTION                        #
     # ==================================================================== #
+    map_screen.btn_refresh_text.visible = True
     map_screen.btn_refresh_pol.visible = True
     map_screen.btn_refresh_rel.visible = True
     map_screen.btn_refresh_core.visible = True

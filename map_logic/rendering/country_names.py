@@ -138,6 +138,8 @@ def draw_country_names(map_screen, surface):
 def update_country_centers(map_screen):
     # Calculates the visual center, rotation, and physical spread for every country landmass.
     
+    timer = pygame.time.get_ticks()
+
     def get_blobs(grouping_key_func):
         blobs = []
         visited = set()
@@ -212,3 +214,5 @@ def update_country_centers(map_screen):
     # Generate separate blobs for political owners and primary cores
     map_screen.country_text_blobs = get_blobs(lambda p: p.get("owner"))
     map_screen.core_text_blobs = get_blobs(lambda p: p.get("cores")[0] if p.get("cores") else None)
+
+    print(f"Country centers / names refreshed in {pygame.time.get_ticks() - timer} ms")

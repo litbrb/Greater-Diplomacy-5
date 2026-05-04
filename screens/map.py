@@ -21,7 +21,7 @@ from map_logic.diplomacy import diplomacy_logic, player_diplomacy_actions
 from map_logic.random_map import random_map_generator
 from map_logic.rendering import edit_province_ownership, map_renderer, refresh_map
 from map_logic.rendering.font_manager import fonts
-from map_logic.rendering.country_names import update_country_centers
+from map_logic.rendering.country_names import update_country_centers as calc_country_centers
 
 class Map(GameState):
     def __init__(self, load_path=None, is_scenario=False, is_random=False, force_editor=False, random_settings=None, num_players=1):
@@ -128,7 +128,7 @@ class Map(GameState):
             data.setdefault("allied_with", [])
             data.setdefault("pending_diplomacy", {})
 
-        update_country_centers(self)
+        self.update_country_centers()
 
     # --- Properties ---
     @property
@@ -162,6 +162,10 @@ class Map(GameState):
         self.secondary_mode = self.secondary_modes[self.sec_idx]
         self.show_feedback(f"View Mode: {self.secondary_mode}")
 
+    def update_country_centers(self):
+        """Calculates new label centers and text blobs for the map."""
+        calc_country_centers(self)
+
     def set_map_layer(self, layer_name):
         """Unified map layer setter."""
         self.base_layer = layer_name
@@ -173,6 +177,10 @@ class Map(GameState):
             "CORES": self.cores_map
         }
         self.active_map = layer_map.get(layer_name, self.political_map)
+        
+        # --- ADDED: Auto-refresh the text blobs when changing map views ---
+        self.update_country_centers()
+        
         self.show_feedback(f"Mode: {layer_name.title()}")
         
     # --- Screen Transitions ---

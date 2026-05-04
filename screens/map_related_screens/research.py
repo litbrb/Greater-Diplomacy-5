@@ -50,7 +50,8 @@ class Research_Screen(GameState):
             "aircraft_carrier": 350,
             "workshop": 250, "basic_factory": 250, "factory": 250,
             "bergius_process": 350, "synthetic_fuel_experiments": 350, "fuel_refining": 350,
-            "basic_recruitment": 450, "recruitment_buildings": 450
+            "basic_recruitment": 450, "recruitment_buildings": 450,
+            "general_recruitment": 550
         }
 
         self.nodes = {"INFANTRY": [], "TANKS": [], "NAVY": [], "INDUSTRY": []}
@@ -119,6 +120,7 @@ class Research_Screen(GameState):
         if tech_key == "basic_factory": return "Basic Factory"
         if tech_key == "basic_recruitment": return "Basic Recruitment Center"
         if tech_key == "recruitment_buildings": return f"Recruitment Building Lvl {lvl}"
+        if tech_key == "general_recruitment": return f"General Recruitment Lvl {lvl}"
         
         base_name = tech_key.replace('_', ' ').title()
         
@@ -204,10 +206,9 @@ class Research_Screen(GameState):
             elif is_researching and cur_lvl + 1 == lvl:
                 status = "RESEARCHING"
             elif cur_lvl == lvl - 1:
-                if lvl == 1:
-                    reqs = self.tech_tree[tech_key].get("req", {})
-                    if self.check_requirements(res_levels, reqs):
-                        status = "AVAILABLE"
+                reqs = self.tech_tree[tech_key].get("req", {})
+                if self.check_requirements(res_levels, reqs, lvl):
+                    status = "AVAILABLE"
                 else:
                     status = "AVAILABLE"
                     
@@ -235,11 +236,11 @@ class Research_Screen(GameState):
             
             self.elements.append(btn)
 
-    def check_requirements(self, res_levels, reqs):
+    def check_requirements(self, res_levels, reqs, target_lvl=1):
         if not reqs: return True
         if "OR" in reqs:
-            return any(res_levels.get(k, 0) >= v for sub in reqs["OR"] for k, v in sub.items())
-        return all(res_levels.get(k, 0) >= v for k, v in reqs.items())
+            return any(res_levels.get(k, 0) >= (target_lvl if v == "MATCH_LEVEL" else v) for sub in reqs["OR"] for k, v in sub.items())
+        return all(res_levels.get(k, 0) >= (target_lvl if v == "MATCH_LEVEL" else v) for k, v in reqs.items())
 
     def open_modal(self, node_info):
         self.active_modal = node_info
@@ -335,10 +336,10 @@ class Research_Screen(GameState):
                 if "OR" in reqs:
                     for sub_req in reqs["OR"]:
                         for req_k, req_lvl in sub_req.items():
-                            draw_line_to_prev(req_k, req_lvl)
+                            draw_line_to_prev(req_k, req_lvl if req_lvl != "MATCH_LEVEL" else 1)
                 else:
                     for req_k, req_lvl in reqs.items():
-                        draw_line_to_prev(req_k, req_lvl)
+                        draw_line_to_prev(req_k, req_lvl if req_lvl != "MATCH_LEVEL" else 1)
 
     def draw_hud_slots(self, surface):
         hud_rect = pygame.Rect(20, c.SCREEN_HEIGHT - 120, 400, 100)

@@ -65,8 +65,34 @@ def draw_tooltip(self, surface):
                 lines.append("No Natural Resources")
 
     elif self.secondary_mode == "ECONOMY":
-        # Base production from the tile itself dynamically pulled from config
-        lines.append(f"Base Yield: +{c.BASE_YIELDS['manpower']}Man, +{c.BASE_YIELDS['materials']}Mat, +{c.BASE_YIELDS['fuel']}Fuel")
+        # Base production from the tile itself dynamically calculated
+        owner_data = self.nation_data.get(owner_id, {})
+        research_data = owner_data.get("research", {})
+        
+        # Calculate dynamic bonuses based on tech
+        gen_rec_lvl = research_data.get("general_recruitment", 0)
+        manpower_bonus = gen_rec_lvl * getattr(c, 'GENERAL_RECRUITMENT_BONUS', 5)
+        
+        bergius_bonus = c.BERGIUS_FUEL_BONUS if research_data.get("bergius_process", 0) > 0 else 0
+        
+        # Base yields including tech bonuses
+        base_man = c.BASE_YIELDS['manpower'] + manpower_bonus
+        base_mat = c.BASE_YIELDS['materials']
+        base_fuel = c.BASE_YIELDS['fuel'] + bergius_bonus
+
+        # Apply core/non-core penalties to give the player the EXACT true yield
+        is_core = owner_id in prov.get("cores", [])
+        man_mult = 1.0 if is_core else c.NON_CORE_MULTIPLIERS["manpower"]
+        mat_mult = 1.0 if is_core else c.NON_CORE_MULTIPLIERS["materials"]
+        fuel_mult = 1.0 if is_core else c.NON_CORE_MULTIPLIERS["fuel"]
+
+        actual_man = int(base_man * man_mult)
+        actual_mat = int(base_mat * mat_mult)
+        actual_fuel = int(base_fuel * fuel_mult)
+
+        lines.append(f"Tile Yield: +{actual_man}Man, +{actual_mat}Mat, +{actual_fuel}Fuel")
+        if not is_core and owner_id not in c.UNPLAYABLE_NATIONS:
+            lines.append("  *(Non-Core Penalties Applied)*")
 
         buildings = prov.get("buildings", [])
         if buildings:

@@ -298,6 +298,10 @@ def get_tech_unlocks(tech_key, level):
     if tech_key == "bergius_process" and level == 1:
         unlocks.append(f"+{c.BERGIUS_FUEL_BONUS} Base Fuel/Turn")
         
+    if tech_key == "general_recruitment":
+        bonus = getattr(c, 'GENERAL_RECRUITMENT_BONUS', 5)
+        unlocks.append(f"+{bonus} Base Manpower/Tile")
+        
     return unlocks
 
 def get_highest_infantry(nation_data_block, tech_tree, unit_library):
@@ -340,12 +344,12 @@ def get_best_naval_unit(player_research, unit_library):
     """Finds the highest preference naval unit the nation has unlocked."""
     return get_best_preferred_unit(player_research, unit_library, c.AI_NAVAL_UNIT_PREFERENCE)
 
-def check_tech_requirements(res_levels, reqs):
+def check_tech_requirements(res_levels, reqs, target_lvl=1):
     """Centralized tech requirement checker."""
     if not reqs: return True
     if "OR" in reqs:
-        return any(res_levels.get(k, 0) >= v for sub in reqs["OR"] for k, v in sub.items())
-    return all(res_levels.get(k, 0) >= v for k, v in reqs.items())
+        return any(res_levels.get(k, 0) >= (target_lvl if v == "MATCH_LEVEL" else v) for sub in reqs["OR"] for k, v in sub.items())
+    return all(res_levels.get(k, 0) >= (target_lvl if v == "MATCH_LEVEL" else v) for k, v in reqs.items())
 
 def is_training_troops(province):
     """Returns True if the province has any troops in its deployment queue."""
@@ -388,10 +392,6 @@ def can_afford(nation_data_block, costs_dict):
 
 def calculate_all_economies(map_data, nation_data):
     """Standardized economy calculator. Single source of truth for UI and Turn Processor."""
-    YIELD_MANPOWER = c.BASE_YIELDS["manpower"]
-    YIELD_MATERIALS = c.BASE_YIELDS["materials"]
-    YIELD_FUEL = c.BASE_YIELDS["fuel"]
-
     unit_lib = get_unit_library()
     bldg_lib = get_building_library()
 
@@ -400,10 +400,20 @@ def calculate_all_economies(map_data, nation_data):
     for name, n_data in nation_data.items():
         # Fetch Bergius bonus
         bergius_bonus = 0
-        if n_data.get("research", {}).get("bergius_process", 0) > 0:
+        research_data = n_data.get("research", {})
+        if research_data.get("bergius_process", 0) > 0:
             bergius_bonus = c.BERGIUS_FUEL_BONUS
 
+        # Fetch General Recruitment bonus
+        gen_rec_lvl = research_data.get("general_recruitment", 0)
+        manpower_bonus = gen_rec_lvl * getattr(c, 'GENERAL_RECRUITMENT_BONUS', 5)
+
         econ_data[name] = {
+            "dynamic_yields": {
+                "manpower": c.BASE_YIELDS["manpower"] + manpower_bonus,
+                "materials": c.BASE_YIELDS["materials"],
+                "fuel": c.BASE_YIELDS["fuel"] + bergius_bonus
+            },
             "breakdown": {
                 "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
                 "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
@@ -427,10 +437,12 @@ def calculate_all_economies(map_data, nation_data):
 
             cat = "core" if is_core else "non_core"
             bd = econ_data[owner]["breakdown"]
+            dyn_yields = econ_data[owner]["dynamic_yields"]
 
-            bd["manpower"][cat] += man_mult * YIELD_MANPOWER
-            bd["materials"][cat] += mat_mult * YIELD_MATERIALS
-            bd["fuel"][cat] += fuel_mult * YIELD_FUEL
+            # Use the dynamic yields per nation instead of the global constants
+            bd["manpower"][cat] += man_mult * dyn_yields["manpower"]
+            bd["materials"][cat] += mat_mult * dyn_yields["materials"]
+            bd["fuel"][cat] += fuel_mult * dyn_yields["fuel"]
 
             # Natural Resources
             res = province.get("resources", {})

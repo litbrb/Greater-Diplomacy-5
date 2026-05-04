@@ -33,13 +33,15 @@ FEEDBACK_TEXT_Y = 220
 
 # Economy Data
 BASE_YIELDS = {
-    "manpower": 50,
+    "manpower": 100,
     "materials": 10,
     "fuel": 1
 }
 
+GENERAL_RECRUITMENT_BONUS = 5 # Add this
+
 COUNTRY_BASE_YIELDS = {
-    "manpower": 500,
+    "manpower": 1000,
     "materials": 100,
     "fuel": 0
 }
@@ -56,7 +58,7 @@ DAYS_PER_TURN = 10
 
 # Non-core penalties
 NON_CORE_MULTIPLIERS = {
-    "manpower": 0.0,
+    "manpower": 0.1,
     "materials": 0.5,
     "fuel": 0.5
 }

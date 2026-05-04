@@ -50,7 +50,7 @@ class Research_Screen(GameState):
             "destroyer": 250,
             "carrack": 350, "ironclad": 350, "pre-dreadnought": 350, "dreadnought": 350,
             "battleship": 350,
-            "aircraft_carrier": 450,
+            "aircraft_carrier": 350,
             "workshop": 250, "basic_factory": 250, "factory": 250,
             "bergius_process": 350, "synthetic_fuel_experiments": 350, "fuel_refining": 350,
             "basic_recruitment": 450, "recruitment_buildings": 450,
@@ -224,7 +224,7 @@ class Research_Screen(GameState):
                 if self.check_requirements(res_levels, reqs, lvl):
                     status = "AVAILABLE"
                 else:
-                    status = "AVAILABLE"
+                    status = "LOCKED"
                     
             color_map = {"COMPLETED": "green", "RESEARCHING": "orange", "AVAILABLE": "blue", "LOCKED": "grey"}
             btn_color = color_map[status]

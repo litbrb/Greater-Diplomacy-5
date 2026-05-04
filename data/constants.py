@@ -191,6 +191,14 @@ RESEARCH_TIMELINE_SPACING = 80 # Width between years on the research timeline
 
 BASE_RESEARCH_POINTS_PER_DAY = 10 
 
+# Unlocked tech exception for starting exactly in 1910
+DEFAULT_1910_TECH = {
+    "infantry_type": 1,
+    "cavalry": 1,
+    "destroyer": 1,
+    "basic_factory": 1
+}
+
 # ==========================================
 # INPUT SETTINGS
 # ==========================================

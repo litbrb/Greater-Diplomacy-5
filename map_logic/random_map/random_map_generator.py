@@ -130,17 +130,32 @@ def randomize_all_provinces(map_screen, settings):
         with open(template_path, "r") as f:
             struct = json.load(f)
             res_template = {tech: 0 for tech in struct.keys()}
-            if "infantry_type" in res_template: res_template["infantry_type"] = 1
-            if "cavalry" in res_template: res_template["cavalry"] = 1
+            # Changed these to 0 so the dynamic logic fully controls the starting tech
+            if "infantry_type" in res_template: res_template["infantry_type"] = 0
+            if "cavalry" in res_template: res_template["cavalry"] = 0
 
     # Dynamically read years from the loaded JSON struct
     tech_timeline = {tech: data.get("years", [1850]) for tech, data in struct.items()}
     
     # Calculate what tech levels everyone gets based on the Start Year
     baseline_tech = {}
-    for tech, years in tech_timeline.items():
-        lvl = sum(1 for y in years if y <= start_year)
-        if lvl > 0: baseline_tech[tech] = lvl
+    
+    if start_year == 1910:
+        # Load the exception from constants.py
+        baseline_tech = getattr(c, 'DEFAULT_1910_TECH', {}).copy()
+    else:
+        for tech, years in tech_timeline.items():
+            # Check the JSON structure to see if this is an infantry tech
+            is_infantry = struct.get(tech, {}).get("category") == "INFANTRY"
+            
+            if is_infantry:
+                # Infantry gets tech up to and including the start year
+                lvl = sum(1 for y in years if y <= start_year)
+            else:
+                # Everything else only gets tech from STRICTLY previous years
+                lvl = sum(1 for y in years if y < start_year)
+                
+            if lvl > 0: baseline_tech[tech] = lvl
 
     # Apply base tech to all active nations
     for nation in active_nations:

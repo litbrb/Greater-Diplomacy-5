@@ -73,12 +73,10 @@ def draw_tooltip(self, surface):
         gen_rec_lvl = research_data.get("general_recruitment", 0)
         manpower_bonus = gen_rec_lvl * getattr(c, 'GENERAL_RECRUITMENT_BONUS', 5)
         
-        bergius_bonus = c.BERGIUS_FUEL_BONUS if research_data.get("bergius_process", 0) > 0 else 0
-        
         # Base yields including tech bonuses
         base_man = c.BASE_YIELDS['manpower'] + manpower_bonus
         base_mat = c.BASE_YIELDS['materials']
-        base_fuel = c.BASE_YIELDS['fuel'] + bergius_bonus
+        base_fuel = c.BASE_YIELDS['fuel']
 
         # Apply core/non-core penalties to give the player the EXACT true yield
         is_core = owner_id in prov.get("cores", [])

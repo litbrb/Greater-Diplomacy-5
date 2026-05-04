@@ -439,11 +439,13 @@ def calculate_all_economies(map_data, nation_data):
             "dynamic_yields": {
                 "manpower": c.BASE_YIELDS["manpower"] + manpower_bonus,
                 "materials": c.BASE_YIELDS["materials"],
-                "fuel": c.BASE_YIELDS["fuel"] + bergius_bonus
+                # FIX: Remove bergius_bonus from the per-tile dynamic yield
+                "fuel": c.BASE_YIELDS["fuel"] 
             },
             "breakdown": {
                 "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
                 "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
+                # Keep it here! This is the flat, nation-wide base income.
                 "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0}
             },
             "upkeep": {"manpower": 0, "materials": 0, "fuel": 0},

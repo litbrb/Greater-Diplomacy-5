@@ -382,6 +382,15 @@ def is_constructing_building(province):
 # ECONOMY QUERIES
 # ==========================================
 
+def get_nation_manpower(nation, nation_data):
+    return nation_data.get(nation, {}).get("manpower", 0)
+
+def get_nation_materials(nation, nation_data):
+    return nation_data.get(nation, {}).get("materials", 0)
+
+def get_nation_fuel(nation, nation_data):
+    return nation_data.get(nation, {}).get("fuel", 0)
+
 def refund_resources(nation_data_block, costs_dict):
     """Adds refunded costs back to a nation's resource pools safely."""
     nation_data_block["materials"] = nation_data_block.get("materials", 0) + costs_dict.get("cost_materials", 0)

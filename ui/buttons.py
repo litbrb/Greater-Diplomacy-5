@@ -34,7 +34,7 @@ def render_buttons(self):
     # ==================================================================== #
     #                        LEFT & BOTTOM UI BARS                         #
     # ==================================================================== #
-    econ_callback = self.open_editor_economy if getattr(self, 'is_editor', False) else self.open_economy_screen
+    econ_callback = editor_menus.open_editor_economy if getattr(self, 'is_editor', False) else self.open_economy_screen
     research_callback = self.open_map_research_editor if getattr(self, 'is_editor', False) else self.open_research
 
     # Editor Buttons
@@ -42,7 +42,7 @@ def render_buttons(self):
     self.btn_ed_rd = Button(c.LEFT_UI_BAR_X, 200, "left_ui_bar", "blue", "R&D", research_callback, image=icons.get("research"))
     self.btn_ed_save = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Save", self.save_map_data)
     self.btn_ed_load = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Load", editor_menus.editor_load_map)
-    self.btn_ed_nation = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Nation", self.select_brush_nation)
+    self.btn_ed_nation = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Nation", editor_menus.select_brush_nation)
     self.btn_ed_core = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*3, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Core Brush", self.select_core_brush)
     self.btn_ed_autocore = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*3, c.SCREEN_HEIGHT - 110, "small", "pink", "Auto-Core", self.auto_assign_cores)
     self.btn_ed_resource = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*4, c.SCREEN_HEIGHT - 110, "small", "purple", "Resource", editor_menus.select_resource_brush)
@@ -61,7 +61,7 @@ def render_buttons(self):
     
     is_spec = getattr(self, 'player_country', '') == "Spectator"
     is_ed = getattr(self, 'is_editor', False)
-    econ_callback = self.open_editor_economy if (is_ed or is_spec) else self.open_economy_screen
+    econ_callback = editor_menus.open_editor_economy if (is_ed or is_spec) else self.open_economy_screen
     research_callback = self.open_map_research_editor if (is_ed or is_spec) else self.open_research
     msgs_callback = self.open_spectator_messages if is_spec else self.open_messages
     

@@ -561,12 +561,6 @@ class Map(GameState):
 
     # --- Tkinter Wrappers (Imported from editor_menus.py) ---
 
-    def select_brush_nation(self):
-        editor_menus.select_brush_nation(self)
-
-    def open_editor_economy(self):
-        editor_menus.open_editor_economy(self)
-
     def open_map_research_editor(self):
         editor_menus.open_map_research_editor(self)
         

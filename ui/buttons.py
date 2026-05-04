@@ -23,7 +23,6 @@ def render_buttons(self):
     self.btn_refresh_core = Button(c.SCREEN_WIDTH - 320, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Core Ref", self.refresh_cores_map)
     self.btn_refresh_fac = Button(c.SCREEN_WIDTH - 220, c.TOP_BAR_UI_CENTER_Y, "small_square", "grey", "Fac Ref", self.refresh_factions_map)
 
-    # REFACTORED: Using the unified set_map_layer method
     self.btn_view_terrain = Button(c.VIEW_BTN_START_X, c.VIEW_BTN_ROW1_Y, "small_square", "green", "Terrain", lambda: self.set_map_layer("TERRAIN"), image=icons.get("terrain"), show_text=False)
     self.btn_view_political = Button(c.VIEW_BTN_START_X + c.VIEW_BTN_STEP_X, c.VIEW_BTN_ROW1_Y, "small_square", "green", "Political", lambda: self.set_map_layer("POLITICAL"), image=icons.get("political"), show_text=False)
     self.btn_view_relations = Button(c.VIEW_BTN_START_X + c.VIEW_BTN_STEP_X * 2, c.VIEW_BTN_ROW1_Y, "small_square", "green", "Relations", lambda: self.set_map_layer("RELATIONS"), image=icons.get("relations"), show_text=False)
@@ -42,10 +41,9 @@ def render_buttons(self):
     is_spec = getattr(self, 'player_country', '') == "Spectator"
     is_ed = getattr(self, 'is_editor', False)
 
-    # REFACTORED: Pointing to generic change_state methods instead of wrappers
-    econ_callback = editor_menus.open_editor_economy if (is_ed or is_spec) else lambda: self.change_state("ECONOMY")
-    research_callback = editor_menus.open_map_research_editor if (is_ed or is_spec) else lambda: self.change_state("RESEARCH")
-    msgs_callback = editor_menus.open_spectator_messages if is_spec else lambda: self.change_state("MESSAGES")
+    econ_callback = (lambda: editor_menus.open_editor_economy(self)) if (is_ed or is_spec) else (lambda: self.change_state("ECONOMY"))
+    research_callback = (lambda: editor_menus.open_map_research_editor(self)) if (is_ed or is_spec) else (lambda: self.change_state("RESEARCH"))
+    msgs_callback = (lambda: editor_menus.open_spectator_messages(self)) if is_spec else (lambda: self.change_state("MESSAGES"))
 
     # Editor Buttons
     self.btn_ed_econ = Button(c.LEFT_UI_BAR_X, 500, "left_ui_bar", "green", "Country Economy", econ_callback)
@@ -63,7 +61,7 @@ def render_buttons(self):
     self.btn_ed_date = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*7, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Set Date", lambda: editor_menus.open_editor_date(self))
     self.btn_ed_diplo = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*8, c.BOTTOM_BAR_UI_CENTER_Y, "small", "red", "Diplomacy", lambda: editor_menus.open_diplomacy_editor(self))
 
-    # Gameplay Buttons (REFACTORED: using turn_manager)
+    # Gameplay Buttons
     self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Next Turn", lambda: turn_manager.advance_time(self))
     self.btn_skip_ai = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Skip AI", self.toggle_skip_ai)
     
@@ -89,11 +87,11 @@ def render_buttons(self):
     domestic_x = c.LEFT_UI_BAR_X
     diplo_x = 180
 
-    # Domestic Set (REFACTORED: generic transitions)
+    # Domestic Set
     self.btn_go_orders = Button(280, 603, "orders", "blue", "Give Orders", lambda: self.change_state("ORDERS"), image=icons.get("paper"), show_text=False)
     self.btn_go_production = Button(600, 603, "medium_square", "orange", "Production", lambda: self.change_state_if_owned("PRODUCTION", requires_land=True), image=icons.get("industry"), show_text=False)
 
-    # Foreign Set (REFACTORED: lambda delegation to logic files)
+    # Foreign Set
     self.btn_declare_war = Button(diplo_x, c.ACTION_BTN_START_Y, "diplomatic", "red", "Declare War", lambda: player_diplomacy_actions.handle_declare_war(self))
     self.btn_join_wars = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 1, "diplomatic", "orange", "Join Wars", lambda: player_diplomacy_actions.handle_join_wars(self))
     self.btn_call_to_arms = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 2, "diplomatic", "red", "Call to Arms", lambda: player_diplomacy_actions.handle_call_to_arms(self))
@@ -245,6 +243,7 @@ def update_button_states(map_screen):
     # ======================================================================== #
     #                        PROVINCE INTERACTION LOGIC                        #
     # ======================================================================== #
+
     if is_sel:
         owner = map_screen.selected_province.get("owner", "Unclaimed")
         

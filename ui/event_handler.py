@@ -3,6 +3,7 @@ from map_logic.rendering import map_utils
 from map_logic.rendering import edit_province_ownership
 import data.constants as c
 from map_logic.camera import camera_handler
+from map_logic import player_setup
 
 def handle_map_events(self, event):
     mx, my = pygame.mouse.get_pos()
@@ -187,12 +188,12 @@ def handle_map_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.pending_selection:
                 if hasattr(self, 'confirm_rect') and self.confirm_rect.collidepoint(mx, my):
-                    self.confirm_player_country()
+                    player_setup.confirm_player_country(self)
                 elif hasattr(self, 'cancel_rect') and self.cancel_rect.collidepoint(mx, my):
-                    self.cancel_selection()
+                    player_setup.cancel_selection(self)
                 return 
             if self.hovered_province:
-                self.select_player_country(self.hovered_province)
+                player_setup.select_player_country(self, self.hovered_province)
         return 
 
     # --- NEW: Direct Map Message Editing ---

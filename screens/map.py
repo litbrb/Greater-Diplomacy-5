@@ -2,7 +2,6 @@
 import pygame
 import random
 import math
-import threading
 
 # Data & Constants
 import data.constants as c
@@ -15,7 +14,7 @@ from ui_elements import Button, process_text_input
 from ui import event_handler, spectator_menus, buttons, editor_menus
 
 # Game Logic & Rendering Submodules
-from map_logic import turn_processor
+from map_logic import turn_manager, player_setup
 from map_logic.camera.camera_handler import MapCamera
 from map_logic.diplomacy import diplomacy_logic, player_diplomacy_actions
 from map_logic.random_map import random_map_generator
@@ -73,8 +72,7 @@ class Map(GameState):
         self.viewing_ai_moves = False
         self.skip_ai_view = False
         
-        # --- 2. Data Loading (FIXED ORDER) ---
-        # Load the selected map BEFORE we do any camera math!
+        # --- 2. Data Loading ---
         if is_random and random_settings:
             load_map.load_map_assets(self, random_settings["map_path"])
             self.time_manager.year = random_settings["year"]
@@ -92,11 +90,8 @@ class Map(GameState):
         self.top_bar_rect = pygame.Rect(0, 0, c.SCREEN_WIDTH, 60)
         self.bot_bar_rect = pygame.Rect(0, c.SCREEN_HEIGHT - 60, c.SCREEN_WIDTH, 60)
         self.raised_rect = pygame.Rect(0, 0, c.UI_LEFT_OFFSET, c.SCREEN_HEIGHT)
-        
-        # WIDENED to 270 to accommodate the 5th button
         self.ui_background_rect = pygame.Rect(0, c.SCREEN_HEIGHT - 120, 270, 120)
         
-        # Now these grab the dimensions of the CORRECT map
         self.map_w, self.map_h = self.id_map.get_size()
         self.min_zoom = (c.SCREEN_HEIGHT - self.total_ui_h) / self.map_h
         self.camera = MapCamera(self.min_zoom)
@@ -116,7 +111,6 @@ class Map(GameState):
         self.factions_map = self.id_map.copy()
 
         # --- 3. RUN THE RANDOMIZER ---
-        # Now that the map data and nation data actually exist, we can randomize them
         if is_random and random_settings:
             random_map_generator.randomize_all_provinces(self, random_settings)
 
@@ -137,28 +131,18 @@ class Map(GameState):
 
     # --- Properties ---
     @property
-    def player_manpower(self):
-        if self.player_country in self.nation_data:
-            return self.nation_data[self.player_country].get("manpower", 0)
-        return 0
-
+    def player_manpower(self): return self.nation_data.get(self.player_country, {}).get("manpower", 0)
     @player_manpower.setter
-    def player_manpower(self, value):
-        if self.player_country in self.nation_data:
-            self.nation_data[self.player_country]["manpower"] = value
+    def player_manpower(self, value): 
+        if self.player_country in self.nation_data: self.nation_data[self.player_country]["manpower"] = value
 
     @property
-    def player_materials(self):
-        if self.player_country in self.nation_data:
-            return self.nation_data[self.player_country].get("materials", 0)
-        return 0
-
+    def player_materials(self): return self.nation_data.get(self.player_country, {}).get("materials", 0)
+    
     @property
-    def player_fuel(self):
-        if self.player_country in self.nation_data:
-            return self.nation_data[self.player_country].get("fuel", 0)
-        return 0
+    def player_fuel(self): return self.nation_data.get(self.player_country, {}).get("fuel", 0)
 
+    # --- Toggles & View Modes ---
     def toggle_country_names(self):
         self.show_country_names = not getattr(self, 'show_country_names', True)
         self.show_feedback(f"Country Names: {'ON' if self.show_country_names else 'OFF'}")
@@ -166,10 +150,8 @@ class Map(GameState):
     def toggle_skip_ai(self):
         self.skip_ai_view = not getattr(self, 'skip_ai_view', False)
         self.show_feedback(f"Skip AI View: {'ON' if self.skip_ai_view else 'OFF'}")
-        from ui import buttons
         buttons.update_button_states(self)
         
-    # --- Logic Methods ---
     def set_view_mode(self, mode):
         self.secondary_mode = mode
         self.show_feedback(f"View: {mode}")
@@ -178,72 +160,32 @@ class Map(GameState):
         self.sec_idx = (self.sec_idx + 1) % len(self.secondary_modes)
         self.secondary_mode = self.secondary_modes[self.sec_idx]
         self.show_feedback(f"View Mode: {self.secondary_mode}")
-        
-    def select_player_country(self, province):
-        owner = province.get("owner", "Unclaimed")
-        if owner in self.nation_data and self.nation_data[owner].get("is_playable"):
-            self.pending_selection = owner
-            self.selected_province = province 
-            self.show_feedback(f"Selected {owner.title()}...")
-        else:
-            self.show_feedback("Cannot select unowned or non-playable territory")
 
-    # 2. UPDATE confirm logic to loop until all players are picked
-    def confirm_player_country(self):
-        if self.pending_selection:
-            self.active_players.append(self.pending_selection)
-            
-            self.selected_province = None 
-            self.hovered_province = None
-            self.hover_glow_surf = None
-            
-            if len(self.active_players) < self.num_players:
-                self.show_feedback(f"Player {len(self.active_players) + 1}, pick a country!")
-                self.pending_selection = None
-            else:
-                # Everyone picked, start with Player 1
-                self.current_player_index = 0
-                self.player_country = self.active_players[0]
-                self.selection_mode = False
-                self.pending_selection = None
-                
-                self.show_feedback(f"Now playing as {self.player_country}")
-                buttons.render_buttons(self)
-                self.refresh_relations_map()
-
-    # --- NEW SPECTATOR LOGIC ---
-    def start_spectator(self):
-        self.player_country = "Spectator"
-        if "Spectator" not in self.nation_data:
-            self.nation_data["Spectator"] = {
-                "name": "Spectator",
-                "color": [200, 200, 200],
-                "is_playable": False,
-                "at_war_with": [],
-                "allied_with": [],
-                "pending_diplomacy": {}
-            }
-        self.active_players.append("Spectator")
+    def set_map_layer(self, layer_name):
+        """Unified map layer setter."""
+        self.base_layer = layer_name
+        layer_map = {
+            "TERRAIN": self.terrain_map,
+            "POLITICAL": self.political_map,
+            "RELATIONS": self.relations_map,
+            "FACTIONS": self.factions_map,
+            "CORES": self.cores_map
+        }
+        self.active_map = layer_map.get(layer_name, self.political_map)
+        self.show_feedback(f"Mode: {layer_name.title()}")
         
-        if len(self.active_players) < self.num_players:
-            self.show_feedback(f"Player {len(self.active_players) + 1}, pick a country!")
-            self.pending_selection = None
-        else:
-            self.current_player_index = 0
-            self.player_country = self.active_players[0]
-            self.selection_mode = False
-            self.pending_selection = None
-            self.show_feedback(f"Now playing as {self.player_country}")
-            
-            buttons.render_buttons(self)
-            self.refresh_relations_map()
-            
-    def cancel_selection(self):
-        self.pending_selection = None
-        self.selected_province = None
+    # --- Screen Transitions ---
+    def change_state(self, next_state):
+        self.next_state, self.done = next_state, True
+        
+    def change_state_if_owned(self, next_state, requires_land=False):
+        """Only transitions if the player owns the selected province (and optionally if it's land)."""
+        if self.selected_province and self.selected_province.get("owner") == self.player_country:
+            if requires_land and self.selected_province.get("terrain") in c.WATER_TERRAINS:
+                return
+            self.change_state(next_state)
 
     def deselect_province(self):
-        # --- Auto-save or clear direct message draft on exit ---
         if self.selected_province:
             owner = self.selected_province.get("owner")
             is_foreign = queries.is_foreign_playable(owner, self.player_country, self.nation_data)
@@ -255,166 +197,35 @@ class Map(GameState):
                     diplomacy_logic.cancel_text_message(self.nation_data, self.player_country, owner)
                 self.mail_input_active = False
 
-        self.selected_province = None
-        self.hovered_province = None
-        self.hover_glow_surf = None
-        self.last_hovered_id = None
+        self.selected_province = self.hovered_province = self.hover_glow_surf = self.last_hovered_id = None
         self.show_feedback("Map Unlocked")
-
-    def set_terrain(self): 
-        self.base_layer = "TERRAIN"
-        self.active_map = self.terrain_map
-        self.show_feedback("Mode: Terrain")
-
-    def set_political(self): 
-        self.base_layer = "POLITICAL"
-        self.active_map = self.political_map
-        # self.refresh_political_map()
-        self.show_feedback("Mode: Political")
-        
-    def set_relations(self): 
-        self.base_layer = "RELATIONS"
-        self.active_map = self.relations_map
-        # self.refresh_relations_map()
-        self.show_feedback("Mode: Relations")
-
-    # NEW: Factions toggle
-    def set_factions(self): 
-        self.base_layer = "FACTIONS"
-        self.active_map = self.factions_map
-        self.show_feedback("Mode: Factions")
-
-    def set_cores(self): 
-        self.base_layer = "CORES"
-        self.active_map = self.cores_map
-        self.show_feedback("Mode: Cores")
 
     def save_map_data(self): 
         save_map.save_map_data(self)
 
-    def refresh_political_map(self): 
-        refresh_map.refresh_political_map(self)
-        
-    def refresh_relations_map(self): 
-        refresh_map.refresh_relations_map(self)
-
-    def refresh_factions_map(self): 
-        refresh_map.refresh_factions_map(self)
-    
-    def select_core_brush(self): 
-        editor_menus.select_core_brush(self)
-
-    def refresh_cores_map(self): 
-        refresh_map.refresh_cores_map(self)
-
-    def open_messages(self):
-        self.next_state, self.done = "MESSAGES", True
+    def refresh_political_map(self): refresh_map.refresh_political_map(self)
+    def refresh_relations_map(self): refresh_map.refresh_relations_map(self)
+    def refresh_factions_map(self): refresh_map.refresh_factions_map(self)
+    def refresh_cores_map(self): refresh_map.refresh_cores_map(self)
 
     def auto_assign_cores(self):
-        # Automatically assigns a core to whoever owns the province.
         for province in self.map_data.values():
             owner = province.get("owner", "Unclaimed")
-            if owner not in ["Unclaimed", "None", "Ocean", "Lakes"]:
-                province["cores"] = [owner]
-            else:
-                province["cores"] = []
-                
+            province["cores"] = [owner] if owner not in ["Unclaimed", "None", "Ocean", "Lakes"] else []
         self.show_feedback("Auto-assigned all cores!")
-        
-        # Rebuild the visual map immediately if we are looking at it
         if self.map_mode == "CORES":
             self.refresh_cores_map()
 
-    def conquer_province(self): 
-        if self.selected_province:
-            nations_list = ["Rome", "Gaul", "Carthage"] 
-            new_owner = random.choice(nations_list)
-            edit_province_ownership.conquer_province(self, self.selected_province, new_owner)
-
     def exit_to_menu(self): 
         self.show_exit_confirmation = True
-        for el in self.elements:
-            el.visible = False
+        for el in self.elements: el.visible = False
 
     def cancel_exit(self):
         self.show_exit_confirmation = False
         self.show_feedback("Exit cancelled")
 
     def confirm_exit(self):
-        self.next_state, self.done = "MENU", True
-
-    def reset_view(self): 
-        self.camera.target_zoom, self.camera.target_pos = self.min_zoom, pygame.Vector2(0, 0)
-
-    # --- THE THREADED ADVANCE TIME FIX ---
-    def advance_time(self):
-        self.turn_start_time = pygame.time.get_ticks() 
-        
-        # PHASE 2: Resolve the turn if we are currently viewing AI moves (Runs Synchronously)
-        if getattr(self, 'viewing_ai_moves', False):
-            # THE FIX: Set the text, pass the actual surface, and force a frame flip
-            self.loading_status_text = "Resolving Orders..."
-            loading_screen.draw_turn_loading_screen(self, pygame.display.get_surface())
-            pygame.display.flip()
-            
-            turn_processor.resolve_turn(self)
-            self.refresh_political_map()
-            self.refresh_relations_map()
-            self.refresh_factions_map()
-            self.viewing_ai_moves = False
-
-            # If playing multiplayer, show the ready screen for Player 1 again
-            if hasattr(self, 'active_players') and len(self.active_players) > 1:
-                self.show_player_ready_screen = True
-
-            buttons.render_buttons(self) 
-            
-            # --- TIMER FEEDBACK ---
-            elapsed_seconds = (pygame.time.get_ticks() - self.turn_start_time) / 1000.0
-            self.show_feedback(f"Turn resolved in {elapsed_seconds:.2f}s")
-            print(f"[PERFORMANCE] Phase 2 completed in {elapsed_seconds:.2f} seconds.")
-            return
-
-        # PHASE 1: Prepare the turn and generate AI moves
-        if hasattr(self, 'active_players') and len(self.active_players) > 1:
-            self.current_player_index += 1
-            
-            if self.current_player_index < len(self.active_players):
-                # Next player's turn to issue orders
-                self.player_country = self.active_players[self.current_player_index]
-                self.show_player_ready_screen = True
-            else:
-                # All players have gone, loop back to player 1 and PREPARE the turn!
-                self.current_player_index = 0
-                self.player_country = self.active_players[0]
-                self._trigger_ai_thread()
-        else:
-            self._trigger_ai_thread()
-            
-    def _trigger_ai_thread(self):
-        """Helper to lock the UI and start the background thread."""
-        self.ai_is_thinking = True
-        self.loading_status_text = "Initializing Turn..."
-        
-        # Reset trackers for the new turn
-        self.proactive_tasks_total = 0
-        self.proactive_tasks_completed = 0
-        self.responsive_tasks_total = 0
-        self.responsive_tasks_completed = 0
-        
-        # Fire and forget the background process
-        threading.Thread(target=self._run_ai_processing_thread, daemon=True).start()
-        
-    def _run_ai_processing_thread(self):
-        """This runs in the background. Pygame keeps running!"""
-        try:
-            turn_processor.prepare_turn(self)
-        except Exception as e:
-            import traceback
-            self.thread_error = traceback.format_exc()
-            print(f"BACKGROUND CRASH CAUGHT:\n{self.thread_error}")
-        finally:
-            self.ai_processing_complete = True # Always signal the main thread we are done
+        self.change_state("MENU")
 
     def show_feedback(self, text): 
         self.feedback_text, self.feedback_timer = text, pygame.time.get_ticks()
@@ -424,9 +235,7 @@ class Map(GameState):
         event_handler.handle_map_events(self, event)
 
     def sync_units_to_data(self):
-        # OPTIMIZATION FIX: Use the cached queries instead of reading the JSON
         unit_library = queries.get_unit_library()
-        
         if not unit_library:
             self.show_feedback("Error: unit library not found!")
             return
@@ -437,28 +246,16 @@ class Map(GameState):
                 u_type = unit.get("type")
                 if u_type in unit_library:
                     stats = unit_library[u_type]
-                    
-                    unit["max_health"] = stats.get("health", c.DEFAULT_UNIT_HP)
-                    unit["health"] = stats.get("health", c.DEFAULT_UNIT_HP)
-                    unit["attack"] = stats.get("attack", c.DEFAULT_UNIT_ATK)
-                    unit["defense"] = stats.get("defense", c.DEFAULT_UNIT_DEF)
-                    unit["speed"] = stats.get("speed", c.DEFAULT_UNIT_SPD)
-                    
+                    unit.update({
+                        "max_health": stats.get("health", c.DEFAULT_UNIT_HP),
+                        "health": stats.get("health", c.DEFAULT_UNIT_HP),
+                        "attack": stats.get("attack", c.DEFAULT_UNIT_ATK),
+                        "defense": stats.get("defense", c.DEFAULT_UNIT_DEF),
+                        "speed": stats.get("speed", c.DEFAULT_UNIT_SPD)
+                    })
                     updated_count += 1
                     
         self.show_feedback(f"Synced {updated_count} units on map!")
-
-    def handle_declare_war(self):
-        player_diplomacy_actions.handle_declare_war(self)
-
-    def handle_faction_action(self):
-        player_diplomacy_actions.handle_faction_action(self)
-        
-    def handle_join_wars(self):
-        player_diplomacy_actions.handle_join_wars(self)
-
-    def handle_call_to_arms(self):
-        player_diplomacy_actions.handle_call_to_arms(self)
 
     def handle_back_key(self):
         if self.selected_province:
@@ -468,44 +265,33 @@ class Map(GameState):
         if self.selected_province and not self.selection_mode:
             owner = self.selected_province.get("owner", "Unclaimed")
             has_player_units = queries.has_units_in_province(self.player_country, self.selected_province)
-            
-            # Replicate the button visibility condition
             if owner == self.player_country or has_player_units:
-                self.open_orders()
+                self.change_state("ORDERS")
 
     def additional_draw(self, surface): 
         map_renderer.draw_map_screen(self, surface)
 
     def draw(self, surface):
-        # Call the base GameState draw
         super().draw(surface)
-        
-        # Draw badges
         map_renderer.draw_badges(self, surface)
         
-        # --- NEW: RED SCREEN OF DEATH ---
         if getattr(self, 'thread_error', None):
-            surface.fill((150, 0, 0)) # Red background
-            error_font = fonts.get("small")
+            surface.fill((150, 0, 0))
             title = fonts.get("heading1").render("FATAL THREAD ERROR", True, (255, 255, 255))
             surface.blit(title, (20, 20))
-            
             y_offset = 80
             for line in self.thread_error.split('\n'):
-                txt = error_font.render(line, True, (255, 200, 200))
-                surface.blit(txt, (20, y_offset))
+                surface.blit(fonts.get("small").render(line, True, (255, 200, 200)), (20, y_offset))
                 y_offset += 25
-            return # Stop drawing anything else
+            return 
         
-        # THE FIX: Inject the loading screen into the main rendering pipeline
         if getattr(self, 'ai_is_thinking', False):
             loading_screen.draw_turn_loading_screen(self, surface)
 
     def refresh_nation_data(self):
         from data.io import country_io
         new_data = country_io.load_all_country_data()
-        added_count = 0
-        updated_count = 0
+        added_count, updated_count = 0, 0
         
         for country, data in new_data.items():
             if country not in self.nation_data:
@@ -518,9 +304,6 @@ class Map(GameState):
                 if "name" in data:
                     self.nation_data[country]["name"] = data["name"]
 
-                # --- SYNC RESEARCH ---
-                # This ensures the active map inherits any new tech you added 
-                # to the JSON without deleting existing research progress.
                 if "research" in data:
                     current_res = self.nation_data[country].setdefault("research", {})
                     for tech_key, start_val in data["research"].items():
@@ -541,87 +324,32 @@ class Map(GameState):
             self.editor_mode = "NATION"
             self.show_feedback("Editor: Nation Painting")
 
-    # --- Screen Transitions ---
-    def open_production(self):
-        if self.selected_province and self.selected_province.get("owner") == self.player_country:
-            self.next_state, self.done = "PRODUCTION", True
-
-    def open_orders(self):
-        if self.selected_province:
-            self.next_state, self.done = "ORDERS", True
-
-    def open_research(self):
-        self.next_state, self.done = "RESEARCH", True
-
-    def open_economy_screen(self):
-        self.next_state, self.done = "ECONOMY", True
-
-    def open_settings(self):
-        self.next_state, self.done = "SETTINGS", True
-
-    # --- Tkinter Wrappers (Imported from editor_menus.py) ---
-
-    def open_map_research_editor(self):
-        editor_menus.open_map_research_editor(self)
-        
-    def open_spectator_messages(self):
-        editor_menus.open_spectator_messages(self)
-
-    def select_unit_brush(self):
-        editor_menus.select_unit_brush(self)
-    
-    def open_editor_date(self):
-        editor_menus.open_editor_date(self)
-    
-    def open_diplomacy_editor(self):
-        editor_menus.open_diplomacy_editor(self)
-    
-    def open_edit_country(self):
-        if self.player_country == "Spectator":
-            from ui import editor_menus
-            editor_menus.spec_select_edit_country(self)
-        elif self.player_country and self.player_country != "None":
-            self.editing_country = self.player_country
-            self.next_state, self.done = "EDIT_COUNTRY", True
-    
-    # --- Pygame Core Loop Updates ---
     def update(self):
         super().update()
         self.camera.update(self, c.SCREEN_HEIGHT)
 
         if getattr(self, 'show_player_ready_screen', False):
-            for el in self.elements:
-                el.visible = False
+            for el in self.elements: el.visible = False
             return
 
-        # --- THE FIX: CATCH THE THREAD COMPLETION FLAG ---
         if getattr(self, 'ai_processing_complete', False):
             self.ai_processing_complete = False
             self.ai_is_thinking = False
             
-            # --- NEW: Abort if the thread crashed! ---
-            if getattr(self, 'thread_error', None):
-                return
+            if getattr(self, 'thread_error', None): return
             
-            # NOW it is safe to do the things that affect the screen
             if getattr(self, 'skip_ai_view', False):
-                # IMMEDIATELY jump into Phase 2, skipping the visual wait
                 self.viewing_ai_moves = True
-                self.advance_time()
+                turn_manager.advance_time(self)
             else:
                 self.refresh_political_map()
                 self.refresh_relations_map()
                 self.viewing_ai_moves = True
-                
                 buttons.render_buttons(self)
-                
                 elapsed_seconds = (pygame.time.get_ticks() - self.turn_start_time) / 1000.0
                 self.show_feedback(f"AI Strategy generated in {elapsed_seconds:.2f}s")
                 print(f"[PERFORMANCE] Phase 1 completed in {elapsed_seconds:.2f} seconds.")
 
-        # 1. Update Ocean Color
         from map_logic.camera import camera_handler
         self.bg_color = camera_handler.get_dynamic_ocean_color(self.camera, self.min_zoom)
-        
-        # 2. Update Dynamic Button States
         buttons.update_button_states(self)

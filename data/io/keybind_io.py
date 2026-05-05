@@ -5,7 +5,10 @@ import data.constants as c
 
 CONFIG_PATH = c.SETTINGS_CONFIG_PATH
 
-def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI", gemini_api_key="", chatgpt_api_key="", claude_api_key="", ai_immersion_level="FULL", ollama_model="llama3"):
+def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI", 
+                  gemini_api_key="", chatgpt_api_key="", claude_api_key="", ollama_api_key="",
+                  gemini_model="", chatgpt_model="", claude_model="", ollama_model="",
+                  ai_immersion_level="FULL"):
     """Converts key codes to strings and saves along with volume/players/AI/API/Ollama to JSON."""
     readable_binds = {}
     for action, key_code in keybind_dict.items():
@@ -19,17 +22,21 @@ def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI", gemini_
         "gemini_api_key": gemini_api_key,
         "chatgpt_api_key": chatgpt_api_key,
         "claude_api_key": claude_api_key,
-        "ai_immersion_level": ai_immersion_level,
-        "ollama_model": ollama_model
+        "ollama_api_key": ollama_api_key,
+        "gemini_model": gemini_model,
+        "chatgpt_model": chatgpt_model,
+        "claude_model": claude_model,
+        "ollama_model": ollama_model,
+        "ai_immersion_level": ai_immersion_level
     }
     
     with open(CONFIG_PATH, "w") as f:
         json.dump(data_to_save, f, indent=4)
 
 def load_settings(default_binds, default_volume=0.5):
-    """Loads keybinds, volume, AI mode, API key, immersion level, and Ollama model from JSON."""
+    """Loads all settings variables, safely falling back to defaults if missing."""
     if not os.path.exists(CONFIG_PATH):
-        return default_binds, default_volume, 1, c.DEFAULT_AI_MODE, "", "", "", "FULL", "llama3"
+        return default_binds, default_volume, 1, c.DEFAULT_AI_MODE, "", "", "", "", "gemini-2.5-flash", "gpt-4o-mini", "claude-3-haiku-20240307", "llama3", "FULL"
     
     try:
         with open(CONFIG_PATH, "r") as f:
@@ -53,17 +60,23 @@ def load_settings(default_binds, default_volume=0.5):
             if action not in loaded_binds:
                 loaded_binds[action] = code
                 
-        # NEW: Safely get num_players (default to 1 if it's an old save)
-        saved_num_players = saved_data.get("num_players", 1) if isinstance(saved_data, dict) else 1
-        saved_ai_mode = saved_data.get("ai_mode", c.DEFAULT_AI_MODE) if isinstance(saved_data, dict) else c.DEFAULT_AI_MODE
-        # Fallback to old "api_key" if "gemini_api_key" doesn't exist
-        saved_gemini_api_key = saved_data.get("gemini_api_key", saved_data.get("api_key", "")) if isinstance(saved_data, dict) else ""
-        saved_chatgpt_api_key = saved_data.get("chatgpt_api_key", "") if isinstance(saved_data, dict) else ""
-        saved_claude_api_key = saved_data.get("claude_api_key", "") if isinstance(saved_data, dict) else ""
-        saved_ai_immersion = saved_data.get("ai_immersion_level", "FULL") if isinstance(saved_data, dict) else "FULL"
-        saved_ollama_model = saved_data.get("ollama_model", "llama3") if isinstance(saved_data, dict) else "llama3"
+        s = saved_data if isinstance(saved_data, dict) else {}
                 
-        return loaded_binds, saved_vol, saved_num_players, saved_ai_mode, saved_gemini_api_key, saved_chatgpt_api_key, saved_claude_api_key, saved_ai_immersion, saved_ollama_model
+        return (
+            loaded_binds, 
+            saved_vol, 
+            s.get("num_players", 1), 
+            s.get("ai_mode", c.DEFAULT_AI_MODE),
+            s.get("gemini_api_key", s.get("api_key", "")),
+            s.get("chatgpt_api_key", ""),
+            s.get("claude_api_key", ""),
+            s.get("ollama_api_key", ""),
+            s.get("gemini_model", "gemini-2.5-flash"),
+            s.get("chatgpt_model", "gpt-4o-mini"),
+            s.get("claude_model", "claude-3-haiku-20240307"),
+            s.get("ollama_model", "llama3"),
+            s.get("ai_immersion_level", "FULL")
+        )
     except Exception as e:
         print(f"Error loading settings: {e}")
-        return default_binds, default_volume, 1, "GEMINI", "", "", "", "FULL", "llama3"
+        return default_binds, default_volume, 1, "GEMINI", "", "", "", "", "gemini-2.5-flash", "gpt-4o-mini", "claude-3-haiku-20240307", "llama3", "FULL"

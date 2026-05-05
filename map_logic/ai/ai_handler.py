@@ -25,9 +25,25 @@ def get_ai_immersion_level():
     """Reads the settings config to see which immersion level is active."""
     return queries.get_settings().get("ai_immersion_level", "FULL")
 
+# --- MODEL / URL GETTERS ---
+
+def get_gemini_model():
+    return queries.get_settings().get("gemini_model", "gemini-2.5-flash")
+
+def get_chatgpt_model():
+    return queries.get_settings().get("chatgpt_model", "gpt-4o-mini")
+
+def get_claude_model():
+    return queries.get_settings().get("claude_model", "claude-3-haiku-20240307")
+
 def get_ollama_model():
     """Reads the settings config to see which Ollama model is requested."""
     return queries.get_settings().get("ollama_model", "llama3")
+
+def get_ollama_url():
+    """Reads the URL from the settings. Defaults to localhost if empty."""
+    url = queries.get_settings().get("ollama_api_key", "").strip()
+    return url if url else "http://localhost:11434/api/chat"
 
 def get_world_context(nation_data, active_nations, ai_nation, target_nation=None, current_date="Unknown"):
     ai_stats = nation_data.get(ai_nation, {})
@@ -95,9 +111,9 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
 
 def call_ollama(system_prompt, user_prompt):
     """Helper to hit local Ollama instance."""
-    url = "http://localhost:11434/api/chat"
+    url = get_ollama_url()
     payload = {
-        "model": get_ollama_model(), # Pull dynamically instead of hardcoding "llama3"
+        "model": get_ollama_model(),
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -230,7 +246,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     try:
         client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
-            model=c.GEMINI_MODEL_NAME,
+            model=get_gemini_model(),
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
@@ -315,7 +331,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
     try:
         client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
-            model=c.GEMINI_MODEL_NAME,
+            model=get_gemini_model(),
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
@@ -372,7 +388,7 @@ def generate_proactive_text(ai_nation, target_nation, action_context, human_play
     try:
         client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
-            model=c.GEMINI_MODEL_NAME,
+            model=get_gemini_model(),
             contents=system_prompt,
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )

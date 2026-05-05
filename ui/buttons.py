@@ -420,7 +420,7 @@ def render_settings_buttons(settings_screen):
     ai_is_on = settings_screen.ai_mode != "OFF"
     toggle_color = "green" if ai_is_on else "red"
     toggle_text = "AI: ON" if ai_is_on else "AI: OFF"
-    settings_screen.elements.append(Button(10, c.SCREEN_HEIGHT - 50, "small", toggle_color, toggle_text, settings_screen.toggle_ai_enabled))
+    settings_screen.elements.append(Button(10, c.SCREEN_HEIGHT - 60, "small", toggle_color, toggle_text, settings_screen.toggle_ai_enabled))
 
     # --- Only render the sub-options if AI is currently turned ON ---
     if ai_is_on:
@@ -442,11 +442,11 @@ def render_settings_buttons(settings_screen):
         settings_screen.elements.append(btn_claude)
 
         # --- AI IMMERSION BUTTONS ---
-        btn_lite = Button(10, c.SCREEN_HEIGHT - 100, "small", "red", "LITE AI", lambda: settings_screen.set_ai_immersion_level("LITE"))
+        btn_lite = Button(10, c.SCREEN_HEIGHT - 110, "small", "red", "LITE AI", lambda: settings_screen.set_ai_immersion_level("LITE"))
         btn_lite.is_selected = (settings_screen.ai_immersion_level == "LITE")
         settings_screen.elements.append(btn_lite)
 
-        btn_full = Button(10, c.SCREEN_HEIGHT - 150, "small", "red", "FULL AI", lambda: settings_screen.set_ai_immersion_level("FULL"))
+        btn_full = Button(10, c.SCREEN_HEIGHT - 155, "small", "red", "FULL AI", lambda: settings_screen.set_ai_immersion_level("FULL"))
         btn_full.is_selected = (settings_screen.ai_immersion_level == "FULL")
         settings_screen.elements.append(btn_full)
 
@@ -454,15 +454,9 @@ def render_settings_buttons(settings_screen):
         btn_abs.is_selected = (settings_screen.ai_immersion_level == "ABSOLUTE")
         settings_screen.elements.append(btn_abs)
 
-    # --- API KEY CLEAR BUTTONS ---
-    if settings_screen.ai_mode == "GEMINI":
-        settings_screen.elements.append(Button(c.SETTINGS_GEMINI_BOX_X + c.SETTINGS_GEMINI_BOX_W + 20, c.SETTINGS_GEMINI_BOX_Y, "small", "red", "Clear", settings_screen.clear_gemini_api_key))
-    elif settings_screen.ai_mode == "OLLAMA":
-        settings_screen.elements.append(Button(c.SETTINGS_OLLAMA_BOX_X + c.SETTINGS_OLLAMA_BOX_W + 20, c.SETTINGS_OLLAMA_BOX_Y, "small", "red", "Clear", settings_screen.clear_ollama_model))
-    elif settings_screen.ai_mode == "CHATGPT":
-        settings_screen.elements.append(Button(c.SETTINGS_CHATGPT_BOX_X + c.SETTINGS_CHATGPT_BOX_W + 20, c.SETTINGS_CHATGPT_BOX_Y, "small", "red", "Clear", settings_screen.clear_chatgpt_api_key))
-    elif settings_screen.ai_mode == "CLAUDE":
-        settings_screen.elements.append(Button(c.SETTINGS_CLAUDE_BOX_X + c.SETTINGS_CLAUDE_BOX_W + 20, c.SETTINGS_CLAUDE_BOX_Y, "small", "red", "Clear", settings_screen.clear_claude_api_key))
+        # --- API KEY & MODEL CLEAR BUTTONS ---
+        settings_screen.elements.append(Button(c.SETTINGS_BOX_X + c.SETTINGS_BOX_W + 10, c.SETTINGS_KEY_BOX_Y, "small_square", "red", "X", lambda: settings_screen.clear_input("KEY")))
+        settings_screen.elements.append(Button(c.SETTINGS_BOX_X + c.SETTINGS_BOX_W + 10, c.SETTINGS_MOD_BOX_Y, "small_square", "red", "X", lambda: settings_screen.clear_input("MOD")))
 
     # Sliders
     settings_screen.volume_slider = Slider(keybind_x, 320, 200, "Volume", settings_screen.volume, settings_screen.set_volume)

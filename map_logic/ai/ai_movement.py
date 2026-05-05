@@ -109,10 +109,9 @@ def process_ai_unit_orders(map_screen):
         all_enemy_coasts = set()
         enemy_coastal_waters = set()
         unclaimed_targets = set()
-        all_unclaimed_coasts = set() # --- NEW: Global coastal unclaimed ---
+        all_unclaimed_coasts = set()
 
         # Locate coastal provinces globally for naval targeting and island hopping
-        # Un-indented so it runs even during peacetime!
         for prov in map_screen.map_data.values():
             if prov.get("is_coastal", False):
                 owner = prov.get("owner", "Unclaimed")
@@ -126,7 +125,7 @@ def process_ai_unit_orders(map_screen):
                         if n_prov and n_prov.get("terrain") in c.WATER_TERRAINS:
                             enemy_coastal_waters.add(n_id)
                             
-                # --- NEW: Identify unclaimed islands globally ---
+                # Identify unclaimed islands globally
                 elif owner in ["Unclaimed", "None", ""]:
                     all_unclaimed_coasts.add(prov["id"])
 
@@ -138,17 +137,14 @@ def process_ai_unit_orders(map_screen):
             for n_id in prov.get("neighbors", []):
                 n_prov = map_screen.id_to_province.get(n_id)
                 if not n_prov: continue
-                if n_prov.get("terrain") in c.WATER_TERRAINS: continue # Ignore water for basic land movement
+                if n_prov.get("terrain") in c.WATER_TERRAINS: continue 
 
-                n_owner = n_prov.get("owner", "Unclaimed") # Fallback to Unclaimed
+                n_owner = n_prov.get("owner", "Unclaimed") 
                 if n_owner in enemies:
                     is_war_border = True
                     enemy_targets.add(n_id)
-                # --- NEW: Identify Unclaimed Land ---
                 elif n_owner in ["Unclaimed", "None", ""]: 
                     unclaimed_targets.add(n_id)
-                # ------------------------------------
-                # Ignore water and ignore faction members when deciding where to place peacetime border guards
                 elif n_owner != ai_name and n_owner not in c.WATER_NATIONS and not queries.are_in_same_faction(ai_name, n_owner, map_screen.nation_data):
                     is_peace_border = True
 
@@ -161,12 +157,12 @@ def process_ai_unit_orders(map_screen):
 
         at_war = len(enemies) > 0 and (len(enemy_targets) > 0 or len(all_enemy_coasts) > 0)
 
-        # Determine where units should be
+        # --- FIX: UNIVERSAL TARGETS ---
+        # ALWAYS include peace and coastal borders to prevent abandonment
+        target_destinations = list(unclaimed_targets) + list(all_unclaimed_coasts) + list(peace_borders) + list(coastal_borders)
+
         if at_war:
-            target_destinations = list(enemy_targets) + list(all_enemy_coasts) + list(unclaimed_targets) + list(all_unclaimed_coasts)
-        else:
-            # Include coasts but peace borders still naturally pull units first if we prioritize them
-            target_destinations = list(unclaimed_targets) + list(all_unclaimed_coasts) + list(peace_borders) + list(coastal_borders)
+            target_destinations += list(enemy_targets) + list(all_enemy_coasts)
 
         # If no targets (e.g. island with no neighbors), skip
         if not target_destinations:
@@ -176,12 +172,6 @@ def process_ai_unit_orders(map_screen):
         # Keep track of how many units are assigned to each target so we can spread them evenly
         target_assignments = {t_id: 0 for t_id in target_destinations}
         
-        # Artificially inflate the assignment count of coasts so borders get prioritized first
-        for c_id in coastal_borders:
-            if c_id in target_assignments and c_id not in peace_borders and c_id not in war_borders:
-                target_assignments[c_id] += 1
-
-        # Identify naval destinations (Naval escorts and blockades)
         friendly_convoys = set()
         for unit, prov in units_info:
             if unit.get("type", "").startswith("Convoy"):
@@ -190,18 +180,33 @@ def process_ai_unit_orders(map_screen):
         naval_destinations = list(enemy_coastal_waters) + list(friendly_convoys)
         naval_assignments = {t_id: 0 for t_id in naval_destinations}
         
-        # --- NEW: Convoy Escort Priority ---
+        # Convoy Escort Priority
         # Apply a massive negative weight so warships heavily prioritize covering active convoys
         for c_id in friendly_convoys:
             if c_id in naval_assignments:
                 naval_assignments[c_id] -= c.AI_CONVOY_ESCORT_WEIGHT
 
-        # Pre-count units already AT the targets so we don't over-assign
+        # Pre-count units already AT the targets
         for unit, prov in units_info:
             if prov["id"] in target_assignments:
                 target_assignments[prov["id"]] += 1
             if prov["id"] in naval_assignments:
                 naval_assignments[prov["id"]] += 1
+
+        # --- STRATEGIC WEIGHTING FIX ---
+        # 1. Coasts are low priority. Inflate their count so units prefer land borders.
+        for c_id in coastal_borders:
+            if c_id in target_assignments and c_id not in peace_borders and c_id not in war_borders:
+                target_assignments[c_id] += 1
+                
+        # 2. Push the main army to the frontlines! Only keep 1 guard per peace/coastal border during war or expansion.
+        if at_war or unclaimed_targets:
+            for p_id in peace_borders:
+                if target_assignments.get(p_id, 0) >= 1:
+                    target_assignments[p_id] += 50
+            for c_id in coastal_borders:
+                if target_assignments.get(c_id, 0) >= 1:
+                    target_assignments[c_id] += 50
 
         for unit, prov in units_info:
             u_type = unit.get("type", "")
@@ -212,17 +217,22 @@ def process_ai_unit_orders(map_screen):
 
            # --- ANTI-SHUFFLE INTERCEPTS ---
             
-            # --- NEW: Combat Lock (AI Check) ---
             in_combat = queries.is_nation_in_combat_here(ai_name, prov, map_screen.nation_data)
             
             # If the AI is currently engaged in active combat on its tile,
             # force it to hold the line. It cannot retreat or push forward blindly.
             if in_combat:
                 continue
-            # -----------------------------------
             
-            # --- NEW: Unclaimed Territory Grab ---
-            # If adjacent to an unclaimed tile, prioritize it immediately
+            # --- UNIVERSAL GARRISON FIX ---
+            # If we are holding a defensive border (peace or coastal) and we are the ONLY unit here, HOLD THE LINE.
+            # Do not apply this to war_borders because we WANT to push forward into enemy_targets.
+            is_defensive_hold = (curr_id in peace_borders or curr_id in coastal_borders) and curr_id not in war_borders
+            if not is_naval_combatant and is_defensive_hold:
+                if target_assignments.get(curr_id, 0) <= 1:
+                    continue # Skip Unclaimed Grab, skip Wartime Anti-Shuffle, skip BFS entirely. Stay put!
+            # ------------------------------
+            
             adjacent_unclaimed = [n for n in prov.get("neighbors", []) if n in unclaimed_targets]
             
             # PREVENT ILLEGAL CONVOY MOVES
@@ -233,23 +243,13 @@ def process_ai_unit_orders(map_screen):
                 best_adj = min(adjacent_unclaimed, key=lambda t: target_assignments.get(t, 0))
                 
                 speed = unit.get("speed", 1)
-                unit["order"]["path"] = [best_adj] # Move directly into unclaimed territory
+                unit["order"]["path"] = [best_adj] 
                 
                 target_assignments[best_adj] = target_assignments.get(best_adj, 0) + 1
                 if curr_id in target_assignments:
                     target_assignments[curr_id] -= 1
                 continue
-            # -------------------------------------
 
-            # 1. Peacetime Anti-Shuffle
-            # If we are holding a border and we are the ONLY unit here, hold the line.
-            if not at_war and not is_naval_combatant and curr_id in target_assignments:
-                if target_assignments[curr_id] <= 1:
-                    continue # Skip BFS entirely, stay put
-            
-            # 2. Wartime Anti-Shuffle
-            # If we are adjacent to the enemy, prioritize attacking them directly
-            # instead of walking sideways down the border to balance numbers.
             if at_war and not is_naval_combatant:
                 adjacent_targets = [n for n in prov.get("neighbors", []) if n in target_destinations and n in enemy_targets]
                 
@@ -262,7 +262,7 @@ def process_ai_unit_orders(map_screen):
                     best_adj = min(adjacent_targets, key=lambda t: target_assignments.get(t, 0))
                     
                     speed = unit.get("speed", 1)
-                    unit["order"]["path"] = [best_adj] # Move directly into enemy territory
+                    unit["order"]["path"] = [best_adj] 
                     
                     # --- THE FIX: Let fast units pathfind deeper from the border! ---
                     if speed > 1:
@@ -307,7 +307,7 @@ def process_ai_unit_orders(map_screen):
                     target_assignments[best_adj] = target_assignments.get(best_adj, 0) + 1
                     if curr_id in target_assignments:
                         target_assignments[curr_id] -= 1
-                    continue # Skip normal BFS, we have our extended orders
+                    continue 
 
             # --- END ANTI-SHUFFLE ---
 
@@ -352,7 +352,7 @@ def process_ai_unit_orders(map_screen):
                     for step_id in path[:speed]:
                         step_prov = map_screen.id_to_province.get(step_id)
                         if not is_convoy and not is_naval_combatant and step_prov and step_prov.get("terrain") in c.WATER_TERRAINS:
-                            break # Stop at the coast, explicitly convert next turn
+                            break 
                         final_path.append(step_id)
 
                     unit["order"]["path"] = final_path

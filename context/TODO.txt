@@ -27,16 +27,11 @@ ITS CALLED Tkinter
 - also add in the world map!
 - balance germany?
 
-- do api keys work for different models? does the model have to be specified? is hardcoding in gemini 2.5 bad
-
-- when ai is determine if its a good idea to declare war or not make it think of the long term effects
-- maybe declaring war on the uk to take gibraltar because its poorly defended isn't the best idea when france is allied to them
-
 - caching problem leads to settings maybe not being detected correctly???
 - set from lite to full ai, the ai seemed to just... not know that
 
 - sends ai war declaration
-- ai gets war declaration and then on the same turn sends a message saying "fuck you" "actually wait we can't fight each other"
+- ai gets war declaration and then on the same turn sends two messages saying "how dare you" "actually wait we can't fight each other"
 
 - ceasefire gets accepted immediately instead of having to wait a turn for it to process
 

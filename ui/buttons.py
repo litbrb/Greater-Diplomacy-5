@@ -425,32 +425,32 @@ def render_settings_buttons(settings_screen):
     # --- Only render the sub-options if AI is currently turned ON ---
     if ai_is_on:
         # AI Mode Toggles 
-        btn_gem = Button(120, c.SCREEN_HEIGHT - 150, "small", "blue", "GEMINI", lambda: settings_screen.set_ai_mode("GEMINI"))
+        btn_gem = Button(120, c.SCREEN_HEIGHT - 250, "small", "blue", "GEMINI", lambda: settings_screen.set_ai_mode("GEMINI"))
         btn_gem.is_selected = (settings_screen.ai_mode == "GEMINI")
         settings_screen.elements.append(btn_gem)
 
-        btn_oll = Button(120, c.SCREEN_HEIGHT - 200, "small", "blue", "OLLAMA", lambda: settings_screen.set_ai_mode("OLLAMA"))
+        btn_oll = Button(10, c.SCREEN_HEIGHT - 250, "small", "blue", "OLLAMA", lambda: settings_screen.set_ai_mode("OLLAMA"))
         btn_oll.is_selected = (settings_screen.ai_mode == "OLLAMA")
         settings_screen.elements.append(btn_oll)
 
-        btn_gpt = Button(230, c.SCREEN_HEIGHT - 150, "small", "blue", "CHATGPT", lambda: settings_screen.set_ai_mode("CHATGPT"))
+        btn_gpt = Button(230, c.SCREEN_HEIGHT - 250, "small", "blue", "CHATGPT", lambda: settings_screen.set_ai_mode("CHATGPT"))
         btn_gpt.is_selected = (settings_screen.ai_mode == "CHATGPT")
         settings_screen.elements.append(btn_gpt)
 
-        btn_claude = Button(230, c.SCREEN_HEIGHT - 200, "small", "blue", "CLAUDE", lambda: settings_screen.set_ai_mode("CLAUDE"))
+        btn_claude = Button(340, c.SCREEN_HEIGHT - 250, "small", "blue", "CLAUDE", lambda: settings_screen.set_ai_mode("CLAUDE"))
         btn_claude.is_selected = (settings_screen.ai_mode == "CLAUDE")
         settings_screen.elements.append(btn_claude)
 
         # --- AI IMMERSION BUTTONS ---
-        btn_lite = Button(10, c.SCREEN_HEIGHT - 150, "small", "red", "LITE AI", lambda: settings_screen.set_ai_immersion_level("LITE"))
+        btn_lite = Button(10, c.SCREEN_HEIGHT - 100, "small", "red", "LITE AI", lambda: settings_screen.set_ai_immersion_level("LITE"))
         btn_lite.is_selected = (settings_screen.ai_immersion_level == "LITE")
         settings_screen.elements.append(btn_lite)
 
-        btn_full = Button(10, c.SCREEN_HEIGHT - 200, "small", "red", "FULL AI", lambda: settings_screen.set_ai_immersion_level("FULL"))
+        btn_full = Button(10, c.SCREEN_HEIGHT - 150, "small", "red", "FULL AI", lambda: settings_screen.set_ai_immersion_level("FULL"))
         btn_full.is_selected = (settings_screen.ai_immersion_level == "FULL")
         settings_screen.elements.append(btn_full)
 
-        btn_abs = Button(10, c.SCREEN_HEIGHT - 250, "small", "red", "ABSOLUTE AI", lambda: settings_screen.set_ai_immersion_level("ABSOLUTE"))
+        btn_abs = Button(10, c.SCREEN_HEIGHT - 200, "small", "red", "ABSOLUTE AI", lambda: settings_screen.set_ai_immersion_level("ABSOLUTE"))
         btn_abs.is_selected = (settings_screen.ai_immersion_level == "ABSOLUTE")
         settings_screen.elements.append(btn_abs)
 

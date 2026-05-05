@@ -1,5 +1,4 @@
 import json
-import os
 import requests
 import random
 from google import genai
@@ -231,7 +230,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     try:
         client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model=c.GEMINI_MODEL_NAME,
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
@@ -316,7 +315,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
     try:
         client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model=c.GEMINI_MODEL_NAME,
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
@@ -373,7 +372,7 @@ def generate_proactive_text(ai_nation, target_nation, action_context, human_play
     try:
         client = genai.Client(api_key=get_gemini_api_key())
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model=c.GEMINI_MODEL_NAME,
             contents=system_prompt,
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )

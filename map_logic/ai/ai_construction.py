@@ -284,9 +284,9 @@ def process_ai_economy_decisions(map_screen):
             
             # Find a province capable of recruiting (Exclude tiles in combat)
             if unit_name_to_build == "Militia":
-                factory_provs = [p for p in my_provs if not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data)] # Militia can spawn anywhere!
-            else:
                 factory_provs = [p for p in my_provs if queries.has_industry(p) and not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data)]
+            else:
+                factory_provs = [p for p in my_provs if queries.has_basic_factory(p) and not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data)]
             
             # --- NEW: Filter to coastal factories only if building a naval unit ---
             is_naval_recruit = queries.is_naval_unit(unit_name_to_build)

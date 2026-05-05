@@ -186,14 +186,17 @@ class Production_Screen(GameState):
 
                 if highest_unlocked:
                     lookup_name = highest_unlocked
-                    # Militia doesn't need industry to light up the button
-                    has_industry = queries.has_industry(self.target_province) or lookup_name == "Militia"
+                    
+                    if lookup_name == "Militia":
+                        can_build = queries.has_industry(self.target_province)
+                    else:
+                        can_build = queries.has_basic_factory(self.target_province)
                     
                     if is_spectator and not can_spectator_edit:
                         final_btn_color = "grey"
                         cb = lambda: None
                     else:
-                        final_btn_color = btn_color if has_industry else "grey"
+                        final_btn_color = btn_color if can_build else "grey"
                         cb = lambda n=lookup_name: self.buy_unit(n)
                     
                     btn = Button(x_pos, y_offset, "medium", final_btn_color, highest_unlocked, cb)
@@ -254,10 +257,14 @@ class Production_Screen(GameState):
         stats = self.unit_library.get(unit_name)
         if not stats or not self.map_screen: return
 
-        # Exception for Militia to not require a factory
-        if not queries.has_industry(self.target_province) and unit_name != "Militia":
-            self.map_screen.show_feedback("Requires a Workshop or Factory to recruit!")
-            return
+        if unit_name == "Militia":
+            if not queries.has_industry(self.target_province):
+                self.map_screen.show_feedback("Requires a Workshop or Factory to recruit Militia!")
+                return
+        else:
+            if not queries.has_basic_factory(self.target_province):
+                self.map_screen.show_feedback("Requires a Basic Factory or better to recruit!")
+                return
 
         owner = self.target_province.get("owner")
         p_data = self.map_screen.nation_data.get(owner, {})

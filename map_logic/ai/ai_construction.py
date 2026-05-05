@@ -205,7 +205,8 @@ def process_ai_economy_decisions(map_screen):
             
             # Can we afford the upfront cost AND have a valid province?
             if valid_recruit_provs and data.get("materials", 0) >= cost_mat and data.get("manpower", 0) >= cost_man and data.get("fuel", 0) >= cost_fuel:
-                target_prov = valid_recruit_provs[0] # Pick the first available industrial sector
+                # Pick the province with the shortest queue! Do not overload a province!
+                target_prov = min(valid_recruit_provs, key=lambda p: len(p.get("deployment_queue", [])))
                 
                 data["materials"] -= cost_mat
                 data["manpower"] -= cost_man
@@ -227,6 +228,9 @@ def process_ai_economy_decisions(map_screen):
             industry_b_list = [b for b, d in building_library.items() if d.get("group") == "industry"]
             refinery_b_list = [b for b, d in building_library.items() if d.get("group") == "refinery"]
             recruit_b_list = [b for b, d in building_library.items() if d.get("group") == "recruitment"]
+
+            # Sort provinces by queue length to spread out construction
+            my_provs.sort(key=lambda p: len(p.get("deployment_queue", [])))
 
             for prov in my_provs:
                 current_buildings = prov.get("buildings", [])

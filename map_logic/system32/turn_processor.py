@@ -53,7 +53,11 @@ def resolve_turn(self):
     process_conversions(self)
     process_disbands(self) # Added disband resolution
     
-    # --- NEW: Pre-Movement Combat Mechanics ---
+    # --- MOVED: Process Queues (Deployments) so new units can defend ---
+    print("[SYSTEM] Processing Queues (Deployments)...")
+    process_queues(self)
+
+    # --- Pre-Movement Combat Mechanics ---
     process_pinning(self)
     process_meeting_engagements(self)
     # ------------------------------------------
@@ -62,14 +66,11 @@ def resolve_turn(self):
     process_combat(self)
     check_for_post_combat_captures(self)
     
-    # --- NEW: Kill orphaned units and ghost wars ---
+    # --- Kill orphaned units and ghost wars ---
     process_dead_nations(self)
     
-    print("[SYSTEM] Calculating Economy & Processing Queues...")
+    print("[SYSTEM] Calculating Economy...")
     process_economy(self)
-    
-    # 5. Process Unified Queue (Sequential)
-    process_queues(self)
     
     process_national_research(self)
     print("--- [PHASE 2] COMPLETE ---")

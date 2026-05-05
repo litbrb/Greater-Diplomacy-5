@@ -43,6 +43,7 @@ class Research_Screen(GameState):
             "motorized_infantry": 350,
             "mechanized_infantry": 450,
             "cavalry": 350,
+            "militia": 450,
             "ww1_armored_car": 250, "armored_car": 250, "civilian_car": 250,
             "ww1_tank": 350, "light_tank": 350,
             "medium_tank": 450, "main_battle_tank": 450,

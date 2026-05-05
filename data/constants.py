@@ -184,6 +184,7 @@ RANDOM_SCENARIO_MIN_INFANTRY = 3 # Minimum ground army before buying ships/tanks
 DEFAULT_1910_TECH = {
     "infantry_type": 1,
     "cavalry": 1,
+    "militia": 1,
     "destroyer": 1,
     "basic_factory": 1
 }
@@ -330,6 +331,10 @@ AI_DIPLO_COOLDOWN = -1 # How many turns before AI can retry a rejected/ignored p
 # ==========================================
 # AI RECRUITMENT PREFERENCES
 # ==========================================
+
+# AI Militia Spam Thresholds
+AI_MILITIA_MANPOWER_THRESHOLD = 50000
+AI_MILITIA_MATERIAL_THRESHOLD = 2000
 
 AI_OFFENSIVE_UNIT_PREFERENCE = [
     "Cavalry",

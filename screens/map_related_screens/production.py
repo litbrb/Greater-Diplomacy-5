@@ -186,7 +186,8 @@ class Production_Screen(GameState):
 
                 if highest_unlocked:
                     lookup_name = highest_unlocked
-                    has_industry = queries.has_industry(self.target_province)
+                    # Militia doesn't need industry to light up the button
+                    has_industry = queries.has_industry(self.target_province) or lookup_name == "Militia"
                     
                     if is_spectator and not can_spectator_edit:
                         final_btn_color = "grey"
@@ -253,7 +254,8 @@ class Production_Screen(GameState):
         stats = self.unit_library.get(unit_name)
         if not stats or not self.map_screen: return
 
-        if not queries.has_industry(self.target_province):
+        # Exception for Militia to not require a factory
+        if not queries.has_industry(self.target_province) and unit_name != "Militia":
             self.map_screen.show_feedback("Requires a Workshop or Factory to recruit!")
             return
 

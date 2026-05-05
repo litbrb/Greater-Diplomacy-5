@@ -994,6 +994,14 @@ def select_resource_brush(self):
 
     root.protocol("WM_DELETE_WINDOW", close_menu)
 
+    # --- THE FIX: ADD THIS MISSING LOOP ---
+    while self.menu_active:
+        try:
+            root.update()
+            pygame.event.pump()
+        except (tk.TclError, Exception):
+            break
+
 def open_diplomacy_editor(self):
     """Opens a Tkinter window to edit global relations and factions."""
     active_countries = queries.get_living_nations(self.map_data)

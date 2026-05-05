@@ -209,7 +209,6 @@ def handle_map_events(self, event):
     # Moved ABOVE the "STANDARD GAME SELECTION" return block!
     if self.selected_province:
         owner = self.selected_province.get("owner")
-        from data import queries
         is_foreign = queries.is_foreign_playable(owner, self.player_country, self.nation_data)
         if is_foreign:
             # MAIL BOX! MAIL BOX! MAIL BOX!
@@ -254,5 +253,4 @@ def handle_map_events(self, event):
             
             # NEW: Load draft if one exists so the box isn't empty if you return
             owner = self.selected_province.get("owner")
-            from data import queries
             self.mail_draft_text = queries.get_message_draft(self.player_country, owner, self.nation_data)

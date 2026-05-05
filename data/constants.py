@@ -332,10 +332,6 @@ AI_DIPLO_COOLDOWN = -1 # How many turns before AI can retry a rejected/ignored p
 # AI RECRUITMENT PREFERENCES
 # ==========================================
 
-# AI Militia Spam Thresholds
-AI_MILITIA_MANPOWER_THRESHOLD = 50000
-AI_MILITIA_MATERIAL_THRESHOLD = 2000
-
 AI_OFFENSIVE_UNIT_PREFERENCE = [
     "Cavalry",
     # the stuff below requires fuel, make sure the ai can handle it

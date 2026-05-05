@@ -606,6 +606,11 @@ def process_queues(self):
         queue = province.get("deployment_queue", [])
         if not queue: continue
             
+        # --- NEW: Combat Pause Mechanic ---
+        if queries.is_province_in_active_combat(province, self.nation_data):
+            continue
+        # ----------------------------------
+            
         # ONLY touch the first item!
         item = queue[0]
         

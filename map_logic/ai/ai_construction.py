@@ -102,7 +102,81 @@ def process_ai_economy_decisions(map_screen):
         land_border_count = 0
         sea_border_count = 0
         
+        # --- NEW: Panic Militia & Combat Queue Clearing ---
         for prov in my_provs:
+            in_combat = queries.is_nation_in_combat_here(ai_name, prov, map_screen.nation_data)
+            has_factory = queries.has_industry(prov)
+            
+            # 1. Clear queues on tiles in active combat
+            if in_combat:
+                while prov.get("deployment_queue"):
+                    item = prov["deployment_queue"].pop(0)
+                    if "refund" in item:
+                        data["materials"] += item["refund"].get("materials", 0)
+                        data["manpower"] += item["refund"].get("manpower", 0)
+                        data["fuel"] += item["refund"].get("fuel", 0)
+                continue # Skip panic militia check since it's already in combat and can't build anyway
+                
+            # 2. Panic Militia
+            if has_factory:
+                enemy_adjacent = False
+                for n_id in prov.get("neighbors", []):
+                    n_prov = map_screen.id_to_province.get(n_id)
+                    if not n_prov: continue
+                    # Are there enemy units here?
+                    for u in n_prov.get("units", []):
+                        if queries.are_at_war(ai_name, u.get("owner"), map_screen.nation_data):
+                            enemy_adjacent = True
+                            break
+                    if enemy_adjacent: break
+                
+                if enemy_adjacent:
+                    queue = prov.get("deployment_queue", [])
+                    safe_to_panic = True
+                    
+                    if queue:
+                        first_item = queue[0]
+                        is_bldg = first_item.get("order_type") == "BUILDING"
+                        u_type = first_item.get("unit_type", "")
+                        is_naval = queries.is_naval_unit(u_type) if u_type else False
+                        turns = first_item.get("turns_remaining", 999)
+                        
+                        if not is_bldg and not is_naval and turns <= 1:
+                            safe_to_panic = False # Let the ground unit finish!
+                    
+                    if safe_to_panic and (not queue or queue[0].get("unit_type") != "Militia"):
+                        # Cancel existing queue
+                        while queue:
+                            item = queue.pop(0)
+                            if "refund" in item:
+                                data["materials"] += item["refund"].get("materials", 0)
+                                data["manpower"] += item["refund"].get("manpower", 0)
+                                data["fuel"] += item["refund"].get("fuel", 0)
+                        
+                        # Queue Militia
+                        militia_stats = unit_library.get("Militia", {})
+                        c_mat = militia_stats.get("cost_materials", 0)
+                        c_man = militia_stats.get("cost_manpower", 0)
+                        c_fuel = militia_stats.get("cost_fuel", 0)
+                        
+                        if data.get("materials", 0) >= c_mat and data.get("manpower", 0) >= c_man and data.get("fuel", 0) >= c_fuel:
+                            data["materials"] -= c_mat
+                            data["manpower"] -= c_man
+                            data["fuel"] -= c_fuel
+                            
+                            # Adjust upkeep tracking
+                            upk_man += c_man * c.UPKEEP_MODIFIERS["manpower"]
+                            upk_mat += c_mat * c.UPKEEP_MODIFIERS["materials"]
+                            upk_fuel += c_fuel * c.UPKEEP_MODIFIERS["fuel"]
+                            infantry_count += 1
+                            
+                            order = {
+                                "unit_type": "Militia",
+                                "turns_remaining": max(1, militia_stats.get("production_time", c.DAYS_PER_TURN) // c.DAYS_PER_TURN),
+                                "refund": {"materials": c_mat, "manpower": c_man, "fuel": c_fuel}
+                            }
+                            prov.setdefault("deployment_queue", []).append(order)
+
             # Count existing units
             for u in prov.get("units", []):
                 if u.get("owner") == ai_name:
@@ -177,23 +251,19 @@ def process_ai_economy_decisions(map_screen):
             
             unit_name_to_build = None
 
-            # --- MILITIA SPAM ---
-            if at_war and data.get("manpower", 0) > getattr(c, 'AI_MILITIA_MANPOWER_THRESHOLD', 50000) and data.get("materials", 0) < getattr(c, 'AI_MILITIA_MATERIAL_THRESHOLD', 2000):
-                unit_name_to_build = "Militia"
-            else:
-                # 1. Naval Check (Priority if below ratio)
-                if current_navy_ratio < target_navy_ratio:
-                    if not fuel_shortage:
-                        unit_name_to_build = queries.get_best_naval_unit(data.get("research", {}), unit_library)
+            # 1. Naval Check (Priority if below ratio)
+            if current_navy_ratio < target_navy_ratio:
+                if not fuel_shortage:
+                    unit_name_to_build = queries.get_best_naval_unit(data.get("research", {}), unit_library)
 
-                # 2. Force a tank if our infantry ratio is too high
-                if not unit_name_to_build and (infantry_count / max(1, tank_count)) > dynamic_tank_ratio:
-                    if not fuel_shortage:
-                        unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
-                
-                # 3. Default to Infantry / Guard
-                if not unit_name_to_build:
-                    unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library, allow_fuel_units=not fuel_shortage)
+            # 2. Force a tank if our infantry ratio is too high
+            if not unit_name_to_build and (infantry_count / max(1, tank_count)) > dynamic_tank_ratio:
+                if not fuel_shortage:
+                    unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
+            
+            # 3. Default to Infantry / Guard
+            if not unit_name_to_build:
+                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library, allow_fuel_units=not fuel_shortage)
 
             unit_stats = unit_library.get(unit_name_to_build, {})
             cost_mat = unit_stats.get("cost_materials", 0)
@@ -212,11 +282,11 @@ def process_ai_economy_decisions(map_screen):
                 cost_man = unit_stats.get("cost_manpower", 0)
                 cost_fuel = unit_stats.get("cost_fuel", 0)
             
-            # Find a province capable of recruiting
+            # Find a province capable of recruiting (Exclude tiles in combat)
             if unit_name_to_build == "Militia":
-                factory_provs = my_provs # Militia can spawn anywhere!
+                factory_provs = [p for p in my_provs if not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data)] # Militia can spawn anywhere!
             else:
-                factory_provs = [p for p in my_provs if queries.has_industry(p)]
+                factory_provs = [p for p in my_provs if queries.has_industry(p) and not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data)]
             
             # --- NEW: Filter to coastal factories only if building a naval unit ---
             is_naval_recruit = queries.is_naval_unit(unit_name_to_build)

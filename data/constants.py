@@ -41,7 +41,7 @@ BASE_YIELDS = {
 GENERAL_RECRUITMENT_BONUS = 5 # Add this
 
 COUNTRY_BASE_YIELDS = {
-    "manpower": 1000,
+    "manpower": 100,
     "materials": 100,
     "fuel": 0
 }
@@ -342,7 +342,7 @@ SPECTATOR_CAN_EDIT_PRODUCTION = True
 
 AI_WAR_STRENGTH_THRESHOLD = 1.2 # AI must be 20% stronger on the shared border to declare war
 AI_GLOBAL_STRENGTH_THRESHOLD = 0.8 # AI must have at least 80% of the target's total alliance + economic power to consider war
-AI_WAR_COOLDOWN_TURNS = 36 # How many turns from the start of the game the AI waits before declaring wars
+AI_WAR_COOLDOWN_TURNS = 18 # How many turns from the start of the game the AI waits before declaring wars
 AI_DIPLO_COOLDOWN = -1 # How many turns before AI can retry a rejected/ignored proactive diplomatic action. -1 means infinite.
 
 # ==========================================

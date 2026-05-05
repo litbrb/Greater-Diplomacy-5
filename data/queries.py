@@ -333,26 +333,29 @@ def get_tech_unlocks(tech_key, level):
         
     return unlocks
 
-def get_highest_infantry(nation_data_block, tech_tree, unit_library):
+def get_highest_infantry(nation_data_block, tech_tree, unit_library, allow_fuel_units=True):
     """Finds the highest level infantry unit the nation has researched, prioritizing mechanized/motorized upgrades."""
     res_levels = nation_data_block.get("research", {})
     
-    mech_lvl = res_levels.get("mechanized_infantry", 0)
-    if mech_lvl > 0:
-        mech_years = tech_tree.get("mechanized_infantry", {}).get("years", [c.START_YEAR])
-        target_index = max(0, min(mech_lvl - 1, len(mech_years) - 1))
-        year_val = mech_years[target_index]
-        u_name = f"Mechanized Infantry Type {year_val}"
-        if u_name in unit_library: return u_name
+    # --- FIX: Only allow advanced infantry if we aren't starving for fuel ---
+    if allow_fuel_units:
+        mech_lvl = res_levels.get("mechanized_infantry", 0)
+        if mech_lvl > 0:
+            mech_years = tech_tree.get("mechanized_infantry", {}).get("years", [c.START_YEAR])
+            target_index = max(0, min(mech_lvl - 1, len(mech_years) - 1))
+            year_val = mech_years[target_index]
+            u_name = f"Mechanized Infantry Type {year_val}"
+            if u_name in unit_library: return u_name
 
-    mot_lvl = res_levels.get("motorized_infantry", 0)
-    if mot_lvl > 0:
-        mot_years = tech_tree.get("motorized_infantry", {}).get("years", [c.START_YEAR])
-        target_index = max(0, min(mot_lvl - 1, len(mot_years) - 1))
-        year_val = mot_years[target_index]
-        u_name = f"Motorized Infantry Type {year_val}"
-        if u_name in unit_library: return u_name
+        mot_lvl = res_levels.get("motorized_infantry", 0)
+        if mot_lvl > 0:
+            mot_years = tech_tree.get("motorized_infantry", {}).get("years", [c.START_YEAR])
+            target_index = max(0, min(mot_lvl - 1, len(mot_years) - 1))
+            year_val = mot_years[target_index]
+            u_name = f"Motorized Infantry Type {year_val}"
+            if u_name in unit_library: return u_name
 
+    # Fallback to standard (fuel-free) infantry
     res_lvl = res_levels.get("infantry_type", 1)
     inf_years = tech_tree.get("infantry_type", {}).get("years", [c.START_YEAR])
     

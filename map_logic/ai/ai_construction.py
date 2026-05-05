@@ -95,9 +95,14 @@ def process_ai_economy_decisions(map_screen):
                 worst_unit = candidates[0][0]
                 worst_unit["order"] = {"type": "DISBAND", "turns_left": 1}
                 
+        # --- THE FIX: Decouple Fuel from the Master Block ---
         # If current upkeep is below the desired percentage of income, build units!
-        elif ratio_mat < target_mat and ratio_man < target_man and ratio_fuel < target_fuel:
+        # Only halt production entirely if we are starving for Manpower or Materials.
+        if ratio_mat < target_mat and ratio_man < target_man:
             
+            # Determine if we have a fuel shortage (ratio too high)
+            fuel_shortage = ratio_fuel >= target_fuel
+
             # --- NEW: Guard Target & Dynamic Naval Calculation ---
             infantry_count = 0
             naval_count = 0
@@ -157,10 +162,7 @@ def process_ai_economy_decisions(map_screen):
             total_units = infantry_count + tank_count + naval_count
             current_navy_ratio = naval_count / max(1, total_units)
             
-            # --- THE FIX: Dynamic Army Composition Ratio ---
-            # If materials are plentiful compared to manpower, the ratio shrinks (build more tanks).
-            # If manpower is massive compared to materials, the ratio grows (build more infantry).
-            # Uses c.AI_INFANTRY_TO_TANK_RATIO so balanced economies respect your constants file.
+            # --- Dynamic Army Composition Ratio ---
             mat_to_man_ratio = inc_man / max(1.0, inc_mat)
             dynamic_tank_ratio = max(1, int(mat_to_man_ratio * c.AI_INFANTRY_TO_TANK_RATIO))
             
@@ -168,20 +170,37 @@ def process_ai_economy_decisions(map_screen):
 
             # 1. Naval Check (Priority if below ratio)
             if current_navy_ratio < target_navy_ratio:
-                unit_name_to_build = queries.get_best_naval_unit(data.get("research", {}), unit_library)
+                # Ships need fuel, skip them if we have a shortage
+                if not fuel_shortage:
+                    unit_name_to_build = queries.get_best_naval_unit(data.get("research", {}), unit_library)
 
             # 2. Force a tank if our infantry ratio is too high
             if not unit_name_to_build and (infantry_count / max(1, tank_count)) > dynamic_tank_ratio:
-                unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
+                # Tanks need fuel, skip them if we have a shortage
+                if not fuel_shortage:
+                    unit_name_to_build = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
                 
             # 3. Default to Infantry / Guard
             if not unit_name_to_build:
-                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library)
+                # Tell the query to ignore motorized/mechanized if fuel is a problem
+                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library, allow_fuel_units=not fuel_shortage)
 
             unit_stats = unit_library.get(unit_name_to_build, {})
             cost_mat = unit_stats.get("cost_materials", 0)
             cost_man = unit_stats.get("cost_manpower", 0)
             cost_fuel = unit_stats.get("cost_fuel", 0)
+            
+            # --- SECONDARY FUEL CHECK (Upfront Cost vs Income) ---
+            # If we passed the income ratio checks but we simply don't have enough 
+            # stockpiled fuel to buy the unit, hard fallback to basic infantry!
+            if cost_fuel > 0 and data.get("fuel", 0) < cost_fuel:
+                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library, allow_fuel_units=False)
+                
+                # Re-fetch stats for the fallback unit
+                unit_stats = unit_library.get(unit_name_to_build, {})
+                cost_mat = unit_stats.get("cost_materials", 0)
+                cost_man = unit_stats.get("cost_manpower", 0)
+                cost_fuel = unit_stats.get("cost_fuel", 0)
             
             # Find a province capable of recruiting
             factory_provs = [p for p in my_provs if queries.has_industry(p)]
@@ -195,7 +214,8 @@ def process_ai_economy_decisions(map_screen):
             
             # --- Fallback if AI tries to build a ship but has no coastal factories ---
             if is_naval_recruit and not valid_recruit_provs:
-                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library)
+                # Force basic infantry fallback here as well so the turn isn't wasted
+                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library, allow_fuel_units=False)
                 unit_stats = unit_library.get(unit_name_to_build, {})
                 cost_mat = unit_stats.get("cost_materials", 0)
                 cost_man = unit_stats.get("cost_manpower", 0)

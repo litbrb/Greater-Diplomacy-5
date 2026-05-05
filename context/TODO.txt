@@ -19,6 +19,8 @@ ITS CALLED Tkinter
 
 ===
 
+- for now, only 1914 scenario
+
 - do api keys work for different models? does the model have to be specified? is hardcoding in gemini 2.5 bad
 
 - when ai is determine if its a good idea to declare war or not make it think of the long term effects

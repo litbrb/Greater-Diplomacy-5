@@ -16,7 +16,8 @@ def process_ai_economy_decisions(map_screen):
     nation_provs = {}
     for prov in map_screen.map_data.values():
         owner = prov.get("owner")
-        if owner:
+        # Prevent AI from treating bugged water tiles as valid build sites
+        if owner and prov.get("terrain") not in c.WATER_TERRAINS:
             nation_provs.setdefault(owner, []).append(prov)
 
     ai_nations = queries.get_active_ai_nations(map_screen)

@@ -367,6 +367,10 @@ def check_for_post_combat_captures(self):
     from map_logic.rendering import edit_province_ownership
     
     for province in self.map_data.values():
+        # --- FIX: Water tiles cannot be captured by anyone ---
+        if province.get("terrain") in c.WATER_TERRAINS:
+            continue
+
         units = province.get("units", [])
         if not units:
             continue
@@ -553,10 +557,12 @@ def process_movement(self):
                 # Only conquer if there are NO defenders from an enemy nation
                 if not defenders:
                     if dest_owner == "Unclaimed" or dest_owner in player_data.get("at_war_with", []):
-                        capturer = unit["owner"]
-                        # faction core transfer stuff
-                        true_owner = queries.get_faction_core_transfer_target(capturer, target_prov, self.nation_data)
-                        edit_province_ownership.conquer_province(self, target_prov, true_owner)
+                        # --- FIX: Prevent capturing water tiles via movement ---
+                        if target_prov.get("terrain") not in c.WATER_TERRAINS:
+                            capturer = unit["owner"]
+                            # faction core transfer stuff
+                            true_owner = queries.get_faction_core_transfer_target(capturer, target_prov, self.nation_data)
+                            edit_province_ownership.conquer_province(self, target_prov, true_owner)
 
                 # Stop if an enemy was present
                 if defenders:

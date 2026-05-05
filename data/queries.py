@@ -62,6 +62,36 @@ def get_country_data():
 # DIPLOMACY & COMBAT QUERIES
 # ==========================================
 
+def get_total_turns(time_manager):
+    """Calculates the total number of turns elapsed since the start of the game."""
+    total_days = (time_manager.year - c.START_YEAR) * 360 + (time_manager.month_index * 30) + time_manager.day
+    return total_days // c.DAYS_PER_TURN
+
+def get_economic_power(nation, nation_data):
+    """Estimates a nation's economic power based on its resource stockpiles."""
+    data = nation_data.get(nation, {})
+    # Manpower is 1-to-1, Materials are worth more, Fuel is worth the most
+    return data.get("manpower", 0) + (data.get("materials", 0) * 10) + (data.get("fuel", 0) * 20)
+
+def get_alliance_military_strength(nation, map_data, nation_data):
+    """Calculates the combined military strength of a nation and its faction members/allies."""
+    strength = get_military_strength(nation, map_data)
+    
+    # Add faction members
+    faction = nation_data.get(nation, {}).get("faction", "")
+    if faction:
+        for member in get_faction_members(faction, nation_data):
+            if member != nation:
+                strength += get_military_strength(member, map_data)
+                
+    # Add direct allies if they aren't in the faction
+    allies = nation_data.get(nation, {}).get("allied_with", [])
+    for ally in allies:
+        if not faction or nation_data.get(ally, {}).get("faction", "") != faction:
+            strength += get_military_strength(ally, map_data)
+            
+    return strength
+
 def get_military_strength(nation, map_data):
     """Calculates rough military strength of a nation based on unit stats."""
     strength = 0

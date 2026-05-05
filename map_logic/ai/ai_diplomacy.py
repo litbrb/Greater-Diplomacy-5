@@ -120,41 +120,55 @@ def process_basic_proactive_ai(map_screen):
 
         # --- 4. Declare War for Cores Logic (Border Check Only) ---
         if not is_already_at_war:
-            targets_holding_cores = queries.get_nations_holding_our_cores(ai_name, map_screen.map_data)
-            
-            if targets_holding_cores:
-                # ONLY look at nations we actually share a physical border with
-                my_neighbors = queries.get_neighboring_nations(ai_name, map_screen.map_data, map_screen.id_to_province)
-                valid_border_targets = [t for t in targets_holding_cores if t in my_neighbors]
+            current_turn = queries.get_total_turns(map_screen.time_manager)
+            if current_turn >= c.AI_WAR_COOLDOWN_TURNS:
+                targets_holding_cores = queries.get_nations_holding_our_cores(ai_name, map_screen.map_data)
                 
-                for target in valid_border_targets:
-                    if target not in active_nations: continue
-                    if target in my_enemies: continue
-                    if queries.are_in_same_faction(ai_name, target, map_screen.nation_data): continue
+                if targets_holding_cores:
+                    # ONLY look at nations we actually share a physical border with
+                    my_neighbors = queries.get_neighboring_nations(ai_name, map_screen.map_data, map_screen.id_to_province)
+                    valid_border_targets = [t for t in targets_holding_cores if t in my_neighbors]
                     
-                    # Check localized border strength instead of global strength
-                    my_border_str, target_border_str = queries.get_border_strength(ai_name, target, map_screen.map_data, map_screen.id_to_province)
-                    
-                    # Prevent division by zero if they have literally no troops on the border
-                    target_border_str = max(1, target_border_str)
-                    
-                    if my_border_str >= (target_border_str * c.AI_WAR_STRENGTH_THRESHOLD):
-                        if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
-                            existing = pending.get(target, {})
-                            turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
-                            
-                            if target not in pending or turns == 0:
-                                action_context = f"declaring war on {target} to reclaim our rightful core territory"
-                                llm_msg = ai_handler.generate_proactive_text(ai_name, target, action_context, human_players)
-                                msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
+                    for target in valid_border_targets:
+                        if target not in active_nations: continue
+                        if target in my_enemies: continue
+                        if queries.are_in_same_faction(ai_name, target, map_screen.nation_data): continue
+                        
+                        # Check localized border strength instead of global strength
+                        my_border_str, target_border_str = queries.get_border_strength(ai_name, target, map_screen.map_data, map_screen.id_to_province)
+                        
+                        # Prevent division by zero if they have literally no troops on the border
+                        target_border_str = max(1, target_border_str)
+                        
+                        # --- NEW: Consider total alliance strength and economy ---
+                        my_alliance_str = queries.get_alliance_military_strength(ai_name, map_screen.map_data, map_screen.nation_data)
+                        target_alliance_str = queries.get_alliance_military_strength(target, map_screen.map_data, map_screen.nation_data)
+                        
+                        my_econ_power = queries.get_economic_power(ai_name, map_screen.nation_data) / 100.0
+                        target_econ_power = queries.get_economic_power(target, map_screen.nation_data) / 100.0
+                        
+                        my_total_power = my_alliance_str + my_econ_power
+                        target_total_power = max(1.0, target_alliance_str + target_econ_power)
+                        # ---------------------------------------------------------
+                        
+                        # AI needs local border superiority AND overall global viability to declare war
+                        if my_border_str >= (target_border_str * c.AI_WAR_STRENGTH_THRESHOLD) and my_total_power >= (target_total_power * c.AI_GLOBAL_STRENGTH_THRESHOLD):
+                            if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
+                                existing = pending.get(target, {})
+                                turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+                                
+                                if target not in pending or turns == 0:
+                                    action_context = f"declaring war on {target} to reclaim our rightful core territory"
+                                    llm_msg = ai_handler.generate_proactive_text(ai_name, target, action_context, human_players)
+                                    msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
 
-                                pending[target] = {
-                                    "action": "WAR_DECLARATION",
-                                    "turns": 0,
-                                    "message": msg
-                                }
-                                queries.set_ai_diplo_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data)
-                                break
+                                    pending[target] = {
+                                        "action": "WAR_DECLARATION",
+                                        "turns": 0,
+                                        "message": msg
+                                    }
+                                    queries.set_ai_diplo_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data)
+                                    break
                         
         # --- Update Progress Bar ---
         map_screen.proactive_tasks_completed += 1

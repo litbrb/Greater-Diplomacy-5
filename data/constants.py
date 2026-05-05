@@ -191,6 +191,10 @@ RESEARCH_TIMELINE_SPACING = 80 # Width between years on the research timeline
 
 BASE_RESEARCH_POINTS_PER_DAY = 10 
 
+# Random Scenario Settings
+RANDOM_SCENARIO_SPAWN_UNITS = True
+RANDOM_SCENARIO_MIN_INFANTRY = 3 # Minimum ground army before buying ships/tanks
+
 # Unlocked tech exception for starting exactly in 1910
 DEFAULT_1910_TECH = {
     "infantry_type": 1,
@@ -334,7 +338,9 @@ GEMINI_MODEL_NAME = "gemini-2.5-flash"
 # AI PROACTIVE DIPLOMACY THRESHOLDS
 # ==========================================
 
-AI_WAR_STRENGTH_THRESHOLD = 1.2 # AI must be 20% stronger overall to declare war
+AI_WAR_STRENGTH_THRESHOLD = 1.2 # AI must be 20% stronger on the shared border to declare war
+AI_GLOBAL_STRENGTH_THRESHOLD = 0.8 # AI must have at least 80% of the target's total alliance + economic power to consider war
+AI_WAR_COOLDOWN_TURNS = 18 # How many turns from the start of the game the AI waits before declaring wars
 AI_DIPLO_COOLDOWN = -1 # How many turns before AI can retry a rejected/ignored proactive diplomatic action. -1 means infinite.
 
 # ==========================================
@@ -359,9 +365,9 @@ AI_NAVAL_UNIT_PREFERENCE = [
 ]
 
 AI_UPKEEP_TARGETS = {
-    "manpower": 0.60,
-    "materials": 0.40,
-    "fuel": 0.50
+    "manpower": 0.80,
+    "materials": 0.60,
+    "fuel": 0.70
 }
 
 AI_INFANTRY_TO_TANK_RATIO = 1 # Tanks honestly have no downsides aside from long deployment time so spamming them is pretty good tbh

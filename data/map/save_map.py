@@ -27,7 +27,8 @@ def save_map_data(self, save_name=None):
         "date": {
             "day": self.time_manager.day,
             "month": self.time_manager.month_index,
-            "year": self.time_manager.year
+            "year": self.time_manager.year,
+            "total_turns": getattr(self.time_manager, 'total_turns', 0)
         },
         "loop_map": self.loop_map,
         "player_country": self.player_country,

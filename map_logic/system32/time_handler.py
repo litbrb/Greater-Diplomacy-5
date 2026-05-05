@@ -5,6 +5,7 @@ class TimeHandler:
         self.day = c.DAYS_PER_TURN
         self.month_index = 0
         self.year = start_year
+        self.total_turns = 0 # Track turns since the scenario started
         
         self.months = [
             "January", "February", "March", "April", "May", "June",
@@ -14,6 +15,7 @@ class TimeHandler:
     def process_time(self, amount=5):
         """Increments the day and handles overflow into months and years."""
         self.day += amount
+        self.total_turns += (amount // c.DAYS_PER_TURN)
         
         # Check for Month overflow (30 days per month)
         while self.day > 30:

@@ -63,9 +63,8 @@ def get_country_data():
 # ==========================================
 
 def get_total_turns(time_manager):
-    """Calculates the total number of turns elapsed since the start of the game."""
-    total_days = (time_manager.year - c.START_YEAR) * 360 + (time_manager.month_index * 30) + time_manager.day
-    return total_days // c.DAYS_PER_TURN
+    """Calculates the total number of turns elapsed since the start of the scenario."""
+    return getattr(time_manager, 'total_turns', 0)
 
 def get_economic_power(nation, nation_data):
     """Estimates a nation's economic power based on its resource stockpiles."""

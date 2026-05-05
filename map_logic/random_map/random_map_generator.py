@@ -162,6 +162,13 @@ def randomize_all_provinces(map_screen, settings):
         if "research" not in map_screen.nation_data[nation]:
             map_screen.nation_data[nation]["research"] = {}
         
+        # DO NOT keep existing leftover tech from the base map! 
+        # Overwrite the entire research dict with a clean template first.
+        map_screen.nation_data[nation]["research"] = res_template.copy()
+        
+        # Then, overwrite with the calculated timeline tech levels
+        map_screen.nation_data[nation]["research"].update(baseline_tech)
+        
         # First, lay down the foundational template so every key exists
         for k, v in res_template.items():
             if k not in map_screen.nation_data[nation]["research"]:

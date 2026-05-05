@@ -175,6 +175,7 @@ def load_map_assets(self, load_path):
         self.time_manager = TimeHandler(start_year=save_meta["date"]["year"])
         self.time_manager.day = save_meta["date"]["day"]
         self.time_manager.month_index = save_meta["date"]["month"]
+        self.time_manager.total_turns = save_meta["date"].get("total_turns", 0)
     else:
         self.player_country = "None"
         self.active_players = []

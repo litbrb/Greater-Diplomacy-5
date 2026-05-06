@@ -306,8 +306,15 @@ def update_button_states(map_screen):
 
                 if incoming_turns > 0 and incoming_action in ["FACTION_INVITE", "JOIN_FACTION_REQ", "CEASEFIRE", "CALL_TO_ARMS", "CREATE_FACTION"]:
                     action_name = incoming_action.replace("_", " ")
-                    set_btn(map_screen.btn_accept_req, True, True, f"Accept {action_name}", "green")
-                    set_btn(map_screen.btn_reject_req, True, True, f"Reject {action_name}", "red")
+                    if pending_action == f"ACCEPT_{incoming_action}":
+                        set_btn(map_screen.btn_accept_req, True, True, "Undo Accept", "grey")
+                        set_btn(map_screen.btn_reject_req, False, False, "", "grey")
+                    elif pending_action == f"REJECT_{incoming_action}":
+                        set_btn(map_screen.btn_accept_req, False, False, "", "grey")
+                        set_btn(map_screen.btn_reject_req, True, True, "Undo Reject", "grey")
+                    else:
+                        set_btn(map_screen.btn_accept_req, True, True, f"Accept {action_name}", "green")
+                        set_btn(map_screen.btn_reject_req, True, True, f"Reject {action_name}", "red")
                 else:
                     dw_enabled = not (not at_war and in_same_faction)
                     if pending_action == "CEASEFIRE": dw_text = get_status_text("CEASEFIRE")

@@ -61,8 +61,14 @@ def handle_accept_req(map_screen):
     """Processes the execution of accepting an incoming proposal."""
     target = map_screen.selected_province.get("owner")
     action, incoming_turns = queries.get_diplomatic_status(target, map_screen.player_country, map_screen.nation_data)
-    custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
     
+    # If we are UNDOING the acceptance:
+    pending_action, pending_turns = queries.get_diplomatic_status(map_screen.player_country, target, map_screen.nation_data)
+    if pending_action == f"ACCEPT_{action}" and pending_turns == 0:
+        msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"ACCEPT_{action}", "")
+        map_screen.show_feedback(msg)
+        return
+
     if incoming_turns > 0:
         my_faction = map_screen.nation_data[map_screen.player_country].get("faction", "")
         i_am_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
@@ -71,65 +77,42 @@ def handle_accept_req(map_screen):
             if my_faction:
                 map_screen.show_feedback("Must leave your current faction first!")
                 return
-            diplomacy_logic.finalize_faction_join(map_screen.nation_data, target, map_screen.player_country)
-            del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
-            
-            msg_text = custom_msg if custom_msg else "We accepted your faction invitation."
-            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
-            map_screen.show_feedback("Joined Faction!")
-
         elif action == "JOIN_FACTION_REQ":
             if not i_am_leader:
                 map_screen.show_feedback("You are no longer the leader, cannot accept!")
                 return
-            diplomacy_logic.finalize_faction_join(map_screen.nation_data, map_screen.player_country, target)
-            del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
-            
-            msg_text = custom_msg if custom_msg else "We accepted your request to join."
-            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
-            map_screen.show_feedback("Faction Expanded!")
-
         elif action == "CREATE_FACTION":
             if my_faction:
                 map_screen.show_feedback("Must leave your current faction first!")
                 return
-            diplomacy_logic.finalize_create_faction(map_screen.nation_data, target)
-            diplomacy_logic.finalize_faction_join(map_screen.nation_data, target, map_screen.player_country)
-            del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
-            
-            msg_text = custom_msg if custom_msg else "We agreed to form a faction with you."
-            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
-            map_screen.show_feedback("Faction Formed!")
 
-        elif action == "CEASEFIRE":
-            diplomacy_logic.finalize_neutral(map_screen.nation_data, map_screen.player_country, target)
-            del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
-            msg_text = custom_msg if custom_msg else "We accepted your ceasefire terms."
-            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
-            map_screen.show_feedback("Ceasefire Accepted!")
-
-        elif action == "CALL_TO_ARMS":
-            diplomacy_logic.join_faction_wars(map_screen.nation_data, map_screen.player_country, target)
-            del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
-            msg_text = custom_msg if custom_msg else "We answer your call. Our forces will join your wars."
-            diplomacy_logic.send_message(map_screen, map_screen.player_country, target, msg_text, "DIPLOMACY")
-            map_screen.show_feedback("Joined Allies in War!")
-
+        custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
+        msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"ACCEPT_{action}", custom_msg)
+        
         map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
         map_screen.refresh_relations_map()
         map_screen.refresh_factions_map()
+        map_screen.show_feedback(f"Acceptance queued: {action.replace('_', ' ').title()}")
 
 def handle_reject_req(map_screen):
     """Processes the execution of rejecting an incoming proposal."""
     target = map_screen.selected_province.get("owner")
     action, incoming_turns = queries.get_diplomatic_status(target, map_screen.player_country, map_screen.nation_data)
 
+    # If we are UNDOING the rejection:
+    pending_action, pending_turns = queries.get_diplomatic_status(map_screen.player_country, target, map_screen.nation_data)
+    if pending_action == f"REJECT_{action}" and pending_turns == 0:
+        msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"REJECT_{action}", "")
+        map_screen.show_feedback(msg)
+        return
+
     if incoming_turns > 0:
-        del map_screen.nation_data[target]["pending_diplomacy"][map_screen.player_country]
-        diplomacy_logic.send_message(map_screen, map_screen.player_country, target, f"We rejected your {action.replace('_', ' ').lower()}.", "DIPLOMACY")
-        map_screen.show_feedback("Request Rejected!")
+        custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
+        msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"REJECT_{action}", custom_msg)
+        map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
+        map_screen.show_feedback(f"Rejection queued: {action.replace('_', ' ').title()}")
 
 def handle_join_wars(map_screen):
     target = map_screen.selected_province.get("owner")

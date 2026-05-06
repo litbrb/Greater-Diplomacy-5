@@ -27,6 +27,13 @@ ITS CALLED Tkinter
 - also add in the world map!
 - balance germany?
 
+- music tab?
+- oi did you finish csc645 work
+- completed research tab seems to overflow across the screen kinda
+- does the ai actually send a request for other countries to help them out? or do they wait until someone else asks to join in their war?
+- make ai try to join a faction when they get declared on
+- if ai is in a faction and in a war that's far away can they at least designate some units to help out their allies instead of just doing nothing
+
 - 106 nations on world map seems to cause lag issues
 - also sending troops across the provinces with connections that loop around the map create a comically long arrow stretching across the entire world, this should not happen
 

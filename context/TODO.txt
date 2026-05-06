@@ -27,17 +27,14 @@ ITS CALLED Tkinter
 - also add in the world map!
 - balance germany?
 
-- ai just seems to automatically join in a war... and then has the audacity to ask "may we join your war" when they already did so
-
 - sends ai war declaration
 - ai gets war declaration and then on the same turn sends two messages saying "how dare you" "actually wait we can't fight each other"
 
-- when a country sends you a diplomatic thingy make sure you can actually accept it!!!!!
-- also make war declarations and the like more visible (shown in yo face)
+- make war declarations and the like more visible (shown in yo face)
 
 - why doesn't the ai in absolute mode keep spam responding to each other when they get things like war declarations how do they know to stop after the first message
 
-ai should be able to sign non-agression pacts that prevent wars
+- ai should be able to sign non-agression pacts that prevent wars
 
 evaluating grand strategy (19/26)
 

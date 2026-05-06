@@ -304,14 +304,14 @@ def update_button_states(map_screen):
                 i_am_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
                 target_is_leader = queries.is_faction_leader(owner, map_screen.nation_data)
 
-                if incoming_turns > 0 and incoming_action in ["FACTION_INVITE", "JOIN_FACTION_REQ", "CEASEFIRE", "CALL_TO_ARMS", "CREATE_FACTION"]:
+                if incoming_turns > 0 and incoming_action in c.BILATERAL_ACTIONS:
                     action_name = incoming_action.replace("_", " ")
                     if pending_action == f"ACCEPT_{incoming_action}":
-                        set_btn(map_screen.btn_accept_req, True, True, "Undo Accept", "grey")
-                        set_btn(map_screen.btn_reject_req, False, False, "", "grey")
+                        set_btn(map_screen.btn_accept_req, True, True, "Undo Accept", "green")
+                        set_btn(map_screen.btn_reject_req, False, False, "", "green")
                     elif pending_action == f"REJECT_{incoming_action}":
-                        set_btn(map_screen.btn_accept_req, False, False, "", "grey")
-                        set_btn(map_screen.btn_reject_req, True, True, "Undo Reject", "grey")
+                        set_btn(map_screen.btn_accept_req, False, False, "", "red")
+                        set_btn(map_screen.btn_reject_req, True, True, "Undo Reject", "red")
                     else:
                         set_btn(map_screen.btn_accept_req, True, True, f"Accept {action_name}", "green")
                         set_btn(map_screen.btn_reject_req, True, True, f"Reject {action_name}", "red")

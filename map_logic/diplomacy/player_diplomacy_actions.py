@@ -82,9 +82,15 @@ def handle_accept_req(map_screen):
                 map_screen.show_feedback("You are no longer the leader, cannot accept!")
                 return
         elif action == "CREATE_FACTION":
-            if my_faction:
-                map_screen.show_feedback("Must leave your current faction first!")
+                if my_faction:
+                    map_screen.show_feedback("Must leave your current faction first!")
+                    return
+        elif action in ["JOIN_WARS", "CALL_TO_ARMS"]:
+            if not queries.are_in_same_faction(map_screen.player_country, target, map_screen.nation_data):
+                map_screen.show_feedback("You must be in the same faction to do this!")
                 return
+
+        custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
 
         custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
         msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"ACCEPT_{action}", custom_msg)

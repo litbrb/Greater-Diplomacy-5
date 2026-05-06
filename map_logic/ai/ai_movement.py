@@ -98,7 +98,11 @@ def process_ai_unit_orders(map_screen):
         my_prov_ids = set(p["id"] for p in my_provs)
         
         # Combine land and water IDs so BFS can route overseas
-        allowed_prov_ids = my_prov_ids.union(allowed_prov_ids_cache)
+        # Include ALL legally passable tiles so the AI isn't blind!
+        allowed_prov_ids = set(allowed_prov_ids_cache)
+        for p in map_screen.map_data.values():
+            if queries.can_land_units_enter(ai_name, p, map_screen.nation_data):
+                allowed_prov_ids.add(p["id"])
         
         enemies = map_screen.nation_data[ai_name].get("at_war_with", [])
 

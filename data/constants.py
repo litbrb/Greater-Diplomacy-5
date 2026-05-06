@@ -340,6 +340,11 @@ UNIT_BOX_TEXT_COLOR = (255, 255, 255)
 
 SPECTATOR_CAN_EDIT_PRODUCTION = True
 
+# --- NEW: Expeditionary Force Weight ---
+# A higher number means the AI prefers defending its own borders over helping allies.
+# 5 means it will secure its own borders with at least 5 units before sending units away.
+AI_EXPEDITION_WEIGHT = 5
+
 # ==========================================
 # AI PROACTIVE DIPLOMACY THRESHOLDS
 # ==========================================

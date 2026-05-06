@@ -249,7 +249,10 @@ def can_ships_enter(moving_nation, target_province, nation_data):
     target_owner = target_province.get("owner", "Unclaimed")
     
     # Ships can only enter friendly or unowned ports
-    return target_owner == moving_nation or are_in_same_faction(moving_nation, target_owner, nation_data) or target_owner == "Unclaimed"
+    is_faction = are_in_same_faction(moving_nation, target_owner, nation_data)
+    is_ally = target_owner in nation_data.get(moving_nation, {}).get("allied_with", [])
+    
+    return target_owner == moving_nation or is_faction or is_ally or target_owner == "Unclaimed"
 
 def can_land_units_enter(moving_nation, target_province, nation_data):
     """Centralized rules for land movement."""
@@ -262,7 +265,11 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
     allowed_owners = ["Unclaimed", "None", moving_nation, "Ocean", "Lakes"]
 
     if target_owner not in allowed_owners:
-        if not (are_at_war(moving_nation, target_owner, nation_data) or are_in_same_faction(moving_nation, target_owner, nation_data)):
+        is_enemy = are_at_war(moving_nation, target_owner, nation_data)
+        is_faction = are_in_same_faction(moving_nation, target_owner, nation_data)
+        is_ally = target_owner in nation_data.get(moving_nation, {}).get("allied_with", [])
+        
+        if not (is_enemy or is_faction or is_ally):
             return False
 
     return True

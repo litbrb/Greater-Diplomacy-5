@@ -18,7 +18,8 @@ def _bfs_nearest_target(start_id, target_ids, allowed_prov_ids, id_to_province, 
 
         # Allow BFS to search a few tiles deeper than the first found target 
         # so it can accurately discover empty borders further down the line.
-        if found_depth != -1 and (len(path) - 1) > found_depth + 3:
+        # DEPTH OF 10 SO AI CAN SEE FAR
+        if found_depth != -1 and (len(path) - 1) > found_depth + 10:
             break
 
         curr = path[-1]
@@ -106,6 +107,13 @@ def process_ai_unit_orders(map_screen):
         
         enemies = map_screen.nation_data[ai_name].get("at_war_with", [])
 
+        # --- NEW: Identify Friendly Nations for Expedition Logic ---
+        friendly_nations = {ai_name}
+        my_faction = map_screen.nation_data[ai_name].get("faction", "")
+        if my_faction:
+            friendly_nations.update(queries.get_faction_members(my_faction, map_screen.nation_data))
+        friendly_nations.update(map_screen.nation_data[ai_name].get("allied_with", []))
+
         war_borders = set()
         peace_borders = set()
         coastal_borders = set()
@@ -114,13 +122,14 @@ def process_ai_unit_orders(map_screen):
         enemy_coastal_waters = set()
         unclaimed_targets = set()
         all_unclaimed_coasts = set()
-        active_battles = set() # NEW: track active combat zones
+        active_battles = set() 
+        expedition_targets = set() # NEW: track distant allied fronts
 
         # Locate coastal provinces globally for naval targeting and island hopping
         for prov in map_screen.map_data.values():
+            owner = prov.get("owner", "Unclaimed")
+            
             if prov.get("is_coastal", False):
-                owner = prov.get("owner", "Unclaimed")
-                
                 if enemies and owner in enemies:
                     all_enemy_coasts.add(prov["id"])
                     
@@ -133,6 +142,22 @@ def process_ai_unit_orders(map_screen):
                 # Identify unclaimed islands globally
                 elif owner in ["Unclaimed", "None", ""]:
                     all_unclaimed_coasts.add(prov["id"])
+
+            # --- NEW: Distant Allied Wars / Expedition Targets ---
+            if enemies:
+                # 1. Reinforce allied battles
+                if queries.is_province_in_active_combat(prov, map_screen.nation_data):
+                    units_here = prov.get("units", [])
+                    if any(u.get("owner") in friendly_nations for u in units_here):
+                        expedition_targets.add(prov["id"])
+
+                # 2. Reinforce allied borders touching mutual enemies
+                if owner in enemies:
+                    for n_id in prov.get("neighbors", []):
+                        n_prov = map_screen.id_to_province.get(n_id)
+                        if n_prov and n_prov.get("owner") in friendly_nations and n_prov.get("owner") != ai_name:
+                            expedition_targets.add(prov["id"])
+                            break
 
         for prov in my_provs:
             is_war_border = False
@@ -160,7 +185,7 @@ def process_ai_unit_orders(map_screen):
             elif is_coastal:
                 coastal_borders.add(prov["id"])
 
-        at_war = len(enemies) > 0 and (len(enemy_targets) > 0 or len(all_enemy_coasts) > 0)
+        at_war = len(enemies) > 0 and (len(enemy_targets) > 0 or len(all_enemy_coasts) > 0 or len(expedition_targets) > 0)
 
         # --- FIND ACTIVE BATTLES & CONVOY STATUS ---
         friendly_convoys = set()
@@ -187,7 +212,8 @@ def process_ai_unit_orders(map_screen):
         target_destinations = list(set(list(unclaimed_targets) + list(all_unclaimed_coasts) + list(peace_borders) + list(coastal_borders) + list(active_battles)))
 
         if at_war:
-            target_destinations = list(set(target_destinations + list(enemy_targets) + list(all_enemy_coasts)))
+            # Inject expedition_targets so distant armies mobilize!
+            target_destinations = list(set(target_destinations + list(enemy_targets) + list(all_enemy_coasts) + list(expedition_targets)))
 
         # If no targets (e.g. island with no neighbors), skip
         if not target_destinations:
@@ -236,6 +262,12 @@ def process_ai_unit_orders(map_screen):
             for c_id in coastal_borders:
                 if target_assignments.get(c_id, 0) >= 1:
                     target_assignments[c_id] += 50
+
+        # 3. NEW: Penalize expedition targets so the AI defends its homeland fronts FIRST.
+        # This guarantees they "send a few units" instead of draining their own country dry.
+        for e_id in expedition_targets:
+            if e_id in target_assignments and e_id not in enemy_targets and e_id not in war_borders:
+                target_assignments[e_id] += getattr(c, 'AI_EXPEDITION_WEIGHT', 2)
 
         for unit, prov in units_info:
             u_type = unit.get("type", "")
@@ -286,7 +318,8 @@ def process_ai_unit_orders(map_screen):
                 continue
 
             if at_war and not is_naval_combatant:
-                adjacent_targets = [n for n in prov.get("neighbors", []) if n in target_destinations and n in enemy_targets]
+                # Include expedition targets in the adjacent strike check so they can push off allied territory
+                adjacent_targets = [n for n in prov.get("neighbors", []) if n in target_destinations and (n in enemy_targets or n in expedition_targets)]
                 
                 # PREVENT ILLEGAL CONVOY ATTACKS
                 if is_convoy:
@@ -357,10 +390,15 @@ def process_ai_unit_orders(map_screen):
             if not targets:
                 continue
 
+            # Bypass the depth limiter for fully garrisoned borders
+            # Filter out targets that have the +50 "fully garrisoned" penalty applied
+            priority_targets = [t for t in targets if assignments.get(t, 0) < 50]
+            search_targets = priority_targets if priority_targets else targets
+
             # Route to the nearest border/enemy/coast/convoy that needs reinforcements
             path = _bfs_nearest_target(
                 curr_id, 
-                set(targets), 
+                set(search_targets), # <--- Pass the filtered list here
                 allowed_prov_ids, 
                 map_screen.id_to_province, 
                 assignments, 

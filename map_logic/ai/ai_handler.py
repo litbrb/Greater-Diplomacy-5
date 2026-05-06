@@ -183,10 +183,8 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
 
     context = get_world_context(nation_data, active_nations, ai_nation, sender_nation)
     
-    # --- Split logic between Proposals and Unilateral Declarations ---
-    unilateral_actions = ["WAR_DECLARATION", "LEAVE_FACTION", "DISBAND_FACTION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER"] # Added KICK_FACTION_MEMBER
-    
-    if action_type in unilateral_actions:
+    # --- Split logic between Proposals and Unilateral Declarations ---    
+    if action_type in c.UNILATERAL_ACTIONS:
         if action_type == "WAR_DECLARATION":
             action_context = f"{sender_nation} has DECLARED WAR on us!"
         elif action_type == "LEAVE_FACTION":

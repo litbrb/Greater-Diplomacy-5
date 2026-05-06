@@ -390,6 +390,29 @@ AI_REINFORCE_COMBAT_WEIGHT = 20 # Pulls pathing land units toward active battles
 AI_MIN_COAST_FOR_NAVY = 8 # Tiles needed to justify building a navy
 
 # ==========================================
+# DIPLOMATIC ACTION CLASSIFICATIONS
+# ==========================================
+
+# Actions that happen instantly and do not require the target's consent
+UNILATERAL_ACTIONS = [
+    "WAR_DECLARATION",
+    "BREAK_ALLIANCE",
+    "KICK_FACTION_MEMBER",
+    "LEAVE_FACTION",
+    "DISBAND_FACTION"
+]
+
+# Proposals that require the target to explicitly Accept or Reject
+BILATERAL_ACTIONS = [
+    "JOIN_WARS",
+    "FACTION_INVITE",
+    "JOIN_FACTION_REQ",
+    "CEASEFIRE",
+    "CALL_TO_ARMS",
+    "CREATE_FACTION"
+]
+
+# ==========================================
 # FILE PATHS
 # ==========================================
 

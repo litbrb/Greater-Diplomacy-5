@@ -44,8 +44,8 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
     elif current_action is not None:
         # NEW: Allow upgrading a drafted text message into a formal diplomatic action
         info = pending.get(target_name, {})
-        is_unilateral = current_action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION"]
-        
+        is_unilateral = current_action in c.UNILATERAL_ACTIONS
+
         if isinstance(info, dict) and info.get("action", "").startswith("MSG:") and info.get("turns", 0) == 0:
             if not custom_msg:
                 # Inherit the text from the draft if the user didn't provide a new one
@@ -200,7 +200,7 @@ def process_diplomacy_turn(self):
             if turns == 1:
                 is_human_target = target in getattr(self, 'active_players', [])
                 if not is_human_target:
-                    if action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
+                    if action in c.UNILATERAL_ACTIONS or action in c.BILATERAL_ACTIONS:
                         ai_tasks.append({"sender": country_name, "target": target, "action": action, "content": custom_msg})
                     elif action.startswith("MSG:"):
                         ai_tasks.append({"sender": country_name, "target": target, "action": "CUSTOM_MSG", "content": action[4:]})
@@ -236,7 +236,7 @@ def process_diplomacy_turn(self):
             futures = {}
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
-                if task["action"] in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "CALL_TO_ARMS", "WAR_DECLARATION", "LEAVE_FACTION", "DISBAND_FACTION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "CREATE_FACTION"]:
+                if task["action"] in c.UNILATERAL_ACTIONS or task["action"] in c.BILATERAL_ACTIONS:
                     future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""), human_players)
                     futures[future] = task
                 elif task["action"] == "CUSTOM_MSG":
@@ -268,7 +268,7 @@ def process_diplomacy_turn(self):
             turns = info.get("turns", 0)
             custom_msg = info.get("message", "")
 
-            is_unilateral = action in ["WAR_DECLARATION", "JOIN_WARS", "BREAK_ALLIANCE", "KICK_FACTION_MEMBER", "LEAVE_FACTION", "DISBAND_FACTION"]
+            is_unilateral = action in c.UNILATERAL_ACTIONS
 
             if turns == 0:
                 # EXECUTE unilateral actions instantly on Turn 0

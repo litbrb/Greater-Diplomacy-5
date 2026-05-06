@@ -27,6 +27,8 @@ ITS CALLED Tkinter
 - also add in the world map!
 - balance germany?
 
+- ai just seems to automatically join in a war... and then has the audacity to ask "may we join your war" when they already did so
+
 - sends ai war declaration
 - ai gets war declaration and then on the same turn sends two messages saying "how dare you" "actually wait we can't fight each other"
 

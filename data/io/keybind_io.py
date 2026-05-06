@@ -2,6 +2,7 @@ import json
 import os
 import pygame
 import data.constants as c
+from data import queries
 
 CONFIG_PATH = c.SETTINGS_CONFIG_PATH
 
@@ -32,6 +33,8 @@ def save_settings(keybind_dict, volume, num_players=1, ai_mode="GEMINI",
     
     with open(CONFIG_PATH, "w") as f:
         json.dump(data_to_save, f, indent=4)
+        
+    queries.clear_json_caches() # Add this line so your game knows it updated!
 
 def load_settings(default_binds, default_volume=0.5):
     """Loads all settings variables, safely falling back to defaults if missing."""

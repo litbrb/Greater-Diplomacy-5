@@ -3,7 +3,7 @@ from gameState import GameState
 import data.constants as c
 from ui_elements import Button, Slider
 from map_logic.rendering.font_manager import fonts
-import json
+from data import queries
 
 class Random_Setup(GameState):
     def __init__(self):
@@ -24,13 +24,8 @@ class Random_Setup(GameState):
         self.refresh_ui()
 
     def calculate_max_countries(self):
-        # Count playable nations
-        countries_path = c.COUNTRIES_DATA_PATH
-        playable = 0
-        if os.path.exists(countries_path):
-            with open(countries_path, "r") as f:
-                data = json.load(f)
-                playable = sum(1 for n, d in data.items() if d.get("is_playable"))
+        data = queries.get_country_data()
+        playable = sum(1 for n, d in data.items() if d.get("is_playable"))
         return max(1, playable) # Fallback to 1
 
     def reset_to_defaults(self):

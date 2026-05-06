@@ -278,6 +278,18 @@ DEFAULT_UNIT_DEF = 0
 DEFAULT_UNIT_SPD = 1
 
 # ==========================================
+# CALCULATIONS & WEIGHTS
+# ==========================================
+
+# Used in queries.py to estimate a nation's total economic power
+ECONOMY_WEIGHT_MANPOWER = 1
+ECONOMY_WEIGHT_MATERIALS = 10
+ECONOMY_WEIGHT_FUEL = 20
+
+# Used in queries.py to calculate military strength (Attack + Defense + (Health / DIVISOR))
+MILITARY_STRENGTH_HEALTH_DIVISOR = 10.0
+
+# ==========================================
 # CONVOY & TRUCK LOGIC
 # ==========================================
 

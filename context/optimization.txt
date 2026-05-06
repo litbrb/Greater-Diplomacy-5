@@ -4,4 +4,4 @@ anything relating to replacing disk i/o with caching would be useful (if it can 
 
 also misleading functions in queries.py should be fixed to be more clear (example: a function that says it gets the best attack but then also gets the best defense if the attacks are tied)
 
-an example of how to implement these changes (like an example of what the entire file would look like) would be extremely useful
+an example of how to implement these changes (like an example of what the entire file would have to look like with the changes implemented) would be extremely useful

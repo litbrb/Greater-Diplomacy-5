@@ -9,6 +9,7 @@ import data.constants as c
 # ==========================================
 # UNIFIED CACHE MANAGER
 # ==========================================
+
 # Replaces individual global variables with a clean dictionary
 _JSON_CACHE = {
     "settings": None,
@@ -69,8 +70,11 @@ def get_total_turns(time_manager):
 def get_economic_power(nation, nation_data):
     """Estimates a nation's economic power based on its resource stockpiles."""
     data = nation_data.get(nation, {})
-    # Manpower is 1-to-1, Materials are worth more, Fuel is worth the most
-    return data.get("manpower", 0) + (data.get("materials", 0) * 10) + (data.get("fuel", 0) * 20)
+    # CHANGED: Now uses constants instead of hardcoded 10 and 20
+    manpower_val = data.get("manpower", 0) * c.ECONOMY_WEIGHT_MANPOWER
+    materials_val = data.get("materials", 0) * c.ECONOMY_WEIGHT_MATERIALS
+    fuel_val = data.get("fuel", 0) * c.ECONOMY_WEIGHT_FUEL
+    return manpower_val + materials_val + fuel_val
 
 def get_alliance_military_strength(nation, map_data, nation_data):
     """Calculates the combined military strength of a nation and its faction members/allies."""
@@ -97,8 +101,9 @@ def get_military_strength(nation, map_data):
     for prov in map_data.values():
         for u in prov.get("units", []):
             if u.get("owner") == nation:
-                # Simple formula: attack + defense + (health / 10)
-                strength += u.get("attack", 0) + u.get("defense", 0) + (u.get("health", 0) / 10)
+                # CHANGED: Uses constant divisor instead of hardcoded 10
+                hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
+                strength += u.get("attack", 0) + u.get("defense", 0) + hp_val
     return strength
 
 def get_nations_holding_our_cores(nation, map_data):
@@ -132,7 +137,9 @@ def get_border_strength(nation_a, nation_b, map_data, id_to_province):
             if prov:
                 for u in prov.get("units", []):
                     if u.get("owner") == target_nation:
-                        strength += u.get("attack", 0) + u.get("defense", 0) + (u.get("health", 0) / 10)
+                        # CHANGED: Uses constant divisor instead of hardcoded 10
+                        hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
+                        strength += u.get("attack", 0) + u.get("defense", 0) + hp_val
         return strength
 
     return calc_strength(border_provs_a, nation_a), calc_strength(border_provs_b, nation_b)
@@ -267,9 +274,6 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
 
 def get_industry(province):
     """Returns the highest level of industry in the province."""
-    # 1-5 workshop
-    # 6 basic factory
-    # 7-11 factory
     level = 0
     for b in province.get("buildings", []):
         if "Workshop Lvl" in b:
@@ -337,7 +341,6 @@ def get_highest_infantry(nation_data_block, tech_tree, unit_library, allow_fuel_
     """Finds the highest level infantry unit the nation has researched, prioritizing mechanized/motorized upgrades."""
     res_levels = nation_data_block.get("research", {})
     
-    # --- FIX: Only allow advanced infantry if we aren't starving for fuel ---
     if allow_fuel_units:
         mech_lvl = res_levels.get("mechanized_infantry", 0)
         if mech_lvl > 0:
@@ -359,7 +362,6 @@ def get_highest_infantry(nation_data_block, tech_tree, unit_library, allow_fuel_
     res_lvl = res_levels.get("infantry_type", 1)
     inf_years = tech_tree.get("infantry_type", {}).get("years", [c.START_YEAR])
     
-    # --- UPDATED: Safer index bounds checking ---
     target_index = max(0, min(res_lvl - 1, len(inf_years) - 1))
     year_val = inf_years[target_index]
     u_name = f"Infantry Type {year_val}"
@@ -471,13 +473,11 @@ def calculate_all_economies(map_data, nation_data):
             "dynamic_yields": {
                 "manpower": c.BASE_YIELDS["manpower"] + manpower_bonus,
                 "materials": c.BASE_YIELDS["materials"],
-                # FIX: Remove bergius_bonus from the per-tile dynamic yield
                 "fuel": c.BASE_YIELDS["fuel"] 
             },
             "breakdown": {
                 "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
                 "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
-                # Keep it here! This is the flat, nation-wide base income.
                 "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0}
             },
             "upkeep": {"manpower": 0, "materials": 0, "fuel": 0},
@@ -580,7 +580,7 @@ def get_nation_provinces_and_units(nation, map_data):
     return owned_provs, owned_units
 
 def get_living_nations(map_data):
-    """Scans the map and returns a set of all nations that currently own at least one province."""    
+    """Scans the map and returns a set of all nations that currently own at least one province."""   
     active_nations = set()
     for prov in map_data.values():
         owner = prov.get("owner")
@@ -751,12 +751,20 @@ def is_unit_obsolete(group_name, player_research):
     obsoleting_techs = c.OBSOLESCENCE_RULES.get(group_name, [])
     return any(player_research.get(tech, 0) >= 1 for tech in obsoleting_techs)
 
-def get_best_unit_by_defense(units):
-    """Finds the unit with the highest defense stat in a list of units, tiebreaking with attack."""
+# --- CHANGED: Renamed the misleading function and added its counterpart ---
+def get_best_unit_by_defense_then_attack(units):
+    """Finds the unit with the highest defense stat, tiebreaking with attack."""
     if not units:
         return None
     # Tuple sorting: (Primary Sort, Secondary Sort)
     return max(units, key=lambda u: (u.get("defense", 0), u.get("attack", 0)))
+
+def get_best_unit_by_attack_then_defense(units):
+    """Finds the unit with the highest attack stat, tiebreaking with defense."""
+    if not units:
+        return None
+    return max(units, key=lambda u: (u.get("attack", 0), u.get("defense", 0)))
+
 
 # ==========================================
 # PREDICTION QUERIES (UI & RENDERING)
@@ -765,7 +773,7 @@ def get_best_unit_by_defense(units):
 def get_combat_predictions(map_data, nation_data, id_to_province):
     """Generates predictions for meeting engagements and province clashes."""
     predictions = []
-    incoming = {} # dest_id -> list of (unit, origin_id)
+    incoming = {} 
     
     # 1. Map all incoming movements
     for prov in map_data.values():
@@ -825,12 +833,12 @@ def get_combat_predictions(map_data, nation_data, id_to_province):
 # ==========================================
 
 def encode_surf_to_b64(surf, fmt="RGBA"):
-    """Encodes a pygame surface to a Base64 string."""
+    #Encodes a pygame surface to a Base64 string.
     img_str = pygame.image.tostring(surf, fmt)
     return base64.b64encode(img_str).decode('utf-8')
 
 def decode_b64_to_surf(b64_str, size):
-    """Decodes a Base64 string back into a pygame surface."""
+    # Decodes a Base64 string back into a pygame surface.
     try:
         img_bytes = base64.b64decode(b64_str)
         # Check if the save file is using the new RGBA format or the old RGB format
@@ -848,7 +856,7 @@ def decode_b64_to_surf(b64_str, size):
 # ==========================================
 
 def is_nation_reachable(nation_a, target_nation, map_data, id_to_province, nation_data):
-    """Determines if a nation can physically reach another via land borders (including faction borders) or sea."""
+    # Determines if a nation can physically reach another via land borders (including faction borders) or sea.
     nation_a_faction = nation_data.get(nation_a, {}).get("faction", "")
     friendly_nations = {nation_a}
     if nation_a_faction:
@@ -873,25 +881,25 @@ def is_nation_reachable(nation_a, target_nation, map_data, id_to_province, natio
             for n_id in prov.get("neighbors", []):
                 n_prov = id_to_province.get(n_id)
                 if n_prov and n_prov.get("owner") in enemy_nations:
-                    return True # Direct land connection found
+                    return True 
                     
         # Keep an eye out for enemy coasts globally too
         if owner in enemy_nations and prov.get("is_coastal", False):
             target_has_coast = True
             
     if friendly_has_coast and target_has_coast:
-        return True # Both can access the ocean and therefore reach each other
+        return True 
         
     return False
 
 def is_ai_diplo_on_cooldown(sender, target, action, nation_data):
-    """Checks if a specific proactive diplomatic action is on cooldown."""
+    # Checks if a specific proactive diplomatic action is on cooldown.
     cooldowns = nation_data.get(sender, {}).get("diplo_cooldowns", {})
     target_cooldowns = cooldowns.get(target, {})
     return target_cooldowns.get(action, 0) != 0
 
 def set_ai_diplo_cooldown(sender, target, action, nation_data, duration=None):
-    """Sets a cooldown for a proactive diplomatic action to prevent spamming."""
+    # Sets a cooldown for a proactive diplomatic action to prevent spamming.
     if duration is None:
         duration = c.AI_DIPLO_COOLDOWN
     

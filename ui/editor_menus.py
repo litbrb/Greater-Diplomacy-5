@@ -915,7 +915,7 @@ def select_unit_brush(self):
     self.menu_active = True
 
     unit_path = c.UNIT_DATA_PATH
-    units = list(json.load(open(unit_path, 'r')).keys()) if os.path.exists(unit_path) else []
+    units = list(queries.get_unit_library().keys())
 
     def on_select(event=None):
         selection = lb.curselection()

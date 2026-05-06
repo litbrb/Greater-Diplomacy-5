@@ -30,9 +30,6 @@ ITS CALLED Tkinter
 - is ai even capturable
 - movement arrows for ai countries seem to appear even when you're not viewing ai moves
 
-- caching problem leads to settings maybe not being detected correctly???
-- set from lite to full ai, the ai seemed to just... not know that
-
 - sends ai war declaration
 - ai gets war declaration and then on the same turn sends two messages saying "how dare you" "actually wait we can't fight each other"
 

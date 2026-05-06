@@ -3,7 +3,7 @@ from map_logic.rendering import map_utils
 from map_logic.rendering import edit_province_ownership
 import data.constants as c
 from map_logic.camera import camera_handler
-from map_logic import player_setup
+from map_logic.setup import player_setup
 from data import queries
 
 def handle_map_events(self, event):

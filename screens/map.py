@@ -15,7 +15,7 @@ from ui_elements import Button, process_text_input
 from ui import event_handler, spectator_menus, buttons, editor_menus
 
 # Game Logic & Rendering Submodules
-from map_logic import player_setup
+from map_logic.setup import player_setup
 from map_logic.camera.camera_handler import MapCamera
 from map_logic.diplomacy import diplomacy_logic, player_diplomacy_actions
 from map_logic.random_map import random_map_generator

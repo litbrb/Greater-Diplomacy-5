@@ -45,13 +45,6 @@ def select_brush_nation(self):
 
     root.protocol("WM_DELETE_WINDOW", close_menu)
     
-    # --- MISSING EVENT PUMP LOOP ---
-    while self.menu_active:
-        try:
-            root.update()
-            pygame.event.pump()
-        except (tk.TclError, Exception):
-            break
     tk.Label(root, text="Select Paint Nation:", font=("Arial", 12)).pack(pady=10)
     
     frame = tk.Frame(root)

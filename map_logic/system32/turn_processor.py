@@ -146,6 +146,59 @@ def process_pinning(self):
                     # FIX: Track the origin province ID (province["id"]) along with the unit
                     incoming_attacks.setdefault(dest_id, []).append((unit, province["id"]))
 
+    # --- NEW: RESOLVE SUICIDE CHARGES ---
+    # If incoming attackers are so weak they'd die instantly, resolve the combat NOW
+    # so they die, deal their damage, and don't pin the defenders.
+    for dest_id, attackers_info in list(incoming_attacks.items()):
+        dest_prov = self.id_to_province.get(dest_id)
+        if not dest_prov: continue
+        
+        defenders = dest_prov.get("units", [])
+        if not defenders: continue
+        
+        tile_owner = dest_prov.get("owner", "Unclaimed")
+        if tile_owner in c.UNPLAYABLE_NATIONS: continue
+        
+        friendly_defenders = [u for u in defenders if not queries.are_at_war(tile_owner, u.get("owner"), self.nation_data)]
+        if not friendly_defenders: continue
+        
+        total_defender_atk = sum(u.get("attack", 5) for u in friendly_defenders)
+        
+        hostile_attackers = [
+            info for info in attackers_info
+            if queries.are_at_war(tile_owner, info[0].get("owner"), self.nation_data)
+        ]
+        
+        if not hostile_attackers: continue
+        
+        damage_per_attacker = total_defender_atk / len(hostile_attackers)
+        attackers_survive = False
+        
+        for a_unit, _ in hostile_attackers:
+            actual_dmg = max(0, damage_per_attacker - a_unit.get("defense", 0))
+            if actual_dmg < a_unit.get("health", 1):
+                attackers_survive = True
+                break
+                
+        if not attackers_survive:
+            # 1. Attackers are obliterated. Apply their pitiful damage to the defenders.
+            total_attacker_atk = sum(a_unit.get("attack", 5) for a_unit, _ in hostile_attackers)
+            apply_group_damage(total_attacker_atk, friendly_defenders)
+            
+            # 2. Kill the attackers and remove them from incoming_attacks
+            for a_unit, a_origin_id in hostile_attackers:
+                a_unit["health"] = 0
+                incoming_attacks[dest_id] = [info for info in incoming_attacks[dest_id] if info[0] != a_unit]
+                
+                # Cleanup dead units from their origin province immediately
+                a_prov = self.id_to_province.get(a_origin_id)
+                if a_prov:
+                    a_prov["units"] = [u for u in a_prov["units"] if u.get("health", 0) > 0]
+            
+            # 3. Cleanup dead defenders in the destination province (just in case they died to scratch damage)
+            dest_prov["units"] = [u for u in dest_prov["units"] if u.get("health", 0) > 0]
+
+    # --- STANDARD PINNING LOGIC ---
     for province in self.map_data.values():
         for unit in province.get("units", []):
             order = unit.get("order")
@@ -193,7 +246,7 @@ def process_meeting_engagements(self):
                     prov1 = self.id_to_province[pair[0]]
                     prov2 = self.id_to_province[pair[1]]
                     
-                    # --- FIX: Safely check if the path has elements before grabbing index 0 ---
+                    # Safely check if the path has elements before grabbing index 0
                     units1 = [u for u in prov1.get("units", []) if u.get("order", {}).get("path") and u["order"]["path"][0] == pair[1]]
                     units2 = [u for u in prov2.get("units", []) if u.get("order", {}).get("path") and u["order"]["path"][0] == pair[0]]
                     
@@ -203,9 +256,16 @@ def process_meeting_engagements(self):
                     apply_group_damage(atk2, units1)
                     apply_group_damage(atk1, units2)
                     
-                    # Lock them in combat so they don't slide past each other
-                    for u in units1 + units2:
-                        u["_combat_locked"] = True
+                    # Only lock them in combat if the enemy survived!
+                    surviving_units1 = [u for u in units1 if u.get("health", 0) > 0]
+                    surviving_units2 = [u for u in units2 if u.get("health", 0) > 0]
+                    
+                    if surviving_units2:
+                        for u in surviving_units1:
+                            u["_combat_locked"] = True
+                    if surviving_units1:
+                        for u in surviving_units2:
+                            u["_combat_locked"] = True
                     
                     prov1["units"] = [u for u in prov1["units"] if u.get("health", 0) > 0]
                     prov2["units"] = [u for u in prov2["units"] if u.get("health", 0) > 0]
@@ -348,19 +408,28 @@ def process_combat(self):
                     # Side B attacks Side A
                     apply_group_damage(sides[nation_b]["total_atk"], sides[nation_a]["units"])
 
-        # --- NEW: Wipe queues and destroy misplaced naval units for units engaged in combat ---
+        # Remove dead units (HP <= 0) BEFORE checking if we should wipe paths
+        surviving_units = [u for u in units if u.get("health", 0) > 0]
+        province["units"] = surviving_units
+
+        # Wipe queues and destroy misplaced naval units ONLY if combat is still ongoing
         if combat_occurred:
             is_land = province.get("terrain") not in c.WATER_TERRAINS
-            for u in units:
-                if "order" in u and "path" in u["order"]:
-                    u["order"]["path"] = []
+            
+            # Check if there are STILL enemies present after the combat phase
+            still_in_combat = queries.is_province_in_active_combat(province, self.nation_data)
+            
+            for u in surviving_units:
+                if still_in_combat:
+                    if "order" in u and "path" in u["order"]:
+                        u["order"]["path"] = []
                 
                 # Immediately destroy warships caught in land combat
                 if is_land and queries.is_naval_unit(u.get("type", "")) and not u.get("type", "").startswith("Convoy"):
                     u["health"] = 0
-
-        # Remove dead units (HP <= 0)
-        province["units"] = [u for u in units if u.get("health", 0) > 0]
+            
+            # Filter dead ships out
+            province["units"] = [u for u in surviving_units if u.get("health", 0) > 0]
 
 def check_for_post_combat_captures(self):
     """Assigns province ownership to units standing in an undefended enemy province."""
@@ -456,6 +525,7 @@ def process_movement(self):
             order = unit.get("order")
             if order and order.get("type") == "MOVE" and order.get("path"):
                 unit["_current_province_id"] = province["id"]
+                unit["_skip_remaining_steps"] = False # Track halted movement
                 moving_units.append(unit)
             else:
                 units_to_keep.append(unit)
@@ -471,8 +541,8 @@ def process_movement(self):
 
     for step in range(max_speed):
         for unit in moving_units:
-            # Explicitly check if this individual unit has run out of moves
-            if step >= unit.get("speed", 1):
+            # Explicitly check if this individual unit has run out of moves or is skipping
+            if unit.get("_skip_remaining_steps", False) or step >= unit.get("speed", 1):
                 continue
                 
             order = unit.get("order")
@@ -496,7 +566,8 @@ def process_movement(self):
                     # If it already moved this turn (step > 0) and entered combat, stop immediately.
                     # Or, if it started in combat and is trying to advance deeper into enemy territory, stop.
                     if step > 0 or queries.is_hostile_territory(unit["owner"], dest_owner, self.nation_data):
-                        order["path"] = []
+                        # Stop advancing for this turn, but DO NOT wipe the queue!
+                        unit["_skip_remaining_steps"] = True 
                         continue
             # ------------------------------------------
 
@@ -506,7 +577,6 @@ def process_movement(self):
             is_convoy = u_type.startswith("Convoy")
             
             # --- Convoy Land Movement Check ---
-            curr_prov = self.id_to_province.get(unit["_current_province_id"])
             if is_convoy and curr_prov:
                 if not queries.can_convoy_enter(curr_prov, target_prov):
                     order["path"] = []
@@ -557,7 +627,7 @@ def process_movement(self):
                 # Only conquer if there are NO defenders from an enemy nation
                 if not defenders:
                     if dest_owner == "Unclaimed" or dest_owner in player_data.get("at_war_with", []):
-                        # --- FIX: Prevent capturing water tiles via movement ---
+                        # Prevent capturing water tiles via movement
                         if target_prov.get("terrain") not in c.WATER_TERRAINS:
                             capturer = unit["owner"]
                             # faction core transfer stuff
@@ -566,7 +636,8 @@ def process_movement(self):
 
                 # Stop if an enemy was present
                 if defenders:
-                    order["path"] = []
+                    # Stop advancing for this turn, but DO NOT wipe the queue!
+                    unit["_skip_remaining_steps"] = True 
             else:
                 order["path"] = []
 
@@ -583,6 +654,11 @@ def process_movement(self):
             
             for province in self.map_data.values():
                 province["units"] = [u for u in province["units"] if id(u) not in moving_ids]
+
+    # Clean up the temporary tracking flag so it doesn't pollute the save files!
+    for unit in moving_units:
+        if "_skip_remaining_steps" in unit:
+            del unit["_skip_remaining_steps"]
 
 def process_economy(self):
     """Calculates income, applies building yields, and deducts unit upkeep."""

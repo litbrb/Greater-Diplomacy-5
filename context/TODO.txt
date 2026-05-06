@@ -31,9 +31,7 @@ ITS CALLED Tkinter
 - completed research tab seems to overflow across the screen kinda
 - does the ai actually send a request for other countries to help them out? or do they wait until someone else asks to join in their war?
 - make ai try to join a faction when they get declared on
-
-- note: when a stack of units attacks another stack of units, it prevents the defending stack from moving that turn
-- could you make it so that if the attacking stack immediately dies when it attacks (example: militia unit thrown at a tank), it doesn't actually stop the other stack from moving
+- ai should consider strength of other factions they might be able to join when deciding to declare war on a country from a different faction
 
 - 106 nations on world map seems to cause lag issues
 - also sending troops across the provinces with connections that loop around the map create a comically long arrow stretching across the entire world, this should not happen

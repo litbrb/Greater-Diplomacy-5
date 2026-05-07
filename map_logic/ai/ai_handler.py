@@ -5,6 +5,7 @@ from google import genai
 from google.genai import types
 import data.constants as c
 from data import queries
+from map_logic.ai import ai_prompts
 
 def get_gemini_api_key():
     """Helper to dynamically fetch the saved key from cache."""
@@ -50,16 +51,8 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
     manpower = ai_stats.get("manpower", 0)
     materials = ai_stats.get("materials", 0)
     
-    # 1. Establish Reality
-    context = f"Current Date: {current_date}\n"
-    context += f"You are the leader of {ai_nation}.\n"
-    context += f"CRITICAL RULE: The ONLY nations that currently exist in this world are: {', '.join(active_nations)}.\n"
-    context += "Do NOT mention, reference, or interact with any country, empire, or nation not explicitly on this list.\n\n"
-    
-    context += f"Your economy: {manpower} Manpower, {materials} Materials.\n\n"
-    
     # 2. Establish Global Politics (Now includes Factions!)
-    context += "--- GLOBAL POLITICS ---\n"
+    politics_str = ""
     for nation in active_nations:
         n_data = nation_data.get(nation, {})
         wars = [w for w in n_data.get("at_war_with", []) if w in active_nations]
@@ -75,22 +68,21 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
             rels.append(f"Relations: {rel_score} (Scale: -100 to 100)")
         
         if rels:
-            context += f"- {nation}: {' | '.join(rels)}.\n"
+            politics_str += f"- {nation}: {' | '.join(rels)}.\n"
             
     # 3. Add Recent World Events
     global_event_data = nation_data.get("GLOBAL_EVENTS", {})
     # Safely unpack the new dict format
     events = global_event_data.get("log", []) if isinstance(global_event_data, dict) else global_event_data
     
+    events_str = ""
     if events:
-        context += "\n--- RECENT WORLD EVENTS ---\n"
         for ev in events[:8]: # Show the 8 most recent events
-            context += f"- {ev}\n"
+            events_str += f"- {ev}\n"
             
     # 4. Establish Target Context & Message History
+    target_context_str = ""
     if target_nation:
-        context += f"\n--- CURRENT TARGET ---\nYou are currently communicating with {target_nation}.\n"
-        
         inbox = ai_stats.get("inbox", [])
         thread = []
         
@@ -105,9 +97,12 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
         if thread:
             # Only give the last 10 messages so we don't blow up the context window
             recent_thread = thread[-10:]
-            context += "Recent message history:\n" + "\n".join(recent_thread) + "\n"
-        
-    return context
+            target_context_str = "\n".join(recent_thread) + "\n"
+            
+    return ai_prompts.build_world_context(
+        current_date, ai_nation, ', '.join(active_nations), 
+        manpower, materials, politics_str, events_str, target_context_str, target_nation
+    )
 
 def call_ollama(system_prompt, user_prompt):
     """Helper to hit local Ollama instance."""
@@ -164,19 +159,19 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
 
     if use_lite_logic:
         if action_type == "WAR_DECLARATION":
-            fallback = c.AI_FALLBACK_RESPONSES.get("BETRAYAL", "You will regret this betrayal.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("BETRAYAL", "You will regret this betrayal.")
         elif action_type == "LEAVE_FACTION":
-            fallback = c.AI_FALLBACK_RESPONSES.get("FACTION_ABANDONED", "We will not forget your abandonment.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("FACTION_ABANDONED", "We will not forget your abandonment.")
         elif action_type == "DISBAND_FACTION":
-            fallback = c.AI_FALLBACK_RESPONSES.get("FACTION_DISBANDED", "It is a shame to see our alliance broken.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("FACTION_DISBANDED", "It is a shame to see our alliance broken.")
         elif action_type == "JOIN_WARS":
-            fallback = c.AI_FALLBACK_RESPONSES.get("ACCEPTED_HELP", "We gratefully accept your assistance in our conflicts.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("ACCEPTED_HELP", "We gratefully accept your assistance in our conflicts.")
         elif action_type == "BREAK_ALLIANCE":
-            fallback = c.AI_FALLBACK_RESPONSES.get("ALLIANCE_BROKEN", "We won't forget this.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("ALLIANCE_BROKEN", "We won't forget this.")
         elif action_type == "KICK_FACTION_MEMBER":
-            fallback = c.AI_FALLBACK_RESPONSES.get("KICKED_FROM_FACTION", "We won't forget being expelled.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("KICKED_FROM_FACTION", "We won't forget being expelled.")
         else:
-            fallback = c.AI_FALLBACK_RESPONSES.get("AI_OFF_ACCEPT", "We accept your proposal.") if accepted else c.AI_FALLBACK_RESPONSES.get("AI_OFF_REJECT", "We reject your proposal.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("AI_OFF_ACCEPT", "We accept your proposal.") if accepted else ai_prompts.AI_FALLBACK_RESPONSES.get("AI_OFF_REJECT", "We reject your proposal.")
         return accepted, fallback
 
     print(f"[LLM CALL] {ai_nation} generating flavor text for {action_type} from {sender_nation}... (Mode: {mode})")
@@ -185,60 +180,25 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     
     # --- Split logic between Proposals and Unilateral Declarations ---    
     if action_type in c.UNILATERAL_ACTIONS:
-        if action_type == "WAR_DECLARATION":
-            action_context = f"{sender_nation} has DECLARED WAR on us!"
-        elif action_type == "LEAVE_FACTION":
-            action_context = f"{sender_nation} has abandoned our faction!"
-        elif action_type == "DISBAND_FACTION":
-            action_context = f"{sender_nation} has disbanded our faction!"
-        elif action_type == "JOIN_WARS":
-            action_context = f"{sender_nation} has mobilized their forces to join our ongoing wars!"
-        elif action_type == "BREAK_ALLIANCE":
-            action_context = f"{sender_nation} has broken their alliance with us!"
-        elif action_type == "KICK_FACTION_MEMBER":
-            action_context = f"{sender_nation} has expelled us from the faction!"
-        
-        # FIX: Append the custom message to the context so the AI can actually read it
-        if custom_msg:
-            action_context += f" They included this official message: '{custom_msg}'"
-            
-        system_prompt = (
-            "You are an AI playing a grand strategy game. You act as the leader of your nation. "
-            f"You have just received the following unilateral declaration: {action_context} "
-            #             "There is no proposal to accept or reject. You must react to this news in character. "
-            "There is no proposal to accept or reject. You must send a reply to the country that sent you this declaration in character. "
-            "Reply ONLY with a valid JSON object matching this schema: "
-            '{"message": "In-character dialogue reacting to the event in english"}'
-        )
+        action_context = ai_prompts.get_unilateral_receive_context(action_type, sender_nation, custom_msg)
+        system_prompt = ai_prompts.get_unilateral_system_prompt(action_context)
         user_prompt = f"{context}\n{action_context} Provide your reaction."
-        
     else:
-        action_context = f"{sender_nation} has proposed a {action_type}."
-        
-        # ---> ADD THIS: Ensure the AI actually reads the proposal message!
-        if custom_msg:
-            action_context += f" They included this official message: '{custom_msg}'"
-            
-        system_prompt = (
-            "You are an AI playing a grand strategy game. You act as the leader of your nation. "
-            f"You have already decided to strongly {'ACCEPT' if accepted else 'REJECT'} the diplomatic proposal. "
-            "The details are already finalized, don't ask for further clarification, and don't ask to discuss it further. "
-            "Reply ONLY with a valid JSON object matching this schema: "
-            '{"message": "In-character dialogue responding to the proposal in english"}'
-        )
+        action_context = ai_prompts.get_bilateral_receive_context(action_type, sender_nation, custom_msg)
+        system_prompt = ai_prompts.get_bilateral_system_prompt(accepted)
         user_prompt = f"{context}\n{action_context} Provide your response based on your decision."
 
     if mode == "OLLAMA":
         result = call_ollama(system_prompt, user_prompt)
         if result:
-            return accepted, result.get("message", c.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"])
-        return accepted, c.AI_FALLBACK_RESPONSES["OLLAMA_ERROR"]
+            return accepted, result.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"])
+        return accepted, ai_prompts.AI_FALLBACK_RESPONSES["OLLAMA_ERROR"]
     elif mode == "CHATGPT":
         print("[LLM] Custom ChatGPT hook to be placed here.")
-        return accepted, c.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]
+        return accepted, ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]
     elif mode == "CLAUDE":
         print("[LLM] Custom Claude hook to be placed here.")
-        return accepted, c.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]
+        return accepted, ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]
 
     # Fallback to Gemini
     try:
@@ -249,10 +209,10 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
         reply_json = json.loads(response.text)
-        return accepted, reply_json.get("message", c.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"])
+        return accepted, reply_json.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"])
     except Exception as e:
         print(f"Gemini Error: {e}")
-        return accepted, c.AI_FALLBACK_RESPONSES["API_ERROR"]
+        return accepted, ai_prompts.AI_FALLBACK_RESPONSES["API_ERROR"]
 
 def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content, human_players=None):
     if human_players is None:
@@ -276,7 +236,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
 
     if use_lite_logic:
         return {
-            "message": c.AI_FALLBACK_RESPONSES["AI_OFF_MESSAGE"], 
+            "message": ai_prompts.AI_FALLBACK_RESPONSES["AI_OFF_MESSAGE"], 
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE"
         }
@@ -284,47 +244,30 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
     print(f"[LLM CALL] {ai_nation} is drafting a reply to {sender_nation}... (Mode: {mode})")
 
     context = get_world_context(nation_data, active_nations, ai_nation, sender_nation)
-    system_prompt = (
-        "You are an AI leader in a grand strategy game. Respond to the incoming diplomatic message in character. "
-         # "Keep your response under 2 sentences. "
-        "For reasons unbenownst to the other country, your goals actually align exactly with what they think they have to convince you to do. "
-        "It's also in your best interest to make it seem like they had to convince you, so your actions don't seem too spontaneous. "
-        # "You may also take a diplomatic action if the sender's reasoning is convincing or offensive. " 
-        "You may also take a diplomatic action when responding to the country.\n"
-        "Valid actions: 'WAR_DECLARATION', 'JOIN_WARS', 'LEAVE_FACTION', 'JOIN_FACTION_REQ', or 'NONE'.\n"
-        "RULES FOR ACTIONS:\n"
-        "- You MUST specify the target country for your action in 'action_target' (e.g., 'Germany', 'Russia', or the sender's name).\n"
-        "- Do NOT output 'JOIN_FACTION_REQ' if you are already in a faction. You have to leave your faction before doing that.\n"
-        "- Do NOT output 'WAR_DECLARATION' against a member of your own faction. You have to leave your faction before doing that.\n"
-        "- Do NOT output 'JOIN_WARS' if you're trying to join the war of someone not in your faction, instead just type 'WAR_DECLARATION' against the target country.\n"
-        "- If your plan requires two steps (like leaving your faction this turn to declare war next turn), "
-        "put your immediate move in 'action'/'action_target' and your next move in 'follow_up_action'/'follow_up_target'.\n"
-        "Reply ONLY with a valid JSON object matching this schema: "
-        '{"message": "Your in-character response here", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE"}'
-    )
+    system_prompt = ai_prompts.get_custom_message_system_prompt()
     user_prompt = f"{context}\nMessage from {sender_nation}: '{message_content}'"
     
     if mode == "OLLAMA":
         result = call_ollama(system_prompt, user_prompt)
         if result:
             return {
-                "message": result.get("message", c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
+                "message": result.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
                 "action": result.get("action", "NONE"),
                 "action_target": result.get("action_target", "NONE"),
                 "follow_up_action": result.get("follow_up_action", "NONE"),
                 "follow_up_target": result.get("follow_up_target", "NONE")
             }
         return {
-            "message": c.AI_FALLBACK_RESPONSES["OLLAMA_ERROR"], 
+            "message": ai_prompts.AI_FALLBACK_RESPONSES["OLLAMA_ERROR"], 
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE"
         }
     elif mode == "CHATGPT":
         print("[LLM] Custom ChatGPT hook to be placed here.")
-        return { "message": c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE" }
+        return { "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE" }
     elif mode == "CLAUDE":
         print("[LLM] Custom Claude hook to be placed here.")
-        return { "message": c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE" }
+        return { "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE" }
 
     try:
         client = genai.Client(api_key=get_gemini_api_key())
@@ -345,7 +288,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
                 ai_action = "NONE"
 
         return {
-            "message": reply_json.get("message", c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
+            "message": reply_json.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
             "action": ai_action,
             "action_target": act_target,
             "follow_up_action": reply_json.get("follow_up_action", "NONE"),
@@ -354,7 +297,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
     except Exception as e:
         print(f"Gemini Error: {e}")
         return {
-            "message": c.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], 
+            "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], 
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE"
         }
@@ -373,11 +316,7 @@ def generate_proactive_text(ai_nation, target_nation, action_context, human_play
     if use_lite_logic:
         return None 
         
-    system_prompt = (
-        f"You are the leader of {ai_nation}. Write a single, brief sentence to {target_nation} "
-        f"about {action_context}. Do not include quotes. Reply strictly with a JSON object: "
-        '{"message": "Your text here"}'
-    )
+    system_prompt = ai_prompts.get_proactive_system_prompt(ai_nation, target_nation, action_context)
     
     if mode == "OLLAMA":
         result = call_ollama(system_prompt, "Generate message.")

@@ -1,4 +1,4 @@
-from map_logic.ai import ai_handler
+from map_logic.ai import ai_handler, ai_prompts
 from data import queries
 import data.constants as c
 
@@ -49,9 +49,9 @@ def process_basic_proactive_ai(map_screen):
                         turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
                         
                         if enemy not in pending or turns == 0:
-                            action_context = f"offering a ceasefire because our nations cannot physically reach each other"
+                            action_context = ai_prompts.get_proactive_action_context("CEASEFIRE")
                             llm_msg = ai_handler.generate_proactive_text(ai_name, enemy, action_context, human_players)
-                            msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("GENERIC_MESSAGE", "We offer terms for a ceasefire.")
+                            msg = llm_msg if llm_msg else ai_prompts.AI_FALLBACK_RESPONSES.get("GENERIC_MESSAGE", "We offer terms for a ceasefire.")
                             
                             pending[enemy] = {
                                 "action": "CEASEFIRE",
@@ -77,9 +77,9 @@ def process_basic_proactive_ai(map_screen):
                         
                         if member not in pending or turns == 0:
                             target_enemy = unshared_wars[0]
-                            action_context = f"calling you to arms in our war against {target_enemy}"
+                            action_context = ai_prompts.get_proactive_action_context("CALL_TO_ARMS", target_enemy)
                             llm_msg = ai_handler.generate_proactive_text(ai_name, member, action_context, human_players)
-                            msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("GENERIC_MESSAGE", "We request your aid in our ongoing conflicts!")
+                            msg = llm_msg if llm_msg else ai_prompts.AI_FALLBACK_RESPONSES.get("GENERIC_MESSAGE", "We request your aid in our ongoing conflicts!")
                             
                             pending[member] = {
                                 "action": "CALL_TO_ARMS",
@@ -106,9 +106,9 @@ def process_basic_proactive_ai(map_screen):
                         turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
                         
                         if member not in pending or turns == 0:
-                            action_context = f"mobilizing our forces to join your war against {target_enemy}"
+                            action_context = ai_prompts.get_proactive_action_context("JOIN_WARS", target_enemy)
                             llm_msg = ai_handler.generate_proactive_text(ai_name, member, action_context, human_players)
-                            msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("PROACTIVE_JOIN_WAR", "Brothers, let us join your fight.")
+                            msg = llm_msg if llm_msg else ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_JOIN_WAR", "Brothers, let us join your fight.")
                             
                             pending[member] = {
                                 "action": "JOIN_WARS",
@@ -158,9 +158,9 @@ def process_basic_proactive_ai(map_screen):
                                 turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
                                 
                                 if target not in pending or turns == 0:
-                                    action_context = f"declaring war on {target} to reclaim our rightful core territory"
+                                    action_context = ai_prompts.get_proactive_action_context("WAR_DECLARATION", target)
                                     llm_msg = ai_handler.generate_proactive_text(ai_name, target, action_context, human_players)
-                                    msg = llm_msg if llm_msg else c.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
+                                    msg = llm_msg if llm_msg else ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
 
                                     pending[target] = {
                                         "action": "WAR_DECLARATION",

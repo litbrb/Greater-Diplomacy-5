@@ -730,6 +730,7 @@ def is_naval_unit(unit_type):
     stats = get_unit_library().get(unit_type, {})
     return stats.get("naval_unit", False)
 
+# i don't know if this would really count as a query...
 def revert_transport(unit):
     """Reverts a transport (like a Convoy) back to its original unit type."""
     if "original_type" not in unit:

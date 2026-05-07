@@ -11,7 +11,6 @@ context/combined_scripts.txt
 
 *.pyc
 !countries_data.json
-!settings_config.json
 !unit_data.json
 !research_template.json
 !building_data.json

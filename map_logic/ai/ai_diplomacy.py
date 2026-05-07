@@ -61,6 +61,41 @@ def process_basic_proactive_ai(map_screen):
                             queries.set_ai_diplo_cooldown(ai_name, enemy, "CEASEFIRE", map_screen.nation_data)
                             break # Act once per turn to avoid conflicts
 
+        # --- 1.5. Defensive Faction Seeking Logic ---
+        if is_already_at_war and not my_faction:
+            potential_leaders = []
+            for enemy in my_enemies:
+                # Find nations also at war with our enemy
+                enemy_wars = map_screen.nation_data.get(enemy, {}).get("at_war_with", [])
+                for mutual_combatant in enemy_wars:
+                    if mutual_combatant == ai_name or mutual_combatant not in active_nations:
+                        continue
+                    # If they have a faction, we want to talk to the leader
+                    fac = map_screen.nation_data.get(mutual_combatant, {}).get("faction", "")
+                    if fac:
+                        fac_leader = queries.get_faction_leader(fac, map_screen.nation_data)
+                        if fac_leader and fac_leader not in potential_leaders and fac_leader in active_nations:
+                            potential_leaders.append(fac_leader)
+
+            if potential_leaders:
+                # Just ask the first valid leader we found
+                target_leader = potential_leaders[0]
+                if not queries.is_ai_diplo_on_cooldown(ai_name, target_leader, "JOIN_FACTION_REQ", map_screen.nation_data):
+                    existing = pending.get(target_leader, {})
+                    turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+
+                    if target_leader not in pending or turns == 0:
+                        action_context = "requesting to join your faction to stand against our mutual enemies"
+                        llm_msg = ai_handler.generate_proactive_text(ai_name, target_leader, action_context, human_players)
+                        msg = llm_msg if llm_msg else "Our enemies are aligned, let us join your faction to stand against them."
+
+                        pending[target_leader] = {
+                            "action": "JOIN_FACTION_REQ",
+                            "turns": 0,
+                            "message": msg
+                        }
+                        queries.set_ai_diplo_cooldown(ai_name, target_leader, "JOIN_FACTION_REQ", map_screen.nation_data)
+
         # --- 2. Call to Arms Logic ---
         if is_already_at_war and my_faction:
             faction_members = queries.get_faction_members(my_faction, map_screen.nation_data)
@@ -140,14 +175,18 @@ def process_basic_proactive_ai(map_screen):
                         # Prevent division by zero if they have literally no troops on the border
                         target_border_str = max(1, target_border_str)
                         
-                        # --- NEW: Consider total alliance strength and economy ---
+                        # --- MODIFIED: Consider total alliance strength, economy, and distractions ---
                         my_alliance_str = queries.get_alliance_military_strength(ai_name, map_screen.map_data, map_screen.nation_data)
                         target_alliance_str = queries.get_alliance_military_strength(target, map_screen.map_data, map_screen.nation_data)
                         
                         my_econ_power = queries.get_economic_power(ai_name, map_screen.nation_data) / 100.0
                         target_econ_power = queries.get_economic_power(target, map_screen.nation_data) / 100.0
-                        
-                        my_total_power = my_alliance_str + my_econ_power
+
+                        # Factor in how distracted the target is by their existing wars
+                        target_distraction_str = queries.get_combined_enemy_strength(target, map_screen.map_data, map_screen.nation_data) * getattr(c, 'AI_ENEMY_DISTRACTION_WEIGHT', 0.8)
+
+                        # Add the target's distraction to our perceived power
+                        my_total_power = my_alliance_str + my_econ_power + target_distraction_str
                         target_total_power = max(1.0, target_alliance_str + target_econ_power)
                         # ---------------------------------------------------------
                         

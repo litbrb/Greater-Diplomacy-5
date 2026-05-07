@@ -356,6 +356,11 @@ AI_GLOBAL_STRENGTH_THRESHOLD = 0.8 # AI must have at least 80% of the target's t
 AI_WAR_COOLDOWN_TURNS = 18 # How many turns from the start of the game the AI waits before declaring wars
 AI_DIPLO_COOLDOWN = -1 # How many turns before AI can retry a rejected/ignored proactive diplomatic action. -1 means infinite.
 
+# --- NEW: Distraction Weight ---
+# How much the AI values the strength of their target's current enemies. 
+# 0.8 means if the target is fighting someone with 1000 strength, the AI feels 800 points braver.
+AI_ENEMY_DISTRACTION_WEIGHT = 0.8
+
 # ==========================================
 # AI RECRUITMENT PREFERENCES
 # ==========================================

@@ -63,6 +63,15 @@ def get_country_data():
 # DIPLOMACY & COMBAT QUERIES
 # ==========================================
 
+def get_combined_enemy_strength(target_nation, map_data, nation_data):
+    """Calculates the total military strength of everyone actively fighting the target."""
+    total_str = 0
+    enemies = nation_data.get(target_nation, {}).get("at_war_with", [])
+    for enemy in enemies:
+        if enemy in nation_data and enemy not in c.UNPLAYABLE_NATIONS:
+            total_str += get_military_strength(enemy, map_data)
+    return total_str
+
 def get_total_turns(time_manager):
     """Calculates the total number of turns elapsed since the start of the scenario."""
     return getattr(time_manager, 'total_turns', 0)

@@ -1,3 +1,4 @@
+import random
 from map_logic.ai import ai_handler, ai_prompts
 from data import queries
 import data.constants as c
@@ -192,22 +193,25 @@ def process_basic_proactive_ai(map_screen):
                         
                         # AI needs local border superiority AND overall global viability to declare war
                         if my_border_str >= (target_border_str * c.AI_WAR_STRENGTH_THRESHOLD) and my_total_power >= (target_total_power * c.AI_GLOBAL_STRENGTH_THRESHOLD):
-                            if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
-                                existing = pending.get(target, {})
-                                turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
-                                
-                                if target not in pending or turns == 0:
-                                    action_context = ai_prompts.get_proactive_action_context("WAR_DECLARATION", target)
-                                    llm_msg = ai_handler.generate_proactive_text(ai_name, target, action_context, human_players)
-                                    msg = llm_msg if llm_msg else ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
+                            
+                            # Random chance to actually declare war
+                            if random.random() <= getattr(c, 'AI_WAR_DECLARATION_CHANCE', 0.50):
+                                if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
+                                    existing = pending.get(target, {})
+                                    turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+                                    
+                                    if target not in pending or turns == 0:
+                                        action_context = ai_prompts.get_proactive_action_context("WAR_DECLARATION", target)
+                                        llm_msg = ai_handler.generate_proactive_text(ai_name, target, action_context, human_players)
+                                        msg = llm_msg if llm_msg else ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
 
-                                    pending[target] = {
-                                        "action": "WAR_DECLARATION",
-                                        "turns": 0,
-                                        "message": msg
-                                    }
-                                    queries.set_ai_diplo_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data)
-                                    break
+                                        pending[target] = {
+                                            "action": "WAR_DECLARATION",
+                                            "turns": 0,
+                                            "message": msg
+                                        }
+                                        queries.set_ai_diplo_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data)
+                                        break
                         
         # --- Update Progress Bar ---
         map_screen.proactive_tasks_completed += 1

@@ -30,15 +30,7 @@ ITS CALLED Tkinter
 oh the generating responses thing seems to work but only when generating grand strategy is finished
 could generating grand strategy be replaced with generating messages instead because that's the real important part
 
-- maybe make the ai only have like a 50% chance of actually declaring war should the conditions for declaring war be met
-
 - music tab?
-
-can it be made so that the ai doesn't suicide charge their convoys into ships please
-ive seen situations where the ai turns 20 land units into convoys and then rams it into an enemy destroyer, immediately losing all of them
-
-also, if the ai ever gets in a situation where it's ships are being attacked by another ship and it's going to lose the fight can they retreat
-maybe just keep everything on land if it doesn't have enough ships to maintain local naval superiority
 
 - land based retreating?
 

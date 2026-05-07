@@ -355,8 +355,9 @@ AI_WAR_STRENGTH_THRESHOLD = 1.2 # AI must be 20% stronger on the shared border t
 AI_GLOBAL_STRENGTH_THRESHOLD = 0.8 # AI must have at least 80% of the target's total alliance + economic power to consider war
 AI_WAR_COOLDOWN_TURNS = 18 # How many turns from the start of the game the AI waits before declaring wars
 AI_DIPLO_COOLDOWN = -1 # How many turns before AI can retry a rejected/ignored proactive diplomatic action. -1 means infinite.
+AI_WAR_DECLARATION_CHANCE = 0.50 # 50% chance the AI actually declares war when conditions are met
 
-# --- NEW: Distraction Weight ---
+# Distraction Weight
 # How much the AI values the strength of their target's current enemies. 
 # 0.8 means if the target is fighting someone with 1000 strength, the AI feels 800 points braver.
 AI_ENEMY_DISTRACTION_WEIGHT = 0.8

@@ -80,6 +80,13 @@ ECON_CONVERT_BTN_X1 = SCREEN_WIDTH // 2 - 250
 ECON_CONVERT_BTN_X2 = SCREEN_WIDTH // 2 + 50
 
 # ==========================================
+# AUDIO DEFAULTS
+# ==========================================
+
+DEFAULT_AUDIO_PITCH = 0.5
+DEFAULT_AUDIO_SPEED = 0.5
+
+# ==========================================
 # UI BARS
 # ==========================================
 
@@ -222,12 +229,14 @@ UI_COLORS = {
 }
 
 SIZES = {
+    "tiny_square": (30, 30),
     "small_square": (40, 40),
     "medium_square": (50, 50),
     "tech_square": (80, 80),
     "orders": (100, 50),
     "small": (100, 40),
     "left_ui_bar": (120, 50),
+    "song": (300, 30),
     "diplomatic": (200, 30),
     "medium": (200, 50),
     "large": (300, 80)

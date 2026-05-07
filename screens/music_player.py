@@ -10,6 +10,8 @@ from map_logic.rendering.font_manager import fonts
 import data.constants as c
 from data.io import keybind_io
 
+song_y = 32
+
 class Music_Player(GameState):
     def __init__(self, controller):
         super().__init__()
@@ -22,7 +24,7 @@ class Music_Player(GameState):
             os.makedirs(c.MUSIC_DIR)
         
         self.selected_album = None
-        self.view_mode = "PLAYLIST" # Toggles between "PLAYLIST" and "EDITOR"
+        self.view_mode = "PLAYLIST" 
         
         self.album_scroll_y = 0
         self.track_scroll_y = 0
@@ -38,9 +40,13 @@ class Music_Player(GameState):
             Button(20, 20, "small", "red", "Back", self.handle_back_key)
         ]
         
-        # --- Volume Sliders ---
-        self.elements.append(Slider(c.SCREEN_WIDTH - 250, 40, 200, "SFX Vol", self.controller.volume, self.set_sfx_volume))
-        self.elements.append(Slider(c.SCREEN_WIDTH - 250, 100, 200, "Music Vol", self.controller.music_volume, self.set_music_volume))
+        # --- Audio Sliders ---
+        slider_x = c.SCREEN_WIDTH - 250
+        self.elements.append(Slider(slider_x, 40, 200, "SFX Vol", self.controller.volume, self.set_sfx_volume))
+        self.elements.append(Slider(slider_x, 100, 200, "SFX Speed/Pitch", self.controller.sfx_speed, self.set_sfx_speed))
+
+        self.elements.append(Slider(slider_x, 180, 200, "Music Vol", self.controller.music_volume, self.set_music_volume))
+        self.elements.append(Slider(slider_x, 240, 200, "Music Speed/Pitch", self.controller.music_speed, self.set_music_speed))
         
         # --- View Mode Toggles ---
         color_ed = "blue" if self.view_mode == "EDITOR" else "grey"
@@ -53,8 +59,7 @@ class Music_Player(GameState):
         # --- Left Column: Albums ---
         if self.creating_album:
             self.elements.append(Button(20, y_offset, "medium", "red", "Cancel", self.cancel_new_album))
-            y_offset += 60
-            y_offset += 60 # Reserve physical space for the text box
+            y_offset += 120 
         else:
             self.elements.append(Button(20, y_offset, "medium", "green", "+ New Album", self.start_new_album))
             y_offset += 60
@@ -84,10 +89,9 @@ class Music_Player(GameState):
                 
                 for track_path in self.controller.all_albums[self.selected_album]:
                     track_name = os.path.basename(track_path)
-                    
-                    self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "large", "grey", track_name, lambda: None))
-                    self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 330, track_y, "small_square", "red", "X", lambda p=track_path: self.delete_track(p), show_text=True))
-                    track_y += 60
+                    self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "song", "grey", track_name, lambda: None))
+                    self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 330, track_y, "tiny_square", "red", "X", lambda p=track_path: self.delete_track(p), show_text=True))
+                    track_y += song_y
                     
         elif self.view_mode == "PLAYLIST":
             self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "medium", "green", "Skip / Random Song", self.controller.play_random_song))
@@ -98,30 +102,65 @@ class Music_Player(GameState):
                 is_playing = (self.controller.now_playing == track_path)
                 color = "orange" if is_playing else "grey"
                 
-                self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "large", color, track_name, lambda p=track_path: self.controller.play_specific_song(p)))
-                track_y += 60
+                self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "song", color, track_name, lambda p=track_path: self.controller.play_specific_song(p)))
+                track_y += song_y
 
-    # --- DUAL VOLUME HANDLERS ---
+    # --- AUDIO MODIFICATION HANDLERS ---
     def set_sfx_volume(self, val):
         self.controller.volume = val
-        if ui_elements.click_sound: ui_elements.click_sound.set_volume(val)
-        if ui_elements.slider_sound: ui_elements.slider_sound.set_volume(val)
-        self.save_volumes()
+        ui_elements.global_sfx_volume = val
+        
+        if ui_elements.click_sound and ui_elements.soloud_engine:
+            handle = ui_elements.soloud_engine.play(ui_elements.click_sound)
+            ui_elements.soloud_engine.set_volume(handle, val)
+            ui_elements.soloud_engine.set_relative_play_speed(handle, 0.5 + (self.controller.sfx_speed * 1.5))
+            
+        self.save_audio_settings()
         
     def set_music_volume(self, val):
         self.controller.music_volume = val
-        pygame.mixer.music.set_volume(val)
-        self.save_volumes()
+        if self.controller.music_handle is not None:
+            self.controller.soloud.set_volume(self.controller.music_handle, val)
+        self.save_audio_settings()
+
+    def set_music_speed(self, val):
+        self.controller.music_speed = val
+        if self.controller.music_handle is not None:
+            speed_mult = 0.5 + (val * 1.5) 
+            self.controller.soloud.set_relative_play_speed(self.controller.music_handle, speed_mult)
+        self.save_audio_settings()
         
-    def save_volumes(self):
+    def set_sfx_speed(self, val):
+        self.controller.sfx_speed = val
+        ui_elements.global_sfx_speed = val
+        
+        if ui_elements.slider_sound and ui_elements.soloud_engine:
+            handle = ui_elements.soloud_engine.play(ui_elements.slider_sound)
+            ui_elements.soloud_engine.set_volume(handle, self.controller.volume)
+            ui_elements.soloud_engine.set_relative_play_speed(handle, 0.5 + (val * 1.5))
+            
+        self.save_audio_settings()
+        
+    def save_audio_settings(self):
         keybind_io.save_settings(
-            self.controller.keybinds, self.controller.volume, self.controller.music_volume, self.controller.num_players, 
+            self.controller.keybinds, 
+            self.controller.volume, 
+            self.controller.music_volume, 
+            self.controller.num_players, 
             getattr(self.controller, 'ai_mode', c.DEFAULT_AI_MODE),
-            getattr(self.controller, 'gemini_api_key', ''), getattr(self.controller, 'chatgpt_api_key', ''),
-            getattr(self.controller, 'claude_api_key', ''), getattr(self.controller, 'ollama_api_key', ''),
-            getattr(self.controller, 'gemini_model', ''), getattr(self.controller, 'chatgpt_model', ''),
-            getattr(self.controller, 'claude_model', ''), getattr(self.controller, 'ollama_model', ''),
-            getattr(self.controller, 'ai_immersion_level', 'FULL')
+            getattr(self.controller, 'gemini_api_key', ''), 
+            getattr(self.controller, 'chatgpt_api_key', ''),
+            getattr(self.controller, 'claude_api_key', ''), 
+            getattr(self.controller, 'ollama_api_key', ''),
+            getattr(self.controller, 'gemini_model', ''), 
+            getattr(self.controller, 'chatgpt_model', ''),
+            getattr(self.controller, 'claude_model', ''), 
+            getattr(self.controller, 'ollama_model', ''),
+            getattr(self.controller, 'ai_immersion_level', 'FULL'),
+            getattr(self.controller, 'music_pitch', 0.5), # Legacy catch
+            self.controller.music_speed,
+            getattr(self.controller, 'sfx_pitch', 0.5), # Legacy catch
+            self.controller.sfx_speed
         )
 
     # --- PLAYLIST & EDITOR ACTIONS ---
@@ -161,8 +200,8 @@ class Music_Player(GameState):
         if messagebox.askyesno("Confirm", f"Delete album '{album}' AND physically remove all its files from your disk?"):
             
             if self.controller.now_playing != "None" and album in self.controller.now_playing:
-                pygame.mixer.music.stop()
-                pygame.mixer.music.unload() 
+                if self.controller.music_handle is not None:
+                    self.controller.soloud.stop(self.controller.music_handle)
                 self.controller.now_playing = "None"
 
             # 1. Delete the physical folder from the disk
@@ -222,8 +261,8 @@ class Music_Player(GameState):
 
     def delete_track(self, track_path):
         if self.controller.now_playing == track_path:
-            pygame.mixer.music.stop()
-            pygame.mixer.music.unload() 
+            if self.controller.music_handle is not None:
+                self.controller.soloud.stop(self.controller.music_handle)
             self.controller.now_playing = "None"
 
         # 1. Delete the physical file from the disk

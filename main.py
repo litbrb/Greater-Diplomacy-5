@@ -1,4 +1,12 @@
 import pygame
+import os
+import sys
+
+# --- NEW: Tell Python 3.8+ to trust the current folder for DLLs ---
+if os.name == 'nt':
+    os.add_dll_directory(os.path.dirname(os.path.abspath(__file__)))
+
+from soloud import Soloud, Wav, WavStream # <-- SoLoud imports come AFTER the fix
 from screens.map_related_screens.messages import Messages_Screen
 from map_logic.rendering.font_manager import fonts
 import ui_elements
@@ -23,25 +31,36 @@ pygame.display.set_caption("Greater Diplomacy 5")
 
 class Controller:
     def __init__(self):
-        pygame.init() # Ensure pygame is init before accessing K_ constants
+        pygame.init() 
         pygame.key.set_repeat(c.KEY_REPEAT_DELAY, c.KEY_REPEAT_INTERVAL)
-        pygame.mixer.init() # Initialize sound engine
+        
+        # --- INITIALIZE SOLOUD INSTEAD OF PYGAME.MIXER ---
+        self.soloud = Soloud()
+        self.soloud.init()
+        
+        # Keep track of active audio streams
+        self.music_handle = None 
+        self.music_stream = WavStream()
+        
+        # Share the engine with the UI module
+        ui_elements.soloud_engine = self.soloud
 
-        # Initialize fonts (Optionally pass a path here: fonts.init_fonts("assets/my_font.ttf"))
+        # Initialize fonts
         font_path = c.FONT_PATH_DEFAULT
-        # font_path = "assets/fonts/hemi head bd it.otf"
         fonts.init_fonts(font_path)
 
         self.screen = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
         
-        # Load the sound into the ui_elements module
+        # Load the sound into the ui_elements module using SoLoud Wav()
         try:
-            ui_elements.click_sound = pygame.mixer.Sound(c.SOUND_CLICK_PATH)
+            ui_elements.click_sound = Wav()
+            ui_elements.click_sound.load(c.SOUND_CLICK_PATH)
         except:
             print(f"Warning: {c.SOUND_CLICK_PATH} not found in assets folder")
 
         try:
-            ui_elements.slider_sound = pygame.mixer.Sound(c.SOUND_SLIDER_PATH)
+            ui_elements.slider_sound = Wav()
+            ui_elements.slider_sound.load(c.SOUND_SLIDER_PATH)
         except:
             print(f"Warning: {c.SOUND_SLIDER_PATH} not found in assets folder")
 
@@ -91,23 +110,31 @@ class Controller:
             "ORDERS": pygame.K_q
         }
 
-        # 2. Load settings 
-        self.keybinds, self.volume, self.music_volume, self.num_players, self.ai_mode, \
-        self.gemini_api_key, self.chatgpt_api_key, self.claude_api_key, self.ollama_api_key, \
-        self.gemini_model, self.chatgpt_model, self.claude_model, self.ollama_model, \
-        self.ai_immersion_level = keybind_io.load_settings(default_keys, 0.5, 0.5)
+        # 2. Load settings (Safely handle old saves that might not have pitch/speed)
+        loaded_data = keybind_io.load_settings(default_keys, 0.5, 0.5)
+        
+        self.keybinds = loaded_data[0]
+        self.volume = loaded_data[1]
+        self.music_volume = loaded_data[2]
+        self.num_players = loaded_data[3]
+        self.ai_mode = loaded_data[4]
+        self.gemini_api_key = loaded_data[5]
+        self.chatgpt_api_key = loaded_data[6]
+        self.claude_api_key = loaded_data[7]
+        self.ollama_api_key = loaded_data[8]
+        self.gemini_model = loaded_data[9]
+        self.chatgpt_model = loaded_data[10]
+        self.claude_model = loaded_data[11]
+        self.ollama_model = loaded_data[12]
+        self.ai_immersion_level = loaded_data[13]
+        
+        # New Audio Settings
+        self.music_speed = loaded_data[15] if len(loaded_data) > 15 else getattr(c, 'DEFAULT_AUDIO_SPEED', 0.5)
+        self.sfx_speed = loaded_data[17] if len(loaded_data) > 17 else getattr(c, 'DEFAULT_AUDIO_SPEED', 0.5)
 
         # 3. Apply volume to global sounds on boot
-        if ui_elements.click_sound:
-            ui_elements.click_sound.set_volume(self.volume)
-        if ui_elements.slider_sound:
-            ui_elements.slider_sound.set_volume(self.volume)
-            
-        pygame.mixer.music.set_volume(self.music_volume)
-
-        # UNIVERSAL MUSIC ENGINE
-        self.MUSIC_END_EVENT = pygame.USEREVENT + 1
-        pygame.mixer.music.set_endevent(self.MUSIC_END_EVENT)
+        ui_elements.global_sfx_volume = self.volume
+        ui_elements.global_sfx_speed = self.sfx_speed
 
         self.all_albums = {}
         self.active_albums = []
@@ -148,8 +175,6 @@ class Controller:
             elif map_ref.selected_province:
                 self.states[next_state_name].start_with_province(map_ref.selected_province, map_ref)
         
-        # NEW: Separate handoff for Research since it doesn't care about provinces
-        # Look for the block handling RESEARCH and ECONOMY and change it to this:
         if next_state_name in ["RESEARCH", "ECONOMY", "MESSAGES"]:
             map_ref = self.states["MAP"]
             if next_state_name == "RESEARCH":
@@ -160,7 +185,6 @@ class Controller:
                 self.states["MESSAGES"].start_messages(map_ref)
 
         if next_state_name in ["SETTINGS", "MUSIC_PLAYER"]:
-            # If we entered settings/music from the map, tell it to return to the map
             if previous_state == self.states["MAP"]:
                 self.states[next_state_name].return_state = "MAP"
             else:
@@ -178,9 +202,6 @@ class Controller:
                     self.states["MAP"] = Map(load_path=None, is_scenario=True, is_random=True, num_players=self.num_players)
                 else:
                     is_scen = "scenarios" in path
-                    
-                    # --- THE FIX ---
-                    # Check if we just came from the Map Editor selection screen
                     is_map_editor = (previous_state == self.states["SELECT_BASE_MAP"])
                     
                     self.states["MAP"] = Map(load_path=path, is_scenario=is_scen, force_editor=is_map_editor, num_players=self.num_players)
@@ -236,7 +257,8 @@ class Controller:
     def play_random_song(self):
         if not self.playlist:
             self.now_playing = "None"
-            pygame.mixer.music.stop()
+            if self.music_handle is not None:
+                self.soloud.stop(self.music_handle)
             return
             
         import random
@@ -245,30 +267,39 @@ class Controller:
 
     def play_specific_song(self, track_path):
         try:
-            pygame.mixer.music.load(track_path)
-            pygame.mixer.music.set_volume(self.music_volume)
-            pygame.mixer.music.play()
+            if self.music_handle is not None:
+                self.soloud.stop(self.music_handle)
+                
+            self.music_stream.load(track_path)
+            self.music_handle = self.soloud.play(self.music_stream)
+            
+            # Apply volume and speed dynamically!
+            self.soloud.set_volume(self.music_handle, self.music_volume)
+            speed_mult = 0.5 + (self.music_speed * 1.5) # Scale 0.0-1.0 to 0.5x-2.0x
+            self.soloud.set_relative_play_speed(self.music_handle, speed_mult)
+            
             self.now_playing = track_path
         except Exception as e:
             print(f"Error playing track {track_path}: {e}")
 
     def run(self):
         while True:
+            # --- SOLOUD SONG END CHECK ---
+            if self.music_handle is not None:
+                if not self.soloud.is_valid_voice_handle(self.music_handle):
+                    self.play_random_song()
+                    if self.active_state == self.states.get("MUSIC_PLAYER"):
+                        self.states["MUSIC_PLAYER"].refresh_ui()
+
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
+                    # Clean up C++ engine safely before closing
+                    self.soloud.deinit()
                     return
-                
-                # atch Song End Event
-                if event.type == self.MUSIC_END_EVENT:
-                    self.play_random_song()
-                    # Refresh the UI if they are actively watching the music player
-                    if self.active_state == self.states.get("MUSIC_PLAYER"):
-                        self.states["MUSIC_PLAYER"].refresh_ui()
                 
                 # GLOBAL KEYBOARD HANDLING
                 if event.type == pygame.KEYDOWN:
-                    # Check if the current state is busy "listening" for a key rebind
                     is_listening = getattr(self.active_state, "listening_for", None)
                     
                     if not is_listening:
@@ -289,6 +320,5 @@ class Controller:
             pygame.display.flip()
 
 if __name__ == "__main__":
-    pygame.init()
     game = Controller()
     game.run()

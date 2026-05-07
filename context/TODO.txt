@@ -29,6 +29,8 @@ ITS CALLED Tkinter
 
 oh the generating responses thing seems to work but only when generating grand strategy is finished
 could generating grand strategy be replaced with generating messages instead because that's the real important part
+also add in another bar for processing the refreshing needed for the map
+perhaps a relation button for each country might be best
 
 - music tab?
 

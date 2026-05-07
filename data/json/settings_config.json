@@ -4,7 +4,7 @@
         "ORDERS": "q"
     },
     "volume": 0.205,
-    "num_players": 1,
+    "num_players": 2,
     "ai_mode": "OLLAMA",
     "gemini_api_key": "AIzaSyAJlAkHmBTmSODDZSbrWOuKWDC_4le8Y9o",
     "chatgpt_api_key": "",

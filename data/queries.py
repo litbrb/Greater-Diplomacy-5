@@ -730,6 +730,24 @@ def is_naval_unit(unit_type):
     stats = get_unit_library().get(unit_type, {})
     return stats.get("naval_unit", False)
 
+def revert_transport(unit):
+    """Reverts a transport (like a Convoy) back to its original unit type."""
+    if "original_type" not in unit:
+        return
+
+    pct = unit.get("health", 1) / max(1, unit.get("max_health", 1))
+
+    unit["type"] = unit.get("original_type", "Infantry")
+    unit["speed"] = unit.get("original_speed", 1)
+    unit["max_health"] = unit.get("original_max_health", c.DEFAULT_UNIT_HP)
+    unit["attack"] = unit.get("original_attack", c.DEFAULT_UNIT_ATK)
+
+    unit["health"] = unit["max_health"] * pct
+    unit["naval_unit"] = is_naval_unit(unit["type"])
+
+    for key in ["original_type", "original_speed", "original_max_health", "original_attack"]:
+        if key in unit: del unit[key]
+
 def get_units_in_province(nation, province):
     """Returns a list of units the given nation has in the target province."""
     return [u for u in province.get("units", []) if u.get("owner") == nation]

@@ -250,6 +250,14 @@ def process_meeting_engagements(self):
                     units1 = [u for u in prov1.get("units", []) if u.get("order", {}).get("path") and u["order"]["path"][0] == pair[1]]
                     units2 = [u for u in prov2.get("units", []) if u.get("order", {}).get("path") and u["order"]["path"][0] == pair[0]]
                     
+                    # --- NEW: Unpack Convoys Caught in Land Engagements ---
+                    is_land_engagement = (prov1.get("terrain") not in c.WATER_TERRAINS) or (prov2.get("terrain") not in c.WATER_TERRAINS)
+                    if is_land_engagement:
+                        for u in units1 + units2:
+                            if u.get("type", "").startswith("Convoy"):
+                                queries.revert_transport(u)
+                    # ------------------------------------------------------
+                    
                     atk1 = sum(u.get("attack", 5) for u in units1)
                     atk2 = sum(u.get("attack", 5) for u in units2)
                     
@@ -303,21 +311,8 @@ def process_conversions(self):
                             
                         unit["health"] = unit["max_health"] * pct
                     else:
-                        pct = unit.get("health", 1) / max(1, unit.get("max_health", 1))
+                        queries.revert_transport(unit)
                         
-                        unit["type"] = unit.get("original_type", "Infantry")
-                        unit["speed"] = unit.get("original_speed", 1)
-                        unit["max_health"] = unit.get("original_max_health", c.DEFAULT_UNIT_HP)
-                        unit["attack"] = unit.get("original_attack", c.DEFAULT_UNIT_ATK)
-                        
-                        unit["health"] = unit["max_health"] * pct
-                        
-                        from data import queries
-                        unit["naval_unit"] = queries.is_naval_unit(unit["type"])
-                        
-                        for key in ["original_type", "original_speed", "original_max_health", "original_attack"]:
-                            if key in unit: del unit[key]
-                            
                     # Reset back to a blank move order so they can be selected again
                     unit["order"] = {"type": "MOVE", "path": []}
 
@@ -379,6 +374,15 @@ def process_combat(self):
         units = province.get("units", [])
         if len(units) < 2:
             continue
+            
+        is_land = province.get("terrain") not in c.WATER_TERRAINS
+        
+        # --- NEW: Unpack Convoys Caught on Land ---
+        if is_land and queries.is_province_in_active_combat(province, self.nation_data):
+            for u in units:
+                if u.get("type", "").startswith("Convoy"):
+                    queries.revert_transport(u)
+        # ------------------------------------------
             
         # Group units by owner to calculate total attack per side
         sides = {}
@@ -611,17 +615,7 @@ def process_movement(self):
 
                 # --- INSTANT CONVERT FOR CONVOYS UPON LANDING ---
                 if is_convoy and not dest_is_water:
-                    pct = unit.get("health", 1) / max(1, unit.get("max_health", 1))
-                    unit["type"] = unit.get("original_type", "Infantry")
-                    unit["speed"] = unit.get("original_speed", 1)
-                    unit["max_health"] = unit.get("original_max_health", c.DEFAULT_UNIT_HP)
-                    unit["attack"] = unit.get("original_attack", c.DEFAULT_UNIT_ATK)
-                    
-                    unit["health"] = unit["max_health"] * pct
-                    unit["naval_unit"] = False
-                    
-                    for key in ["original_type", "original_speed", "original_max_health", "original_attack"]:
-                        if key in unit: del unit[key]
+                    queries.revert_transport(unit)
                 # ------------------------------------------------------------
 
                 # Only conquer if there are NO defenders from an enemy nation

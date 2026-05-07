@@ -591,6 +591,15 @@ def finalize_war(nation_data, a, b):
         # Snap relations to rock bottom
         nation_data[country].setdefault("relations", {})[other] = -100
 
+        # --- FIX: Clear faction war cooldowns so allies can be called in ---
+        faction = nation_data[country].get("faction", "")
+        if faction:
+            members = queries.get_faction_members(faction, nation_data)
+            for member in members:
+                if "diplo_cooldowns" in nation_data[country] and member in nation_data[country]["diplo_cooldowns"]:
+                    nation_data[country]["diplo_cooldowns"][member].pop("CALL_TO_ARMS", None)
+                    nation_data[country]["diplo_cooldowns"][member].pop("JOIN_WARS", None)
+
 def finalize_neutral(nation_data, a, b):
     for country, other in [(a, b), (b, a)]:
         if other in nation_data[country]["at_war_with"]:
@@ -620,14 +629,13 @@ def finalize_faction_join(nation_data, host, joiner):
         nation_data[joiner]["faction"] = fac
         nation_data[joiner]["is_faction_leader"] = False
         
-        # --- FIX: Set relations to 100 with all faction members ---
+        # Set relations to 100 with all faction members
         from data import queries
         members = queries.get_faction_members(fac, nation_data)
         for member in members:
             if member != joiner:
                 nation_data[joiner].setdefault("relations", {})[member] = 100
                 nation_data[member].setdefault("relations", {})[joiner] = 100
-        # ----------------------------------------------------------
 
 def finalize_faction_leave(nation_data, leaver):
     nation_data[leaver]["faction"] = ""
@@ -642,10 +650,15 @@ def join_faction_wars(nation_data, joiner, faction_member):
         if joiner not in nation_data[enemy]["at_war_with"]:
             nation_data[enemy]["at_war_with"].append(joiner)
             
-        # --- FIX: Instantly drop relations to -100 upon joining a war ---
+        # Instantly drop relations to -100 upon joining a war
         nation_data[joiner].setdefault("relations", {})[enemy] = -100
         nation_data[enemy].setdefault("relations", {})[joiner] = -100
-        # ----------------------------------------------------------------
+
+    # --- FIX: Clear the cooldowns between these two so they can interact in future wars ---
+    for a, b in [(joiner, faction_member), (faction_member, joiner)]:
+        if "diplo_cooldowns" in nation_data[a] and b in nation_data[a]["diplo_cooldowns"]:
+            nation_data[a]["diplo_cooldowns"][b].pop("CALL_TO_ARMS", None)
+            nation_data[a]["diplo_cooldowns"][b].pop("JOIN_WARS", None)
 
 def finalize_faction_kick(nation_data, leader, member):
     nation_data[member]["faction"] = ""

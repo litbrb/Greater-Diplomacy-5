@@ -1,8 +1,11 @@
 import data.constants as c
 from data import queries
 
-def _bfs_nearest_target(start_id, target_ids, allowed_prov_ids, id_to_province, target_assignments, is_convoy=False, is_ship=False, moving_nation=None, nation_data=None):
+def _bfs_nearest_target(start_id, target_ids, allowed_prov_ids, id_to_province, target_assignments, is_convoy=False, is_ship=False, moving_nation=None, nation_data=None, unsafe_waters=None):
     """Finds shortest path using BFS. Returns the path to the target with the least units assigned."""
+    if unsafe_waters is None:
+        unsafe_waters = {}
+        
     queue = [[start_id]]
     visited = set([start_id])
     valid_paths = []
@@ -42,6 +45,13 @@ def _bfs_nearest_target(start_id, target_ids, allowed_prov_ids, id_to_province, 
                     # Ships can only enter friendly coastal tiles
                     if not queries.can_ships_enter(moving_nation, n_prov, nation_data):
                         continue
+                        
+                # --- BLOCK SUICIDE PATHS ---
+                if dest_is_water and n_id in unsafe_waters:
+                    if is_convoy:
+                        continue # Convoys refuse to sail into enemy fleets
+                    if is_ship and unsafe_waters[n_id] > 2000:
+                        continue # Ships avoid pathing through overwhelmingly strong fleets
             # ---------------------------
 
             if n_id in target_ids:
@@ -107,7 +117,19 @@ def process_ai_unit_orders(map_screen):
         
         enemies = map_screen.nation_data[ai_name].get("at_war_with", [])
 
-        # --- NEW: Identify Friendly Nations for Expedition Logic ---
+        # --- NEW: IDENTIFY UNSAFE WATERS FOR NAVAL SURVIVAL ---
+        # Pre-calculates areas heavily patrolled by enemies so Convoys and weak ships don't suicide
+        unsafe_waters = {}
+        for p in map_screen.map_data.values():
+            if p.get("terrain") in c.WATER_TERRAINS:
+                enemy_str = sum(u.get("attack", 5) + u.get("defense", 0) for u in p.get("units", []) 
+                                if queries.are_at_war(ai_name, u.get("owner"), map_screen.nation_data) 
+                                and queries.is_naval_unit(u.get("type", "")))
+                if enemy_str > 0:
+                    unsafe_waters[p["id"]] = enemy_str
+        # ------------------------------------------------------
+
+        # --- Identify Friendly Nations for Expedition Logic ---
         friendly_nations = {ai_name}
         my_faction = map_screen.nation_data[ai_name].get("faction", "")
         if my_faction:
@@ -123,7 +145,7 @@ def process_ai_unit_orders(map_screen):
         unclaimed_targets = set()
         all_unclaimed_coasts = set()
         active_battles = set() 
-        expedition_targets = set() # NEW: track distant allied fronts
+        expedition_targets = set()
 
         # Locate coastal provinces globally for naval targeting and island hopping
         for prov in map_screen.map_data.values():
@@ -143,7 +165,7 @@ def process_ai_unit_orders(map_screen):
                 elif owner in ["Unclaimed", "None", ""]:
                     all_unclaimed_coasts.add(prov["id"])
 
-            # --- NEW: Distant Allied Wars / Expedition Targets ---
+            # --- Distant Allied Wars / Expedition Targets ---
             if enemies:
                 # 1. Reinforce allied battles
                 if queries.is_province_in_active_combat(prov, map_screen.nation_data):
@@ -203,7 +225,7 @@ def process_ai_unit_orders(map_screen):
                     convoy_in_combat.add(prov["id"])
                 else:
                     for n_id in prov.get("neighbors", []):
-                        if n_id in all_enemy_coasts or n_id in enemy_coastal_waters:
+                        if n_id in all_enemy_coasts or n_id in enemy_coastal_waters or n_id in unsafe_waters:
                             convoy_in_danger.add(prov["id"])
                             break
 
@@ -263,11 +285,10 @@ def process_ai_unit_orders(map_screen):
                 if target_assignments.get(c_id, 0) >= 1:
                     target_assignments[c_id] += 50
 
-        # 3. NEW: Penalize expedition targets so the AI defends its homeland fronts FIRST.
-        # This guarantees they "send a few units" instead of draining their own country dry.
+        # 3. Penalize expedition targets so the AI defends its homeland fronts FIRST.
         for e_id in expedition_targets:
             if e_id in target_assignments and e_id not in enemy_targets and e_id not in war_borders:
-                target_assignments[e_id] += getattr(c, 'AI_EXPEDITION_WEIGHT', 2)
+                target_assignments[e_id] += getattr(c, 'AI_EXPEDITION_WEIGHT', 5)
 
         for unit, prov in units_info:
             u_type = unit.get("type", "")
@@ -276,35 +297,52 @@ def process_ai_unit_orders(map_screen):
 
             curr_id = prov["id"]
 
-           # --- ANTI-SHUFFLE INTERCEPTS ---
-            
+            # --- ANTI-SHUFFLE & COMBAT INTERCEPTS ---
             in_combat = queries.is_nation_in_combat_here(ai_name, prov, map_screen.nation_data)
             
-            # If the AI is currently engaged in active combat on its tile,
-            # force it to hold the line. It cannot retreat or push forward blindly.
+            # If the AI is currently engaged in active combat on its tile...
             if in_combat:
-                continue
+                # Check if we are hopelessly outmatched and should pull our ships/convoys out
+                my_str = sum(u.get("attack", 5) + u.get("defense", 0) for u in prov.get("units", []) if u.get("owner") in friendly_nations)
+                enemy_str = sum(u.get("attack", 5) + u.get("defense", 0) for u in prov.get("units", []) if queries.are_at_war(ai_name, u.get("owner"), map_screen.nation_data))
+                
+                # If Navy is outnumbered 1.5-to-1, or if a Convoy is literally fighting ANY warship
+                if (is_naval_combatant and enemy_str > my_str * 1.5) or (is_convoy and enemy_str > 0):
+                    safe_retreats = []
+                    for n_id in prov.get("neighbors", []):
+                        if n_id in unsafe_waters: continue # Don't retreat into ANOTHER enemy fleet
+                        n_prov = map_screen.id_to_province.get(n_id)
+                        if not n_prov: continue
+                        
+                        if is_convoy and queries.can_convoy_enter(prov, n_prov):
+                            safe_retreats.append(n_id)
+                        elif is_naval_combatant and (n_prov.get("terrain") in c.WATER_TERRAINS or queries.can_ships_enter(ai_name, n_prov, map_screen.nation_data)):
+                            safe_retreats.append(n_id)
+                    
+                    if safe_retreats:
+                        unit["order"]["path"] = [safe_retreats[0]]
+                        continue # Successfully ordered retreat, skip normal BFS
+                # -----------------------------------
+                continue # Otherwise, hold the line and fight!
             
-            # --- UNIVERSAL GARRISON FIX ---
             # If we are holding a defensive border (peace or coastal) and we are the ONLY unit here, HOLD THE LINE.
             # Do not apply this to war_borders because we WANT to push forward into enemy_targets.
             is_defensive_hold = (curr_id in peace_borders or curr_id in coastal_borders) and curr_id not in war_borders
             
-            # FIX: Break the hold if there's an active battle literally 1 tile away!
+            # Break the hold if there's an active battle literally 1 tile away!
             is_near_battle = any(n in active_battles for n in prov.get("neighbors", []))
             if is_near_battle:
                 is_defensive_hold = False
 
             if not is_naval_combatant and is_defensive_hold:
                 if target_assignments.get(curr_id, 0) <= 1:
-                    continue # Skip Unclaimed Grab, skip Wartime Anti-Shuffle, skip BFS entirely. Stay put!
-            # ------------------------------
+                    continue # Stay put!
             
             adjacent_unclaimed = [n for n in prov.get("neighbors", []) if n in unclaimed_targets]
             
             # PREVENT ILLEGAL CONVOY MOVES
             if is_convoy:
-                adjacent_unclaimed = [n for n in adjacent_unclaimed if queries.can_convoy_enter(prov, map_screen.id_to_province.get(n))]
+                adjacent_unclaimed = [n for n in adjacent_unclaimed if queries.can_convoy_enter(prov, map_screen.id_to_province.get(n)) and n not in unsafe_waters]
 
             if adjacent_unclaimed and not is_naval_combatant:
                 best_adj = min(adjacent_unclaimed, key=lambda t: target_assignments.get(t, 0))
@@ -323,7 +361,7 @@ def process_ai_unit_orders(map_screen):
                 
                 # PREVENT ILLEGAL CONVOY ATTACKS
                 if is_convoy:
-                    adjacent_targets = [n for n in adjacent_targets if queries.can_convoy_enter(prov, map_screen.id_to_province.get(n))]
+                    adjacent_targets = [n for n in adjacent_targets if queries.can_convoy_enter(prov, map_screen.id_to_province.get(n)) and n not in unsafe_waters]
 
                 if adjacent_targets:
                     # Pick the adjacent enemy with the least attackers currently assigned
@@ -332,7 +370,7 @@ def process_ai_unit_orders(map_screen):
                     speed = unit.get("speed", 1)
                     unit["order"]["path"] = [best_adj] 
                     
-                    # --- THE FIX: Let fast units pathfind deeper from the border! ---
+                    # Let fast units pathfind deeper from the border!
                     if speed > 1:
                         curr_node = best_adj
                         for _ in range(speed - 1):
@@ -350,7 +388,7 @@ def process_ai_unit_orders(map_screen):
                                 
                                 # Obey movement rules using your constants/queries
                                 if is_convoy:
-                                    if not queries.can_convoy_enter(curr_prov_data, n_prov):
+                                    if not queries.can_convoy_enter(curr_prov_data, n_prov) or n_id in unsafe_waters:
                                         continue
                                 else:
                                     if n_prov.get("terrain") in c.WATER_TERRAINS:
@@ -370,14 +408,11 @@ def process_ai_unit_orders(map_screen):
                             else:
                                 # Reached a dead end (e.g. hit an ocean or friendly border)
                                 break
-                    # ----------------------------------------------------------------
                     
                     target_assignments[best_adj] = target_assignments.get(best_adj, 0) + 1
                     if curr_id in target_assignments:
                         target_assignments[curr_id] -= 1
                     continue 
-
-            # --- END ANTI-SHUFFLE ---
 
             # Branch routing logic between ground forces and naval forces
             if is_naval_combatant:
@@ -398,18 +433,19 @@ def process_ai_unit_orders(map_screen):
             # Route to the nearest border/enemy/coast/convoy that needs reinforcements
             path = _bfs_nearest_target(
                 curr_id, 
-                set(search_targets), # <--- Pass the filtered list here
+                set(search_targets), 
                 allowed_prov_ids, 
                 map_screen.id_to_province, 
                 assignments, 
                 is_convoy=is_convoy, 
                 is_ship=is_naval_combatant, 
                 moving_nation=ai_name, 
-                nation_data=map_screen.nation_data
+                nation_data=map_screen.nation_data,
+                unsafe_waters=unsafe_waters
             )
 
             if path:
-                # --- NEW: Convoy Conversion Check ---
+                # Convoy Conversion Check
                 next_prov = map_screen.id_to_province.get(path[0])
                 next_is_water = next_prov.get("terrain") in c.WATER_TERRAINS
                 
@@ -430,14 +466,13 @@ def process_ai_unit_orders(map_screen):
 
                     unit["order"]["path"] = final_path
                 
-                # Tell the system this unit is taking this target, reducing its priority for the next unit
+                # Tell the system this unit is taking this target, reducing its priority
                 if curr_id in assignments:
                     assignments[curr_id] -= 1
                 if path[-1] in assignments:
                     assignments[path[-1]] += 1
                     
-    # --- NEW: Anti-Swap Cleanup ---
-    # Cancel redundant moves where two identical AI units just swap places with each other.
+    # --- Anti-Swap Cleanup ---
     for ai_name in ai_nations:
         units_info = nation_units[ai_name]
         

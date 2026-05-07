@@ -177,7 +177,7 @@ RESEARCH_TIMELINE_SPACING = 80 # Width between years on the research timeline
 BASE_RESEARCH_POINTS_PER_DAY = 10 
 
 # Random Scenario Settings
-RANDOM_SCENARIO_SPAWN_UNITS = False
+RANDOM_SCENARIO_SPAWN_UNITS = True
 RANDOM_SCENARIO_MIN_INFANTRY = 3 # Minimum ground army before buying ships/tanks
 
 # Unlocked tech exception for starting exactly in 1910

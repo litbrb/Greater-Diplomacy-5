@@ -1,10 +1,9 @@
 import pygame
 import os
 import shutil
-import json
 import tkinter as tk
 from tkinter import filedialog, messagebox
-import ui_elements
+import ui_elements 
 from gameState import GameState
 from ui_elements import Button, Slider, process_text_input
 from map_logic.rendering.font_manager import fonts
@@ -22,9 +21,8 @@ class Music_Player(GameState):
         if not os.path.exists(c.MUSIC_DIR):
             os.makedirs(c.MUSIC_DIR)
         
-        self.albums = self.load_albums()
         self.selected_album = None
-        self.now_playing = "None"
+        self.view_mode = "PLAYLIST" # Toggles between "PLAYLIST" and "EDITOR"
         
         self.album_scroll_y = 0
         self.track_scroll_y = 0
@@ -35,44 +33,20 @@ class Music_Player(GameState):
         
         self.refresh_ui()
 
-    def load_albums(self):
-        # We will scan the actual folders to make the hard drive the ultimate source of truth!
-        synced_albums = {}
-        
-        if os.path.exists(c.MUSIC_DIR):
-            for item in os.listdir(c.MUSIC_DIR):
-                album_dir = os.path.join(c.MUSIC_DIR, item)
-                
-                if os.path.isdir(album_dir):
-                    synced_albums[item] = []
-                    for file in os.listdir(album_dir):
-                        if file.lower().endswith(('.mp3', '.wav', '.ogg')):
-                            # Normalize path slashes for cross-platform JSON storage
-                            track_path = os.path.join(album_dir, file).replace("\\", "/")
-                            synced_albums[item].append(track_path)
-        
-        # Overwrite the JSON with whatever was actually on the disk
-        with open(c.ALBUMS_DATA_PATH, "w", encoding="utf-8") as f:
-            json.dump(synced_albums, f, indent=4)
-            
-        return synced_albums
-
-    def save_albums(self):
-        with open(c.ALBUMS_DATA_PATH, "w", encoding="utf-8") as f:
-            json.dump(self.albums, f, indent=4)
-
     def refresh_ui(self):
         self.elements = [
             Button(20, 20, "small", "red", "Back", self.handle_back_key)
         ]
         
         # --- Volume Sliders ---
-        self.elements.append(
-            Slider(c.SCREEN_WIDTH - 250, 40, 200, "SFX Vol", self.controller.volume, self.set_sfx_volume)
-        )
-        self.elements.append(
-            Slider(c.SCREEN_WIDTH - 250, 100, 200, "Music Vol", self.controller.music_volume, self.set_music_volume)
-        )
+        self.elements.append(Slider(c.SCREEN_WIDTH - 250, 40, 200, "SFX Vol", self.controller.volume, self.set_sfx_volume))
+        self.elements.append(Slider(c.SCREEN_WIDTH - 250, 100, 200, "Music Vol", self.controller.music_volume, self.set_music_volume))
+        
+        # --- View Mode Toggles ---
+        color_ed = "blue" if self.view_mode == "EDITOR" else "grey"
+        color_pl = "blue" if self.view_mode == "PLAYLIST" else "grey"
+        self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, 80, "medium", color_ed, "Album Editor", lambda: self.set_view_mode("EDITOR")))
+        self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 240, 80, "medium", color_pl, "Active Playlist", lambda: self.set_view_mode("PLAYLIST")))
         
         y_offset = 120 + self.album_scroll_y
         
@@ -80,38 +54,58 @@ class Music_Player(GameState):
         if self.creating_album:
             self.elements.append(Button(20, y_offset, "medium", "red", "Cancel", self.cancel_new_album))
             y_offset += 60
+            y_offset += 60 # Reserve physical space for the text box
         else:
             self.elements.append(Button(20, y_offset, "medium", "green", "+ New Album", self.start_new_album))
             y_offset += 60
             
-        for album in sorted(self.albums.keys()):
-            color = "green" if self.selected_album == album else "grey"
-            self.elements.append(Button(20, y_offset, "medium", color, album, lambda a=album: self.select_album(a)))
-            self.elements.append(Button(230, y_offset, "small_square", "red", "X", lambda a=album: self.delete_album(a), show_text=True))
+        for album in sorted(self.controller.all_albums.keys()):
+            # 1. Toggle ON/OFF
+            is_active = album in self.controller.active_albums
+            tog_color = "green" if is_active else "red"
+            tog_text = "ON" if is_active else "OFF"
+            self.elements.append(Button(20, y_offset, "small_square", tog_color, tog_text, lambda a=album: self.toggle_album(a), show_text=True))
+            
+            # 2. Select for Editor
+            sel_color = "blue" if self.selected_album == album and self.view_mode == "EDITOR" else "grey"
+            self.elements.append(Button(70, y_offset, "medium", sel_color, album, lambda a=album: self.select_album(a)))
+            
+            # 3. Delete Album
+            self.elements.append(Button(290, y_offset, "small_square", "red", "X", lambda a=album: self.delete_album(a), show_text=True))
             y_offset += 60
 
         # --- Right Column: Tracks ---
-        if self.selected_album:
-            track_y = 120 + self.track_scroll_y
-            self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "medium", "blue", "+ Add Track", self.import_track))
+        track_y = 150 + self.track_scroll_y
+        
+        if self.view_mode == "EDITOR":
+            if self.selected_album:
+                self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "medium", "green", "+ Add Track", self.import_track))
+                track_y += 60
+                
+                for track_path in self.controller.all_albums[self.selected_album]:
+                    track_name = os.path.basename(track_path)
+                    
+                    self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "large", "grey", track_name, lambda: None))
+                    self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 330, track_y, "small_square", "red", "X", lambda p=track_path: self.delete_track(p), show_text=True))
+                    track_y += 60
+                    
+        elif self.view_mode == "PLAYLIST":
+            self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "medium", "green", "Skip / Random Song", self.controller.play_random_song))
             track_y += 60
             
-            for track_path in self.albums[self.selected_album]:
+            for track_path in self.controller.playlist:
                 track_name = os.path.basename(track_path)
-                is_playing = (self.now_playing == track_path)
+                is_playing = (self.controller.now_playing == track_path)
                 color = "orange" if is_playing else "grey"
                 
-                self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "large", color, track_name, lambda p=track_path: self.play_track(p)))
-                self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 330, track_y, "small_square", "red", "X", lambda p=track_path: self.delete_track(p), show_text=True))
+                self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "large", color, track_name, lambda p=track_path: self.controller.play_specific_song(p)))
                 track_y += 60
 
     # --- DUAL VOLUME HANDLERS ---
     def set_sfx_volume(self, val):
         self.controller.volume = val
-        if ui_elements.click_sound:
-            ui_elements.click_sound.set_volume(val)
-        if ui_elements.slider_sound:
-            ui_elements.slider_sound.set_volume(val)
+        if ui_elements.click_sound: ui_elements.click_sound.set_volume(val)
+        if ui_elements.slider_sound: ui_elements.slider_sound.set_volume(val)
         self.save_volumes()
         
     def set_music_volume(self, val):
@@ -130,10 +124,25 @@ class Music_Player(GameState):
             getattr(self.controller, 'ai_immersion_level', 'FULL')
         )
 
-    def select_album(self, album):
-        self.selected_album = album
+    # --- PLAYLIST & EDITOR ACTIONS ---
+    def set_view_mode(self, mode):
+        self.view_mode = mode
         self.track_scroll_y = 0
         self.refresh_ui()
+
+    def toggle_album(self, album):
+        if album in self.controller.active_albums:
+            self.controller.active_albums.remove(album)
+        else:
+            self.controller.active_albums.append(album)
+            
+        self.controller.save_active_albums()
+        self.controller.build_playlist()
+        self.refresh_ui()
+
+    def select_album(self, album):
+        self.selected_album = album
+        self.set_view_mode("EDITOR")
 
     def start_new_album(self):
         self.creating_album = True
@@ -151,11 +160,10 @@ class Music_Player(GameState):
         root.attributes("-topmost", True)
         if messagebox.askyesno("Confirm", f"Delete album '{album}' AND physically remove all its files from your disk?"):
             
-            # Stop the mixer if a track from this album is currently playing to unlock the file
-            if self.now_playing != "None" and album in self.now_playing:
+            if self.controller.now_playing != "None" and album in self.controller.now_playing:
                 pygame.mixer.music.stop()
                 pygame.mixer.music.unload() 
-                self.now_playing = "None"
+                self.controller.now_playing = "None"
 
             # 1. Delete the physical folder from the disk
             album_dir = os.path.join(c.MUSIC_DIR, album)
@@ -165,14 +173,17 @@ class Music_Player(GameState):
                 except Exception as e:
                     print(f"Error deleting album folder: {e}")
                     
-            # 2. Remove it from our active dictionary
-            if album in self.albums:
-                del self.albums[album]
+            if album in self.controller.all_albums:
+                del self.controller.all_albums[album]
+                
+            if album in self.controller.active_albums:
+                self.controller.active_albums.remove(album)
+                self.controller.save_active_albums()
                 
             if self.selected_album == album:
                 self.selected_album = None
                 
-            self.save_albums()
+            self.controller.build_playlist()
             self.refresh_ui()
             
         root.destroy()
@@ -201,20 +212,19 @@ class Music_Player(GameState):
                     shutil.copy(path, dest_path)
                     # Normalize slashes for JSON storage
                     clean_path = dest_path.replace("\\", "/")
-                    if clean_path not in self.albums[self.selected_album]:
-                        self.albums[self.selected_album].append(clean_path)
+                    if clean_path not in self.controller.all_albums[self.selected_album]:
+                        self.controller.all_albums[self.selected_album].append(clean_path)
                 except Exception as e:
                     print(f"Failed to copy {file_name}: {e}")
                     
-            self.save_albums()
+            self.controller.build_playlist()
             self.refresh_ui()
 
     def delete_track(self, track_path):
-        # Stop the mixer if this specific track is playing to unlock the file
-        if self.now_playing == track_path:
+        if self.controller.now_playing == track_path:
             pygame.mixer.music.stop()
             pygame.mixer.music.unload() 
-            self.now_playing = "None"
+            self.controller.now_playing = "None"
 
         # 1. Delete the physical file from the disk
         if os.path.exists(track_path):
@@ -223,21 +233,13 @@ class Music_Player(GameState):
             except Exception as e:
                 print(f"Error deleting track file: {e}")
                 
-        # 2. Remove it from our active dictionary
-        if self.selected_album and track_path in self.albums[self.selected_album]:
-            self.albums[self.selected_album].remove(track_path)
-            self.save_albums()
-            self.refresh_ui()
-
-    def play_track(self, track_path):
-        try:
-            pygame.mixer.music.load(track_path)
-            pygame.mixer.music.set_volume(self.controller.volume)
-            pygame.mixer.music.play()
-            self.now_playing = track_path
-            self.refresh_ui()
-        except Exception as e:
-            print(f"Error playing track: {e}")
+        if self.selected_album and track_path in self.controller.all_albums[self.selected_album]:
+            self.controller.all_albums[self.selected_album].remove(track_path)
+            
+        if track_path in self.controller.playlist:
+            self.controller.build_playlist()
+            
+        self.refresh_ui()
 
     def handle_events(self, events):
         for event in events:
@@ -260,18 +262,19 @@ class Music_Player(GameState):
             
         # Typing Album Name
         if self.creating_album and event.type == pygame.KEYDOWN:
-            is_valid_char = lambda c: c.isalnum() or c in " _-"
+            is_valid_char = lambda ch: ch.isalnum() or ch in " _-"
             self.new_album_name, status = process_text_input(event, self.new_album_name, max_length=20, validation_func=is_valid_char)
             
             if status == "SUBMIT":
                 name = self.new_album_name.strip()
-                if name and name not in self.albums:
-                    self.albums[name] = []
-                    # Physically create the empty folder on the disk
+                if name and name not in self.controller.all_albums:
+                    self.controller.all_albums[name] = []
                     new_dir = os.path.join(c.MUSIC_DIR, name)
                     if not os.path.exists(new_dir):
-                        os.makedirs(new_dir)                        
-                    self.save_albums()
+                        os.makedirs(new_dir)
+                self.creating_album = False
+                self.refresh_ui()
+            elif status == "CANCEL":
                 self.creating_album = False
                 self.refresh_ui()
 
@@ -286,16 +289,13 @@ class Music_Player(GameState):
         
         # Top headers
         surface.blit(font_title.render("ALBUMS", True, (255, 255, 255)), (20, 80))
-        surface.blit(font_title.render("TRACKS", True, (255, 255, 255)), (c.MUSIC_LEFT_PANE_W + 20, 80))
         
-        # Now Playing
-        np_text = f"Now Playing: {os.path.basename(self.now_playing)}" if self.now_playing != "None" else "Now Playing: Nothing"
+        np_text = f"Now Playing: {os.path.basename(self.controller.now_playing)}" if self.controller.now_playing != "None" else "Now Playing: Nothing"
         surface.blit(font_norm.render(np_text, True, (255, 215, 0)), (c.MUSIC_LEFT_PANE_W + 20, 30))
 
         # Input Box for new album
         if self.creating_album:
-            idx = 1 # Assuming it's the second item down
-            box_y = 120 + self.album_scroll_y + (idx * 60)
+            box_y = 120 + self.album_scroll_y + 60
             rect = pygame.Rect(20, box_y, 200, 50)
             pygame.draw.rect(surface, (100, 100, 100), rect)
             pygame.draw.rect(surface, (255, 255, 255), rect, 2)

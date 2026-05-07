@@ -32,8 +32,6 @@ could generating grand strategy be replaced with generating messages instead bec
 also add in another bar for processing the refreshing needed for the map
 perhaps a relation button for each country might be best
 
-- music tab?
-
 could
 - mark messages as unread?
 also could it be made so that a request you haven't given an answer to is treated like an unread message

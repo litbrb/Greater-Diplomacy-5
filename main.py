@@ -105,6 +105,18 @@ class Controller:
             
         pygame.mixer.music.set_volume(self.music_volume)
 
+        # UNIVERSAL MUSIC ENGINE
+        self.MUSIC_END_EVENT = pygame.USEREVENT + 1
+        pygame.mixer.music.set_endevent(self.MUSIC_END_EVENT)
+
+        self.all_albums = {}
+        self.active_albums = []
+        self.playlist = []
+        self.now_playing = "None"
+        
+        self.load_music_data()
+        self.play_random_song()
+
         self.states = {
             "MENU": Menu(),
             "NEW_GAME": New_Game(),
@@ -183,12 +195,76 @@ class Controller:
         self.active_state.done = False
         self.active_state = self.states[next_state_name]
 
+    def load_music_data(self):
+        import os, json
+        # Scan the hard drive to find whatever is actually there!
+        synced_albums = {}
+        if os.path.exists(c.MUSIC_DIR):
+            for item in os.listdir(c.MUSIC_DIR):
+                album_dir = os.path.join(c.MUSIC_DIR, item)
+                if os.path.isdir(album_dir):
+                    synced_albums[item] = []
+                    for file in os.listdir(album_dir):
+                        if file.lower().endswith(('.mp3', '.wav', '.ogg')):
+                            track_path = os.path.join(album_dir, file).replace("\\", "/")
+                            synced_albums[item].append(track_path)
+                            
+        self.all_albums = synced_albums
+        
+        # Load the user's active playlist toggles
+        try:
+            with open("data/json/active_albums.json", "r") as f:
+                self.active_albums = json.load(f)
+        except:
+            self.active_albums = []
+            
+        # Clean up any active albums that were deleted from the disk
+        self.active_albums = [a for a in self.active_albums if a in self.all_albums]
+        self.build_playlist()
+
+    def save_active_albums(self):
+        import json
+        with open("data/json/active_albums.json", "w") as f:
+            json.dump(self.active_albums, f, indent=4)
+
+    def build_playlist(self):
+        self.playlist = []
+        for album in self.active_albums:
+            if album in self.all_albums:
+                self.playlist.extend(self.all_albums[album])
+
+    def play_random_song(self):
+        if not self.playlist:
+            self.now_playing = "None"
+            pygame.mixer.music.stop()
+            return
+            
+        import random
+        track = random.choice(self.playlist)
+        self.play_specific_song(track)
+
+    def play_specific_song(self, track_path):
+        try:
+            pygame.mixer.music.load(track_path)
+            pygame.mixer.music.set_volume(self.music_volume)
+            pygame.mixer.music.play()
+            self.now_playing = track_path
+        except Exception as e:
+            print(f"Error playing track {track_path}: {e}")
+
     def run(self):
         while True:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
                     return
+                
+                # atch Song End Event
+                if event.type == self.MUSIC_END_EVENT:
+                    self.play_random_song()
+                    # Refresh the UI if they are actively watching the music player
+                    if self.active_state == self.states.get("MUSIC_PLAYER"):
+                        self.states["MUSIC_PLAYER"].refresh_ui()
                 
                 # GLOBAL KEYBOARD HANDLING
                 if event.type == pygame.KEYDOWN:

@@ -569,10 +569,10 @@ class Research_Screen(GameState):
             organized[cat].append((tech_id, lvl, data["max_lvl"]))
 
         start_y = 150
-        column_width = 320
+        column_width = 290
         
         for i, (cat_name, techs) in enumerate(organized.items()):
-            curr_x = 50 + (i * column_width)
+            curr_x = 30 + (i * column_width)
             curr_y = start_y
             
             head = label_font.render(cat_name, True, (255, 215, 0))

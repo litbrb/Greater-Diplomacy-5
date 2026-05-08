@@ -108,13 +108,7 @@ class Music_Player(GameState):
     # --- AUDIO MODIFICATION HANDLERS ---
     def set_sfx_volume(self, val):
         self.controller.volume = val
-        ui_elements.global_sfx_volume = val
-        
-        if ui_elements.click_sound and ui_elements.soloud_engine:
-            handle = ui_elements.soloud_engine.play(ui_elements.click_sound)
-            ui_elements.soloud_engine.set_volume(handle, val)
-            ui_elements.soloud_engine.set_relative_play_speed(handle, 0.5 + (self.controller.sfx_speed * 1.5))
-            
+        ui_elements.global_sfx_volume = val    
         self.save_audio_settings()
         
     def set_music_volume(self, val):

@@ -9,7 +9,7 @@ soloud_engine = None
 click_sound = None
 slider_sound = None
 global_sfx_volume = 0.5
-global_sfx_speed = 0.5
+global_sfx_pitch = 0.5
 
 UI_ICONS = {}
 
@@ -124,7 +124,7 @@ class Button:
                     if click_sound and soloud_engine:
                         handle = soloud_engine.play(click_sound)
                         soloud_engine.set_volume(handle, global_sfx_volume)
-                        soloud_engine.set_relative_play_speed(handle, 0.5 + (global_sfx_speed * 1.5))
+                        soloud_engine.set_relative_play_speed(handle, 0.5 + (global_sfx_pitch * 1.5))
                     self.callback()
 
 class Slider:
@@ -191,7 +191,7 @@ class Slider:
                     if slider_sound and soloud_engine:
                         handle = soloud_engine.play(slider_sound)
                         soloud_engine.set_volume(handle, global_sfx_volume)
-                        soloud_engine.set_relative_play_speed(handle, 0.5 + (global_sfx_speed * 1.5))
+                        soloud_engine.set_relative_play_speed(handle, 0.5 + (global_sfx_pitch * 1.5))
                         
                     self.last_sound_tick = current_time # Reset the throttle
 

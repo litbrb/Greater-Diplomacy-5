@@ -9,7 +9,7 @@ CONFIG_PATH = c.SETTINGS_CONFIG_PATH
 def save_settings(keybind_dict, volume, music_volume, num_players=1, ai_mode="GEMINI", 
                   gemini_api_key="", chatgpt_api_key="", claude_api_key="", ollama_api_key="",
                   gemini_model="", chatgpt_model="", claude_model="", ollama_model="",
-                  ai_immersion_level="FULL", music_pitch=0.5, music_speed=0.5, sfx_pitch=0.5, sfx_speed=0.5):
+                  ai_immersion_level="FULL", music_pitch=0.5, sfx_pitch=0.5):
     """Converts key codes to strings and saves all config data to JSON."""
     readable_binds = {}
     for action, key_code in keybind_dict.items():
@@ -20,9 +20,7 @@ def save_settings(keybind_dict, volume, music_volume, num_players=1, ai_mode="GE
         "volume": volume,
         "music_volume": music_volume,
         "music_pitch": music_pitch,
-        "music_speed": music_speed,
         "sfx_pitch": sfx_pitch,
-        "sfx_speed": sfx_speed,
         "num_players": num_players,
         "ai_mode": ai_mode,
         "gemini_api_key": gemini_api_key,
@@ -44,12 +42,11 @@ def save_settings(keybind_dict, volume, music_volume, num_players=1, ai_mode="GE
 def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
     """Loads all settings variables, safely falling back to defaults if missing."""
     default_pitch = getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
-    default_speed = getattr(c, 'DEFAULT_AUDIO_SPEED', 0.5)
     
     if not os.path.exists(CONFIG_PATH):
         return (default_binds, default_volume, default_music_volume, 1, c.DEFAULT_AI_MODE, 
                 "", "", "", "", "gemini-2.5-flash", "gpt-4o-mini", "claude-3-haiku-20240307", "llama3", "FULL",
-                default_pitch, default_speed, default_pitch, default_speed)
+                default_pitch, default_pitch) # <-- Return 2 pitches instead of 4 variables
     
     try:
         with open(CONFIG_PATH, "r") as f:
@@ -92,13 +89,11 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
             s.get("claude_model", "claude-3-haiku-20240307"),
             s.get("ollama_model", "llama3"),
             s.get("ai_immersion_level", "FULL"),
-            s.get("music_pitch", default_pitch),
-            s.get("music_speed", default_speed),
-            s.get("sfx_pitch", default_pitch),
-            s.get("sfx_speed", default_speed)
+            s.get("music_pitch", s.get("music_speed", default_pitch)), 
+            s.get("sfx_pitch", s.get("sfx_speed", default_pitch))      
         )
     except Exception as e:
         print(f"Error loading settings: {e}")
         return (default_binds, default_volume, default_music_volume, 1, "GEMINI", 
                 "", "", "", "", "gemini-2.5-flash", "gpt-4o-mini", "claude-3-haiku-20240307", "llama3", "FULL",
-                default_pitch, default_speed, default_pitch, default_speed)
+                default_pitch, default_pitch)

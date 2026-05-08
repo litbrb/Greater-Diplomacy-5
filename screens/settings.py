@@ -101,7 +101,7 @@ class Settings(GameState):
 
         immersion = getattr(self.controller, 'ai_immersion_level', 'FULL')
         
-        # FIX: Added self.controller.music_volume
+        # Note: Pitch defaults to 0.5 automatically, so we don't need to explicitly pass it
         keybind_io.save_settings(default_keys, self.volume, self.controller.music_volume, self.num_players, self.ai_mode, 
                                  gemini_api_key, chatgpt_key, claude_key, ollama_key,
                                  gemini_mod, chatgpt_mod, claude_mod, ollama_mod, immersion)

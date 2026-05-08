@@ -43,10 +43,10 @@ class Music_Player(GameState):
         # --- Audio Sliders ---
         slider_x = c.SCREEN_WIDTH - 250
         self.elements.append(Slider(slider_x, 40, 200, "SFX Vol", self.controller.volume, self.set_sfx_volume))
-        self.elements.append(Slider(slider_x, 100, 200, "SFX Speed/Pitch", self.controller.sfx_speed, self.set_sfx_speed))
+        self.elements.append(Slider(slider_x, 100, 200, "SFX Speed/Pitch", self.controller.sfx_pitch, self.set_sfx_pitch))
 
         self.elements.append(Slider(slider_x, 180, 200, "Music Vol", self.controller.music_volume, self.set_music_volume))
-        self.elements.append(Slider(slider_x, 240, 200, "Music Speed/Pitch", self.controller.music_speed, self.set_music_speed))
+        self.elements.append(Slider(slider_x, 240, 200, "Music Speed/Pitch", self.controller.music_pitch, self.set_music_pitch))
         
         # --- View Mode Toggles ---
         color_ed = "blue" if self.view_mode == "EDITOR" else "grey"
@@ -117,17 +117,16 @@ class Music_Player(GameState):
             self.controller.soloud.set_volume(self.controller.music_handle, val)
         self.save_audio_settings()
 
-    def set_music_speed(self, val):
-        self.controller.music_speed = val
+    def set_music_pitch(self, val):
+        self.controller.music_pitch = val
         if self.controller.music_handle is not None:
             speed_mult = 0.5 + (val * 1.5) 
             self.controller.soloud.set_relative_play_speed(self.controller.music_handle, speed_mult)
         self.save_audio_settings()
         
-    def set_sfx_speed(self, val):
-        self.controller.sfx_speed = val
-        ui_elements.global_sfx_speed = val
-            
+    def set_sfx_pitch(self, val):
+        self.controller.sfx_pitch = val
+        ui_elements.global_sfx_pitch = val
         self.save_audio_settings()
         
     def save_audio_settings(self):
@@ -146,10 +145,8 @@ class Music_Player(GameState):
             getattr(self.controller, 'claude_model', ''), 
             getattr(self.controller, 'ollama_model', ''),
             getattr(self.controller, 'ai_immersion_level', 'FULL'),
-            getattr(self.controller, 'music_pitch', 0.5), # Legacy catch
-            self.controller.music_speed,
-            getattr(self.controller, 'sfx_pitch', 0.5), # Legacy catch
-            self.controller.sfx_speed
+            self.controller.music_pitch,
+            self.controller.sfx_pitch
         )
 
     # --- PLAYLIST & EDITOR ACTIONS ---

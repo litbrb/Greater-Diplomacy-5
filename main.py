@@ -129,12 +129,12 @@ class Controller:
         self.ai_immersion_level = loaded_data[13]
         
         # New Audio Settings
-        self.music_speed = loaded_data[15] if len(loaded_data) > 15 else getattr(c, 'DEFAULT_AUDIO_SPEED', 0.5)
-        self.sfx_speed = loaded_data[17] if len(loaded_data) > 17 else getattr(c, 'DEFAULT_AUDIO_SPEED', 0.5)
+        self.music_pitch = loaded_data[14] if len(loaded_data) > 14 else getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
+        self.sfx_pitch = loaded_data[15] if len(loaded_data) > 15 else getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
 
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.volume
-        ui_elements.global_sfx_speed = self.sfx_speed
+        ui_elements.global_sfx_pitch = self.sfx_pitch
 
         self.all_albums = {}
         self.active_albums = []
@@ -275,7 +275,7 @@ class Controller:
             
             # Apply volume and speed dynamically!
             self.soloud.set_volume(self.music_handle, self.music_volume)
-            speed_mult = 0.5 + (self.music_speed * 1.5) # Scale 0.0-1.0 to 0.5x-2.0x
+            speed_mult = 0.5 + (self.music_pitch * 1.5) # Scale 0.0-1.0 to 0.5x-2.0x
             self.soloud.set_relative_play_speed(self.music_handle, speed_mult)
             
             self.now_playing = track_path

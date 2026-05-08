@@ -7,45 +7,64 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import data.constants as c
 
-def combine_files(output_filename="context/combined_scripts.txt", search_directory=".", json_files_to_include=None, acknowledge_patterns=None):
+def combine_files(output_filename="context/combined_scripts.txt", search_directory=".", json_files_to_include=None, acknowledge_patterns=None, silent_ignore_patterns=None):
     """
     Finds all .py files and specific JSON files, writing their content to one text file.
-    Also acknowledges the existence of specific files without writing their contents.
+    Acknowledges certain files without writing contents, and completely ignores others.
+    Filters out directory paths so only files are processed or listed.
     """
-    if json_files_to_include is None:
-        json_files_to_include = []
-    if acknowledge_patterns is None:
-        acknowledge_patterns = []
+    if json_files_to_include is None: json_files_to_include = []
+    if acknowledge_patterns is None: acknowledge_patterns = []
+    if silent_ignore_patterns is None: silent_ignore_patterns = []
 
-    # 1. Get all .py files recursively
-    files_to_process = glob.glob(os.path.join(search_directory, "**", "*.py"), recursive=True)
+    # 1. Get all .py files recursively (and ensure they are files, not dirs named .py)
+    files_to_process = [
+        f for f in glob.glob(os.path.join(search_directory, "**", "*.py"), recursive=True) 
+        if os.path.isfile(f)
+    ]
 
     # 2. Add the specific JSON files if they exist
     for json_file in json_files_to_include:
-        # Construct the path (assumes they are in the search_directory or relative to it)
         json_path = os.path.join(search_directory, json_file)
-        if os.path.exists(json_path):
+        if os.path.exists(json_path) and os.path.isfile(json_path):
             files_to_process.append(json_path)
-        else:
+        elif not os.path.exists(json_path):
             print(f"Warning: Specified JSON file not found: {json_path}")
 
     # 3. Get files to acknowledge (content omitted)
     files_to_acknowledge = []
     for pattern in acknowledge_patterns:
         matches = glob.glob(os.path.join(search_directory, pattern), recursive=True)
-        files_to_acknowledge.extend(matches)
+        # --- NEW: Filter out directories ---
+        valid_files = [f for f in matches if os.path.isfile(f)]
+        files_to_acknowledge.extend(valid_files)
     
     files_to_acknowledge = list(set(files_to_acknowledge))
 
-    # --- NEW: Step 4. Filter out acknowledged files from files_to_process ---
-    # We use absolute paths to compare them safely, in case of relative path mismatches
+    # 4. Get files to completely ignore
+    files_to_silently_ignore = []
+    for pattern in silent_ignore_patterns:
+        matches = glob.glob(os.path.join(search_directory, pattern), recursive=True)
+        # --- NEW: Filter out directories here too ---
+        valid_files = [f for f in matches if os.path.isfile(f)]
+        files_to_silently_ignore.extend(valid_files)
+
+    # 5. Apply all filters
     abs_acknowledged = {os.path.abspath(f) for f in files_to_acknowledge}
+    abs_silent = {os.path.abspath(f) for f in files_to_silently_ignore}
     
+    # Remove silently ignored files from the acknowledge list
+    files_to_acknowledge = [
+        filepath for filepath in files_to_acknowledge 
+        if os.path.abspath(filepath) not in abs_silent
+    ]
+
+    # Remove acknowledged AND silently ignored files from the process list
     files_to_process = [
         filepath for filepath in files_to_process 
-        if os.path.abspath(filepath) not in abs_acknowledged
+        if os.path.abspath(filepath) not in abs_acknowledged 
+        and os.path.abspath(filepath) not in abs_silent
     ]
-    # -------------------------------------------------------------------------
 
     if not files_to_process and not files_to_acknowledge:
         print(f"No files found to process or acknowledge in '{search_directory}'")
@@ -59,12 +78,11 @@ def combine_files(output_filename="context/combined_scripts.txt", search_directo
             outfile.write("--- Acknowledged Files (Contents Omitted) ---\n")
             outfile.write("The following files exist in the project directory but their contents have been omitted for brevity:\n")
             for filepath in sorted(files_to_acknowledge):
-                outfile.write(f"- {filepath}\n")
+                outfile.write(f"> {filepath}\n")
             outfile.write("-" * 45 + "\n\n")
 
         # Write the contents of the remaining files to process
         for filepath in files_to_process:
-            # Skip the output file itself
             if os.path.abspath(filepath) == os.path.abspath(output_filename):
                 continue
             
@@ -94,9 +112,24 @@ files_to_skip_but_list = [
     "**/*.dll",
     "data/**/*.json",
     "soloud.py",
+    "context\context_generator.py",
+    "map_tools\**",
+    #"ui\**",
+    #"screens\**",
+    #"map_logic\**",
+    #"data\**",
+]
+
+# Files you want totally wiped from existence in the final .txt
+files_to_silently_ignore = [
+    "**/__pycache__/*",   # Drops everything inside any __pycache__ folder
+    "**/*.pyc",           # Catches any compiled python files anywhere
+    "**/.git/*",          # Hides git background files if you run this in a repo
+    "**/.env"             # Prevents accidentally leaking your environment variables!
 ]
 
 combine_files(
     json_files_to_include=specific_jsons, 
-    acknowledge_patterns=files_to_skip_but_list
+    acknowledge_patterns=files_to_skip_but_list,
+    silent_ignore_patterns=files_to_silently_ignore
 )

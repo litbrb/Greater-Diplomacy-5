@@ -20,15 +20,11 @@ ITS CALLED Tkinter
 - gemma4 (thinking)
 - qwen3.6 (pro)
 
-- for now, only 1914 scenario
-- also add in the world map!
-- balance germany?
 
-- IS GRAND STRATEGY AND RESPONSES BEING MIXED UP?????
-- BECAUSE IT SURE SEEMS LIKE IT IS
+- are ships being too evasive?
+not attacking convoys that are clearly undefended
+also what are the rules for attacking when it comes to ships
 
-oh the generating responses thing seems to work but only when generating grand strategy is finished
-could generating grand strategy be replaced with generating messages instead because that's the real important part
 also add in another bar for processing the refreshing needed for the map
 perhaps a relation button for each country might be best
 

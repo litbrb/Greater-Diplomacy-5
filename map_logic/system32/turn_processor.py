@@ -27,6 +27,10 @@ def prepare_turn(self):
     self.loading_status_text = "Generating AI Movement Orders..."
     print("[SYSTEM] Generating AI Movement Orders...")
     ai_movement.process_ai_unit_orders(self)
+
+    self.loading_status_text = "Drafting Proactive Responses..."
+    print("[SYSTEM] Drafting Proactive Responses...")
+    ai_diplomacy.process_proactive_llm_tasks(self)
     
     # MOVED: Diplomacy is now processed AFTER AI movement generation.
     self.loading_status_text = "Processing Pending Diplomacy..."
@@ -35,8 +39,8 @@ def prepare_turn(self):
     
     print("--- [PHASE 1] COMPLETE ---")
 
-def resolve_turn(self):
-    """Phase 2: Execute all moves, combat, and advance the clock."""
+def resolve_turn_logic(self): # Renamed from resolve_turn
+    """Executes time, combat, movement, and economy logic (no refreshes)."""
     print("\n--- [PHASE 2] TURN RESOLUTION START ---")
     
     # --- NEW: Snapshot original owners for capture logic ---
@@ -131,7 +135,7 @@ def process_disbands(self):
 def process_next_turn(self):
     """Legacy compatibility just in case it's called elsewhere."""
     prepare_turn(self)
-    resolve_turn(self)
+    resolve_turn_logic(self)
 
 def process_pinning(self):
     """Rule: Units being attacked from a tile must defend the tile they're on, unless moving to friendly territory."""

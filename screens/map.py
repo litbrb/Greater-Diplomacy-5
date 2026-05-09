@@ -41,8 +41,15 @@ class Map(GameState):
         self.loading_status_text = "Waiting..."
         self.proactive_tasks_total = 0
         self.proactive_tasks_completed = 0
+        self.proactive_llm_tasks_total = 0
+        self.proactive_llm_tasks_completed = 0
+        self.proactive_llm_tasks = []
         self.responsive_tasks_total = 0
         self.responsive_tasks_completed = 0
+
+        # --- NEW REFRESH TRACKERS ---
+        self.refresh_tasks_total = 0
+        self.refresh_tasks_completed = 0
         self.loading_spinner_angle = 0
 
         self.brush_building = "None" 

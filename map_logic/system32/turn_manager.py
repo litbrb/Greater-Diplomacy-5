@@ -8,34 +8,45 @@ import traceback
 def advance_time(map_screen):
     map_screen.turn_start_time = pygame.time.get_ticks() 
     
-    # PHASE 2: Resolve the turn if we are currently viewing AI moves (Runs Synchronously)
+    # PHASE 2: Resolve the turn (Synchronous execution with UI updates for refreshes)
     if getattr(map_screen, 'viewing_ai_moves', False):
-        map_screen.loading_status_text = "Resolving Orders..."
-        loading_screen.draw_turn_loading_screen(map_screen, pygame.display.get_surface())
-        pygame.display.flip()
+        map_screen.loading_status_text = "Resolving Orders & Map Refreshes..."
         
-        turn_processor.resolve_turn(map_screen)
-        map_screen.refresh_political_map()
-        map_screen.refresh_relations_map()
-        map_screen.refresh_factions_map()
+        # 1. Run the heavy logic (Combat, Movement, etc.)
+        # These are fast enough to group, but the refreshes are what we want to track
+        turn_processor.resolve_turn_logic(map_screen)
         
-        # Only refresh country centers ONCE after the turn finishes
-        if getattr(map_screen, 'centers_need_update', False):
-            map_screen.update_country_centers()
-            map_screen.centers_need_update = False
+        # 2. Define Refresh Tasks
+        refresh_steps = [
+            ("Refreshing Political Map...", map_screen.refresh_political_map),
+            ("Refreshing Relations Map...", map_screen.refresh_relations_map),
+            ("Refreshing Factions Map...", map_screen.refresh_factions_map),
+            ("Refreshing Core Map...", map_screen.refresh_cores_map),
+            ("Updating Map Labels...", map_screen.update_country_centers)
+        ]
+        
+        map_screen.refresh_tasks_total = len(refresh_steps)
+        map_screen.refresh_tasks_completed = 0
+        
+        # 3. Process each refresh step and flip the display to animate the bar
+        for label, func in refresh_steps:
+            map_screen.loading_status_text = label
+            func() # Execute the refresh
+            map_screen.refresh_tasks_completed += 1
+            
+            # Re-draw the loading screen so the 4th bar moves
+            loading_screen.draw_turn_loading_screen(map_screen, pygame.display.get_surface())
+            pygame.display.flip()
             
         map_screen.viewing_ai_moves = False
 
-        # If playing multiplayer, show the ready screen for Player 1 again
         if hasattr(map_screen, 'active_players') and len(map_screen.active_players) > 1:
             map_screen.show_player_ready_screen = True
 
         buttons.render_buttons(map_screen) 
         
-        # --- TIMER FEEDBACK ---
         elapsed_seconds = (pygame.time.get_ticks() - map_screen.turn_start_time) / 1000.0
         map_screen.show_feedback(f"Turn resolved in {elapsed_seconds:.2f}s")
-        print(f"[PERFORMANCE] Phase 2 completed in {elapsed_seconds:.2f} seconds.")
         return
 
     # PHASE 1: Prepare the turn and generate AI moves
@@ -62,6 +73,9 @@ def trigger_ai_thread(map_screen):
     # Reset trackers for the new turn
     map_screen.proactive_tasks_total = 0
     map_screen.proactive_tasks_completed = 0
+    map_screen.proactive_llm_tasks_total = 0
+    map_screen.proactive_llm_tasks_completed = 0
+    map_screen.proactive_llm_tasks = []
     map_screen.responsive_tasks_total = 0
     map_screen.responsive_tasks_completed = 0
     

@@ -62,7 +62,7 @@ def handle_map_events(self, event):
     # 3. HOVER LOGIC (CRITICAL: Must run before painting)
     if not on_ui:
         wx = ((mx / self.camera.zoom) + self.camera.pos.x) % self.map_w
-        wy = ((my - self.top_ui_height) / self.camera.zoom) + self.camera.pos.y
+        wy = ((my - self.top_ui_height) / (self.camera.zoom * getattr(self.camera, 'tilt_factor', 1.0))) + self.camera.pos.y
         
         if 0 <= wy < self.map_h:
             color = self.id_map.get_at((int(wx), int(wy)))

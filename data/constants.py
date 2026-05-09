@@ -85,7 +85,7 @@ ECON_CONVERT_BTN_X2 = SCREEN_WIDTH // 2 + 50
 
 DEFAULT_SFX_VOLUME = 0.5
 DEFAULT_MUSIC_VOLUME = 0.5
-DEFAULT_AUDIO_PITCH = 0.5
+DEFAULT_AUDIO_PITCH = 0.3
 
 # ==========================================
 # UI BARS
@@ -119,7 +119,7 @@ VIEW_BTN_ROW2_Y = SCREEN_HEIGHT - 100
 
 # --- Left UI Bar Placement ---
 LEFT_UI_BAR_X = 20
-LEFT_UI_BAR_STEP_Y = 80
+LEFT_UI_BAR_STEP_Y = 50
 BTN_SPECTATOR_Y = SCREEN_HEIGHT - 50
 
 # ==========================================
@@ -234,6 +234,7 @@ SIZES = {
     "small_square": (40, 40),
     "medium_square": (50, 50),
     "tech_square": (80, 80),
+    "left_ui_button": (120, 40),
     "orders": (100, 50),
     "small": (100, 40),
     "left_ui_bar": (120, 50),
@@ -270,6 +271,9 @@ MSG_BUBBLE_MAX_WIDTH_RATIO = 0.6
 # ==========================================
 
 MAX_CAMERA_ZOOM = 10.0
+TILT_START_ZOOM = 6.0   # Zoom level where the 3D tilt effect starts
+MAX_Y_TILT_FACTOR = 0.6 # The maximum compression of the Y axis (0.6 = 60% of original height)
+APPLY_TILT_TO_OVERLAYS = False # Whether the tilt compresses icons and text overlays
 
 # Water brightness stuff
 # OCEAN_DARK_BLUE = (10, 20, 40)
@@ -279,7 +283,7 @@ OCEAN_LIGHT_BLUE = (20, 40, 80)
 
 # Toggle this to False if you want to strictly hide names on areas <= 3 provinces
 SHOW_SMALL_TERRITORY_NAMES = False
-NAME_FADE_START = 2.0
+NAME_FADE_START = 4.0
 NAME_FADE_WINDOW = 1.5
 
 # ==========================================

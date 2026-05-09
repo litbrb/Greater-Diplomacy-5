@@ -8,6 +8,7 @@ class MapCamera:
         self.pos = pygame.Vector2(0, 0)
         self.target_pos = pygame.Vector2(0, 0)
         self.lerp_speed = 0.1
+        self.tilt_factor = 1.0
         # currently set to instant, but can be adjusted for smoother transitions
 
     def handle_input(self, event, self_map, on_ui):
@@ -18,18 +19,26 @@ class MapCamera:
 
         if event.type == pygame.MOUSEMOTION and event.buttons[2] and not on_ui:
             self.pos.x -= event.rel[0] / self.zoom
-            self.pos.y -= event.rel[1] / self.zoom
+            self.pos.y -= event.rel[1] / (self.zoom * getattr(self, 'tilt_factor', 1.0))
             self.target_pos = pygame.Vector2(self.pos)
 
     def update(self, self_map, SCREEN_HEIGHT):
+        # 0. Calculate Tilt Factor
+        import data.constants as c
+        if self.zoom > getattr(c, 'TILT_START_ZOOM', 4.0):
+            progress = min(1.0, (self.zoom - c.TILT_START_ZOOM) / (c.MAX_CAMERA_ZOOM - c.TILT_START_ZOOM))
+            self.tilt_factor = 1.0 - (progress * (1.0 - getattr(c, 'MAX_Y_TILT_FACTOR', 0.6)))
+        else:
+            self.tilt_factor = 1.0
+
         # 1. Smooth Zoom
         if abs(self.zoom - self.target_zoom) > 0.001:
             mx, my = pygame.mouse.get_pos()
             w_pre = pygame.Vector2(((mx / self.zoom) + self.pos.x) % self_map.map_w, 
-                                   ((my - self_map.top_ui_height) / self.zoom) + self.pos.y)
+                                   ((my - self_map.top_ui_height) / (self.zoom * self.tilt_factor)) + self.pos.y)
             self.zoom += (self.target_zoom - self.zoom) * self.lerp_speed
             self.pos.x = (w_pre.x - (mx / self.zoom)) % self_map.map_w
-            self.pos.y = w_pre.y - ((my - self_map.top_ui_height) / self.zoom)
+            self.pos.y = w_pre.y - ((my - self_map.top_ui_height) / (self.zoom * self.tilt_factor))
             self.target_pos = pygame.Vector2(self.pos)
 
         # 2. Smooth Pan
@@ -46,7 +55,7 @@ class MapCamera:
             max_x = self_map.map_w - (c.SCREEN_WIDTH / self.zoom) # Assuming 1600 width
             self.pos.x = max(0, min(self.pos.x, max(0, max_x)))
 
-        max_y = self_map.map_h - ((SCREEN_HEIGHT - self_map.total_ui_h) / self.zoom)
+        max_y = self_map.map_h - ((SCREEN_HEIGHT - self_map.total_ui_h) / (self.zoom * self.tilt_factor))
         self.pos.y = max(0, min(self.pos.y, max(0, max_y)))
 
         self.pos.x = round(self.pos.x, 2)
@@ -76,7 +85,7 @@ def center_camera_on_province(camera_obj, province_center, screen_width, screen_
     """Calculates and snaps the camera to the selected province based on current zoom."""
     cx, cy = province_center
     tx = cx - (screen_width / camera_obj.zoom / 2)
-    ty = cy - ((screen_height - total_ui_h) / camera_obj.zoom / 2)
+    ty = cy - ((screen_height - total_ui_h) / (camera_obj.zoom * getattr(camera_obj, 'tilt_factor', 1.0)) / 2)
     
     camera_obj.target_pos = pygame.Vector2(tx, ty)
     camera_obj.pos = pygame.Vector2(tx, ty)

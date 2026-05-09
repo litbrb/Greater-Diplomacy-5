@@ -6,8 +6,6 @@ from map_logic.rendering.font_manager import fonts
 def draw_country_names(map_screen, surface):
     # --- LAYER 3.5: COUNTRY NAMES ---
     # Only show names on the Political map to avoid cluttering other modes
-    # if map_screen.base_layer == "POLITICAL":
-    # if map_screen.secondary_mode == "BLANK":
     if getattr(map_screen, 'show_country_names', True): 
         
         # 1. Cache text surfaces once to save performance
@@ -82,7 +80,7 @@ def draw_country_names(map_screen, surface):
                 offsets = [0, -map_screen.map_w, map_screen.map_w] if map_screen.loop_map else [0]
                 for offset in offsets:
                     sx = (cx + offset - map_screen.camera.pos.x) * map_screen.camera.zoom
-                    sy = (cy - map_screen.camera.pos.y) * map_screen.camera.zoom + map_screen.top_ui_height
+                    sy = (cy - map_screen.camera.pos.y) * map_screen.camera.zoom * getattr(map_screen.camera, 'tilt_factor', 1.0) + map_screen.top_ui_height
 
                     # Frustum Culling: Only draw if it's actually on the screen
                     if -200 < sx < surface.get_width() + 200 and 0 < sy < surface.get_height():
@@ -111,6 +109,9 @@ def draw_country_names(map_screen, surface):
                         scaled_w = int(surf.get_width() * map_screen.camera.zoom * land_scale)
                         scaled_h = int(surf.get_height() * map_screen.camera.zoom * land_scale)
                         
+                        if getattr(map_screen.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', False):
+                            scaled_h = int(scaled_h * map_screen.camera.tilt_factor)
+                        
                         if scaled_w > 0 and scaled_h > 0:
                             scaled_text = pygame.transform.scale(surf, (scaled_w, scaled_h))
                             scaled_shadow = pygame.transform.scale(shadow, (scaled_w, scaled_h))
@@ -135,6 +136,7 @@ def draw_country_names(map_screen, surface):
                                 fac_name = map_screen.nation_data.get(country, {}).get("faction", "").upper()
                                 drawn_factions.add(fac_name)
 
+# (Keep update_country_centers identical since this is back-end analytical geometry math) ...
 def update_country_centers(map_screen):
     # Calculates the visual center, rotation, and physical spread for every country landmass.
     

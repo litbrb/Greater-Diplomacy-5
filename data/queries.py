@@ -10,54 +10,58 @@ import data.constants as c
 # UNIFIED CACHE MANAGER
 # ==========================================
 
-# Replaces individual global variables with a clean dictionary
+# By mapping the path directly to the cache, we can automate loading and saving!
 _JSON_CACHE = {
-    "settings": None,
-    "unit_library": None,
-    "building_library": None,
-    "tech_tree": None,
-    "country_data": None
+    "settings": {"path": c.SETTINGS_CONFIG_PATH, "data": None},
+    "unit_library": {"path": c.UNIT_DATA_PATH, "data": None},
+    "building_library": {"path": c.BUILDING_DATA_PATH, "data": None},
+    "tech_tree": {"path": c.RESEARCH_TEMPLATE_PATH, "data": None},
+    "country_data": {"path": c.COUNTRIES_DATA_PATH, "data": None},
+    "active_albums": {"path": getattr(c, 'ACTIVE_ALBUMS_PATH', "data/json/active_albums.json"), "data": None}
 }
 
 def clear_json_caches():
-    """
-    CRITICAL: Call this from settings.py or your editors after 
-    saving to disk. It forces the game to fetch the updated files!
-    """
+    """Forces the game to fetch the updated files on the next read."""
     for key in _JSON_CACHE:
-        _JSON_CACHE[key] = None
+        _JSON_CACHE[key]["data"] = None
     print("[SYSTEM] JSON Memory Caches Cleared.")
 
-def _load_cached_json(cache_key, file_path):
+def _load_cached_json(cache_key):
     """Helper function to handle file reading and caching dynamically."""
-    if _JSON_CACHE[cache_key] is None:
+    cache_obj = _JSON_CACHE[cache_key]
+    
+    if cache_obj["data"] is None:
+        file_path = cache_obj["path"]
         if os.path.exists(file_path):
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
-                    _JSON_CACHE[cache_key] = json.load(f)
+                    cache_obj["data"] = json.load(f)
             except Exception as e:
                 print(f"Error loading {file_path}: {e}")
-                _JSON_CACHE[cache_key] = {}
+                cache_obj["data"] = {}
         else:
-            _JSON_CACHE[cache_key] = {}
+            cache_obj["data"] = {}
             
-    return _JSON_CACHE[cache_key]
+    return cache_obj["data"]
 
-# --- REFACTORED GETTERS ---
-def get_settings():
-    return _load_cached_json("settings", c.SETTINGS_CONFIG_PATH)
+def save_cached_json(cache_key, new_data):
+    """Saves data to disk AND updates the cache instantly."""
+    cache_obj = _JSON_CACHE[cache_key]
+    cache_obj["data"] = new_data
+    
+    try:
+        with open(cache_obj["path"], "w", encoding="utf-8") as f:
+            json.dump(new_data, f, indent=4)
+    except Exception as e:
+        print(f"Error saving {cache_obj['path']}: {e}")
 
-def get_unit_library(): 
-    return _load_cached_json("unit_library", c.UNIT_DATA_PATH)
-
-def get_building_library(): 
-    return _load_cached_json("building_library", c.BUILDING_DATA_PATH)
-
-def get_tech_tree():
-    return _load_cached_json("tech_tree", c.RESEARCH_TEMPLATE_PATH)
-
-def get_country_data():
-    return _load_cached_json("country_data", c.COUNTRIES_DATA_PATH)
+# --- REFACTORED GETTERS (No paths needed here anymore!) ---
+def get_settings(): return _load_cached_json("settings")
+def get_unit_library(): return _load_cached_json("unit_library")
+def get_building_library(): return _load_cached_json("building_library")
+def get_tech_tree(): return _load_cached_json("tech_tree")
+def get_country_data(): return _load_cached_json("country_data")
+def get_active_albums(): return _load_cached_json("active_albums")
 
 # ==========================================
 # DIPLOMACY & COMBAT QUERIES

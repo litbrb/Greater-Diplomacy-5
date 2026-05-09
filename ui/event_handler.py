@@ -183,11 +183,7 @@ def handle_map_events(self, event):
                     if owner in c.UNPLAYABLE_NATIONS:
                         self.show_feedback("Cannot place units in unowned territory!")
                     else:
-                        import json, os
-                        unit_stats = {}
-                        if os.path.exists('data/json/unit_data.json'):
-                            with open('data/json/unit_data.json', 'r') as f:
-                                unit_stats = json.load(f).get(self.brush_unit, {})
+                        unit_stats = queries.get_unit_library().get(self.brush_unit, {})
                         
                         new_unit = {
                             "type": self.brush_unit,

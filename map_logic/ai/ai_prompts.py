@@ -32,7 +32,13 @@ AI_FALLBACK_RESPONSES = {
     "CROSS_FACTION_JOIN": "Our requests crossed paths. We are now united!",
     "CROSS_CEASEFIRE": "Mutual ceasefire agreements signed.",
     "CROSS_CALL_TO_ARMS": "Our diplomats crossed paths. We stand together in all our wars!",
-    "CROSS_WAR_DECLARATION": "Your diplomat proposing a {action} was executed. We are at WAR!"
+    "CROSS_WAR_DECLARATION": "Your diplomat proposing a {action} was executed. We are at WAR!",
+
+    "PROACTIVE_CEASEFIRE": "We offer terms for a ceasefire.",
+    "PROACTIVE_CALL_TO_ARMS": "We request your aid in our ongoing conflicts!",
+    "PROACTIVE_JOIN_WAR": "Brothers, let us join your fight.",
+    "PROACTIVE_DECLARE_WAR": "Your occupation of our rightful territory ends now!",
+    "PROACTIVE_JOIN_FACTION": "Our enemies are aligned, let us join your faction to stand against them."
 }
 
 # ==========================================

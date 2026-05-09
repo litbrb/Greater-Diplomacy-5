@@ -236,20 +236,18 @@ class Controller:
         self.all_albums = synced_albums
         
         # Load the user's active playlist toggles
-        try:
-            with open("data/json/active_albums.json", "r") as f:
-                self.active_albums = json.load(f)
-        except:
-            self.active_albums = []
+        from data import queries
+        # Returns {} by default if empty, so ensure it's a list
+        loaded_albums = queries.get_active_albums()
+        self.active_albums = loaded_albums if isinstance(loaded_albums, list) else []
             
         # Clean up any active albums that were deleted from the disk
         self.active_albums = [a for a in self.active_albums if a in self.all_albums]
         self.build_playlist()
 
     def save_active_albums(self):
-        import json
-        with open("data/json/active_albums.json", "w") as f:
-            json.dump(self.active_albums, f, indent=4)
+        from data import queries
+        queries.save_cached_json("active_albums", self.active_albums)
 
     def build_playlist(self):
         self.playlist = []

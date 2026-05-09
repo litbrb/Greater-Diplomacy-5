@@ -43,6 +43,22 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
     return "Message drafted. Will send at end of turn."
 
 def process_diplomacy_turn(self):
+    # --- DECAY TEMPORARY MODIFIERS ---
+    for country_name, data in list(self.nation_data.items()):
+        if not isinstance(data, dict): 
+            continue
+            
+        temp_mods = data.get("temp_modifiers", {})
+        for target, mods in temp_mods.items():
+            for mod_name in list(mods.keys()):
+                if mods[mod_name] > 0:
+                    mods[mod_name] -= 1
+                elif mods[mod_name] < 0:
+                    mods[mod_name] += 1
+                    
+                if mods[mod_name] == 0:
+                    del mods[mod_name]
+
     # --- 0. PROCESS QUEUED AI MULTI-TURN ACTIONS ---
     for country_name, data in self.nation_data.items():
         if isinstance(data, dict) and "queued_ai_actions" in data and data["queued_ai_actions"]:

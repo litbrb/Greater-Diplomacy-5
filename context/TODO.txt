@@ -25,12 +25,7 @@ ITS CALLED Tkinter
 not attacking convoys that are clearly undefended
 also what are the rules for attacking when it comes to ships
 
-perhaps a relation button for each country might be best
-relations based on modifiers not absolutes
-and this can affect ai diplomacy
-modifiers can make it go really negative or positive but it should be capped at 100 or -100
-for example if you have a (-80) and (-40) modifier those modifiers should be allowed to exist but instead of having -120 opinion it should be -100 opinion
-
+- map seems to automatically switch to political view after processing a turn even if you didn't select that
 
 make FPS able to be edited
 

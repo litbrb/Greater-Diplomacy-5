@@ -1,4 +1,5 @@
 from data import queries
+import data.constants as c
 
 def finalize_war(nation_data, a, b):
     # GUARDRAIL: If they are in the same faction, the aggressor (a) leaves automatically
@@ -8,11 +9,8 @@ def finalize_war(nation_data, a, b):
     for country, other in [(a, b), (b, a)]:
         if other not in nation_data[country]["at_war_with"]:
             nation_data[country]["at_war_with"].append(other)
-            
-        # Snap relations to rock bottom
-        nation_data[country].setdefault("relations", {})[other] = -100
 
-        # --- FIX: Clear faction war cooldowns so allies can be called in ---
+        # Clear faction war cooldowns so allies can be called in
         faction = nation_data[country].get("faction", "")
         if faction:
             members = queries.get_faction_members(faction, nation_data)
@@ -30,6 +28,9 @@ def finalize_neutral(nation_data, a, b):
             
         # Reset relations to 0 upon ceasefire
         nation_data[country].setdefault("relations", {})[other] = 0
+        
+        # Apply Temporary Post-War Modifier
+        queries.add_temporary_modifier(country, other, "recent_war", c.REL_MOD_RECENT_WAR, nation_data)
 
 def finalize_create_faction(nation_data, creator):
     fac = f"The {nation_data[creator].get('name', creator)} Pact"
@@ -58,8 +59,17 @@ def finalize_faction_join(nation_data, host, joiner):
                 nation_data[member].setdefault("relations", {})[joiner] = 100
 
 def finalize_faction_leave(nation_data, leaver):
+    fac = nation_data[leaver].get("faction", "")
+    members = queries.get_faction_members(fac, nation_data)
+    
     nation_data[leaver]["faction"] = ""
     nation_data[leaver]["is_faction_leader"] = False
+    
+    # Apply Temporary Faction Desertion Modifier
+    for m in members:
+        if m != leaver:
+            queries.add_temporary_modifier(leaver, m, "recent_faction", c.REL_MOD_RECENT_FACTION, nation_data)
+            queries.add_temporary_modifier(m, leaver, "recent_faction", c.REL_MOD_RECENT_FACTION, nation_data)
 
 def join_faction_wars(nation_data, joiner, faction_member):
     """Pulls the joining nation into all active wars of the target faction member."""
@@ -69,12 +79,8 @@ def join_faction_wars(nation_data, joiner, faction_member):
             nation_data[joiner]["at_war_with"].append(enemy)
         if joiner not in nation_data[enemy]["at_war_with"]:
             nation_data[enemy]["at_war_with"].append(joiner)
-            
-        # Instantly drop relations to -100 upon joining a war
-        nation_data[joiner].setdefault("relations", {})[enemy] = -100
-        nation_data[enemy].setdefault("relations", {})[joiner] = -100
 
-    # --- FIX: Clear the cooldowns between these two so they can interact in future wars ---
+    # Clear the cooldowns between these two so they can interact in future wars
     for a, b in [(joiner, faction_member), (faction_member, joiner)]:
         if "diplo_cooldowns" in nation_data[a] and b in nation_data[a]["diplo_cooldowns"]:
             nation_data[a]["diplo_cooldowns"][b].pop("CALL_TO_ARMS", None)
@@ -84,6 +90,6 @@ def finalize_faction_kick(nation_data, leader, member):
     nation_data[member]["faction"] = ""
     nation_data[member]["is_faction_leader"] = False
     
-    # Sour relations instantly upon being kicked
-    nation_data[leader].setdefault("relations", {})[member] = -50
-    nation_data[member].setdefault("relations", {})[leader] = -50
+    # Temporary Faction Desertion Modifier
+    queries.add_temporary_modifier(leader, member, "recent_faction", c.REL_MOD_RECENT_FACTION, nation_data)
+    queries.add_temporary_modifier(member, leader, "recent_faction", c.REL_MOD_RECENT_FACTION, nation_data)

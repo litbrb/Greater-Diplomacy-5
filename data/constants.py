@@ -448,6 +448,21 @@ BILATERAL_ACTIONS = [
 ]
 
 # ==========================================
+# RELATION MODIFIERS & COLORS
+# ==========================================
+
+REL_MOD_AT_WAR = -60
+REL_MOD_IN_FACTION = 40
+REL_MOD_RECENT_WAR = -20
+REL_MOD_RECENT_FACTION = -20
+
+COLOR_REL_MAX_POS = (100, 100, 200) # Light blue at 200
+COLOR_REL_POS = (0, 255, 0)         # Green at 100
+COLOR_REL_NEU = (255, 255, 255)     # White at 0
+COLOR_REL_NEG = (255, 0, 0)         # Red at -100
+COLOR_REL_MAX_NEG = (150, 0, 0)     # Very dark red at -200
+
+# ==========================================
 # MUSIC PLAYER UI
 # ==========================================
 

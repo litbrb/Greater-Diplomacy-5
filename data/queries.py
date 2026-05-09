@@ -728,6 +728,54 @@ def has_free_research_slots(nation, nation_data):
     queue = nation_data.get(nation, {}).get("research_queue", [])
     return len(queue) < 2
 
+def get_relation_score(nation_a, nation_b, nation_data):
+    """Calculates dynamic relations based on flat state modifiers and temporary modifiers."""
+    if nation_a == nation_b:
+        return 0
+        
+    score = 0
+    if are_at_war(nation_a, nation_b, nation_data):
+        score += c.REL_MOD_AT_WAR
+    elif are_in_same_faction(nation_a, nation_b, nation_data):
+        score += c.REL_MOD_IN_FACTION
+        
+    # Apply all decaying temporary modifiers
+    temp_mods = nation_data.get(nation_a, {}).get("temp_modifiers", {}).get(nation_b, {})
+    for mod_val in temp_mods.values():
+        score += mod_val
+        
+    return score
+
+def add_temporary_modifier(nation_a, nation_b, mod_name, value, nation_data):
+    """Adds or updates a temporary relation modifier. General opinions stack."""
+    if nation_a not in nation_data: return
+    mods = nation_data.setdefault(nation_a, {}).setdefault("temp_modifiers", {}).setdefault(nation_b, {})
+    
+    if mod_name == "general":
+        mods["general"] = mods.get("general", 0) + value
+    else:
+        mods[mod_name] = value
+
+def get_relation_color(score):
+    """Returns a dynamic color mapped to the relation score (-200 to 200)."""
+    score = max(-200, min(200, score))
+    
+    def lerp_color(c1, c2, t):
+        return (int(c1[0] + (c2[0] - c1[0]) * t),
+                int(c1[1] + (c2[1] - c1[1]) * t),
+                int(c1[2] + (c2[2] - c1[2]) * t))
+                
+    if score > 100:
+        return lerp_color(c.COLOR_REL_POS, c.COLOR_REL_MAX_POS, (score - 100) / 100.0)
+    elif score > 0:
+        return lerp_color(c.COLOR_REL_NEU, c.COLOR_REL_POS, score / 100.0)
+    elif score < -100:
+        return lerp_color(c.COLOR_REL_NEG, c.COLOR_REL_MAX_NEG, (-score - 100) / 100.0)
+    elif score < 0:
+        return lerp_color(c.COLOR_REL_NEU, c.COLOR_REL_NEG, -score / 100.0)
+        
+    return c.COLOR_REL_NEU
+
 # ==========================================
 # STRING & UNIT QUERIES
 # ==========================================

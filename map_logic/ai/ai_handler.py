@@ -314,6 +314,14 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
                 print(f"[AI GUARDRAIL] Prevented {ai_nation} from declaring war on existing enemy {act_target}.")
                 ai_action = "NONE"
 
+        # --- Extract Opinion Mod ---
+        try:
+            op_val = int(reply_json.get("opinion_change", 0))
+            if op_val != 0:
+                queries.add_temporary_modifier(ai_nation, sender_nation, "general", op_val, nation_data)
+        except Exception as e:
+            pass
+                
         return {
             "message": reply_json.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
             "action": ai_action,

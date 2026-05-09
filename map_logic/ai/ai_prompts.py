@@ -157,8 +157,9 @@ def get_custom_message_system_prompt():
         "- Do NOT output 'JOIN_WARS' if you're trying to join the war of someone not in your faction, instead just type 'WAR_DECLARATION' against the target country.\n"
         "- If your plan requires two steps (like leaving your faction this turn to declare war next turn), "
         "put your immediate move in 'action'/'action_target' and your next move in 'follow_up_action'/'follow_up_target'.\n"
+        "- You MUST specify an 'opinion_change' integer between -20 and 20 indicating how much this message improved or worsened your general opinion of the sender.\n"
         "Reply ONLY with a valid JSON object matching this schema: "
-        '{"message": "Your in-character response here", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE"}'
+        '{"message": "Your in-character response here", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0}'
     )
 
 def get_proactive_system_prompt(ai_nation, target_nation, action_context):

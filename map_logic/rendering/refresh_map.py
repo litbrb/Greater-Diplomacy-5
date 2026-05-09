@@ -156,16 +156,9 @@ def refresh_relations_map(self):
             elif owner == self.player_country:
                 color = (0, 0, 255)
             else:
-                # Safely fetch the relation score (defaults to 0)
-                relation = player_data.get("relations", {}).get(owner, 0)
-                
-                # Interpolate from -100 (Red) to 0 (Yellow) to +100 (Green)
-                if relation < 0:
-                    g_val = int(255 * (100 + relation) / 100.0)
-                    color = (255, max(0, min(255, g_val)), 0)
-                else:
-                    r_val = int(255 * (100 - relation) / 100.0)
-                    color = (max(0, min(255, r_val)), 255, 0)
+                # Safely fetch the relation score dynamically
+                relation = queries.get_relation_score(self.player_country, owner, self.nation_data)
+                color = queries.get_relation_color(relation)
                 
         if owner not in owner_to_int:
             owner_to_int[owner] = next_owner_id

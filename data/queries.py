@@ -1009,7 +1009,11 @@ def is_ai_diplo_on_cooldown(sender, target, action, nation_data):
 def set_ai_diplo_cooldown(sender, target, action, nation_data, duration=None):
     # Sets a cooldown for a proactive diplomatic action to prevent spamming.
     if duration is None:
-        duration = c.AI_DIPLO_COOLDOWN
+        # Check if this is a war declaration to use the specific override
+        if action == "WAR_DECLARATION":
+            duration = getattr(c, 'AI_WAR_COOLDOWN', 18)
+        else:
+            duration = c.AI_DIPLO_COOLDOWN
     
     cooldowns = nation_data.setdefault(sender, {}).setdefault("diplo_cooldowns", {})
     target_cooldowns = cooldowns.setdefault(target, {})

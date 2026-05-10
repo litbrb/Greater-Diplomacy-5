@@ -32,7 +32,7 @@ make FPS able to be edited
 
 - make war declarations and the like more visible (shown in yo face)
 
-- why doesn't the ai in absolute mode keep spam responding to each other when they get things like war declarations how do they know to stop after the first message
+AI questions
 
 - ai should be able to sign non-agression pacts that prevent wars
 

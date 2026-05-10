@@ -1,7 +1,7 @@
 import pygame
 from gameState import GameState
 import data.constants as c
-from ui_elements import Button
+from ui_elements import Button, Slider
 from map_logic.rendering.font_manager import fonts
 from data import queries
 
@@ -18,31 +18,15 @@ class Economy_Screen(GameState):
     def refresh_ui(self):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
         
-        # New Conversion Buttons positioned below the resource rows
-        self.elements.append(Button(c.ECON_CONVERT_BTN_X1, c.ECON_CONVERT_BTN_Y, "medium", "orange", "10 Fuel -> 1 Mat", self.convert_fuel_to_materials))
-        self.elements.append(Button(c.ECON_CONVERT_BTN_X2, c.ECON_CONVERT_BTN_Y, "medium", "orange", "10 Mat -> 1 Fuel", self.convert_materials_to_fuel))
+        # New Conversion Slider positioned below the resource rows
+        p_data = self.map_screen.nation_data[self.map_screen.player_country]
+        slider_val = p_data.get("mat_to_fuel_slider", 0.0)
+        self.elements.append(Slider(c.SCREEN_WIDTH // 2 - 200, c.ECON_CONVERT_BTN_Y, 400, "Convert % Mats to Fuel", slider_val, self.set_conversion))
 
-    def convert_fuel_to_materials(self):
+    def set_conversion(self, val):
         if not self.map_screen: return
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
-        
-        if p_data.get("fuel", 0) >= 10:
-            p_data["fuel"] -= 10
-            p_data["materials"] = p_data.get("materials", 0) + 1
-            self.map_screen.show_feedback("Converted 10 Fuel -> 1 Material")
-        else:
-            self.map_screen.show_feedback("Not enough fuel! (Need 10)")
-
-    def convert_materials_to_fuel(self):
-        if not self.map_screen: return
-        p_data = self.map_screen.nation_data[self.map_screen.player_country]
-        
-        if p_data.get("materials", 0) >= 10:
-            p_data["materials"] -= 10
-            p_data["fuel"] = p_data.get("fuel", 0) + 1
-            self.map_screen.show_feedback("Converted 10 Materials -> 1 Fuel")
-        else:
-            self.map_screen.show_feedback("Not enough materials! (Need 10)")
+        p_data["mat_to_fuel_slider"] = val
 
     def additional_draw(self, surface):
         if not self.map_screen: return
@@ -58,7 +42,7 @@ class Economy_Screen(GameState):
             total_inc, upkeep, breakdown = econ_tuple
         else:
             total_inc, upkeep = econ_tuple
-            breakdown = {k: {"core":0, "non_core":0, "buildings":0, "resources":0} for k in ["manpower", "materials", "fuel"]}
+            breakdown = {k: {"core":0, "non_core":0, "buildings":0, "resources":0, "conversion":0} for k in ["manpower", "materials", "fuel"]}
             
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
         
@@ -94,6 +78,11 @@ class Economy_Screen(GameState):
             
             # Detailed Breakdown
             detail_breakdown = f"Details -> Base: +{int(bd.get('base',0))}  |  Core: +{int(bd.get('core',0))}  |  Non-Core: +{int(bd.get('non_core',0))}  |  Buildings: +{int(bd.get('buildings',0))}  |  Resources: +{int(bd.get('resources',0))}"
+            if bd.get('conversion', 0) != 0:
+                conv_val = int(bd.get('conversion', 0))
+                sign = "+" if conv_val > 0 else ""
+                detail_breakdown += f"  |  Conversion: {sign}{conv_val}"
+
             surface.blit(font_small.render(detail_breakdown, True, (150, 150, 150)), (row_rect.x + 350, row_rect.y + 60))
             
             y_offset += 120

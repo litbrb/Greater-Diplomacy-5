@@ -549,9 +549,9 @@ def calculate_all_economies(map_data, nation_data):
                 "fuel": c.BASE_YIELDS["fuel"] 
             },
             "breakdown": {
-                "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
-                "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0},
-                "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0}
+                "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0},
+                "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0},
+                "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0}
             },
             "upkeep": {"manpower": 0, "materials": 0, "fuel": 0},
             "total_inc": {"manpower": 0, "materials": 0, "fuel": 0}
@@ -602,8 +602,25 @@ def calculate_all_economies(map_data, nation_data):
                 econ_data[u_owner]["upkeep"]["materials"] += stats.get("cost_materials", 0) * c.UPKEEP_MODIFIERS["materials"]
                 econ_data[u_owner]["upkeep"]["fuel"] += stats.get("cost_fuel", 0) * c.UPKEEP_MODIFIERS["fuel"]
 
-    # Finalize totals
-    for data in econ_data.values():
+    # Finalize totals and calculate conversions
+    for name, data in econ_data.items():
+        n_data = nation_data.get(name, {})
+        conv_rate = n_data.get("mat_to_fuel_slider", 0.0)
+        
+        # Calculate raw material income vs upkeep to find out what we have safely
+        raw_inc_mat = sum(data["breakdown"]["materials"].values())
+        raw_upk_mat = data["upkeep"]["materials"]
+        temp_mat = n_data.get("materials", 0) + raw_inc_mat - raw_upk_mat
+        
+        if conv_rate > 0 and temp_mat >= 10:
+            convert_amount = int(temp_mat * conv_rate)
+            convert_amount = (convert_amount // 10) * 10
+            fuel_gained = convert_amount // 10
+            
+            # Treat materials consumed as an expense, and fuel generated as an income
+            data["breakdown"]["materials"]["conversion"] = -convert_amount
+            data["breakdown"]["fuel"]["conversion"] = fuel_gained
+
         data["total_inc"]["manpower"] = sum(data["breakdown"]["manpower"].values())
         data["total_inc"]["materials"] = sum(data["breakdown"]["materials"].values())
         data["total_inc"]["fuel"] = sum(data["breakdown"]["fuel"].values())

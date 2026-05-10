@@ -283,10 +283,10 @@ APPLY_TILT_TO_ARROWS = True # Whether the tilt compresses movement arrows
 APPLY_TILT_TO_STATUS_ICONS = True # Whether the tilt compresses training, disbanding, and construction icons
 
 # Water brightness stuff
-# OCEAN_DARK_BLUE = (10, 20, 40)
-OCEAN_DARK_BLUE = (5, 10, 20)
-# OCEAN_LIGHT_BLUE = (40, 100, 180)
-OCEAN_LIGHT_BLUE = (20, 40, 80)
+OCEAN_DARK_BLUE = (10, 20, 40)
+# OCEAN_DARK_BLUE = (5, 10, 20)
+OCEAN_LIGHT_BLUE = (40, 100, 180)
+# OCEAN_LIGHT_BLUE = (20, 40, 80)
 # Toggle this to False if you want to strictly hide names on areas <= 3 provinces
 SHOW_SMALL_TERRITORY_NAMES = False
 NAME_FADE_START = 4.0
@@ -312,6 +312,8 @@ ECONOMY_WEIGHT_FUEL = 20
 
 # Used in queries.py to calculate military strength (Attack + Defense + (Health / DIVISOR))
 MILITARY_STRENGTH_HEALTH_DIVISOR = 10.0
+
+MAX_COMBAT_ATTACKERS = 5 # Only the top 5 units will deal damage in combat
 
 # ==========================================
 # CONVOY & TRUCK LOGIC

@@ -66,6 +66,14 @@ def process_ai_economy_decisions(map_screen):
         if ratio_mat > target_mat: deficits.append("cost_materials")
         if ratio_fuel > target_fuel: deficits.append("cost_fuel")
 
+        # If the ai is low on fuel but has a lot of materials, let them use this feature to balance out their economy
+        if ratio_fuel > target_fuel and ratio_mat < target_mat and data.get("materials", 0) > 500:
+            data["mat_to_fuel_slider"] = 0.5 # Convert 50% of available materials to fuel
+        elif data.get("materials", 0) > 5000 and data.get("fuel", 0) < 500:
+            data["mat_to_fuel_slider"] = 0.8 # Emergency conversion
+        else:
+            data["mat_to_fuel_slider"] = 0.0
+
         if deficits:
             # Find units to disband
             owned_units = []

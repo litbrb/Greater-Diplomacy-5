@@ -33,8 +33,6 @@ make FPS able to be edited
 - make war declarations and the like more visible (shown in yo face)
 
 - replace camera automatic tilt with slider you can use to manually edit the tilt
-- oh yeah also for the unit display thingy make it so if there's a tie in attack use speed to determine the unit to display
-AI questions
 
 - ai should be able to sign non-agression pacts that prevent wars
 

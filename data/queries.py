@@ -869,19 +869,28 @@ def is_unit_obsolete(group_name, player_research):
     return any(player_research.get(tech, 0) >= 1 for tech in obsoleting_techs)
 
 # --- CHANGED: Renamed the misleading function and added its counterpart ---
-def get_best_unit_by_defense_then_attack(units):
-    """Finds the unit with the highest defense stat, tiebreaking with attack."""
+def get_best_unit_by_defense_then_attack_then_speed(units):
+    """Finds the unit with the highest defense stat, tiebreaking with attack, then speed."""
     if not units:
         return None
-    # Tuple sorting: (Primary Sort, Secondary Sort)
-    return max(units, key=lambda u: (u.get("defense", 0), u.get("attack", 0)))
-
+    # Tuple sorting: (Primary Sort, Secondary Sort, Tertiary Sort)
+    return max(units, key=lambda u: (
+        u.get("defense", c.DEFAULT_UNIT_DEF), 
+        u.get("attack", c.DEFAULT_UNIT_ATK),
+        u.get("speed", c.DEFAULT_UNIT_SPD)
+    ))
 def get_best_unit_by_attack_then_defense(units):
     """Finds the unit with the highest attack stat, tiebreaking with defense."""
     if not units:
         return None
     return max(units, key=lambda u: (u.get("attack", 0), u.get("defense", 0)))
 
+def get_best_unit_by_attack_then_speed(units):
+    """Finds the unit with the highest attack stat, tiebreaking with speed."""
+    if not units:
+        return None
+    # Tuple sorting: (Primary Sort: Attack, Secondary Sort: Speed)
+    return max(units, key=lambda u: (u.get("attack", 0), u.get("speed", 0)))
 
 # ==========================================
 # PREDICTION QUERIES (UI & RENDERING)

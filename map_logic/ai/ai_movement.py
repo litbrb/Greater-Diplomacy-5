@@ -209,24 +209,67 @@ def process_ai_unit_orders(map_screen):
 
         at_war = len(enemies) > 0 and (len(enemy_targets) > 0 or len(all_enemy_coasts) > 0 or len(expedition_targets) > 0)
 
-        # --- FIND ACTIVE BATTLES & CONVOY STATUS ---
+        # --- FIND ACTIVE BATTLES, RETREATS & CONVOY STATUS ---
         friendly_convoys = set()
         convoy_in_combat = set()
         convoy_in_danger = set()
 
+        lost_battles = {} # prov_id -> safe_retreat_id
+
         for unit, prov in units_info:
+            p_id = prov["id"]
             if queries.is_nation_in_combat_here(ai_name, prov, map_screen.nation_data):
-                active_battles.add(prov["id"])
+                if p_id not in active_battles and p_id not in lost_battles:
+                    
+                    # Evaluate if the AI will lose this battle on the next turn
+                    my_units = [u for u in prov.get("units", []) if u.get("owner") in friendly_nations]
+                    enemy_units = [u for u in prov.get("units", []) if queries.are_at_war(ai_name, u.get("owner"), map_screen.nation_data)]
+                    
+                    total_enemy_atk = sum(u.get("attack", c.DEFAULT_UNIT_ATK) for u in enemy_units)
+                    
+                    all_will_die = True
+                    if my_units and enemy_units:
+                        dmg_per_unit = total_enemy_atk / len(my_units)
+                        for u in my_units:
+                            if max(0, dmg_per_unit - u.get("defense", c.DEFAULT_UNIT_DEF)) < u.get("health", 1):
+                                all_will_die = False
+                                break
+                    else:
+                        all_will_die = False
+                        
+                    if all_will_die:
+                        # Find a safe retreat target for the group
+                        safe_retreats = []
+                        for n_id in prov.get("neighbors", []):
+                            if n_id in unsafe_waters: continue
+                            n_prov = map_screen.id_to_province.get(n_id)
+                            if not n_prov: continue
+                            n_owner = n_prov.get("owner", "Unclaimed")
+                            if not queries.is_hostile_territory(ai_name, n_owner, map_screen.nation_data):
+                                safe_retreats.append(n_id)
+                                
+                        if safe_retreats:
+                            # Prioritize friendly territory
+                            best_retreat = safe_retreats[0]
+                            for r_id in safe_retreats:
+                                if map_screen.id_to_province[r_id].get("owner") in friendly_nations:
+                                    best_retreat = r_id
+                                    break
+                            lost_battles[p_id] = best_retreat
+                        else:
+                            active_battles.add(p_id) # Nowhere to run, fight to the death
+                    else:
+                        active_battles.add(p_id)
                 
             if unit.get("type", "").startswith("Convoy"):
-                friendly_convoys.add(prov["id"])
+                friendly_convoys.add(p_id)
                 # Escort AI: Determine how much danger the convoy is in
                 if queries.is_nation_in_combat_here(ai_name, prov, map_screen.nation_data):
-                    convoy_in_combat.add(prov["id"])
+                    convoy_in_combat.add(p_id)
                 else:
                     for n_id in prov.get("neighbors", []):
                         if n_id in all_enemy_coasts or n_id in enemy_coastal_waters or n_id in unsafe_waters:
-                            convoy_in_danger.add(prov["id"])
+                            convoy_in_danger.add(p_id)
                             break
 
         # --- FIX: UNIVERSAL TARGETS ---
@@ -296,6 +339,21 @@ def process_ai_unit_orders(map_screen):
             is_naval_combatant = queries.is_naval_unit(u_type) and not is_convoy
 
             curr_id = prov["id"]
+
+            # --- NEW: GROUP RETREAT FROM LOST BATTLES ---
+            if curr_id in lost_battles:
+                retreat_target = lost_battles[curr_id]
+                n_prov = map_screen.id_to_province.get(retreat_target)
+                if n_prov:
+                    can_retreat = False
+                    if is_convoy and queries.can_convoy_enter(prov, n_prov): can_retreat = True
+                    elif is_naval_combatant and (n_prov.get("terrain") in c.WATER_TERRAINS or queries.can_ships_enter(ai_name, n_prov, map_screen.nation_data)): can_retreat = True
+                    elif not is_naval_combatant and not is_convoy and queries.can_land_units_enter(unit["owner"], n_prov, map_screen.nation_data): can_retreat = True
+                    
+                    if can_retreat:
+                        unit["order"]["path"] = [retreat_target]
+                        continue
+            # --------------------------------------------
 
             # --- ANTI-SHUFFLE & COMBAT INTERCEPTS ---
             in_combat = queries.is_nation_in_combat_here(ai_name, prov, map_screen.nation_data)

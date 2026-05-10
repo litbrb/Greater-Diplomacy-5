@@ -22,6 +22,28 @@ def draw_combat_bubbles(self_map, surface):
         friendly_nations.update(queries.get_faction_members(player_faction, self_map.nation_data))
     
     for pred in predictions:
+        # Check if the player is the initiator
+        is_initiator = False
+        if player_country == "Spectator":
+            is_initiator = True
+        elif pred["type"] == "meeting":
+            s1_owner = pred["side1"][0]["owner"] if pred["side1"] else ""
+            s2_owner = pred["side2"][0]["owner"] if pred["side2"] else ""
+            if s1_owner in friendly_nations or s2_owner in friendly_nations:
+                is_initiator = True
+        else:
+            loc_id = pred["loc"]
+            for owner, units in pred["forces"].items():
+                if owner in friendly_nations:
+                    for u in units:
+                        order = u.get("order")
+                        if order and order.get("type") == "MOVE" and order.get("path") and order["path"][0] == loc_id:
+                            is_initiator = True
+                            break
+        
+        if not is_initiator:
+            continue
+
         friendly_atk = 0
         enemy_atk = 0
         involved = False

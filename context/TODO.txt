@@ -22,14 +22,11 @@ ITS CALLED Tkinter
 - gemma4 (thinking)
 - qwen3.6 (pro)
 
-AI THINKING PROBLEMS
-- are ships being too evasive?
-not attacking convoys that are clearly undefended
-also what are the rules for attacking when it comes to ships
-- land based retreating?
-
 - let the ai be able to convert materials into oil and oil into materials???
 - make converting oil and materials more... streamlined so you don't have to click it a million times
+
+- make it so that only the top 3 units by attack value can actually deal damage in a battle
+- the rest of them can act as just meatshields
 
 - trade mechanics (offer x territory for y thing)
 
@@ -40,6 +37,8 @@ SLIDER STUFF
 - make war declarations and the like more visible (shown in yo face)
 
 - ai should be able to sign non-agression pacts that prevent wars
+
+- how does the ai determine how to ask someone else to join in a war or not?
 
 could you make it such so that if a country is at war it will try to send a call to arms request to all the other countries in its faction
 (if full ai is on make the ai write a message first before declaring war)

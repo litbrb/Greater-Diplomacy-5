@@ -40,11 +40,6 @@ also what are the rules for attacking when it comes to ships
 - lands gained that wasn't originally held by all faction members can use the coring mechanic to determine who gets to own it
 - if a faction starts the game in a war, simply use what the faction looked like at the start of the game as the map to store
 
-- make random scenarios more balanced (no starting out with just a basic factory if the year is high enough)
-- if factory 1 is unlocked, ensure that every country has at least a factory of that level
-- if recruitment center 2 is unlocked, ensure that every country has at least a recruitment center of that level
-- etc
-
 SLIDER STUFF
 - make FPS able to be edited
 - replace camera automatic tilt with slider you can use to manually edit the tilt

@@ -1,4 +1,3 @@
-import random
 import os
 import json
 import data.constants as c
@@ -224,30 +223,72 @@ def randomize_all_provinces(map_screen, settings):
             if allowed_recruitment and random.random() < 0.30:
                 prov["buildings"].append(random.choice(allowed_recruitment))
 
-    # --- Step D: Guarantee Minimum Buildings ---
+    # --- Step D: Guarantee Minimum Buildings (Balanced by Tech) ---
+    best_factory = allowed_factories[-1] if allowed_factories else getattr(c, 'DEFAULT_STARTING_FACTORY', "Basic Factory")
+    best_refinery = allowed_refineries[-1] if allowed_refineries else None
+    best_recruitment = allowed_recruitment[-1] if allowed_recruitment else None
+
     for nation in active_nations:
         owned_provs = [p for p in valid_land_provinces if p["owner"] == nation]
         if not owned_provs: continue
 
-        has_factory = False
+        has_best_factory = False
+        has_best_refinery = False
+        has_best_recruitment = False
+        
+        factory_provs = []
         refinery_provs = []
+        recruitment_provs = []
 
         for prov in owned_provs:
             bldgs = prov.get("buildings", [])
             
-            # Check if province contains an industrial building
-            if any("Factory" in b for b in bldgs):
-                has_factory = True
-                
-            if any("Refinery" in b for b in bldgs):
-                refinery_provs.append(prov)
-        
-        # If the nation randomly got zero factories, guarantee them one
-        if not has_factory:
-            # Safely prioritize merging it with an existing refinery to save map space
-            target_prov = random.choice(refinery_provs) if refinery_provs else random.choice(owned_provs)
-            bldg_to_add = random.choice(allowed_factories) if allowed_factories else c.DEFAULT_STARTING_FACTORY
-            target_prov.setdefault("buildings", []).append(bldg_to_add)
+            # Check if they randomly received the best tier buildings
+            if best_factory and best_factory in bldgs: has_best_factory = True
+            if best_refinery and best_refinery in bldgs: has_best_refinery = True
+            if best_recruitment and best_recruitment in bldgs: has_best_recruitment = True
+            
+            # Track existing building locations for grouping
+            if any("Factory" in b for b in bldgs): factory_provs.append(prov)
+            if any("Refinery" in b for b in bldgs): refinery_provs.append(prov)
+            if any("Recruitment" in b for b in bldgs): recruitment_provs.append(prov)
+
+        # 1. Guarantee best factory
+        if best_factory and not has_best_factory:
+            # Safely prioritize upgrading an existing lower-tier factory
+            if factory_provs:
+                target_prov = random.choice(factory_provs)
+                # Remove the old factory to upgrade it
+                target_prov["buildings"] = [b for b in target_prov["buildings"] if "Factory" not in b]
+            else:
+                target_prov = random.choice(refinery_provs + recruitment_provs) if (refinery_provs or recruitment_provs) else random.choice(owned_provs)
+                factory_provs.append(target_prov)
+            
+            target_prov.setdefault("buildings", []).append(best_factory)
+
+        # 2. Guarantee best refinery
+        if best_refinery and not has_best_refinery:
+            # Refineries should ideally be placed on tiles with factories
+            if refinery_provs:
+                target_prov = random.choice(refinery_provs)
+                # Remove the old refinery to upgrade it
+                target_prov["buildings"] = [b for b in target_prov["buildings"] if "Refinery" not in b]
+            else:
+                target_prov = random.choice(factory_provs) if factory_provs else random.choice(owned_provs)
+            
+            target_prov.setdefault("buildings", []).append(best_refinery)
+
+        # 3. Guarantee best recruitment center
+        if best_recruitment and not has_best_recruitment:
+            # Recruitment centers should also ideally be on tiles with factories
+            if recruitment_provs:
+                target_prov = random.choice(recruitment_provs)
+                # Remove the old recruitment center to upgrade it
+                target_prov["buildings"] = [b for b in target_prov["buildings"] if "Recruitment" not in b]
+            else:
+                target_prov = random.choice(factory_provs) if factory_provs else random.choice(owned_provs)
+            
+            target_prov.setdefault("buildings", []).append(best_recruitment)
 
     # --- Step E: Generate Starting Armies & Spread Across Borders ---
     if getattr(c, 'RANDOM_SCENARIO_SPAWN_UNITS', True):

@@ -55,6 +55,31 @@ def save_cached_json(cache_key, new_data):
     except Exception as e:
         print(f"Error saving {cache_obj['path']}: {e}")
 
+def save_global_settings(controller):
+    """Unified helper to save all settings directly from the controller state."""
+    from data.io import keybind_io
+    import data.constants as c
+    
+    keybind_io.save_settings(
+        controller.keybinds,
+        controller.sfx_volume,
+        controller.music_volume,
+        getattr(controller, 'num_players', 1),
+        getattr(controller, 'ai_mode', c.DEFAULT_AI_MODE),
+        getattr(controller, 'gemini_api_key', ''),
+        getattr(controller, 'chatgpt_api_key', ''),
+        getattr(controller, 'claude_api_key', ''),
+        getattr(controller, 'ollama_api_key', ''),
+        getattr(controller, 'gemini_model', ''),
+        getattr(controller, 'chatgpt_model', ''),
+        getattr(controller, 'claude_model', ''),
+        getattr(controller, 'ollama_model', ''),
+        getattr(controller, 'ai_immersion_level', 'FULL'),
+        getattr(controller, 'music_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
+        getattr(controller, 'sfx_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
+        getattr(controller, 'target_fps', getattr(c, 'TARGET_FPS', 60))
+    )
+
 # --- REFACTORED GETTERS (No paths needed here anymore!) ---
 def get_settings(): return _load_cached_json("settings")
 def get_unit_library(): return _load_cached_json("unit_library")

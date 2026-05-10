@@ -4,6 +4,7 @@ from gameState import GameState
 from data.io import keybind_io
 import data.constants as c
 from ui import buttons
+from data import queries
 from map_logic.rendering.font_manager import fonts
 
 class Settings(GameState):
@@ -87,27 +88,16 @@ class Settings(GameState):
     def reset_defaults(self):
         default_keys = {"BACK": pygame.K_ESCAPE, "ORDERS": pygame.K_q}
         self.controller.keybinds = default_keys
-        
-        # Pull everything safely to reset layout without wiping APIs
-        gemini_api_key = getattr(self.controller, 'gemini_api_key', '')
-        chatgpt_key = getattr(self.controller, 'chatgpt_api_key', '')
-        claude_key = getattr(self.controller, 'claude_api_key', '')
-        ollama_key = getattr(self.controller, 'ollama_api_key', '')
-        
-        gemini_mod = getattr(self.controller, 'gemini_model', '')
-        chatgpt_mod = getattr(self.controller, 'chatgpt_model', '')
-        claude_mod = getattr(self.controller, 'claude_model', '')
-        ollama_mod = getattr(self.controller, 'ollama_model', '')
-
-        immersion = getattr(self.controller, 'ai_immersion_level', 'FULL')
-        
-        # Note: Pitch defaults to 0.5 automatically, so we don't need to explicitly pass it
-        keybind_io.save_settings(default_keys, self.sfx_volume, self.controller.music_volume, self.num_players, self.ai_mode, 
-                                 gemini_api_key, chatgpt_key, claude_key, ollama_key,
-                                 gemini_mod, chatgpt_mod, claude_mod, ollama_mod, immersion,
-                                 self.controller.music_pitch, self.controller.sfx_pitch) # <-- ADDED PITCHES HERE
+        self.controller.target_fps = 60
+        queries.save_global_settings(self.controller)
         self.refresh_ui()
-        
+
+    def set_fps(self, val):
+        fps = int(20 + (val * 40)) # Scale 0.0-1.0 to 20-60
+        self.controller.target_fps = fps
+        if hasattr(self, 'fps_slider'):
+            self.fps_slider.text = f"Max FPS: {fps}"
+
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -193,24 +183,7 @@ class Settings(GameState):
             self.player_slider.text = f"Players: {self.num_players}"
 
     def save_and_go_back(self, execute_exit=True):
-        keybind_io.save_settings(
-            self.controller.keybinds, 
-            self.controller.sfx_volume, 
-            self.controller.music_volume,
-            self.num_players, 
-            self.ai_mode,
-            getattr(self.controller, 'gemini_api_key', ''), 
-            getattr(self.controller, 'chatgpt_api_key', ''), 
-            getattr(self.controller, 'claude_api_key', ''), 
-            getattr(self.controller, 'ollama_api_key', ''), 
-            getattr(self.controller, 'gemini_model', ''), 
-            getattr(self.controller, 'chatgpt_model', ''), 
-            getattr(self.controller, 'claude_model', ''), 
-            getattr(self.controller, 'ollama_model', ''), 
-            getattr(self.controller, 'ai_immersion_level', 'FULL'),
-            self.controller.music_pitch,
-            self.controller.sfx_pitch
-        )
+        queries.save_global_settings(self.controller)
         
         if execute_exit:
             self.next_state = getattr(self, 'return_state', 'MENU')

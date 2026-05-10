@@ -138,24 +138,7 @@ class Music_Player(GameState):
         self.save_audio_settings()
         
     def save_audio_settings(self):
-        keybind_io.save_settings(
-            self.controller.keybinds, 
-            self.controller.sfx_volume, 
-            self.controller.music_volume, 
-            self.controller.num_players, 
-            getattr(self.controller, 'ai_mode', c.DEFAULT_AI_MODE),
-            getattr(self.controller, 'gemini_api_key', ''), 
-            getattr(self.controller, 'chatgpt_api_key', ''),
-            getattr(self.controller, 'claude_api_key', ''), 
-            getattr(self.controller, 'ollama_api_key', ''),
-            getattr(self.controller, 'gemini_model', ''), 
-            getattr(self.controller, 'chatgpt_model', ''),
-            getattr(self.controller, 'claude_model', ''), 
-            getattr(self.controller, 'ollama_model', ''),
-            getattr(self.controller, 'ai_immersion_level', 'FULL'),
-            self.controller.music_pitch,
-            self.controller.sfx_pitch
-        )
+        queries.save_global_settings(self.controller)
 
     # --- PLAYLIST & EDITOR ACTIONS ---
     def set_view_mode(self, mode):

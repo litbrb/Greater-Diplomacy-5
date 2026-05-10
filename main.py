@@ -131,10 +131,9 @@ class Controller:
         self.claude_model = loaded_data[11]
         self.ollama_model = loaded_data[12]
         self.ai_immersion_level = loaded_data[13]
-        
-        # New Audio Settings
         self.music_pitch = loaded_data[14] if len(loaded_data) > 14 else getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
         self.sfx_pitch = loaded_data[15] if len(loaded_data) > 15 else getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
+        self.target_fps = loaded_data[16] if len(loaded_data) > 16 else getattr(c, 'TARGET_FPS', 60)
 
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.sfx_volume
@@ -293,7 +292,7 @@ class Controller:
     def run(self):
         while True:
             # --- THE MAGIC CPU FIX ---
-            self.clock.tick(c.TARGET_FPS) 
+            self.clock.tick(self.target_fps) 
             
             # --- SOLOUD SONG END CHECK ---
             if self.music_handle is not None:

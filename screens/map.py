@@ -1,7 +1,5 @@
 # Standard Library & Third Party
 import pygame
-import random
-import math
 import os
 import sys
 

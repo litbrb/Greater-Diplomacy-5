@@ -239,6 +239,7 @@ SIZES = {
     "medium_square": (50, 50),
     "tech_square": (80, 80),
     "left_ui_button": (120, 40),
+    "new_game": (300, 50),
     "orders": (100, 50),
     "small": (100, 40),
     "left_ui_bar": (120, 50),
@@ -452,10 +453,11 @@ BILATERAL_ACTIONS = [
 # RELATION MODIFIERS & COLORS
 # ==========================================
 
-REL_MOD_AT_WAR = -60
-REL_MOD_IN_FACTION = 40
+REL_MOD_AT_WAR = -100
+REL_MOD_IN_FACTION = 80
 REL_MOD_RECENT_WAR = -20
 REL_MOD_RECENT_FACTION = -20
+REL_MOD_COMMON_ENEMY = 20
 
 COLOR_REL_MAX_POS = (100, 100, 200) # Light blue at 200
 COLOR_REL_POS = (0, 255, 0)         # Green at 100

@@ -67,9 +67,8 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
         
         # --- Inject Relation Score ---
         if nation != ai_nation:
-            rel_score = ai_stats.get("relations", {}).get(nation, 0)
-            rels.append(f"Relations: {rel_score} (Scale: -100 to 100)")
-        
+            rel_score = queries.get_relation_score(ai_nation, nation, nation_data)
+            rels.append(f"Relations: {rel_score} (Scale: -200 to 200)")        
         if rels:
             politics_str += f"- {nation}: {' | '.join(rels)}.\n"
             
@@ -156,6 +155,20 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     mode = get_ai_mode()
     immersion = get_ai_immersion_level()
     
+    # stuff to maybe replace the hardcoded true?
+    rel_score = queries.get_relation_score(ai_nation, sender_nation, nation_data)
+    
+    # Base logic: If they hate us (-100), they won't accept anything but a ceasefire.
+    # If they like us (80+), they are very likely to accept.
+    chance = 50 + (rel_score / 2) # Scale -100 to 100 into 0% to 100% chance
+    
+    # War specific logic
+    if rel_score <= -100 and action_type != "CEASEFIRE":
+        accepted = False
+    else:
+        accepted = random.randint(0, 100) < chance
+
+    # nah
     # Ensure 50/50 strict logic regardless of model behavior
     accepted = random.choice([True, False])
     # actually true, always

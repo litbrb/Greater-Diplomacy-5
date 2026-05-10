@@ -1,6 +1,7 @@
 import data.constants as c
 from data import queries
 from map_logic.rendering import edit_province_ownership
+import random # Imported for the random tiebreaker
 
 def apply_group_damage(total_atk, target_units):
     """Distributes total attack among target units, reduced by their individual defense."""
@@ -269,9 +270,34 @@ def check_for_post_combat_captures(self):
             elif hp == max_hp:
                 top_nations.append(o)
             
+        capturer = None
+        
         # If one clear winner, they take it
         if len(top_nations) == 1:
             capturer = top_nations[0]
+        # If there's a tie, run through the tiebreaker cascade
+        elif len(top_nations) > 1:
+            # Tiebreaker 1: Highest combined attack
+            atk_totals = {o: sum(u.get("attack", 0) for u in units if u["owner"] == o) for o in top_nations}
+            max_atk = max(atk_totals.values())
+            tied_by_atk = [o for o, atk in atk_totals.items() if atk == max_atk]
+
+            if len(tied_by_atk) == 1:
+                capturer = tied_by_atk[0]
+            else:
+                # Tiebreaker 2: Highest speed stat
+                spd_max = {o: max((u.get("speed", 0) for u in units if u["owner"] == o), default=0) for o in tied_by_atk}
+                max_spd = max(spd_max.values())
+                tied_by_spd = [o for o, spd in spd_max.items() if spd == max_spd]
+
+                if len(tied_by_spd) == 1:
+                    capturer = tied_by_spd[0]
+                else:
+                    # Tiebreaker 3: Let fate decide
+                    capturer = random.choice(tied_by_spd)
+            
+        # Finalize Capture Logic
+        if capturer:
             if capturer != current_owner:
                 # faction core transfer stuff
                 true_owner = queries.get_faction_core_transfer_target(capturer, province, self.nation_data)
@@ -286,7 +312,3 @@ def check_for_post_combat_captures(self):
                         if queries.is_hostile_territory(capturer, u["owner"], self.nation_data):
                             u["health"] = 0
                 province["units"] = [u for u in units if u.get("health", 0) > 0]
-            
-        # If there's a tie, give up, the province simply remains unchanged
-        elif len(top_nations) > 1:
-            pass

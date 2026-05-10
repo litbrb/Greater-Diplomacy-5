@@ -215,8 +215,6 @@ def get_faction_core_transfer_target(capturer, province, nation_data):
     if capturer in c.UNPLAYABLE_NATIONS:
         return capturer
 
-    current_owner = province.get("owner", "Unclaimed")
-
     faction_name = nation_data.get(capturer, {}).get("faction", "")
     if not faction_name:
         return capturer
@@ -230,15 +228,8 @@ def get_faction_core_transfer_target(capturer, province, nation_data):
     # Only transfer if EXACTLY ONE faction member has a core on this territory
     if len(faction_cores_on_tile) == 1:
         return faction_cores_on_tile[0]
-    elif len(faction_cores_on_tile) > 1:
-        return current_owner # Province remains unchanged
-
-
-    # Edge case: if the owner of that tile is at war with whoever captured it, capturer keeps it
-    if current_owner != "Unclaimed" and are_at_war(current_owner, capturer, nation_data):
-        return capturer
     
-    # If nobody does, the capturer keeps it
+    # If 2 or more faction members have a core, or nobody does, the capturer keeps the tile
     return capturer
 
 # ==========================================
@@ -748,6 +739,15 @@ def get_relation_score(nation_a, nation_b, nation_data):
     elif are_in_same_faction(nation_a, nation_b, nation_data):
         score += c.REL_MOD_IN_FACTION
         
+    # Common Enemy Bonus
+    enemies_a = set(get_enemies(nation_a, nation_data))
+    enemies_b = set(get_enemies(nation_b, nation_data))
+    
+    # If the intersection contains anything, they share at least one enemy.
+    # The flat bonus is applied once, capping the effect.
+    if enemies_a & enemies_b:
+        score += c.REL_MOD_COMMON_ENEMY
+        
     # Apply all decaying temporary modifiers
     temp_mods = nation_data.get(nation_a, {}).get("temp_modifiers", {}).get(nation_b, {})
     for mod_val in temp_mods.values():
@@ -868,7 +868,6 @@ def is_unit_obsolete(group_name, player_research):
     obsoleting_techs = c.OBSOLESCENCE_RULES.get(group_name, [])
     return any(player_research.get(tech, 0) >= 1 for tech in obsoleting_techs)
 
-# --- CHANGED: Renamed the misleading function and added its counterpart ---
 def get_best_unit_by_defense_then_attack_then_speed(units):
     """Finds the unit with the highest defense stat, tiebreaking with attack, then speed."""
     if not units:

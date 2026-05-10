@@ -14,7 +14,7 @@ class New_Game(GameState):
     def refresh_scenarios(self):
         self.elements = [
             Button(50, 50, "small", "red", "Back", self.exit_to_menu),
-            Button("centered", "centered + 200", "large", "orange", "RANDOM SCENARIO", self.start_random_scenario),
+            Button("centered", "centered + 200", "new_game", "orange", "RANDOM SCENARIO", self.start_random_scenario),
             # Button("centered", "centered", "big", "red", "Check map tools", self.map_selected),
         ]
         
@@ -25,10 +25,10 @@ class New_Game(GameState):
             
         scenarios = os.listdir(scenario_dir)
         for i, name in enumerate(scenarios):
-            btn_y = 200 + (i * 100)
+            btn_y = 200 + (i * 60)
             # Create a button for each scenario
             self.elements.append(
-                Button("centered", btn_y, "large", "blue", name, 
+                Button("centered", btn_y, "new_game", "blue", name, 
                        lambda n=name: self.start_scenario(n))
             )
 

@@ -370,7 +370,8 @@ class Map(GameState):
     def refresh_nation_data(self):
         from data.io import country_io
         new_data = country_io.load_all_country_data()
-        added_count, updated_count = 0
+        added_count = 0
+        updated_count = 0
         
         for country, data in new_data.items():
             if country not in self.nation_data:
@@ -406,7 +407,7 @@ class Map(GameState):
                 del self.default_research[k]
                 updated_count += 1
                 
-        self.nation_colors = {name: tuple(stats["color"]) for name, stats in self.nation_data.items()}
+        self.nation_colors = {name: tuple(stats.get("color", [150, 150, 150])) for name, stats in self.nation_data.items()}
         self.refresh_political_map()
         self.refresh_relations_map()
         

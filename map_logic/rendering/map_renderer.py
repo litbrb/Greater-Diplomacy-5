@@ -63,14 +63,15 @@ def draw_map_screen(self, surface):
             if order and order.get("type") == "MOVE":
                 path = order.get("path", [])
                 if path:
-                    # --- NEW VISIBILITY CHECK ---
                     owner = unit.get("owner")
-                    is_player_unit = owner in getattr(self, 'active_players', [self.player_country])
+                    
+                    # Only show the arrows for the CURRENT player taking their turn!
+                    is_current_player_unit = (owner == self.player_country)
                     is_spectator = self.player_country == "Spectator"
                     
-                    # Hide the arrows if it's not the player's unit, the player isn't spectating,
-                    # and the game isn't actively resolving AI turns.
-                    if not is_player_unit and not is_spectator and not getattr(self, 'viewing_ai_moves', False):
+                    # Hide the arrows if it's not the current player's unit, the player isn't spectating,
+                    # and the game isn't actively resolving AI/global turns.
+                    if not is_current_player_unit and not is_spectator and not getattr(self, 'viewing_ai_moves', False):
                         continue
                     # ----------------------------
 

@@ -34,14 +34,16 @@ also what are the rules for attacking when it comes to ships
 - trade mechanics (offer x territory for y thing)
 
 - movement arrows can still be seen even in spectator mode! before the ai is supposed to make their moves!
-- also movement order arrows from other players can be seen if you're playing local multiplayer
 
 - when a faction enters a war, keep what the faction borders looked like before the war stored somewhere
 - if land is lost or gained from the territory each member had before the war, instead of checking for cores, simply check for what the map originally looked like and restore recaptured provinces that way
-- lands gained that wern't originally held by all faction members can use the coring mechanic to determine who gets to own it
+- lands gained that wasn't originally held by all faction members can use the coring mechanic to determine who gets to own it
 - if a faction starts the game in a war, simply use what the faction looked like at the start of the game as the map to store
 
 - make random scenarios more balanced (no starting out with just a basic factory if the year is high enough)
+- if factory 1 is unlocked, ensure that every country has at least a factory of that level
+- if recruitment center 2 is unlocked, ensure that every country has at least a recruitment center of that level
+- etc
 
 SLIDER STUFF
 - make FPS able to be edited

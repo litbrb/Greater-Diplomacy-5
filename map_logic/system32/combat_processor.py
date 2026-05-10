@@ -287,7 +287,6 @@ def check_for_post_combat_captures(self):
                             u["health"] = 0
                 province["units"] = [u for u in units if u.get("health", 0) > 0]
             
-        # If there's a tie, it becomes unclaimed
+        # If there's a tie, give up, the province simply remains unchanged
         elif len(top_nations) > 1:
-            if current_owner != "Unclaimed":
-                edit_province_ownership.conquer_province(self, province, "Unclaimed")
+            pass

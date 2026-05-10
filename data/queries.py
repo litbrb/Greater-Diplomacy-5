@@ -215,6 +215,8 @@ def get_faction_core_transfer_target(capturer, province, nation_data):
     if capturer in c.UNPLAYABLE_NATIONS:
         return capturer
 
+    current_owner = province.get("owner", "Unclaimed")
+
     faction_name = nation_data.get(capturer, {}).get("faction", "")
     if not faction_name:
         return capturer
@@ -228,8 +230,15 @@ def get_faction_core_transfer_target(capturer, province, nation_data):
     # Only transfer if EXACTLY ONE faction member has a core on this territory
     if len(faction_cores_on_tile) == 1:
         return faction_cores_on_tile[0]
+    elif len(faction_cores_on_tile) > 1:
+        return current_owner # Province remains unchanged
 
-    # If multiple faction members have a core, or nobody does, the capturer keeps it
+
+    # Edge case: if the owner of that tile is at war with whoever captured it, capturer keeps it
+    if current_owner != "Unclaimed" and are_at_war(current_owner, capturer, nation_data):
+        return capturer
+    
+    # If nobody does, the capturer keeps it
     return capturer
 
 # ==========================================

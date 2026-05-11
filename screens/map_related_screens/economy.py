@@ -20,8 +20,15 @@ class Economy_Screen(GameState):
         
         # New Conversion Slider positioned below the resource rows
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
-        slider_val = p_data.get("mat_to_fuel_slider", 0.0)
-        self.elements.append(Slider(c.SCREEN_WIDTH // 2 - 200, c.ECON_CONVERT_BTN_Y, 400, "Convert % Mats to Fuel", slider_val, self.set_conversion))
+        
+        # Fetch the max allowed conversion limit based on tech
+        max_allowed = queries.get_max_fuel_conversion(p_data)
+        
+        # Safely clamp the loaded slider value just in case they lost tech
+        slider_val = min(p_data.get("mat_to_fuel_slider", 0.0), max_allowed)
+        p_data["mat_to_fuel_slider"] = slider_val
+        
+        self.elements.append(Slider(c.SCREEN_WIDTH // 2 - 200, c.ECON_CONVERT_BTN_Y, 400, "Convert % Mats to Fuel", slider_val, self.set_conversion, visual_max=c.MAX_CONVERSION_SLIDER_VAL, allowed_max=max_allowed))
 
     def set_conversion(self, val):
         if not self.map_screen: return

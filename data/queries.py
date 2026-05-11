@@ -112,7 +112,6 @@ def get_total_turns(time_manager):
 def get_economic_power(nation, nation_data):
     """Estimates a nation's economic power based on its resource stockpiles."""
     data = nation_data.get(nation, {})
-    # CHANGED: Now uses constants instead of hardcoded 10 and 20
     manpower_val = data.get("manpower", 0) * c.ECONOMY_WEIGHT_MANPOWER
     materials_val = data.get("materials", 0) * c.ECONOMY_WEIGHT_MATERIALS
     fuel_val = data.get("fuel", 0) * c.ECONOMY_WEIGHT_FUEL
@@ -143,7 +142,6 @@ def get_military_strength(nation, map_data):
     for prov in map_data.values():
         for u in prov.get("units", []):
             if u.get("owner") == nation:
-                # CHANGED: Uses constant divisor instead of hardcoded 10
                 hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
                 strength += u.get("attack", 0) + u.get("defense", 0) + hp_val
     return strength
@@ -179,7 +177,6 @@ def get_border_strength(nation_a, nation_b, map_data, id_to_province):
             if prov:
                 for u in prov.get("units", []):
                     if u.get("owner") == target_nation:
-                        # CHANGED: Uses constant divisor instead of hardcoded 10
                         hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
                         strength += u.get("attack", 0) + u.get("defense", 0) + hp_val
         return strength
@@ -374,6 +371,16 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
 # PROVINCE & TECH QUERIES
 # ==========================================
 
+def get_max_fuel_conversion(nation_data_block):
+    """Determines the maximum allowed Mat-to-Fuel conversion slider value based on tech."""
+    res = nation_data_block.get("research", {})
+    if res.get("fuel_refining", 0) >= 3: return c.CONVERSION_LIMITS.get("fuel_refining_3", 0.10)
+    if res.get("fuel_refining", 0) == 2: return c.CONVERSION_LIMITS.get("fuel_refining_2", 0.08)
+    if res.get("fuel_refining", 0) == 1: return c.CONVERSION_LIMITS.get("fuel_refining_1", 0.06)
+    if res.get("synthetic_fuel_experiments", 0) >= 1: return c.CONVERSION_LIMITS.get("synthetic_fuel_experiments", 0.04)
+    if res.get("bergius_process", 0) >= 1: return c.CONVERSION_LIMITS.get("bergius_process", 0.02)
+    return 0.0
+
 def get_industry(province):
     """Returns the highest level of industry in the province."""
     level = 0
@@ -432,6 +439,12 @@ def get_tech_unlocks(tech_key, level):
     # Hardcoded logic bonuses
     if tech_key == "bergius_process" and level == 1:
         unlocks.append(f"+{c.BERGIUS_FUEL_BONUS} Base Fuel/Turn")
+        unlocks.append("Max Mat-to-Fuel Conversion: 2%")
+    elif tech_key == "synthetic_fuel_experiments" and level == 1:
+        unlocks.append("Max Mat-to-Fuel Conversion: 4%")
+    elif tech_key == "fuel_refining":
+        limit = 4 + (level * 2)
+        unlocks.append(f"Max Mat-to-Fuel Conversion: {limit}%")
         
     if tech_key == "general_recruitment":
         bonus = getattr(c, 'GENERAL_RECRUITMENT_BONUS', 5)
@@ -634,14 +647,14 @@ def calculate_all_economies(map_data, nation_data):
     # Finalize totals and calculate conversions
     for name, data in econ_data.items():
         n_data = nation_data.get(name, {})
-        conv_rate = n_data.get("mat_to_fuel_slider", 0.0)
+        conv_rate = min(n_data.get("mat_to_fuel_slider", 0.0), get_max_fuel_conversion(n_data))
         
         # Calculate raw material income vs upkeep to find out what we have safely
         raw_inc_mat = sum(data["breakdown"]["materials"].values())
         raw_upk_mat = data["upkeep"]["materials"]
         
-        # Max conversion only uses income gained this turn, not storage
-        net_inc_mat = max(0, raw_inc_mat)
+        # Only use the income gained this turn, don't drain the storage
+        net_inc_mat = max(0, raw_inc_mat - raw_upk_mat)
         
         if conv_rate > 0 and net_inc_mat >= 10:
             convert_amount = int(net_inc_mat * conv_rate)

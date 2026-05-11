@@ -135,18 +135,23 @@ class Button:
                     self.callback()
 
 class Slider:
-    def __init__(self, x, y, width, text, initial_val, callback):
+    def __init__(self, x, y, width, text, initial_val, callback, visual_max=1.0, allowed_max=1.0):
         self.rect = pygame.Rect(x, y, width, 20)
-        self.handle_rect = pygame.Rect(x + (width * initial_val) - 10, y - 5, 20, 30)
+        self.visual_max = visual_max
+        self.allowed_max = allowed_max
+        
+        self.value = max(0.0, min(initial_val, self.allowed_max))
+        ratio = self.value / self.visual_max if self.visual_max > 0 else 0
+        
+        self.handle_rect = pygame.Rect(x + (width * ratio) - 10, y - 5, 20, 30)
         self.text = text
         self.callback = callback
-        self.value = initial_val
         self.dragging = False
         self.visible = True
         
         # --- COMBINED TRACKERS ---
         self.last_display_string = self.get_display_string()
-        self.last_sound_tick = 0  # Put the throttle tracker back
+        self.last_sound_tick = 0
 
     def get_display_string(self):
         """
@@ -161,6 +166,15 @@ class Slider:
         if not self.visible: return
         
         pygame.draw.rect(surface, c.COLOR_SLIDER_TRACK, self.rect)
+        
+        # Draw restricted track if applicable
+        if self.allowed_max < self.visual_max and self.visual_max > 0:
+            allowed_ratio = self.allowed_max / self.visual_max
+            restricted_x = self.rect.x + int(self.rect.width * allowed_ratio)
+            restricted_w = self.rect.width - int(self.rect.width * allowed_ratio)
+            restricted_rect = pygame.Rect(restricted_x, self.rect.y, restricted_w, self.rect.height)
+            pygame.draw.rect(surface, (60, 40, 40), restricted_rect) # A dark reddish-grey for locked part
+            
         pygame.draw.rect(surface, c.COLOR_SLIDER_HANDLE, self.handle_rect)
         
         slider_font = fonts.get("normal")
@@ -181,8 +195,14 @@ class Slider:
             self.dragging = False
             
         elif event.type == pygame.MOUSEMOTION and self.dragging:
-            self.handle_rect.centerx = max(self.rect.left, min(event.pos[0], self.rect.right))
-            self.value = (self.handle_rect.centerx - self.rect.left) / self.rect.width
+            raw_x = max(self.rect.left, min(event.pos[0], self.rect.right))
+            raw_ratio = (raw_x - self.rect.left) / self.rect.width
+            max_ratio = self.allowed_max / self.visual_max if self.visual_max > 0 else 1.0
+            
+            clamped_ratio = min(raw_ratio, max_ratio)
+            
+            self.handle_rect.centerx = self.rect.left + int(self.rect.width * clamped_ratio)
+            self.value = clamped_ratio * self.visual_max
             
             self.callback(self.value)
             

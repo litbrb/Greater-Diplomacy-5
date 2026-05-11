@@ -45,3 +45,7 @@ Include a requirements.txt
 - declared war on, might be able to offer a ceasefire to someone else as an example
 
 - the map seems to show 0/0 for loading before it realizes how many actually have to be loaded
+
+- remove the fuel buildings, and instead just use the materials to fuel slider
+
+- make ollama threads the threads for every ai thing

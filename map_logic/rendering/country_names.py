@@ -109,18 +109,23 @@ def draw_country_names(map_screen, surface):
                         scaled_w = int(surf.get_width() * map_screen.camera.zoom * land_scale)
                         scaled_h = int(surf.get_height() * map_screen.camera.zoom * land_scale)
                         
-                        # --- NEW: Apply Tilt Compression to Text ---
-                        if getattr(map_screen.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_TEXT', True):
-                            scaled_h = int(scaled_h * map_screen.camera.tilt_factor)
-                        
                         if scaled_w > 0 and scaled_h > 0:
+                            # 1. Apply Uniform Scaling First
                             scaled_text = pygame.transform.scale(surf, (scaled_w, scaled_h))
                             scaled_shadow = pygame.transform.scale(shadow, (scaled_w, scaled_h))
                             
+                            # 2. Rotate the Text
                             angle = blob.get("angle", 0)
                             if abs(angle) > 2: 
                                 scaled_text = pygame.transform.rotate(scaled_text, angle)
                                 scaled_shadow = pygame.transform.rotate(scaled_shadow, angle)
+
+                            # 3. Apply Tilt Compression to Text AFTER Rotation
+                            if getattr(map_screen.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_TEXT', True):
+                                final_w = scaled_text.get_width()
+                                final_h = max(1, int(scaled_text.get_height() * map_screen.camera.tilt_factor))
+                                scaled_text = pygame.transform.scale(scaled_text, (final_w, final_h))
+                                scaled_shadow = pygame.transform.scale(scaled_shadow, (final_w, final_h))
                             
                             scaled_text.set_alpha(alpha)
                             scaled_shadow.set_alpha(alpha)
@@ -137,7 +142,6 @@ def draw_country_names(map_screen, surface):
                                 fac_name = map_screen.nation_data.get(country, {}).get("faction", "").upper()
                                 drawn_factions.add(fac_name)
 
-# (Keep update_country_centers identical since this is back-end analytical geometry math) ...
 def update_country_centers(map_screen):
     # Calculates the visual center, rotation, and physical spread for every country landmass.
     

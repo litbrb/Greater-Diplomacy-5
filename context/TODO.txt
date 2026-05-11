@@ -24,8 +24,6 @@ pyinstaller --clean --onefile --add-binary "win64-libsoloud.dll;." --add-binary 
 pyinstaller --clean --onefile main.py
 pyinstaller --onefile --windowed main.py
 
-Include a requirements.txt
-
 - default leader name please?
 - or just make the portrait bigger if no name and occupation given
 
@@ -33,13 +31,9 @@ Include a requirements.txt
 - gemma4 (thinking)
 - qwen3.6 (pro)
 
-- trade mechanics (offer x territory for y thing)
-
 - SO MANY OTHER VISUAL BUGS
 
 - make war declarations and the like more visible (shown in yo face)
-
-- ai should be able to sign non-agression pacts that prevent wars
 
 - make ai able to respond to actions taken against them not only with a reaction, but a diplomatic action too if possible
 - if declared war on, the ai might be able to offer a ceasefire to someone else (or whoever they're fighting) as an example

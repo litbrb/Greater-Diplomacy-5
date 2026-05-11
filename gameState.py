@@ -2,13 +2,6 @@ import pygame
 import data.constants as c
 from ui.bars import ui_bars
 
-# Default Keybinds
-DEFAULT_KEYS = {
-    "BACK": pygame.K_ESCAPE,
-    "NEXT_TURN": pygame.K_SPACE,
-    "ORDERS": pygame.K_q
-}
-
 class GameState:
     def __init__(self):
         self.done = False
@@ -33,7 +26,8 @@ class GameState:
                 bg_img = pygame.transform.scale(bg_img, surface.get_size())
             surface.blit(bg_img, (0, 0))
         else:
-            surface.fill(getattr(self, 'bg_color', (30, 30, 30)))
+            # Pull from constants instead of hardcoding
+            surface.fill(getattr(self, 'bg_color', c.DEFAULT_BG_COLOR))
         
         # 2. Draw the specific screen content (Map, UI Bars)
         # Moving this BEFORE elements fixes the layering

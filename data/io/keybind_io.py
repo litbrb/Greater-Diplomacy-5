@@ -1,4 +1,3 @@
-import json
 import os
 import pygame
 import data.constants as c
@@ -35,23 +34,31 @@ def save_settings(keybind_dict, volume, music_volume, num_players=1, ai_mode="GE
         "target_fps": target_fps
     }
     
-    with open(CONFIG_PATH, "w") as f:
-        json.dump(data_to_save, f, indent=4)
-        
-    queries.clear_json_caches()
+    # --- OPTIMIZATION: Replaced manual json.dump and clear_json_caches() ---
+    # This automatically writes to the disk AND keeps the memory updated seamlessly.
+    queries.save_cached_json("settings", data_to_save)
 
 def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
     """Loads all settings variables, safely falling back to defaults if missing."""
     default_pitch = getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
     
+    # --- OPTIMIZATION: Pulled AI defaults from constants ---
     if not os.path.exists(CONFIG_PATH):
         return (default_binds, default_volume, default_music_volume, 1, c.DEFAULT_AI_MODE, 
-                "", "", "", "", "gemini-2.5-flash", "gpt-4o-mini", "claude-3-haiku-20240307", "llama3", "FULL",
-                default_pitch, default_pitch) # <-- Return 2 pitches instead of 4 variables
+                "", "", "", "", 
+                getattr(c, 'DEFAULT_GEMINI_MODEL', "gemini-2.5-flash"), 
+                getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini"), 
+                getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307"), 
+                getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3"), 
+                "FULL", default_pitch, default_pitch)
     
     try:
-        with open(CONFIG_PATH, "r") as f:
-            saved_data = json.load(f)
+        # Utilize the caching manager
+        saved_data = queries.get_settings()
+        if not saved_data:
+            import json
+            with open(CONFIG_PATH, "r") as f:
+                saved_data = json.load(f)
         
         # Backwards compatibility if old save file only has keybinds directly
         if "keybinds" not in saved_data:
@@ -85,10 +92,10 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
             s.get("chatgpt_api_key", ""),
             s.get("claude_api_key", ""),
             s.get("ollama_api_key", ""),
-            s.get("gemini_model", "gemini-2.5-flash"),
-            s.get("chatgpt_model", "gpt-4o-mini"),
-            s.get("claude_model", "claude-3-haiku-20240307"),
-            s.get("ollama_model", "llama3"),
+            s.get("gemini_model", getattr(c, 'DEFAULT_GEMINI_MODEL', "gemini-2.5-flash")),
+            s.get("chatgpt_model", getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini")),
+            s.get("claude_model", getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307")),
+            s.get("ollama_model", getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3")),
             s.get("ai_immersion_level", "FULL"),
             s.get("music_pitch", s.get("music_speed", default_pitch)), 
             s.get("sfx_pitch", s.get("sfx_speed", default_pitch)),
@@ -97,5 +104,9 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
     except Exception as e:
         print(f"Error loading settings: {e}")
         return (default_binds, default_volume, default_music_volume, 1, "GEMINI", 
-                "", "", "", "", "gemini-2.5-flash", "gpt-4o-mini", "claude-3-haiku-20240307", "llama3", "FULL",
-                default_pitch, default_pitch)
+                "", "", "", "", 
+                getattr(c, 'DEFAULT_GEMINI_MODEL', "gemini-2.5-flash"), 
+                getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini"), 
+                getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307"), 
+                getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3"), 
+                "FULL", default_pitch, default_pitch)

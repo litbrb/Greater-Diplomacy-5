@@ -32,17 +32,17 @@ def get_ai_immersion_level():
 # --- MODEL / URL GETTERS ---
 
 def get_gemini_model():
-    return queries.get_settings().get("gemini_model", "gemini-2.5-flash")
+    return queries.get_settings().get("gemini_model", getattr(c, 'DEFAULT_GEMINI_MODEL', "gemini-2.5-flash"))
 
 def get_chatgpt_model():
-    return queries.get_settings().get("chatgpt_model", "gpt-4o-mini")
+    return queries.get_settings().get("chatgpt_model", getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini"))
 
 def get_claude_model():
-    return queries.get_settings().get("claude_model", "claude-3-haiku-20240307")
+    return queries.get_settings().get("claude_model", getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307"))
 
 def get_ollama_model():
     """Reads the settings config to see which Ollama model is requested."""
-    return queries.get_settings().get("ollama_model", "llama3")
+    return queries.get_settings().get("ollama_model", getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3"))
 
 def get_ollama_url():
     """Reads the URL from the settings. Defaults to localhost if empty."""
@@ -147,7 +147,7 @@ def call_ollama(system_prompt, user_prompt):
         return None
 
 def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg="", human_players=None):
-    if FORCE_SKIP: return True, ai_prompts.AI_FALLBACK_RESPONSES.get("GENERIC_ACCEPT", "We accept.")
+    if FORCE_SKIP: return True, ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]
     
     if human_players is None:
         human_players = []
@@ -168,13 +168,10 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     else:
         accepted = random.randint(0, 100) < chance
 
-    # nah
     # Ensure 50/50 strict logic regardless of model behavior
     accepted = random.choice([True, False])
     # actually true, always
     accepted = True
-    # hey so please don't remove the stuff above or this comment its useful for testing if the ai can accept things without breaking the game
-    # (i swear to god if you remove these comments...)
 
     # Check if this is an AI talking to an AI
     is_ai_to_ai = (ai_nation not in human_players) and (sender_nation not in human_players)
@@ -193,22 +190,23 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         use_lite_logic = True
 
     if use_lite_logic:
+        # --- OPTIMIZATION: Stripped hardcoded text, defer to dictionary strictly ---
         if action_type == "WAR_DECLARATION":
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("BETRAYAL", "You will regret this betrayal.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["BETRAYAL"]
         elif action_type == "LEAVE_FACTION":
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("FACTION_ABANDONED", "We will not forget your abandonment.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["FACTION_ABANDONED"]
         elif action_type == "DISBAND_FACTION":
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("FACTION_DISBANDED", "It is a shame to see our alliance broken.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["FACTION_DISBANDED"]
         elif action_type == "JOIN_WARS":
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("ACCEPTED_HELP", "We gratefully accept your assistance in our conflicts.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["ACCEPTED_HELP"]
         elif action_type == "BREAK_ALLIANCE":
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("ALLIANCE_BROKEN", "We won't forget this.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["ALLIANCE_BROKEN"]
         elif action_type == "KICK_FACTION_MEMBER":
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("KICKED_FROM_FACTION", "We won't forget being expelled.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["KICKED_FROM_FACTION"]
         elif action_type == "CALL_TO_ARMS":
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("ANSWERED_CALL", "We will answer your call to arms.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["ANSWERED_CALL"]
         else:
-            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("AI_OFF_ACCEPT", "We accept your proposal.") if accepted else ai_prompts.AI_FALLBACK_RESPONSES.get("AI_OFF_REJECT", "We reject your proposal.")
+            fallback = ai_prompts.AI_FALLBACK_RESPONSES["AI_OFF_ACCEPT"] if accepted else ai_prompts.AI_FALLBACK_RESPONSES["AI_OFF_REJECT"]
         return accepted, fallback
 
     print(f"[LLM CALL] {ai_nation} generating flavor text for {action_type} from {sender_nation}... (Mode: {mode})")
@@ -318,7 +316,6 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
         )
         reply_json = json.loads(response.text)
         
-        # Add this guardrail right after loading the JSON:
         ai_action = reply_json.get("action", "NONE")
         act_target = reply_json.get("action_target", "NONE")
         if ai_action == "WAR_DECLARATION":

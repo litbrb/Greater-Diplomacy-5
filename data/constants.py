@@ -1,3 +1,5 @@
+import pygame
+
 # Used for logical ownership assignment
 WATER_MAPPING = {
     "ocean": "Ocean", 
@@ -62,6 +64,25 @@ NON_CORE_MULTIPLIERS = {
     "materials": 0.5,
     "fuel": 0.5
 }
+
+# ==========================================
+# DEFAULTS & ASSETS
+# ==========================================
+
+DEFAULT_BG_COLOR = (30, 30, 30)
+ICON_PATH = 'assets/icon/icon.png'
+
+DEFAULT_KEYS = {
+    "BACK": pygame.K_ESCAPE,
+    "NEXT_TURN": pygame.K_SPACE,
+    "ORDERS": pygame.K_q
+}
+
+# AI Default Models
+DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+DEFAULT_CHATGPT_MODEL = "gpt-4o-mini"
+DEFAULT_CLAUDE_MODEL = "claude-3-haiku-20240307"
+DEFAULT_OLLAMA_MODEL = "llama3"
 
 # ==========================================
 # STARTING BUILDINGS

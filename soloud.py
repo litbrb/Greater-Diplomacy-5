@@ -7,7 +7,8 @@ import sys
 try:
     import os
     # Force Python to look at the exact, absolute path of the DLL next to this script
-    dll_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "soloud_x64.dll")
+    dll_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "win64-libsoloud"
+	".dll")
     soloud_dll = ctypes.CDLL(dll_path)
 except Exception as e:
     print("\n" + "="*50)

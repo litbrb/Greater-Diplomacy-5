@@ -2,6 +2,15 @@ import pygame
 import os
 import sys
 
+# --- NEW: macOS Tkinter/Pygame NSApplication Clash Fix ---
+import platform
+import tkinter as tk
+if platform.system() == "Darwin":
+    # Initialize Tkinter FIRST so it claims the macOS NSApplication.
+    # Pygame is polite enough to share, but Tkinter is not.
+    _mac_tk_fix = tk.Tk()
+    _mac_tk_fix.withdraw()
+
 # --- NEW: Tell Python 3.8+ to trust the current folder for DLLs ---
 if os.name == 'nt':
     os.add_dll_directory(os.path.dirname(os.path.abspath(__file__)))

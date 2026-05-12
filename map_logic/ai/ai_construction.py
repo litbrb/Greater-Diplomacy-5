@@ -73,11 +73,18 @@ def process_ai_economy_decisions(map_screen):
         if ratio_mat > target_mat: deficits.append("cost_materials")
         if ratio_fuel > target_fuel: deficits.append("cost_fuel")
 
+        # --- DYNAMIC AI CONVERSION FIX ---
+        # Fetch the exact maximum conversion limit this specific AI is legally allowed to use
+        max_conversion = queries.get_max_fuel_conversion(data)
+
         # If the ai is low on fuel but has a lot of materials, let them use this feature to balance out their economy
-        if ratio_fuel > target_fuel and ratio_mat < target_mat and data.get("materials", 0) > 500:
-            data["mat_to_fuel_slider"] = 0.5 # Convert 50% of available materials produced to fuel
-        elif data.get("materials", 0) > 5000 and data.get("fuel", 0) < 500:
-            data["mat_to_fuel_slider"] = 0.8 # Emergency conversion
+        if max_conversion > 0:
+            if ratio_fuel > target_fuel and ratio_mat < target_mat and data.get("materials", 0) > 500:
+                data["mat_to_fuel_slider"] = max_conversion * 0.5 # Convert using 50% of their LEGAL MAXIMUM capability
+            elif data.get("materials", 0) > 5000 and data.get("fuel", 0) < 500 or data.get("materials", 0) > 50000:
+                data["mat_to_fuel_slider"] = max_conversion # Emergency: Maximize production safely
+            else:
+                data["mat_to_fuel_slider"] = 0.0
         else:
             data["mat_to_fuel_slider"] = 0.0
 

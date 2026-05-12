@@ -312,6 +312,10 @@ class Orders_Screen(GameState):
             if start_node and not queries.can_convoy_enter(start_node, dest):
                 self.map_screen.show_feedback("Convoys on land can only move to ocean!")
                 return False
+                
+            if not dest_is_water and not queries.can_land_units_enter(unit["owner"], dest, self.map_screen.nation_data):
+                self.map_screen.show_feedback(f"Neutral {dest_owner} territory!")
+                return False
         # ----------------------------------
 
         # Enforce Diplomacy/Border Rules

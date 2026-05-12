@@ -46,13 +46,17 @@ def _bfs_nearest_target(start_id, target_ids, allowed_prov_ids, id_to_province, 
                     if not queries.can_ships_enter(moving_nation, n_prov, nation_data):
                         continue
                         
+                if is_ship and not dest_is_water:
+                    # Ships can only enter friendly coastal tiles
+                    if not queries.can_ships_enter(moving_nation, n_prov, nation_data):
+                        continue
+                        
+                if is_convoy and not dest_is_water:
+                    # Convoys landing must obey land border rules
+                    if not queries.can_land_units_enter(moving_nation, n_prov, nation_data):
+                        continue
+
                 # --- BLOCK SUICIDE PATHS ---
-                if dest_is_water and n_id in unsafe_waters:
-                    if is_convoy:
-                        continue # Convoys refuse to sail into enemy fleets
-                    if is_ship and unsafe_waters[n_id] > 2000:
-                        continue # Ships avoid pathing through overwhelmingly strong fleets
-            # ---------------------------
 
             if n_id in target_ids:
                 valid_paths.append(path + [n_id])

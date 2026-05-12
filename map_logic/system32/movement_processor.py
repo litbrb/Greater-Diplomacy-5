@@ -177,8 +177,10 @@ def process_movement(self):
             defenders = [u for u in target_prov.get("units", []) 
                         if u["owner"] != unit["owner"] and u["owner"] not in player_data.get("allied_with", [])]
 
-            if is_naval or is_convoy:
-                can_enter = True # Naval and convoy rules already handled above
+            if is_naval and not is_convoy:
+                can_enter = True # Naval rules already handled above
+            elif is_convoy and dest_is_water:
+                can_enter = True
             else:
                 can_enter = queries.can_land_units_enter(unit["owner"], target_prov, self.nation_data)
 

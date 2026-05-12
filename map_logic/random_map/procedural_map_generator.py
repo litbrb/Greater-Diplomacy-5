@@ -6,7 +6,7 @@ def generate_new_world(map_screen):
     """Generates the geometric map surfaces and data structures from scratch."""
     
     # 1. Define dimensions for the random world
-    width, height = 6000, 2000
+    width, height = 600, 200
     num_provinces = 300
     
     # 2. Create blank surfaces

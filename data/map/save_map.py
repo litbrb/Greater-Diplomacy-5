@@ -52,13 +52,19 @@ def save_map_data(self, save_name=None):
             "buildings": data.get("buildings", [])
         }
 
+    # Actual map data
     with open(os.path.join(save_path, "meta.json"), "w") as f:
         json.dump(save_dict, f, indent=4)
         
-    # --- NEW: Save the raw structural geometry so this save is completely self-contained! ---
+    # Raw structural geometry (so this save is completely self-contained)
     with open(os.path.join(save_path, "map_data.json"), "w") as f:
         json.dump(self.raw_json_data, f, indent=4)
-        
+    
+    # History
+    if hasattr(self, 'history'):
+        with open(os.path.join(save_path, "history.json"), "w") as f:
+            json.dump(self.history, f, indent=4)
+            
     # Visual states
     pygame.image.save(self.political_map, os.path.join(save_path, "political.png"))
     pygame.image.save(self.terrain_map, os.path.join(save_path, "terrain.png"))

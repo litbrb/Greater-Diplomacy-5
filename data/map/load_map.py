@@ -112,6 +112,36 @@ def load_map_assets(self, load_path):
         with open(meta_path, "r") as f:
             save_meta = json.load(f)
 
+    self.history = {}
+    if load_path:
+        history_path = os.path.join(load_path, "history.json")
+        if os.path.exists(history_path):
+            try:
+                with open(history_path, "r") as f:
+                    self.history = json.load(f)
+            except Exception as e:
+                print(f"Error loading history.json: {e}")
+
+    if getattr(self, 'history_turn', None) is not None and save_meta:
+        turn_key = str(self.history_turn)
+        if turn_key in self.history:
+            snap = self.history[turn_key]
+            save_meta["nation_data"] = snap.get("nation_data", save_meta.get("nation_data", {}))
+            if "provinces" in snap:
+                save_meta["provinces"] = snap["provinces"]
+            
+            if "date" not in save_meta:
+                save_meta["date"] = {}
+            save_meta["date"]["day"] = snap.get("day", save_meta["date"].get("day", 1))
+            save_meta["date"]["month"] = snap.get("month", save_meta["date"].get("month", 0))
+            save_meta["date"]["year"] = snap.get("year", save_meta["date"].get("year", 1910))
+            save_meta["date"]["total_turns"] = int(self.history_turn)
+            
+            # Branches timeline by truncating future history to prevent paradoxes
+            keys_to_delete = [k for k in self.history.keys() if int(k) > int(self.history_turn)]
+            for k in keys_to_delete:
+                del self.history[k]
+
     # --- 3. Load Nation Data (The Critical Fix) ---
     base_nation_data = copy.deepcopy(country_io.load_all_country_data())
 

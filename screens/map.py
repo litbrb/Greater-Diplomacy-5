@@ -28,9 +28,10 @@ from map_logic.rendering.font_manager import fonts
 from map_logic.rendering.country_names import update_country_centers as calc_country_centers
 
 class Map(GameState):
-    def __init__(self, load_path=None, is_scenario=False, is_random=False, force_editor=False, random_settings=None, num_players=1):
+    def __init__(self, load_path=None, is_scenario=False, is_random=False, force_editor=False, random_settings=None, num_players=1, history_turn=None):
         super().__init__()
 
+        self.history_turn = history_turn
         self.num_players = num_players
         self.active_players = getattr(self, 'active_players', []) # Usually empty on boot unless loaded from save
         self.current_player_index = getattr(self, 'current_player_index', 0)

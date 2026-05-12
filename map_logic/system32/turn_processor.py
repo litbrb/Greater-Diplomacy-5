@@ -39,6 +39,33 @@ def prepare_turn(self):
     
     print("--- [PHASE 1] COMPLETE ---")
 
+def snapshot_history(self):
+    import copy
+    if not hasattr(self, 'history'):
+        self.history = {}
+    turn_idx = str(getattr(self.time_manager, 'total_turns', 0))
+    
+    snapshot = {
+        "date_str": self.time_manager.get_date_string(),
+        "day": self.time_manager.day,
+        "month": self.time_manager.month_index,
+        "year": self.time_manager.year,
+        "nation_data": copy.deepcopy(self.nation_data),
+        "provinces": {}
+    }
+    for data in self.map_data.values():
+        snapshot["provinces"][data["json_key"]] = {
+            "owner": data["owner"],
+            "cores": data.get("cores", []),
+            "is_coastal": data.get("is_coastal", False),
+            "units": copy.deepcopy(data.get("units", [])),
+            "deployment_queue": copy.deepcopy(data.get("deployment_queue", [])),
+            "orders": copy.deepcopy(data.get("orders", [])),
+            "resources": copy.deepcopy(data.get("resources", [])),
+            "buildings": copy.deepcopy(data.get("buildings", []))
+        }
+    self.history[turn_idx] = snapshot
+
 def resolve_turn_logic(self): # Renamed from resolve_turn
     """Executes time, combat, movement, and economy logic (no refreshes)."""
     print("\n--- [PHASE 2] TURN RESOLUTION START ---")
@@ -81,6 +108,10 @@ def resolve_turn_logic(self): # Renamed from resolve_turn
     economy_processor.process_economy(self)
     
     research_processor.process_national_research(self)
+    
+    print("[SYSTEM] Saving Turn History Snapshot...")
+    snapshot_history(self)
+    
     print("--- [PHASE 2] COMPLETE ---")
     print("="*40 + "\n")
 

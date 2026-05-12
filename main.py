@@ -264,7 +264,9 @@ class Controller:
                     is_scen = "scenarios" in path
                     is_map_editor = (previous_state == self.states["SELECT_BASE_MAP"])
                     
-                    self.states["MAP"] = Map(load_path=path, is_scenario=is_scen, force_editor=is_map_editor, num_players=self.num_players)
+                    history_turn = getattr(previous_state, 'selected_history_turn', None)
+                    
+                    self.states["MAP"] = Map(load_path=path, is_scenario=is_scen, force_editor=is_map_editor, num_players=self.num_players, history_turn=history_turn)
                     
             elif previous_state in [self.states["MENU"], self.states["NEW_GAME"]]:
                 self.states["MAP"] = Map(num_players=self.num_players)

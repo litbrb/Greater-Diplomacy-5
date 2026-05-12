@@ -1,4 +1,5 @@
 import os
+import json
 import shutil
 import pygame
 import zipfile
@@ -45,14 +46,17 @@ class Load_Game(GameState):
             # Load
             self.elements.append(Button(200, btn_y, "medium", "blue", folder, 
                                        lambda f=folder: self.load_specific_save(f)))
+            # History
+            self.elements.append(Button(420, btn_y, "small", "purple", "History", 
+                                       lambda f=folder: self.open_history_menu(f)))
             # Rename
-            self.elements.append(Button(420, btn_y, "small", "grey", "Rename", 
+            self.elements.append(Button(530, btn_y, "small", "grey", "Rename", 
                                        lambda f=folder: self.start_rename(f)))
             # Export
-            self.elements.append(Button(530, btn_y, "small", "blue", "Export", 
+            self.elements.append(Button(640, btn_y, "small", "blue", "Export", 
                                        lambda f=folder: self.export_save_zip(f)))
             # Delete trigger
-            self.elements.append(Button(640, btn_y, "small", "red", "Del", 
+            self.elements.append(Button(750, btn_y, "small", "red", "Del", 
                                        lambda f=folder: self.trigger_delete_conf(f)))
 
     def trigger_delete_conf(self, folder_name):
@@ -135,6 +139,78 @@ class Load_Game(GameState):
             sub_msg = font.render("Press Enter to Confirm or Esc to Cancel", True, (200, 200, 200))
             sub_rect = sub_msg.get_rect(center=(800, 450))
             surface.blit(sub_msg, sub_rect)
+
+    def open_history_menu(self, folder_name):
+        import tkinter as tk
+        from tkinter import ttk
+        from data import queries
+        
+        history_path = os.path.join(c.SAVES_DIR, folder_name, "history.json")
+        if not os.path.exists(history_path):
+            root = queries.get_transient_tk_root()
+            messagebox.showinfo("No History", "No history available for this save.")
+            queries.destroy_tk_root(root)
+            return
+            
+        with open(history_path, "r") as f:
+            history_data = json.load(f)
+            
+        if not history_data:
+            root = queries.get_transient_tk_root()
+            messagebox.showinfo("No History", "History file is empty.")
+            queries.destroy_tk_root(root)
+            return
+
+        root = tk.Tk()
+        root.title(f"History: {folder_name}")
+        root.geometry("300x400")
+        root.attributes("-topmost", True)
+        self.menu_active = True
+        
+        tk.Label(root, text="Select a past turn to load:", font=("Arial", 12)).pack(pady=10)
+        
+        frame = tk.Frame(root)
+        frame.pack(fill="both", expand=True, padx=10)
+        scrollbar = tk.Scrollbar(frame)
+        scrollbar.pack(side="right", fill="y")
+        
+        lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
+        
+        turns = sorted([int(k) for k in history_data.keys()])
+        for t in turns:
+            date_str = history_data[str(t)].get("date_str", f"Turn {t}")
+            lb.insert(tk.END, f"Turn {t}: {date_str}")
+            
+        lb.pack(side="left", fill="both", expand=True)
+        scrollbar.config(command=lb.yview)
+        
+        def close_menu():
+            self.menu_active = False
+            root.destroy()
+            
+        root.protocol("WM_DELETE_WINDOW", close_menu)
+        
+        def on_select(event=None):
+            selection = lb.curselection()
+            if selection:
+                selected_idx = selection[0]
+                selected_turn = turns[selected_idx]
+                self.selected_save_path = os.path.join(c.SAVES_DIR, folder_name)
+                self.selected_history_turn = selected_turn
+                self.next_state = "MAP"
+                self.done = True
+                close_menu()
+        
+        tk.Button(root, text="Load Selected Turn", command=on_select, bg="#9C27B0", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
+        lb.bind('<Double-1>', on_select)
+        
+        while self.menu_active and not self.done:
+            try:
+                root.update()
+                pygame.event.pump()
+                pygame.time.wait(c.CPU_LIMITER)
+            except:
+                break
 
     # --- File System Methods (Unchanged logic, just used by UI) ---
     def export_save_zip(self, folder_name):

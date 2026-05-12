@@ -74,14 +74,14 @@ def render_buttons(self):
             self.editing_country = self.player_country
             self.change_state("EDIT_COUNTRY")
 
-    self.btn_gp_edit = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 1, "left_ui_button", "orange", "Edit Nation", open_edit_country_action, image=icons.get("brush"), show_text=False)
-    self.btn_gp_econ = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 2, "left_ui_button", "green", "Country Economy", econ_callback, image=icons.get("economy(the_economy_of_a_country_to_be_unusually_specific)"), show_text=False)
-    self.btn_gp_rd = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 3, "left_ui_button", "blue", "R&D", research_callback, image=icons.get("research"), show_text=False)
-    self.btn_gp_msgs = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 4, "left_ui_button", "purple", "Messages", msgs_callback, image=icons.get("mail"), show_text=False)
-    self.btn_gp_save = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 5, "left_ui_button", "green", "Save", self.save_map_data, image=icons.get("save"), show_text=False)
-    self.btn_gp_settings = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 6, "left_ui_button", "grey", "Settings", lambda: self.change_state("SETTINGS"), image=icons.get("settings"), show_text=False)
-    self.btn_gp_music = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 7, "left_ui_button", "blue", "Music Player", lambda: self.change_state("MUSIC_PLAYER"), show_text=True)
-    self.btn_gp_faction = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 8, "left_ui_button", "blue", "Faction", lambda: self.change_state("FACTION"), image=icons.get("faction"), show_text=False)
+    self.btn_gp_edit = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 1, "left_ui_button", "pink", "Identity", open_edit_country_action, image=icons.get("brush"), show_text=True)
+    self.btn_gp_econ = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 2, "left_ui_button", "pink", "Economy", econ_callback, image=icons.get("economy(the_economy_of_a_country_to_be_unusually_specific)"), show_text=True)
+    self.btn_gp_rd = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 3, "left_ui_button", "pink", "R&D", research_callback, image=icons.get("research"), show_text=True)
+    self.btn_gp_msgs = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 4, "left_ui_button", "pink", "Mail", msgs_callback, image=icons.get("mail"), show_text=True)
+    self.btn_gp_save = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 5, "left_ui_button", "pink", "Save", self.save_map_data, image=icons.get("save"), show_text=True)
+    self.btn_gp_settings = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 6, "left_ui_button", "pink", "Settings", lambda: self.change_state("SETTINGS"), image=icons.get("settings"), show_text=True)
+    self.btn_gp_music = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 7, "left_ui_button", "pink", "Music", lambda: self.change_state("MUSIC_PLAYER"), image=icons.get("music"), show_text=True)
+    self.btn_gp_faction = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 8, "left_ui_button", "pink", "Faction", lambda: self.change_state("FACTION"), image=icons.get("faction"), show_text=True)
 
     # NEW: Register the Slider below the Faction button
     slider_y = int(start_y_val + c.LEFT_UI_BAR_STEP_Y * 9.5)

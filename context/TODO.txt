@@ -12,18 +12,8 @@ so i have this pygame project that's essentially a turn based map game (DO NOT H
 
 - make the menu screen look REAL good
 
-- determine ai rules (as in how does it move / build things)
-- determine how the cooldown timer handles things more clearly so the infinite cooldown isn't completely game ruining
-
-ITS CALLED Tkinter
-
-===
-
-pyinstaller --clean --onefile --add-binary "win64-libsoloud.dll;." --add-binary "mac64-libsoloud;." --add-binary "win64-libsoloud.dll;." main.py
-what does --windowed [application here] do?
-
-- SO MANY OTHER VISUAL BUGS
-
 - make ai able to respond to actions taken against them not only with a reaction, but a diplomatic action too if possible
 - if declared war on, the ai might be able to offer a ceasefire to someone else (or whoever they're fighting) as an example
-- if full ai, they can send this to another country and the other country should be able to respond...? 
+- maybe a call to arms request to their faction members
+- do try to ensure that if this does happen they don't send multiple call to arms requests simultaneously (im pretty sure there's other parts of the code that act proactively in this regard, i don't really remember them that well though and could use a refresher)
+- if they do send a diplomatic action to another country, unless absolute ai is on there should be a fallback message with it to save on llm usage

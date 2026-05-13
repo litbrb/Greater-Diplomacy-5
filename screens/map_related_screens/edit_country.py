@@ -16,7 +16,7 @@ from data import queries
 input_box_x = c.EDIT_COUNTRY_UI_X1
 second_right_ui_x = c.EDIT_COUNTRY_UI_X2
 right_ui_x = c.EDIT_COUNTRY_UI_X3
-
+x_offset_confirmation = -100
 class Edit_Country_Screen(GameState):
     def __init__(self):
         super().__init__()
@@ -44,6 +44,7 @@ class Edit_Country_Screen(GameState):
         self.active_color = (0, 0, 0)
         self.draw_mode = "BRUSH" # Can be "BRUSH" or "FILL"
         self.active_input = None # "COUNTRY_NAME", "NAME", or "TITLE"
+        self.resetting_type = None # "FLAG" or "PORTRAIT"
         
         self.is_drawing = False
         self.history = []
@@ -259,6 +260,22 @@ class Edit_Country_Screen(GameState):
             self.flag_surf = self.history[self.history_index][0].copy()
             self.portrait_surf = self.history[self.history_index][1].copy()
 
+    def trigger_reset(self, target_type):
+        self.resetting_type = target_type
+
+    def confirm_reset(self):
+        if self.resetting_type == "FLAG":
+            self.flag_surf = queries.decode_b64_to_surf("DEFAULT", self.flag_size, is_portrait=False, country_name=self.editing_country)
+        elif self.resetting_type == "PORTRAIT":
+            self.portrait_surf = queries.decode_b64_to_surf("DEFAULT", self.portrait_size, is_portrait=True, country_name=self.editing_country)
+        
+        self.map_screen.show_feedback(f"{self.resetting_type.title()} reset to default!")
+        self.save_state()
+        self.resetting_type = None
+
+    def cancel_reset(self):
+        self.resetting_type = None
+
     def save_and_exit(self):
         p_data = self.map_screen.nation_data[self.editing_country]
         p_data["name"] = self.country_name
@@ -266,6 +283,9 @@ class Edit_Country_Screen(GameState):
         p_data["leader_title"] = self.leader_title
         p_data["flag_data"] = queries.encode_surf_to_b64(self.flag_surf)
         p_data["portrait_data"] = queries.encode_surf_to_b64(self.portrait_surf)
+        
+        # Scrub it immediately to keep RAM clean
+        queries.scrub_default_images({self.editing_country: p_data})
         
         # --- NEW COLOR SAVE LOGIC ---
         old_color = p_data.get("color")
@@ -285,6 +305,23 @@ class Edit_Country_Screen(GameState):
 
     def handle_events(self, events):
         for event in events:
+            if self.resetting_type:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self.confirm_reset()
+                    elif event.key == pygame.K_ESCAPE:
+                        self.cancel_reset()
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    mx, my = event.pos
+                    center_x, center_y = c.SCREEN_WIDTH // 2 + x_offset_confirmation, c.SCREEN_HEIGHT // 2
+                    yes_rect = pygame.Rect(center_x - 130, center_y + 40, 100, 40)
+                    no_rect = pygame.Rect(center_x + 30, center_y + 40, 100, 40)
+                    if yes_rect.collidepoint(mx, my):
+                        self.confirm_reset()
+                    elif no_rect.collidepoint(mx, my):
+                        self.cancel_reset()
+                continue
+                
             for el in self.elements:
                 el.handle_event(event)
             self.additional_events(event)
@@ -435,6 +472,38 @@ class Edit_Country_Screen(GameState):
         draw_input_box(500, "Country Name:", "COUNTRY_NAME", self.country_name)
         draw_input_box(575, "Leader Name:", "NAME", self.leader_name)
         draw_input_box(650, "Leader Title:", "TITLE", self.leader_title)
+
+        # --- DRAW RESET CONFIRMATION POPUP ---
+        if self.resetting_type:
+            overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 180))
+            surface.blit(overlay, (0, 0))
+
+            box_rect = pygame.Rect(0, 0, 450, 200)
+            box_rect.center = (c.SCREEN_WIDTH // 2 + x_offset_confirmation, c.SCREEN_HEIGHT // 2)
+            pygame.draw.rect(surface, (60, 20, 20), box_rect)
+            pygame.draw.rect(surface, (255, 50, 50), box_rect, 3)
+
+            font = fonts.get("heading2")
+            msg = font.render(f"Reset {self.resetting_type.title()} to Default?", True, (255, 255, 255))
+            surface.blit(msg, msg.get_rect(center=(box_rect.centerx, box_rect.y + 50)))
+
+            sub_msg = fonts.get("normal").render("Press Enter to Confirm or Esc to Cancel", True, (200, 200, 200))
+            surface.blit(sub_msg, sub_msg.get_rect(center=(box_rect.centerx, box_rect.y + 90)))
+
+            yes_rect = pygame.Rect(box_rect.centerx - 130, box_rect.y + 140, 100, 40)
+            no_rect = pygame.Rect(box_rect.centerx + 30, box_rect.y + 140, 100, 40)
+
+            mx, my = pygame.mouse.get_pos()
+            pygame.draw.rect(surface, (150, 0, 0) if yes_rect.collidepoint(mx, my) else (100, 0, 0), yes_rect)
+            pygame.draw.rect(surface, (0, 150, 0) if no_rect.collidepoint(mx, my) else (0, 100, 0), no_rect)
+
+            btn_font = fonts.get("button")
+            yes_txt = btn_font.render("YES", True, (255, 255, 255))
+            no_txt = btn_font.render("NO", True, (255, 255, 255))
+            
+            surface.blit(yes_txt, yes_txt.get_rect(center=yes_rect.center))
+            surface.blit(no_txt, no_txt.get_rect(center=no_rect.center))
 
     def handle_back_key(self):
         self.exit_to_map()

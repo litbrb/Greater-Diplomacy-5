@@ -1145,7 +1145,7 @@ def decode_b64_to_surf(b64_str, size, is_portrait=False, country_name=None):
     
     cache_key = (b64_str, size, is_portrait, country_name)
     if cache_key in _dynamic_image_cache:
-        return _dynamic_image_cache[cache_key]
+        return _dynamic_image_cache[cache_key].copy()
 
     if not b64_str or b64_str == "DEFAULT":
         # --- Check for country-specific local file first ---
@@ -1157,7 +1157,7 @@ def decode_b64_to_surf(b64_str, size, is_portrait=False, country_name=None):
                     img = pygame.image.load(file_path).convert_alpha()
                     scaled = pygame.transform.scale(img, size)
                     _dynamic_image_cache[cache_key] = scaled
-                    return scaled
+                    return scaled.copy()
                 except:
                     pass # Fallback to absolute default
         
@@ -1167,12 +1167,12 @@ def decode_b64_to_surf(b64_str, size, is_portrait=False, country_name=None):
             img = pygame.image.load(path).convert_alpha()
             scaled = pygame.transform.scale(img, size)
             _dynamic_image_cache[cache_key] = scaled
-            return scaled
+            return scaled.copy()
         except:
             surf = pygame.Surface(size, pygame.SRCALPHA)
             surf.fill((200, 200, 200, 255))
             _dynamic_image_cache[cache_key] = surf
-            return surf
+            return surf.copy()
 
     try:
         img_bytes = base64.b64decode(b64_str)
@@ -1181,12 +1181,12 @@ def decode_b64_to_surf(b64_str, size, is_portrait=False, country_name=None):
         else:
             scaled = pygame.image.fromstring(img_bytes, size, "RGB").convert_alpha()
         _dynamic_image_cache[cache_key] = scaled
-        return scaled
+        return scaled.copy()
     except:
         surf = pygame.Surface(size, pygame.SRCALPHA)
         surf.fill((255, 255, 255, 255))
         _dynamic_image_cache[cache_key] = surf
-        return surf
+        return surf.copy()
 
 # ==========================================
 # DIPLOMATIC SPAM/REACHABILITY QUERIES

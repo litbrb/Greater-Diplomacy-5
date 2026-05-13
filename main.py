@@ -346,7 +346,16 @@ class Controller:
             return
             
         import random
-        track = random.choice(self.playlist)
+        
+        # Check if we have more than one song and if the current song is in the playlist
+        if len(self.playlist) > 1 and self.now_playing in self.playlist:
+            # Create a temporary list of all songs EXCEPT the one that just played
+            available_tracks = [track for track in self.playlist if track != self.now_playing]
+            track = random.choice(available_tracks)
+        else:
+            # Fallback for playlists with only 1 song, or if nothing is playing yet
+            track = random.choice(self.playlist)
+            
         self.play_specific_song(track)
 
     def play_specific_song(self, track_path):

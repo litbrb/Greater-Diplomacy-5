@@ -57,7 +57,7 @@ def draw_ui_bars(map_screen, surface):
     # Tiled bars benefit greatly from scaling, stretched bars will ignore it anyway
     top_bg = get_ui_image("UI Square Top.png", 3.8)
     bot_bg = get_ui_image("UI Square Bottom.png", 3.8)
-    side_bg = get_ui_image("UI Square 2.png", 5.0)
+    side_bg = get_ui_image("UI Square 2.png", 10.0)
     corner_bg = get_ui_image("UI Square 3.png", 1.0) # Doubled in size before tiling
 
     # --- LAYER 4: UI BARS & HUD ---

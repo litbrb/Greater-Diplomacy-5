@@ -280,6 +280,7 @@ SIZES = {
     "small_square": (40, 40),
     "medium_square": (50, 50),
     "tech_square": (80, 80),
+    "album_square": (200, 200),
     "left_ui_button": (120, 40),
     "new_game": (300, 50),
     "orders": (100, 50),
@@ -517,10 +518,10 @@ COLOR_REL_MAX_NEG = (150, 0, 0)     # Very dark red at -200
 # MUSIC PLAYER UI
 # ==========================================
 
-MUSIC_LEFT_PANE_W = 350
+MUSIC_LEFT_PANE_W = 250
 
 # ==========================================
-# PROCEDURAL MAP GENERATION DEFAULTS
+# RANDOM PROCEDURAL MAP GENERATION DEFAULTS
 # ==========================================
 
 PROCEDURAL_MAP_WIDTH = 1200

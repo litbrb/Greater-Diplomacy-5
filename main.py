@@ -194,6 +194,7 @@ class Controller:
         self.active_albums = []
         self.playlist = []
         self.now_playing = "None"
+        self.track_start_times = {} # Keeps track of offsets specified in start_times.json
         
         self.load_music_data()
         self.play_random_song()
@@ -282,15 +283,35 @@ class Controller:
         import os, json
         # Scan the hard drive to find whatever is actually there!
         synced_albums = {}
+        self.track_start_times = {} # Clear start times whenever we scan
+        
         if os.path.exists(c.MUSIC_DIR):
             for item in os.listdir(c.MUSIC_DIR):
                 album_dir = os.path.join(c.MUSIC_DIR, item)
                 if os.path.isdir(album_dir):
                     synced_albums[item] = []
+                    
+                    # --- NEW: Check for start_times.json ---
+                    album_start_times = {}
+                    start_times_path = os.path.join(album_dir, "start_times.json")
+                    if os.path.exists(start_times_path):
+                        try:
+                            with open(start_times_path, "r") as f:
+                                album_start_times = json.load(f)
+                        except Exception as e:
+                            print(f"Error loading start_times.json for {item}: {e}")
+                    
                     for file in os.listdir(album_dir):
                         if file.lower().endswith(('.mp3', '.wav', '.ogg')):
                             track_path = os.path.join(album_dir, file).replace("\\", "/")
                             synced_albums[item].append(track_path)
+                            
+                            # --- NEW: Map the start time if defined ---
+                            file_stem = os.path.splitext(file)[0]
+                            if file in album_start_times:
+                                self.track_start_times[track_path] = float(album_start_times[file])
+                            elif file_stem in album_start_times:
+                                self.track_start_times[track_path] = float(album_start_times[file_stem])
                             
         self.all_albums = synced_albums
         
@@ -329,6 +350,9 @@ class Controller:
 
     def play_specific_song(self, track_path):
         try:
+            # Fetch the defined start time, default to 0.0 if not listed
+            start_time = self.track_start_times.get(track_path, 0.0)
+            
             if c.USE_SOLOUD:
                 if hasattr(self, 'music_handle') and self.music_handle is not None:
                     self.soloud.stop(self.music_handle)
@@ -336,12 +360,17 @@ class Controller:
                 self.music_stream.load(track_path)
                 self.music_handle = self.soloud.play(self.music_stream)
                 
+                # Apply SoLoud Seek
+                if start_time > 0:
+                    self.soloud.seek(self.music_handle, start_time)
+                
                 self.soloud.set_volume(self.music_handle, self.music_volume)
                 speed_mult = 0.5 + (self.music_pitch * 1.5) 
                 self.soloud.set_relative_play_speed(self.music_handle, speed_mult)
             else:
                 pygame.mixer.music.load(track_path)
-                pygame.mixer.music.play()
+                # Apply Pygame Mixer Seek
+                pygame.mixer.music.play(start=start_time)
                 pygame.mixer.music.set_volume(self.music_volume)
                 
             self.now_playing = track_path

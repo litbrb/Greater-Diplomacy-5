@@ -27,7 +27,7 @@ def parse_pos(val, limit, size):
     return val
 
 class Button:
-    def __init__(self, x, y, size_preset, color_preset, text, callback, image=None, show_text=True):
+    def __init__(self, x, y, size_preset, color_preset, text, callback, image=None, show_text=True, layout="horizontal"):
         self.width, self.height = c.SIZES.get(size_preset, (200, 50))
         final_x = parse_pos(x, c.SCREEN_WIDTH, self.width)
         final_y = parse_pos(y, c.SCREEN_HEIGHT, self.height)
@@ -40,6 +40,7 @@ class Button:
         self.callback = callback
         self.image = image 
         self.show_text = show_text
+        self.layout = layout
 
         self.font = fonts.get("button")
 
@@ -78,14 +79,26 @@ class Button:
         pygame.draw.rect(surface, border_color, self.rect, border_thickness)
 
         if self.image and self.text and self.show_text:
-            img_rect = self.image.get_rect(midleft=(self.rect.x + 10, self.rect.centery))
-            surface.blit(self.image, img_rect)
-            
-            text_surf = self.font.render(self.text, True, (255, 255, 255))
-            text_rect = text_surf.get_rect(midleft=(img_rect.right + 10, self.rect.centery))
-            shadow = self.font.render(self.text, True, (0, 0, 0))
-            surface.blit(shadow, (text_rect.x + 1, text_rect.y + 1))
-            surface.blit(text_surf, text_rect)
+            if getattr(self, 'layout', 'horizontal') == 'vertical':
+                # Image in middle (shifted down slightly to make room for top text)
+                img_rect = self.image.get_rect(center=(self.rect.centerx, self.rect.centery + 10))
+                surface.blit(self.image, img_rect)
+                
+                # Text on top
+                text_surf = self.font.render(self.text, True, (255, 255, 255))
+                text_rect = text_surf.get_rect(midtop=(self.rect.centerx, self.rect.y + 5))
+                shadow = self.font.render(self.text, True, (0, 0, 0))
+                surface.blit(shadow, (text_rect.x + 1, text_rect.y + 1))
+                surface.blit(text_surf, text_rect)
+            else:
+                img_rect = self.image.get_rect(midleft=(self.rect.x + 10, self.rect.centery))
+                surface.blit(self.image, img_rect)
+                
+                text_surf = self.font.render(self.text, True, (255, 255, 255))
+                text_rect = text_surf.get_rect(midleft=(img_rect.right + 10, self.rect.centery))
+                shadow = self.font.render(self.text, True, (0, 0, 0))
+                surface.blit(shadow, (text_rect.x + 1, text_rect.y + 1))
+                surface.blit(text_surf, text_rect)
             
         elif self.image:
             img_rect = self.image.get_rect(center=self.rect.center)

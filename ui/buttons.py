@@ -395,8 +395,8 @@ def render_edit_country_buttons(edit_screen):
         Button(c.EDIT_COUNTRY_UI_X3 + 50, 375, "small_square", brush_color, "Brush", lambda: edit_screen.set_tool("BRUSH"), image=icons.get("brush"), show_text=False),
         Button(c.EDIT_COUNTRY_UI_X3 + 100, 375, "small_square", fill_color, "Fill", lambda: edit_screen.set_tool("FILL"), image=icons.get("paint"), show_text=False),
         Button(c.EDIT_COUNTRY_UI_X3 + 100, 600, "small", "orange", "Map Color", edit_screen.pick_map_color),
-        Button(c.EDIT_COUNTRY_UI_X3 + 125, 80, "small_square", "purple", "Brush Color", edit_screen.pick_custom_brush_color, image=icons.get("star"), show_text=False),
-        Button(c.EDIT_COUNTRY_UI_X3 + 175, 80, "small_square", "purple", "Null Color", lambda: edit_screen.set_color((0, 0, 0, 0)), image=icons.get("red_line"), show_text=False)
+        Button(c.EDIT_COUNTRY_UI_X3 + 225, 60, "small_square", "light_grey", "Brush Color", edit_screen.pick_custom_brush_color, image=icons.get("colors"), show_text=False),
+        Button(c.EDIT_COUNTRY_UI_X3 + 225, 105, "small_square", "light_grey", "Null Color", lambda: edit_screen.set_color((0, 0, 0, 0)), image=icons.get("red_line"), show_text=False)
     ])
 
 def render_settings_buttons(settings_screen):
@@ -477,7 +477,7 @@ def render_settings_buttons(settings_screen):
 
     settings_screen.elements.extend([
         settings_screen.player_slider,
-        settings_screen.fps_slider, # <-- Added to elements list
+        settings_screen.fps_slider,
         Button(keybind_x, 530, "medium", "grey", back_btn_text, lambda: settings_screen.start_listening("BACK")),
         Button(keybind_x, 590, "medium", "grey", orders_btn_text, lambda: settings_screen.start_listening("ORDERS")),
         Button(keybind_x, 650, "medium", "red", "Reset Defaults", settings_screen.reset_defaults)

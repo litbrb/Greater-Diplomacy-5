@@ -12,6 +12,9 @@ data
     - includes constants.py (gets constant information)
     - includes queries.py (gets dynamic information)
 
+dist
+    - this is what will be shared to everyone else
+
 map_logic
     - handles how the map processes turns, how the ai for every country works, etc
 

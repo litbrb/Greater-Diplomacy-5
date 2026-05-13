@@ -147,6 +147,7 @@ class Controller:
             "paint": symbol_loader.get_symbol("Paint", 1.5),
             "brush": symbol_loader.get_symbol("Brush", 1.5),
             "eraser": symbol_loader.get_symbol("Eraser", 1.5),
+            "colors": symbol_loader.get_symbol("Colors", 2),
             "red_line": symbol_loader.get_symbol("Red Line", 1.5),
             "color_picker": symbol_loader.get_symbol("Color Picker", 1.5),
             "export": symbol_loader.get_symbol("Export", 1.5),

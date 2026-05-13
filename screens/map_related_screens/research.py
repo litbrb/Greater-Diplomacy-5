@@ -203,6 +203,10 @@ class Research_Screen(GameState):
 
     def draw_tech_nodes(self, res_levels, queue):
         current_year = self.map_screen.time_manager.year
+        
+        # Determine button size preset and X offset based on current category
+        btn_size = "tech_square_wide" if self.current_category in getattr(c, 'WIDE_RESEARCH_CATEGORIES', ["TANKS", "NAVY"]) else "tech_square"
+        x_offset = c.SIZES.get(btn_size, (80, 80))[0] // 2
 
         for node in self.nodes.get(self.current_category, []):
             tech_key = node["key"]
@@ -210,7 +214,8 @@ class Research_Screen(GameState):
             year = node["year"]
             base_y = node["base_y"]
             
-            base_x = (year - current_year) * self.pixels_per_year + (c.SCREEN_WIDTH // 2) - 40
+            # Use the dynamic x_offset instead of hardcoded 40
+            base_x = (year - current_year) * self.pixels_per_year + (c.SCREEN_WIDTH // 2) - x_offset
             
             cur_lvl = res_levels.get(tech_key, 0)
             is_researching = any(q["tech_name"] == tech_key for q in queue)
@@ -243,7 +248,8 @@ class Research_Screen(GameState):
                 "target_year": year
             }
             
-            btn = Button(base_x + self.scroll_x, base_y, "tech_square", btn_color, display_name, 
+            # Feed the dynamically assigned btn_size into the Button call
+            btn = Button(base_x + self.scroll_x, base_y, btn_size, btn_color, display_name, 
                          lambda n=node_info: self.open_modal(n), image=icon, show_text=False)
             
             btn.base_x = base_x

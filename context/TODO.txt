@@ -1,6 +1,6 @@
 INTRO.TXT:
 
-so i have this pygame project that's essentially a turn based map game (DO NOT HARD CODE THINGS, TRY TO USE CONSTANTS.PY / QUERIES.PY WHERE APPLICABLE) (DO NOT REMOVE COMMENTS WHEN TRYING TO EDIT FILES)
+so i have this pygame project that's essentially a turn based map game (DO NOT HARD CODE THINGS, TRY TO USE CONSTANTS.PY / QUERIES.PY WHERE APPLICABLE) (DO NOT REMOVE COMMENTS WHEN TRYING TO EDIT FILES) (DO NOT SHOW A GITHUB CHANGE LOG, SHOW THE ACTUAL FILE)
 
 ==================================================
 

@@ -42,7 +42,7 @@ AI_FALLBACK_RESPONSES = {
 # ==========================================
 
 def build_world_context(current_date, ai_nation, active_nations_str, manpower, materials, politics_str, events_str, target_context_str, target_nation):
-    """Assembles the overarching context about the world, economy, and politics."""
+    # Assembles the overarching context about the world, economy, and politics.
     context = f"Current Date: {current_date}\n"
     context += f"You are the leader of {ai_nation}.\n"
     context += f"CRITICAL RULE: The ONLY nations that currently exist in this world are: {active_nations_str}.\n"
@@ -63,7 +63,7 @@ def build_world_context(current_date, ai_nation, active_nations_str, manpower, m
     return context
 
 def get_proactive_action_context(action_type, target=None):
-    """Returns the descriptive context for when an AI initiates a diplomatic move."""
+    # Returns the descriptive context for when an AI initiates a diplomatic move.
     if action_type == "CEASEFIRE":
         return "offering a ceasefire because our nations cannot physically reach each other"
     elif action_type == "CALL_TO_ARMS":
@@ -77,7 +77,7 @@ def get_proactive_action_context(action_type, target=None):
     return ""
 
 def get_unilateral_receive_context(action_type, sender_nation, custom_msg=""):
-    """Returns the context for when an AI receives an un-rejectable action (like War)."""
+    # Returns the context for when an AI receives an un-rejectable action (like War).
     context = ""
     if action_type == "WAR_DECLARATION":
         context = f"{sender_nation} has DECLARED WAR on us!"
@@ -97,7 +97,7 @@ def get_unilateral_receive_context(action_type, sender_nation, custom_msg=""):
     return context
 
 def get_bilateral_receive_context(action_type, sender_nation, custom_msg=""):
-    """Returns the context for when an AI receives a bilateral proposal."""
+    # Returns the context for when an AI receives a bilateral proposal.
     if action_type == "JOIN_WARS":
         context = f"{sender_nation} is offering to join YOUR ongoing wars."
     elif action_type == "CALL_TO_ARMS":
@@ -163,7 +163,7 @@ def get_custom_message_system_prompt():
         "- Relations < -50: Be hostile, dismissive, or threatening.\n"
         "- Relations 0 to 50: Be neutral, transactional, and cautious.\n"
         "- Relations > 50: Be warm, brotherly, and highly cooperative.\n"
-        #"If you are at war (Relations -100 or lower), do not agree to anything friendly unless it's a 'CEASEFIRE'. "
+        "If you are at war (Relations -100 or lower), do not agree to anything friendly unless it's a 'CEASEFIRE'. "
         "You may also take a diplomatic action if the sender's reasoning is convincing or offensive. " 
         "Valid actions: 'WAR_DECLARATION', 'JOIN_WARS', 'LEAVE_FACTION', 'JOIN_FACTION_REQ', 'CEASEFIRE', 'CALL_TO_ARMS', 'CREATE_FACTION', 'KICK_FACTION_MEMBER', 'DISBAND_FACTION' or 'NONE'.\n"
         "RULES FOR ACTIONS:\n"

@@ -1,8 +1,0 @@
-- in map editor add a way to change the name of a country / leader of a country / title of leader of a country / color of a country
-- this should be specific for that map in particular
-- add in a maximum amount of resources a country can store (say 100k manpower and materials and fuel)
-
-- trade mechanics (offer x territory for y thing)
-- ai should be able to sign non-agression pacts that prevent wars
-
-SYNTHETIC FUEL EXPERIMENTS DOES NOT LOOK THE SAME AS THE OTHER RESEARCH OPTIONS

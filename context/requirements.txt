@@ -1,7 +1,0 @@
-# Graphics and Math
-pygame
-numpy
-
-# AI and Networking
-requests
-google-genai

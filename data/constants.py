@@ -572,8 +572,6 @@ PORTRAIT_SIZE = (60, 60)
 
 # Fonts & Sounds
 FONT_PATH_DEFAULT = "assets/fonts/W95F.otf"
-#FONT_PATH_MAP = "assets/fonts/OpenSans-Regular.ttf"
-#FONT_PATH_MAP = "assets/fonts/VerilySerifMono.otf"
 FONT_PATH_MAP = "assets/fonts/PixelOperatorMonoHB.ttf"
 
 # UI Specific Font Paths

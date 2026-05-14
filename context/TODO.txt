@@ -8,4 +8,8 @@ so i have this pygame project that's essentially a turn based map game (DO NOT H
 
 - maybe make left ui buttons not clickable when turns are processing
 
-- also ive seen it happen multiple times where the ai spends time genuinely thinking of a message but instead just sends a generic one instead?
+- why is the ai failing to respond sometimes? check logs to find out
+
+- ai declaring war seems to keep saying "oh we're not declaring war we just want to talk", please fix this
+
+- maybe make the ai_prompts.py use a seperate json file located in data/json

@@ -121,7 +121,8 @@ def call_ollama(system_prompt, user_prompt):
         "stream": True # <--- THE FIX: Stream token-by-token
     }
     try:
-        response = requests.post(url, json=payload, timeout=45, stream=True)
+        # 5 minute timeout
+        response = requests.post(url, json=payload, timeout=300, stream=True)
         response.raise_for_status()
         
         full_text = ""

@@ -141,11 +141,11 @@ def call_ollama(system_prompt, user_prompt):
         try:
             return json.loads(full_text)
         except json.JSONDecodeError:
-            return {"message": full_text} # Fallback if it fails strict parsing
+            return {"message": f"JSON ERROR: {full_text}"} # Fallback if it fails strict parsing
             
     except Exception as e:
         print(f"Ollama Python Error: {e}")
-        return None
+        return {"message": f"OLLAMA ERROR: {str(e)}"}
 
 def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg="", human_players=None):
     if FORCE_SKIP: 
@@ -228,14 +228,14 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         if result:
             return {
                 "accepted": accepted,
-                "message": result.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]),
+                "message": result.get("message", f"OLLAMA ERROR: Unknown Format"),
                 "action": result.get("action", "NONE"),
                 "action_target": result.get("action_target", "NONE"),
                 "follow_up_action": result.get("follow_up_action", "NONE"),
                 "follow_up_target": result.get("follow_up_target", "NONE"),
                 "opinion_change": result.get("opinion_change", 0)
             }
-        return { "accepted": accepted, "message": ai_prompts.AI_FALLBACK_RESPONSES["OLLAMA_ERROR"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0 }
+        return { "accepted": accepted, "message": "OLLAMA ERROR: No response", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0 }
     elif mode == "CHATGPT":
         print("[LLM] Custom ChatGPT hook to be placed here.")
         return { "accepted": accepted, "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0 }
@@ -260,7 +260,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
             
         return {
             "accepted": accepted,
-            "message": reply_json.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"]),
+            "message": reply_json.get("message", f"JSON ERROR: Parsed fine but missing 'message' key."),
             "action": reply_json.get("action", "NONE"),
             "action_target": reply_json.get("action_target", "NONE"),
             "follow_up_action": reply_json.get("follow_up_action", "NONE"),
@@ -268,8 +268,8 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
             "opinion_change": op_val
         }
     except Exception as e:
-        print(f"Gemini Error: {e}")
-        return {"accepted": accepted, "message": ai_prompts.AI_FALLBACK_RESPONSES["API_ERROR"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0}
+        print(f"API Error: {e}")
+        return {"accepted": accepted, "message": f"API ERROR: {str(e)}", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0}
 
 def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content, human_players=None):
     if FORCE_SKIP: 
@@ -312,7 +312,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
         result = call_ollama(system_prompt, user_prompt)
         if result:
             return {
-                "message": result.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
+                "message": result.get("message", f"OLLAMA ERROR: Unknown Format"), 
                 "action": result.get("action", "NONE"),
                 "action_target": result.get("action_target", "NONE"),
                 "follow_up_action": result.get("follow_up_action", "NONE"),
@@ -320,7 +320,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
                 "opinion_change": result.get("opinion_change", 0)
             }
         return {
-            "message": ai_prompts.AI_FALLBACK_RESPONSES["OLLAMA_ERROR"], 
+            "message": "OLLAMA ERROR: No response", 
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
         }
@@ -346,7 +346,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             op_val = 0
                 
         return {
-            "message": reply_json.get("message", ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"]), 
+            "message": reply_json.get("message", f"JSON ERROR: Parsed fine but missing 'message' key."), 
             "action": reply_json.get("action", "NONE"),
             "action_target": reply_json.get("action_target", "NONE"),
             "follow_up_action": reply_json.get("follow_up_action", "NONE"),
@@ -354,9 +354,9 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             "opinion_change": op_val
         }
     except Exception as e:
-        print(f"Gemini Error: {e}")
+        print(f"API Error: {e}")
         return {
-            "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], 
+            "message": f"API ERROR: {str(e)}", 
             "action": "NONE", "action_target": "NONE", 
             "follow_up_action": "NONE", "follow_up_target": "NONE",
             "opinion_change": 0
@@ -384,7 +384,7 @@ def generate_proactive_text(nation_data, active_nations, ai_nation, target_natio
     
     if mode == "OLLAMA":
         result = call_ollama(system_prompt, user_prompt)
-        return result.get("message") if result else None
+        return result.get("message", "OLLAMA ERROR: Unknown Format") if result else "OLLAMA ERROR: No response"
 
     try:
         client = genai.Client(api_key=get_gemini_api_key())
@@ -393,6 +393,6 @@ def generate_proactive_text(nation_data, active_nations, ai_nation, target_natio
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
-        return json.loads(response.text).get("message")
-    except Exception:
-        return None
+        return json.loads(response.text).get("message", "JSON ERROR: Parsed fine but missing 'message' key.")
+    except Exception as e:
+        return f"API ERROR: {str(e)}"

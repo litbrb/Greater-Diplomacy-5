@@ -88,7 +88,7 @@ def process_proactive_llm_tasks(map_screen):
                 final_msg = llm_msg if llm_msg else task["fallback"]
             except Exception as e:
                 print(f"Thread error in proactive response: {e}")
-                final_msg = task["fallback"]
+                final_msg = f"THREAD ERROR: {str(e)}"
                 
             # Update the pending dictionary with the final generated message
             sender_data = map_screen.nation_data.get(task["sender"], {})

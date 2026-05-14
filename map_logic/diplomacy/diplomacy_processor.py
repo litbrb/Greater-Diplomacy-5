@@ -300,6 +300,10 @@ def process_diplomacy_turn(self):
                     ai_results[(task["sender"], task["target"], task["action"])] = future.result()
                 except Exception as e: 
                     print(f"Thread error: {e}")
+                    ai_results[(task["sender"], task["target"], task["action"])] = {
+                        "accepted": True, "message": f"THREAD ERROR: {str(e)}", "action": "NONE", "action_target": "NONE", 
+                        "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
+                    }
                     
                 # Incremental Progress logic
                 is_human_related = (task["sender"] in human_players or task["target"] in human_players)

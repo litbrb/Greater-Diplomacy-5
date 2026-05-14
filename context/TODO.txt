@@ -5,5 +5,3 @@ so i have this pygame project that's essentially a turn based map game (DO NOT H
 ==================================================
 
 - fix combat zone idk??? (IT LOOKS AWFUL)
-
-- make the menu screen look REAL good

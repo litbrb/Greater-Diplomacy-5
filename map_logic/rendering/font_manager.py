@@ -22,7 +22,7 @@ class FontManager:
             "country_name_display": {"size": 100, "bold": False, "path": c.FONT_PATH_MAP},
             
             # --- NEW: Dedicated UI Fonts ---
-            "top_bar_date": {"size": 18, "bold": False, "path": getattr(c, 'FONT_PATH_DATE', c.FONT_PATH_DEFAULT)},
+            "date_bar": {"size": 24, "bold": False, "path": getattr(c, 'FONT_PATH_DATE', c.FONT_PATH_DEFAULT)},
             "top_bar_country": {"size": 32, "bold": False, "path": getattr(c, 'FONT_PATH_TOP_COUNTRY', c.FONT_PATH_DEFAULT)},
             "resource_hud": {"size": 18, "bold": False, "path": getattr(c, 'FONT_PATH_RESOURCES', c.FONT_PATH_DEFAULT)},
             # fonts.get("title")

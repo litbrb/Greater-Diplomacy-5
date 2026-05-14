@@ -162,7 +162,6 @@ TOP_BAR_UI_CENTER_Y = 10
 BOTTOM_BAR_UI_CENTER_Y = SCREEN_HEIGHT - 50
 
 # --- Top Bar Text Placement ---
-TOP_BAR_DATE_Y = 20
 TOP_BAR_COUNTRY_X = 180
 TOP_BAR_COUNTRY_Y = 15
 TOP_BAR_TEXT_BG_PADDING = 10
@@ -578,7 +577,7 @@ FONT_PATH_DEFAULT = "assets/fonts/W95F.otf"
 FONT_PATH_MAP = "assets/fonts/PixelOperatorMonoHB.ttf"
 
 # UI Specific Font Paths
-FONT_PATH_DATE = "assets/fonts/MonoSpatial.ttf"
+FONT_PATH_DATE = "assets/fonts/PixelOperatorMonoHB.ttf"
 FONT_PATH_TOP_COUNTRY = "assets/fonts/PixelOperatorMonoHB.ttf"
 FONT_PATH_RESOURCES = "assets/fonts/W95F.otf"
 

@@ -23,9 +23,8 @@ def draw_top_text(map_screen, surface):
 
     # 1. Draw Date (Centered)
     date_str = map_screen.time_manager.get_date_string()
-    date_surf = fonts.get("top_bar_date").render(date_str, True, (255, 255, 255))
-    date_x = c.SCREEN_WIDTH // 2 - date_surf.get_width() // 2
-    draw_with_bg(date_surf, date_x, c.TOP_BAR_DATE_Y)
+    date_surf = fonts.get("date_bar").render(date_str, True, (255, 255, 255))
+    draw_with_bg(date_surf, 300, c.BOTTOM_BAR_UI_CENTER_Y -50)
 
     # 2. Draw "Playing As" Name / Selected Province Owner
     # Check if we have a province selected first, otherwise default to the player country

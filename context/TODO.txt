@@ -8,10 +8,6 @@ so i have this pygame project that's essentially a turn based map game (DO NOT H
 
 - maybe make left ui buttons not clickable when turns are processing
 
-- why is the ai failing to respond sometimes? check logs to find out
-
 - ai declaring war seems to keep saying "oh we're not declaring war we just want to talk", please fix this
 
 - maybe make the ai_prompts.py use a seperate json file located in data/json
-
-- when making a map there is a country you can choose called global events, please remove that from the list

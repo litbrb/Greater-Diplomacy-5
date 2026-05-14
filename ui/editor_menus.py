@@ -67,7 +67,7 @@ def select_brush_nation(self):
     nations = sorted(list(self.nation_data.keys()))
     lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
     for n in nations:
-        if n not in ["Ocean", "Lakes"]:
+        if n not in c.UNPLAYABLE_NATIONS or n in ["Unclaimed", "None"]:
             lb.insert(tk.END, n)
     lb.pack(side="left", fill="both", expand=True)
     scrollbar.config(command=lb.yview)
@@ -106,7 +106,7 @@ def select_core_brush(self):
     nations = sorted(list(self.nation_data.keys()))
     lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
     for n in nations:
-        if n not in c.WATER_NATIONS:
+        if n not in c.UNPLAYABLE_NATIONS or n in ["Unclaimed", "None"]:
             lb.insert(tk.END, n)
     lb.pack(side="left", fill="both", expand=True)
     scrollbar.config(command=lb.yview)

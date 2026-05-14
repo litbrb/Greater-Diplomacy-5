@@ -22,7 +22,7 @@ OCEAN_TERRAINS = ["ocean", "coastal_sea", "inland_sea"]
 
 # Owner groupings for logic and UI checks
 WATER_NATIONS = ["Ocean", "Lakes"]
-UNPLAYABLE_NATIONS = ["None", "Unclaimed", "Ocean", "Lakes", "Spectator", "GLOBAL_EVENTS"]
+UNPLAYABLE_NATIONS = ["None", "Unclaimed", "Ocean", "Lakes", "Spectator", "GLOBAL_EVENTS", "FACTION_WAR_MAPS"]
 
 # Width and Height
 SCREEN_WIDTH = 1280

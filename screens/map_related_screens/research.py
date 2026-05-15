@@ -53,7 +53,7 @@ class Research_Screen(GameState):
             "battleship": 350,
             "aircraft_carrier": 350,
             "workshop": 250, "basic_factory": 250, "factory": 250,
-            "bergius_process": 350, "synthetic_fuel_experiments": 350, "fuel_refining": 350,
+            "bergius_process": 350, "fuel_refining": 350,
             "basic_recruitment": 450, "recruitment_buildings": 450,
             "general_recruitment": 550
         }
@@ -131,7 +131,6 @@ class Research_Screen(GameState):
         if tech_key == "dreadnought": return "Dreadnought"
         if tech_key == "battleship": return "Battleship"
         if tech_key == "bergius_process": return "Bergius Process"
-        if tech_key == "synthetic_fuel_experiments": return "Synthetic Fuel Experiments"
         if tech_key == "basic_factory": return "Basic Factory"
         if tech_key == "basic_recruitment": return "Basic Recruitment Center"
         if tech_key == "recruitment_buildings": return f"Recruitment Building Lvl {lvl}"
@@ -140,7 +139,7 @@ class Research_Screen(GameState):
         base_name = tech_key.replace('_', ' ').title()
         
         if tech_key in ["factory", "fuel_refining"]:
-            if tech_key == "fuel_refining": base_name = "Synthetic Refinery" 
+            if tech_key == "fuel_refining": base_name = "Fuel Refining" 
             return f"{base_name} Lvl {lvl}"
             
         return f"{base_name} {romans.get(lvl, str(lvl))}"
@@ -373,7 +372,7 @@ class Research_Screen(GameState):
                         left_wing = (mx - head_size * math.cos(angle_rad - math.pi / 6),
                                      my - head_size * math.sin(angle_rad - math.pi / 6))
                         right_wing = (mx - head_size * math.cos(angle_rad + math.pi / 6),
-                                      my - head_size * math.sin(angle_rad + math.pi / 6))
+                                       my - head_size * math.sin(angle_rad + math.pi / 6))
                         pygame.draw.polygon(surface, color, [(mx, my), left_wing, right_wing])
 
             # Draw standard linear connection to previous level

@@ -124,15 +124,9 @@ ECON_CONVERT_BTN_Y = 600
 ECON_CONVERT_BTN_X1 = SCREEN_WIDTH // 2 - 250
 ECON_CONVERT_BTN_X2 = SCREEN_WIDTH // 2 + 50
 
-CONVERSION_LIMITS = {
-    "bergius_process": 0.02,
-    "synthetic_fuel_experiments": 0.04,
-    "fuel_refining_1": 0.06,
-    "fuel_refining_2": 0.08,
-    "fuel_refining_3": 0.10
-}
+FUEL_REFINING_CONVERSION_PER_LVL = 0.01
 
-MAX_CONVERSION_SLIDER_VAL = 0.10
+MAX_CONVERSION_SLIDER_VAL = 0.15
 
 # ==========================================
 # AUDIO DEFAULTS

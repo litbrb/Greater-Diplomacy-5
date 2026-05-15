@@ -10,7 +10,7 @@ new_research_block = {
     "armored_car": 0, "light_tank": 0, "medium_tank": 0, "heavy_tank": 0, "main_battle_tank": 0, 
     "dreadnought": 0, "destroyer": 0, 
     "aircraft_carrier": 0, "basic_factory": 0, "factory": 0, "bergius_process": 0, 
-    "synthetic_fuel_experiments": 0, "fuel_refining": 0,
+    "fuel_refining": 0,
     "general_recruitment": 0
 }
 

@@ -1,6 +1,6 @@
 {
-    "infantry_type": { "category": "INFANTRY", "max_lvl": 41, "cost": 1200, "req": {}, "years": [1910, 1911, 1912, 1913, 1914, 1915, 1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950] },
-    "cavalry": { "category": "INFANTRY", "max_lvl": 1, "cost": 1200, "req": {}, "years": [1910] },
+    "infantry_type": { "category": "INFANTRY", "max_lvl": 41, "cost": 1000, "req": {}, "years": [1910, 1911, 1912, 1913, 1914, 1915, 1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950] },
+    "cavalry": { "category": "INFANTRY", "max_lvl": 1, "cost": 1000, "req": {}, "years": [1910] },
     "militia": { "category": "INFANTRY", "max_lvl": 1, "cost": 300, "req": {}, "years": [1910] },
     "motorized_infantry": { "category": "INFANTRY", "max_lvl": 21, "cost": 800, "req": {"infantry_type": "MATCH_LEVEL_+20", "cavalry": 1}, "years": [1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950] },
     "mechanized_infantry": { "category": "INFANTRY", "max_lvl": 11, "cost": 800, "req": {"motorized_infantry": "MATCH_LEVEL_+10"}, "years": [1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950] },
@@ -23,9 +23,8 @@
     "basic_factory": { "category": "INDUSTRY", "max_lvl": 1, "cost": 2000, "req": {}, "years": [1910] },
     "factory": { "category": "INDUSTRY", "max_lvl": 15, "cost": 2000, "req": {"basic_factory": 1}, "years": [1912, 1914, 1916, 1918, 1920, 1922, 1924, 1926, 1928, 1930, 1932, 1934, 1936, 1938, 1940] },
     "bergius_process": { "category": "INDUSTRY", "max_lvl": 1, "cost": 2000, "req": {}, "years": [1910] },
-    "synthetic_fuel_experiments": { "category": "INDUSTRY", "max_lvl": 1, "cost": 2000, "req": {"bergius_process": 1}, "years": [1920] },
-    "fuel_refining": { "category": "INDUSTRY", "max_lvl": 3, "cost": 2000, "req": {"synthetic_fuel_experiments": 1}, "years": [1925, 1930, 1935] },
+    "fuel_refining": { "category": "INDUSTRY", "max_lvl": 15, "cost": 2000, "req": {"bergius_process": 1}, "years": [1912, 1914, 1916, 1918, 1920, 1922, 1924, 1926, 1928, 1930, 1932, 1934, 1936, 1938, 1940] },
     "basic_recruitment": { "category": "INDUSTRY", "max_lvl": 1, "cost": 2000, "req": {}, "years": [1910] },
-    "recruitment_buildings": { "category": "INDUSTRY", "max_lvl": 10, "cost": 2000, "req": {"basic_recruitment": 1}, "years": [1912, 1914, 1916, 1918, 1920, 1922, 1924, 1926, 1928, 1930] },
-    "general_recruitment": { "category": "INDUSTRY", "max_lvl": 10, "cost": 2000, "req": {"recruitment_buildings": "MATCH_LEVEL"}, "years": [1913, 1915, 1917, 1919, 1921, 1923, 1925, 1927, 1929, 1931] }
+    "recruitment_buildings": { "category": "INDUSTRY", "max_lvl": 15, "cost": 1000, "req": {"basic_recruitment": 1}, "years": [1912, 1914, 1916, 1918, 1920, 1922, 1924, 1926, 1928, 1930, 1932, 1934, 1936, 1938, 1940] },
+    "general_recruitment": { "category": "INDUSTRY", "max_lvl": 15, "cost": 1000, "req": {"recruitment_buildings": "MATCH_LEVEL"}, "years": [1913, 1915, 1917, 1919, 1921, 1923, 1925, 1927, 1929, 1931, 1933, 1935, 1937, 1939, 1941] }
 }

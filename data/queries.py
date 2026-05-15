@@ -374,12 +374,8 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
 def get_max_fuel_conversion(nation_data_block):
     """Determines the maximum allowed Mat-to-Fuel conversion slider value based on tech."""
     res = nation_data_block.get("research", {})
-    if res.get("fuel_refining", 0) >= 3: return c.CONVERSION_LIMITS.get("fuel_refining_3", 0.10)
-    if res.get("fuel_refining", 0) == 2: return c.CONVERSION_LIMITS.get("fuel_refining_2", 0.08)
-    if res.get("fuel_refining", 0) == 1: return c.CONVERSION_LIMITS.get("fuel_refining_1", 0.06)
-    if res.get("synthetic_fuel_experiments", 0) >= 1: return c.CONVERSION_LIMITS.get("synthetic_fuel_experiments", 0.04)
-    if res.get("bergius_process", 0) >= 1: return c.CONVERSION_LIMITS.get("bergius_process", 0.02)
-    return 0.0
+    lvl = res.get("fuel_refining", 0)
+    return lvl * c.FUEL_REFINING_CONVERSION_PER_LVL
 
 def get_industry(province):
     """Returns the highest level of industry in the province."""
@@ -417,8 +413,6 @@ def get_building_required_tech(b_name):
         return "basic_factory", 1
     if "Factory Lvl" in b_name:
         return "factory", int(b_name.split()[-1])
-    if "Experimental Refinery" in b_name:
-        return "synthetic_fuel_experiments", 1
     if "Synthetic Refinery" in b_name:
         return "fuel_refining", int(b_name.split()[-1])
     if "Basic Recruitment" in b_name:
@@ -439,11 +433,8 @@ def get_tech_unlocks(tech_key, level):
     # Hardcoded logic bonuses
     if tech_key == "bergius_process" and level == 1:
         unlocks.append(f"+{c.BERGIUS_FUEL_BONUS} Base Fuel/Turn")
-        unlocks.append("Max Mat-to-Fuel Conversion: 2%")
-    elif tech_key == "synthetic_fuel_experiments" and level == 1:
-        unlocks.append("Max Mat-to-Fuel Conversion: 4%")
     elif tech_key == "fuel_refining":
-        limit = 4 + (level * 2)
+        limit = int(level * c.FUEL_REFINING_CONVERSION_PER_LVL * 100)
         unlocks.append(f"Max Mat-to-Fuel Conversion: {limit}%")
         
     if tech_key == "general_recruitment":

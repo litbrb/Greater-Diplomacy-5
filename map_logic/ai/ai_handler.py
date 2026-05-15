@@ -1,6 +1,9 @@
 import json
 import requests
 import random
+import urllib.parse
+import http.client
+import socket
 from google import genai
 from google.genai import types
 import data.constants as c
@@ -9,6 +12,31 @@ from map_logic.ai import ai_prompts
 
 # --- NEW GLOBAL ABORT FLAG ---
 FORCE_SKIP = False
+CURRENT_TURN_ID = 0
+ACTIVE_OLLAMA_CONNECTIONS = []
+
+def abort_ai_generation():
+    """Forcefully kills local AI generation by dropping OS sockets and flushing VRAM."""
+    # 1. Close all active HTTP TCP sockets to instantly snap threads out of blocking I/O
+    for conn in list(ACTIVE_OLLAMA_CONNECTIONS):
+        try:
+            # --- THE TRUE OS-LEVEL SOCKET KILL ---
+            # This forces the blocking recv() in the background threads to instantly throw an exception
+            if getattr(conn, 'sock', None):
+                conn.sock.shutdown(socket.SHUT_RDWR)
+            conn.close()
+        except Exception:
+            pass
+    ACTIVE_OLLAMA_CONNECTIONS.clear()
+    
+    # 2. Tell Ollama to abort and unload to free up the GPU immediately
+    if get_ai_mode() == "OLLAMA":
+        try:
+            url = get_ollama_url().replace("/api/chat", "/api/generate")
+            # A tiny 0.1s timeout so the Pygame UI doesn't hang if Ollama's HTTP queue is saturated
+            requests.post(url, json={"model": get_ollama_model(), "prompt": "", "keep_alive": 0}, timeout=(0.1, 0.1))
+        except:
+            pass
 
 def get_gemini_api_key():
     """Helper to dynamically fetch the saved key from cache."""
@@ -106,11 +134,13 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
         manpower, materials, politics_str, events_str, target_context_str, target_nation
     )
 
-def call_ollama(system_prompt, user_prompt):
-    """Helper to hit local Ollama instance with streaming to allow instant termination."""
-    if FORCE_SKIP: return None
+def call_ollama(system_prompt, user_prompt, turn_id=None):
+    """Helper to hit local Ollama instance with direct socket control for instant termination."""
+    if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): return None
     
-    url = get_ollama_url()
+    url_str = get_ollama_url()
+    parsed_url = urllib.parse.urlparse(url_str)
+    
     payload = {
         "model": get_ollama_model(),
         "messages": [
@@ -118,23 +148,45 @@ def call_ollama(system_prompt, user_prompt):
             {"role": "user", "content": user_prompt}
         ],
         "format": "json",
-        "stream": True # <--- THE FIX: Stream token-by-token
+        "stream": True # Stream token-by-token
     }
+    
+    payload_bytes = json.dumps(payload).encode('utf-8')
+    
+    # Bypass requests and create a raw HTTP connection directly
+    conn = None
+    if parsed_url.scheme == "https":
+        conn = http.client.HTTPSConnection(parsed_url.hostname, parsed_url.port or 443, timeout=300)
+    else:
+        conn = http.client.HTTPConnection(parsed_url.hostname, parsed_url.port or 80, timeout=300)
+        
+    ACTIVE_OLLAMA_CONNECTIONS.append(conn)
+    
     try:
-        # 5 minute timeout
-        response = requests.post(url, json=payload, timeout=300, stream=True)
-        response.raise_for_status()
+        headers = {"Content-Type": "application/json", "Connection": "close"}
+        
+        # This initiates the blocking request. If conn.sock.shutdown() is called from the UI thread,
+        # the OS will instantly throw a ConnectionAbortedError here and wake up this thread.
+        conn.request("POST", parsed_url.path, body=payload_bytes, headers=headers)
+        response = conn.getresponse()
+        
+        if response.status >= 400:
+            return {"message": f"OLLAMA HTTP ERROR: {response.status}"}
         
         full_text = ""
         # Iterate over the stream as it generates
-        for line in response.iter_lines():
-            # If the user clicked skip midway through generation, sever the TCP connection!
-            if FORCE_SKIP:
-                response.close()
+        while True:
+            if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID):
+                conn.close()
                 return None
                 
-            if line:
-                chunk = json.loads(line)
+            line = response.readline()
+            if not line:
+                break
+                
+            line_str = line.decode('utf-8').strip()
+            if line_str:
+                chunk = json.loads(line_str)
                 full_text += chunk.get("message", {}).get("content", "")
                 
         # Parse the final reconstructed string
@@ -144,11 +196,21 @@ def call_ollama(system_prompt, user_prompt):
             return {"message": f"JSON ERROR: {full_text}"} # Fallback if it fails strict parsing
             
     except Exception as e:
-        print(f"Ollama Python Error: {e}")
+        # If the connection was forcefully closed by the skip button, fail silently
+        if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID):
+            return None
+        print(f"Ollama Connection Error: {e}")
         return {"message": f"OLLAMA ERROR: {str(e)}"}
+    finally:
+        if conn in ACTIVE_OLLAMA_CONNECTIONS:
+            ACTIVE_OLLAMA_CONNECTIONS.remove(conn)
+        try:
+            conn.close()
+        except:
+            pass
 
-def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg="", human_players=None):
-    if FORCE_SKIP: 
+def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg="", human_players=None, turn_id=None):
+    if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): 
         return {
             "accepted": True, 
             "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"], 
@@ -224,7 +286,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         user_prompt = f"{context}\n{action_context} Provide your response based on your decision."
 
     if mode == "OLLAMA":
-        result = call_ollama(system_prompt, user_prompt)
+        result = call_ollama(system_prompt, user_prompt, turn_id)
         if result:
             return {
                 "accepted": accepted,
@@ -251,6 +313,10 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
+        
+        if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): 
+            return { "accepted": accepted, "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_ACCEPT"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0 }
+
         reply_json = json.loads(response.text)
         
         try:
@@ -271,8 +337,8 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         print(f"API Error: {e}")
         return {"accepted": accepted, "message": f"API ERROR: {str(e)}", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0}
 
-def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content, human_players=None):
-    if FORCE_SKIP: 
+def process_custom_message(nation_data, active_nations, ai_nation, sender_nation, message_content, human_players=None, turn_id=None):
+    if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): 
         return { "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0 }
     
     if human_players is None:
@@ -309,7 +375,7 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
     user_prompt = f"{context}\nMessage from {sender_nation}: '{message_content}'"
     
     if mode == "OLLAMA":
-        result = call_ollama(system_prompt, user_prompt)
+        result = call_ollama(system_prompt, user_prompt, turn_id)
         if result:
             return {
                 "message": result.get("message", f"OLLAMA ERROR: Unknown Format"), 
@@ -338,6 +404,10 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
+        
+        if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): 
+            return { "message": ai_prompts.AI_FALLBACK_RESPONSES["GENERIC_MESSAGE"], "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0 }
+
         reply_json = json.loads(response.text)
         
         try:
@@ -362,9 +432,9 @@ def process_custom_message(nation_data, active_nations, ai_nation, sender_nation
             "opinion_change": 0
         }
 
-def generate_proactive_text(nation_data, active_nations, ai_nation, target_nation, action_context, human_players=None):
+def generate_proactive_text(nation_data, active_nations, ai_nation, target_nation, action_context, human_players=None, turn_id=None):
     """Generates a quick one-liner for proactive hardcoded AI actions."""
-    if FORCE_SKIP: return None
+    if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): return None
     
     if human_players is None:
         human_players = []
@@ -383,7 +453,7 @@ def generate_proactive_text(nation_data, active_nations, ai_nation, target_natio
     user_prompt = f"{context}\nWrite the message."
     
     if mode == "OLLAMA":
-        result = call_ollama(system_prompt, user_prompt)
+        result = call_ollama(system_prompt, user_prompt, turn_id)
         return result.get("message", "OLLAMA ERROR: Unknown Format") if result else "OLLAMA ERROR: No response"
 
     try:
@@ -393,6 +463,9 @@ def generate_proactive_text(nation_data, active_nations, ai_nation, target_natio
             contents=f"{system_prompt}\n\n{user_prompt}",
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
+        
+        if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): return None
+            
         return json.loads(response.text).get("message", "JSON ERROR: Parsed fine but missing 'message' key.")
     except Exception as e:
         return f"API ERROR: {str(e)}"

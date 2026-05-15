@@ -51,8 +51,9 @@ def process_proactive_llm_tasks(map_screen):
     # REMOVED THE "with" BLOCK SO IT DOESN'T BLOCK ON EXIT
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_threads)
     futures = {}
+    my_turn_id = getattr(ai_handler, 'CURRENT_TURN_ID', 0)
     for task in tasks:
-        future = executor.submit(ai_handler.generate_proactive_text, map_screen.nation_data, active_nations, task["sender"], task["target"], task["context"], human_players)
+        future = executor.submit(ai_handler.generate_proactive_text, map_screen.nation_data, active_nations, task["sender"], task["target"], task["context"], human_players, my_turn_id)
         futures[future] = task
         
     while futures:
@@ -87,7 +88,10 @@ def process_proactive_llm_tasks(map_screen):
                         map_screen.proactive_llm_tasks_completed += 1
             
             # Tell the executor to shut down WITHOUT waiting for the API requests to finish
-            executor.shutdown(wait=False)
+            try:
+                executor.shutdown(wait=False, cancel_futures=True)
+            except TypeError:
+                executor.shutdown(wait=False)
             break # Exit the while loop entirely
             
         # Process successfully completed threads in chunks of 0.1 seconds

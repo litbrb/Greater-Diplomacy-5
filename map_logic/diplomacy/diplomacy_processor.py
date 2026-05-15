@@ -266,13 +266,15 @@ def process_diplomacy_turn(self):
         max_threads = queries.get_ai_threads()
         executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_threads)
         futures = {}
+        my_turn_id = getattr(ai_handler, 'CURRENT_TURN_ID', 0)
+        
         for task in ai_tasks:
             target_ai, sender = task["target"], task["sender"]
             if task["action"] in c.UNILATERAL_ACTIONS or task["action"] in c.BILATERAL_ACTIONS:
-                future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""), human_players)
+                future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""), human_players, my_turn_id)
                 futures[future] = task
             elif task["action"] == "CUSTOM_MSG":
-                future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"], human_players)
+                future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"], human_players, my_turn_id)
                 futures[future] = task
                 
         while futures:
@@ -323,7 +325,10 @@ def process_diplomacy_turn(self):
                         self.responsive_tasks_completed += 1
                         
                 self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})...."
-                executor.shutdown(wait=False)
+                try:
+                    executor.shutdown(wait=False, cancel_futures=True)
+                except TypeError:
+                    executor.shutdown(wait=False)
                 break
                 
             done, _ = concurrent.futures.wait(futures.keys(), timeout=0.1, return_when=concurrent.futures.FIRST_COMPLETED)

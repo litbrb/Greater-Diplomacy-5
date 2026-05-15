@@ -82,6 +82,7 @@ def trigger_ai_thread(map_screen):
     # --- IMPORTANT: Reset the module-level abort flag so APIs work again ---
     from map_logic.ai import ai_handler
     ai_handler.FORCE_SKIP = False
+    ai_handler.CURRENT_TURN_ID = getattr(ai_handler, 'CURRENT_TURN_ID', 0) + 1
     
     from data import queries
     

@@ -50,6 +50,7 @@ def handle_map_events(self, event):
                 # --- IMPORTANT: Set the module-level abort flag so running threads instantly die ---
                 from map_logic.ai import ai_handler
                 ai_handler.FORCE_SKIP = True
+                ai_handler.abort_ai_generation()
                 
                 self.show_feedback("Forcing AI to skip LLM generation...")
         return # Block all other map events while AI is processing!

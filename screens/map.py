@@ -399,10 +399,7 @@ class Map(GameState):
             for line in self.thread_error.split('\n'):
                 surface.blit(fonts.get("small").render(line, True, (255, 200, 200)), (20, y_offset))
                 y_offset += 25
-            return 
-        
-        if getattr(self, 'ai_is_thinking', False):
-            loading_screen.draw_turn_loading_screen(self, surface)
+            return
 
     def refresh_nation_data(self):
         from data.io import country_io

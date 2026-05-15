@@ -12,7 +12,12 @@ def advance_time(map_screen):
     
     # PHASE 2: Resolve the turn (Synchronous execution with UI updates for refreshes)
     if getattr(map_screen, 'viewing_ai_moves', False):
+        map_screen.is_refreshing = True
         map_screen.loading_status_text = "Resolving Orders & Map Refreshes..."
+        
+        # Force a frame update so the loading screen appears BEFORE the heavy logic freezes the thread
+        map_screen.draw(pygame.display.get_surface())
+        pygame.display.flip()
         
         # 1. Run the heavy logic (Combat, Movement, etc.)
         turn_processor.resolve_turn_logic(map_screen)
@@ -36,11 +41,12 @@ def advance_time(map_screen):
             func() # Execute the refresh
             map_screen.refresh_tasks_completed += 1
             
-            # Re-draw the loading screen so the 4th bar moves
-            loading_screen.draw_turn_loading_screen(map_screen, pygame.display.get_surface())
+            # Re-draw the full screen so UI bars stay on top
+            map_screen.draw(pygame.display.get_surface())
             pygame.display.flip()
             
         map_screen.viewing_ai_moves = False
+        map_screen.is_refreshing = False
 
         if hasattr(map_screen, 'active_players') and len(map_screen.active_players) > 1:
             map_screen.show_player_ready_screen = True

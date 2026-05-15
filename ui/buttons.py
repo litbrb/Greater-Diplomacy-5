@@ -224,7 +224,7 @@ def update_button_states(map_screen):
 
     else:
         viewing_ai = getattr(map_screen, 'viewing_ai_moves', False)
-        is_thinking = getattr(map_screen, 'ai_is_thinking', False) # Check our new flag
+        is_thinking = getattr(map_screen, 'ai_is_thinking', False) or getattr(map_screen, 'is_refreshing', False) # Check our flags
 
         # Hide/disable the button if we are thinking
         map_screen.btn_next_turn.visible = not is_sel and not is_thinking
@@ -244,7 +244,10 @@ def update_button_states(map_screen):
                 map_screen.btn_gp_music, map_screen.btn_gp_faction, map_screen.slider_camera_tilt
             ]
             for btn in gp_btns:
-                btn.visible = not is_sel
+                if is_thinking and btn not in [map_screen.btn_gp_settings, map_screen.btn_gp_music, map_screen.slider_camera_tilt]:
+                    btn.visible = False
+                else:
+                    btn.visible = not is_sel
 
             # --- ADD THIS LOGIC TO GREY OUT THE FACTION BUTTON ---
             my_faction = map_screen.nation_data.get(map_screen.player_country, {}).get("faction", "")

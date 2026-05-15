@@ -130,6 +130,11 @@ def draw_map_screen(self, surface):
             
         province_select.draw_province_select(self, surface)
             
+    # --- LAYER 3.9: TURN LOADING SCREEN ---
+    if getattr(self, 'ai_is_thinking', False) or getattr(self, 'is_refreshing', False):
+        from map_logic.system32 import loading_screen
+        loading_screen.draw_turn_loading_screen(self, surface)
+
     # --- LAYER 4: UI BARS & HUD ---
     ui_bars.draw_ui_bars(self, surface)
     

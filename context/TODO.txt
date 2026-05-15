@@ -6,9 +6,6 @@ so i have this pygame project that's essentially a turn based map game (DO NOT H
 
 - fix combat zone idk??? (IT LOOKS AWFUL)
 
-- maybe make left ui buttons not clickable when turns are processing
-- however keep the settings and music buttons there
-
 - ai declaring war seems to keep saying "oh we're not declaring war we just want to talk", please fix this
 
 - when in non-ai mode (ie using fallbacks) maybe make there multiple things that can be said in certain circumstances

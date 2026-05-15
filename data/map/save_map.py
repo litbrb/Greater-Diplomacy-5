@@ -64,9 +64,9 @@ def save_map_data(self, save_name=None):
         json.dump(self.raw_json_data, f, indent=4)
     
     # History
-    if hasattr(self, 'history'):
+    if hasattr(self, 'history') and self.history:
         with open(os.path.join(save_path, "history.json"), "w") as f:
-            json.dump(self.history, f, indent=4)
+            json.dump(self.history, f, indent=getattr(c, 'HISTORY_INDENT', None))
             
     # Visual states
     pygame.image.save(self.political_map, os.path.join(save_path, "political.png"))

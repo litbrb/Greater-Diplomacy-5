@@ -584,3 +584,10 @@ BUILDING_DATA_PATH = "data/json/building_data.json"
 SETTINGS_CONFIG_PATH = "data/json/settings_config.json"
 ALBUMS_DATA_PATH = "data/json/albums.json"
 ACTIVE_ALBUMS_PATH = "data/json/active_albums.json"
+
+# ==========================================
+# HISTORY & SAVING SETTINGS
+# ==========================================
+
+RECORD_HISTORY = True
+HISTORY_INDENT = None # this used to be 4 btw

@@ -115,8 +115,11 @@ def resolve_turn_logic(self): # Renamed from resolve_turn
     
     research_processor.process_national_research(self)
     
-    print("[SYSTEM] Saving Turn History Snapshot...")
-    snapshot_history(self)
+    if getattr(c, 'RECORD_HISTORY', True):
+        print("[SYSTEM] Saving Turn History Snapshot...")
+        snapshot_history(self)
+    else:
+        print("[SYSTEM] History Recording Disabled. Skipping Snapshot...")
     
     print("--- [PHASE 2] COMPLETE ---")
     print("="*40 + "\n")

@@ -37,6 +37,17 @@ def process_proactive_llm_tasks(map_screen):
     
     active_nations = list(queries.get_living_nations(map_screen.map_data))
     
+    # If skipping, bypass the executor entirely to save time and prevent thread leakage
+    if getattr(map_screen, 'force_skip_llm', False):
+        for task in tasks:
+            final_msg = task["fallback"]
+            sender_data = map_screen.nation_data.get(task["sender"], {})
+            pending = sender_data.get("pending_diplomacy", {})
+            target_info = pending.get(task["target"])
+            if isinstance(target_info, dict) and target_info.get("action") == task["action_type"]:
+                target_info["message"] = final_msg
+        return
+
     # REMOVED THE "with" BLOCK SO IT DOESN'T BLOCK ON EXIT
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_threads)
     futures = {}

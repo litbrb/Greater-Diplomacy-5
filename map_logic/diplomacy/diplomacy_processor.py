@@ -229,7 +229,40 @@ def process_diplomacy_turn(self):
         self.responsive_tasks_completed = 0
         
         self.loading_status_text = f"Processing Global Responses (0/{self.responsive_tasks_total})..."
-        
+    
+    # If skipping, bypass the executor entirely
+    if getattr(self, 'force_skip_llm', False):
+        for task in ai_tasks:
+            target_ai, sender = task["target"], task["sender"]
+            if task["action"] == "CUSTOM_MSG":
+                ai_results[(sender, target_ai, task["action"])] = {
+                    "message": ai_prompts.AI_FALLBACK_RESPONSES["AI_OFF_MESSAGE"], 
+                    "action": "NONE", "action_target": "NONE", 
+                    "follow_up_action": "NONE", "follow_up_target": "NONE",
+                    "opinion_change": 0
+                }
+            elif task["action"] in c.UNILATERAL_ACTIONS:
+                fallback_map = {
+                    "WAR_DECLARATION": "BETRAYAL",
+                    "LEAVE_FACTION": "FACTION_ABANDONED",
+                    "DISBAND_FACTION": "FACTION_DISBANDED",
+                    "JOIN_WARS": "ACCEPTED_HELP",
+                    "BREAK_ALLIANCE": "ALLIANCE_BROKEN",
+                    "KICK_FACTION_MEMBER": "KICKED_FROM_FACTION"
+                }
+                fb_key = fallback_map.get(task["action"], "GENERIC_MESSAGE")
+                fallback = ai_prompts.AI_FALLBACK_RESPONSES.get(fb_key, "Message received.")
+                ai_results[(sender, target_ai, task["action"])] = {
+                    "accepted": True, "message": fallback, "action": "NONE", "action_target": "NONE", 
+                    "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
+                }
+            else:
+                fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("AI_OFF_ACCEPT", "We accept your proposal.")
+                ai_results[(sender, target_ai, task["action"])] = {
+                    "accepted": True, "message": fallback, "action": "NONE", "action_target": "NONE", 
+                    "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
+                }
+    else:
         max_threads = queries.get_ai_threads()
         executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_threads)
         futures = {}
@@ -283,13 +316,13 @@ def process_diplomacy_turn(self):
                                 "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
                             }
                             
-                    # Incremental Progress logic
-                    is_human_related = (task["sender"] in human_players or task["target"] in human_players)
-                    if mode != "OFF":
-                        if immersion == "ABSOLUTE" or (immersion == "FULL" and is_human_related) or (immersion == "LITE" and is_human_related and (task["action"] == "CUSTOM_MSG" or bool(task.get("content", "").strip()))):
-                            self.responsive_tasks_completed += 1
-                            
-                self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})..."
+                # Incremental Progress logic
+                is_human_related = (task["sender"] in human_players or task["target"] in human_players)
+                if mode != "OFF":
+                    if immersion == "ABSOLUTE" or (immersion == "FULL" and is_human_related) or (immersion == "LITE" and is_human_related and (task["action"] == "CUSTOM_MSG" or bool(task.get("content", "").strip()))):
+                        self.responsive_tasks_completed += 1
+                        
+                self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})...."
                 executor.shutdown(wait=False)
                 break
                 

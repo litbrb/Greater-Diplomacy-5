@@ -45,6 +45,12 @@ def draw_turn_loading_screen(map_screen, surface):
         # Outline
         pygame.draw.rect(surface, (200, 200, 200), (bar_x, y_pos, bar_w, bar_h), 2, border_radius=5)
 
+    # --- NEW MULTI TURN LOGIC ---
+    multi_total = getattr(map_screen, 'multi_turns_total', 0)
+    if multi_total > 0:
+        draw_bar(center_y - 50, "Multi-Turn Skip Progress", getattr(map_screen, 'multi_turns_completed', 0), multi_total)
+        return
+
     # Render the 4 distinct phases (safely fetching pending totals)
     draw_bar(center_y - 100, "1. Analyzing Global Strategy", getattr(map_screen, 'proactive_tasks_completed', 0), getattr(map_screen, 'proactive_tasks_total', -1))
     draw_bar(center_y - 100 + spacing, "2. Drafting Proactive Diplomatics", getattr(map_screen, 'proactive_llm_tasks_completed', 0), getattr(map_screen, 'proactive_llm_tasks_total', -1))

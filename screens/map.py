@@ -216,6 +216,57 @@ class Map(GameState):
         self.secondary_mode = self.secondary_modes[self.sec_idx]
         self.show_feedback(f"View Mode: {self.secondary_mode}")
 
+    def trigger_multi_turn(self):
+        import tkinter as tk
+        from tkinter import simpledialog
+        from data import queries
+        import threading
+        
+        root = queries.get_transient_tk_root()
+        turns = simpledialog.askinteger("Process Multiple Turns", "How many turns to process at once?", minvalue=1, maxvalue=5000)
+        queries.destroy_tk_root(root)
+        
+        if turns:
+            self.multi_turns_total = turns
+            self.multi_turns_completed = 0
+            self.ai_is_thinking = True
+            self.loading_status_text = f"Skipping {turns} Turns..."
+            threading.Thread(target=self._run_multi_turn_thread, args=(turns,), daemon=True).start()
+
+    def _run_multi_turn_thread(self, turns):
+        from map_logic.system32 import turn_processor
+        from map_logic.ai import ai_handler
+        import traceback
+        
+        try:
+            ai_handler.FORCE_SKIP = True
+            self.force_skip_llm = True
+            self.viewing_ai_moves = True # Prevents PyGame surface edits from background thread
+            
+            for i in range(turns):
+                self.multi_turns_completed = i + 1
+                self.loading_status_text = f"Processing Turn {i+1}/{turns}..."
+                
+                # Mock the UI prep variables to prevent crashes
+                self.proactive_tasks_total = 1
+                self.proactive_tasks_completed = 1
+                self.proactive_llm_tasks_total = 0
+                self.proactive_llm_tasks_completed = 0
+                self.proactive_llm_tasks = []
+                self.responsive_tasks_total = 0
+                self.responsive_tasks_completed = 0
+                
+                turn_processor.prepare_turn(self)
+                turn_processor.resolve_turn_logic(self)
+                
+        except Exception as e:
+            self.thread_error = traceback.format_exc()
+            print(f"MULTI-TURN CRASH CAUGHT:\n{self.thread_error}")
+        finally:
+            ai_handler.FORCE_SKIP = False
+            self.force_skip_llm = False
+            self.multi_turn_processing_complete = True
+
     def update_country_centers(self):
         """Calculates new label centers and text blobs for the map."""
         calc_country_centers(self)
@@ -486,6 +537,26 @@ class Map(GameState):
 
         if getattr(self, 'show_player_ready_screen', False):
             for el in self.elements: el.visible = False
+            return
+
+        if getattr(self, 'multi_turn_processing_complete', False):
+            self.multi_turn_processing_complete = False
+            self.multi_turns_total = 0
+            self.ai_is_thinking = False
+            
+            if getattr(self, 'thread_error', None): return
+            
+            self.refresh_political_map()
+            self.refresh_relations_map()
+            self.refresh_factions_map()
+            self.refresh_cores_map()
+            self.refresh_faction_territories_map()
+            self.update_country_centers()
+            
+            self.viewing_ai_moves = False # Safely unlock PyGame UI rendering
+            
+            buttons.update_button_states(self)
+            self.show_feedback(f"Multi-Turn Processing Complete!")
             return
 
         if getattr(self, 'ai_processing_complete', False):

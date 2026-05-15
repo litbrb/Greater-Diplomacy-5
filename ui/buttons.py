@@ -64,6 +64,7 @@ def render_buttons(self):
     # Gameplay Buttons
     self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Next Turn", lambda: turn_manager.advance_time(self))
     self.btn_skip_ai = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Skip AI", self.toggle_skip_ai)
+    self.btn_multi_turn = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X * 2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Multi-Turn", self.trigger_multi_turn)
     
     start_y_val = 60
     
@@ -131,7 +132,7 @@ def render_buttons(self):
         self.btn_ed_econ, self.btn_ed_rd, self.btn_ed_save, self.btn_ed_load, self.btn_ed_nation,
         self.btn_ed_core, self.btn_ed_autocore, self.btn_ed_resource, self.btn_ed_building,
         self.btn_ed_unit, self.btn_ed_refresh, self.btn_ed_date, self.btn_ed_diplo,
-        self.btn_next_turn, self.btn_skip_ai, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
+        self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
         self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_go_orders, self.btn_go_production,
         self.btn_declare_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
         self.btn_fac_join_req, self.btn_fac_kick, self.btn_fac_create,
@@ -236,6 +237,9 @@ def update_button_states(map_screen):
         skip_on = getattr(map_screen, 'skip_ai_view', False)
         map_screen.btn_skip_ai.text = "Skip AI: ON" if skip_on else "Skip AI: OFF"
         map_screen.btn_skip_ai.color, map_screen.btn_skip_ai.hover_color = c.UI_COLORS["green" if skip_on else "red"]
+
+        is_spec = getattr(map_screen, 'player_country', '') == "Spectator"
+        map_screen.btn_multi_turn.visible = not is_sel and not is_thinking and is_spec
 
         gp_btns = [
             map_screen.btn_gp_edit, map_screen.btn_gp_econ, map_screen.btn_gp_rd,

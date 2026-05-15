@@ -9,3 +9,7 @@ so i have this pygame project that's essentially a turn based map game (DO NOT H
 - ai declaring war seems to keep saying "oh we're not declaring war we just want to talk", please fix this
 
 - when in non-ai mode (ie using fallbacks) maybe make there multiple things that can be said in certain circumstances
+
+- severe issue where, even when skipping ai moves, the fans on the computer continue to run for noticably long amount of time
+
+- games seem to take a really long time to be saved when you get to like 5 years into the game

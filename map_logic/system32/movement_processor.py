@@ -22,7 +22,12 @@ def process_dead_nations(self):
     # (We run this again here because check_for_post_combat_captures just changed who is alive)
     for nation, data in self.nation_data.items():
         if "at_war_with" in data:
-            data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
+            if nation not in living_nations:
+                # If the nation itself is dead, wipe its entire war list
+                data["at_war_with"] = []
+            else:
+                # If the nation is alive, only keep living enemies
+                data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
 
 def process_disbands(self):
     """Processes the 1-turn timer for disbanding units and refunds their cost."""

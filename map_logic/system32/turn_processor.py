@@ -79,7 +79,12 @@ def resolve_turn_logic(self): # Renamed from resolve_turn
     living_nations = queries.get_living_nations(self.map_data)
     for nation, data in self.nation_data.items():
         if "at_war_with" in data:
-            data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
+            if nation not in living_nations:
+                # The nation is dead, wipe its entire war list
+                data["at_war_with"] = []
+            else:
+                # The nation is alive, only keep living enemies
+                data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
     # ------------------------------
     
     days_to_advance = c.DAYS_PER_TURN
@@ -115,8 +120,3 @@ def resolve_turn_logic(self): # Renamed from resolve_turn
     
     print("--- [PHASE 2] COMPLETE ---")
     print("="*40 + "\n")
-
-def process_next_turn(self):
-    """Legacy compatibility just in case it's called elsewhere."""
-    prepare_turn(self)
-    resolve_turn_logic(self)

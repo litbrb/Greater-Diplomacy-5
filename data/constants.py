@@ -590,4 +590,5 @@ ACTIVE_ALBUMS_PATH = "data/json/active_albums.json"
 # ==========================================
 
 RECORD_HISTORY = True
-HISTORY_INDENT = None # this used to be 4 btw
+HISTORY_INDENT = None # this used to be 4
+SAVE_INDENT = None # this also used to be 4

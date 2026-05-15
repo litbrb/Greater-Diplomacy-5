@@ -57,14 +57,14 @@ def save_map_data(self, save_name=None):
 
     # Actual map data
     with open(os.path.join(save_path, "meta.json"), "w") as f:
-        json.dump(save_dict, f, indent=4)
+        json.dump(save_dict, f, indent=getattr(c, 'SAVE_INDENT', None))
         
     # Raw structural geometry (so this save is completely self-contained)
     with open(os.path.join(save_path, "map_data.json"), "w") as f:
-        json.dump(self.raw_json_data, f, indent=4)
+        json.dump(self.raw_json_data, f, indent=getattr(c, 'SAVE_INDENT', None))
     
     # History
-    if hasattr(self, 'history') and self.history:
+    if hasattr(self, 'history'):
         with open(os.path.join(save_path, "history.json"), "w") as f:
             json.dump(self.history, f, indent=getattr(c, 'HISTORY_INDENT', None))
             

@@ -237,21 +237,25 @@ def update_button_states(map_screen):
         map_screen.btn_skip_ai.text = "Skip AI: ON" if skip_on else "Skip AI: OFF"
         map_screen.btn_skip_ai.color, map_screen.btn_skip_ai.hover_color = c.UI_COLORS["green" if skip_on else "red"]
 
-        if not viewing_ai:
-            gp_btns = [
-                map_screen.btn_gp_edit, map_screen.btn_gp_econ, map_screen.btn_gp_rd,
-                map_screen.btn_gp_msgs, map_screen.btn_gp_save, map_screen.btn_gp_settings,
-                map_screen.btn_gp_music, map_screen.btn_gp_faction, map_screen.slider_camera_tilt
-            ]
-            for btn in gp_btns:
-                if is_thinking and btn not in [map_screen.btn_gp_settings, map_screen.btn_gp_music, map_screen.slider_camera_tilt]:
-                    btn.visible = False
-                else:
-                    btn.visible = not is_sel
+        gp_btns = [
+            map_screen.btn_gp_edit, map_screen.btn_gp_econ, map_screen.btn_gp_rd,
+            map_screen.btn_gp_msgs, map_screen.btn_gp_save, map_screen.btn_gp_settings,
+            map_screen.btn_gp_music, map_screen.btn_gp_faction, map_screen.slider_camera_tilt
+        ]
+        
+        always_visible_btns = [map_screen.btn_gp_settings, map_screen.btn_gp_music, map_screen.slider_camera_tilt]
 
-            # --- ADD THIS LOGIC TO GREY OUT THE FACTION BUTTON ---
-            my_faction = map_screen.nation_data.get(map_screen.player_country, {}).get("faction", "")
-            map_screen.btn_gp_faction.disabled = not bool(my_faction)
+        for btn in gp_btns:
+            if btn in always_visible_btns:
+                btn.visible = not is_sel
+            elif viewing_ai or is_thinking:
+                btn.visible = False
+            else:
+                btn.visible = not is_sel
+
+        # --- ADD THIS LOGIC TO GREY OUT THE FACTION BUTTON ---
+        my_faction = map_screen.nation_data.get(map_screen.player_country, {}).get("faction", "")
+        map_screen.btn_gp_faction.disabled = not bool(my_faction)
 
     map_screen.btn_exit_to_menu.visible = not is_sel
     map_screen.btn_close_info.visible = is_sel

@@ -82,8 +82,8 @@ POPUP_OFFSET_STEP = 30
 # --- Dynamic Menu Text & Links ---
 # The first item will be placed at the bottom, and subsequent items will stack upwards.
 MENU_BOTTOM_TEXTS = [
-    {"main_text": "Discord - ", "link_text": "link", "url": "https://discord.com/"},
-    {"main_text": "Github - ", "link_text": "link", "url": "https://github.com/"}
+    {"main_text": "Discord - ", "link_text": "https://discord.gg/f5Jugz9SKa", "url": "https://discord.gg/f5Jugz9SKa/"},
+    {"main_text": "Github - ", "link_text": "https://github.com/GitGetGot415/Greater-Diplomacy-5", "url": "https://github.com/GitGetGot415/Greater-Diplomacy-5/"}
 ]
 MENU_BOTTOM_TEXT_START_X = 20
 MENU_BOTTOM_TEXT_START_Y = SCREEN_HEIGHT - 40

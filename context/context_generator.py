@@ -130,7 +130,8 @@ files_to_silently_ignore = [
     "**/.git/*",          # Hides git background files if you run this in a repo
     "**/.env",            # Prevents accidentally leaking your environment variables!
     "dist/**",
-    "build/**"
+    "build/**",
+    "**/__init__.py"
 ]
 
 combine_files(

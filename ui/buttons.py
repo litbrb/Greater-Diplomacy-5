@@ -345,7 +345,7 @@ def update_button_states(map_screen):
                 ca_text = get_status_text("CALL TO ARMS") if pending_action == "CALL_TO_ARMS" else "Call to Arms"
                 set_btn(map_screen.btn_call_to_arms, True, can_call_to_arms or pending_action == "CALL_TO_ARMS", ca_text, "red")
 
-                can_invite = bool(my_faction and i_am_leader and not target_faction and not at_war)
+                can_invite = bool(my_faction and not target_faction and not at_war)
                 inv_text = get_status_text("INVITE") if pending_action == "FACTION_INVITE" else "Invite to Faction"
                 set_btn(map_screen.btn_fac_invite, True, can_invite or pending_action == "FACTION_INVITE", inv_text, "green")
 

@@ -317,37 +317,37 @@ def process_diplomacy_turn(self):
                                     "accepted": True, "message": fallback, "action": "NONE", "action_target": "NONE", 
                                     "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
                                 }
-                            
-                # Incremental Progress logic
-                is_human_related = (task["sender"] in human_players or task["target"] in human_players)
-                if mode != "OFF":
-                    if immersion == "ABSOLUTE" or (immersion == "FULL" and is_human_related) or (immersion == "LITE" and is_human_related and (task["action"] == "CUSTOM_MSG" or bool(task.get("content", "").strip()))):
-                        self.responsive_tasks_completed += 1
-                        self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})...."
-                try:
-                    executor.shutdown(wait=False, cancel_futures=True)
-                except TypeError:
-                    executor.shutdown(wait=False)
-                break
+                                
+                        # Incremental Progress logic
+                        is_human_related = (task["sender"] in human_players or task["target"] in human_players)
+                        if mode != "OFF":
+                            if immersion == "ABSOLUTE" or (immersion == "FULL" and is_human_related) or (immersion == "LITE" and is_human_related and (task["action"] == "CUSTOM_MSG" or bool(task.get("content", "").strip()))):
+                                self.responsive_tasks_completed += 1
+                                self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})..."
+                    try:
+                        executor.shutdown(wait=False, cancel_futures=True)
+                    except TypeError:
+                        executor.shutdown(wait=False)
+                    break
                 
-            done, _ = concurrent.futures.wait(futures.keys(), timeout=0.1, return_when=concurrent.futures.FIRST_COMPLETED)
-            for future in done:
-                task = futures.pop(future)
-                try:
-                    ai_results[(task["sender"], task["target"], task["action"])] = future.result()
-                except Exception as e: 
-                    print(f"Thread error: {e}")
-                    ai_results[(task["sender"], task["target"], task["action"])] = {
-                        "accepted": True, "message": f"THREAD ERROR: {str(e)}", "action": "NONE", "action_target": "NONE", 
-                        "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
-                    }
-                    
-                # Incremental Progress logic
-                is_human_related = (task["sender"] in human_players or task["target"] in human_players)
-                if mode != "OFF":
-                    if immersion == "ABSOLUTE" or (immersion == "FULL" and is_human_related) or (immersion == "LITE" and is_human_related and (task["action"] == "CUSTOM_MSG" or bool(task.get("content", "").strip()))):
-                        self.responsive_tasks_completed += 1
-                        self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})..."
+                done, _ = concurrent.futures.wait(futures.keys(), timeout=0.1, return_when=concurrent.futures.FIRST_COMPLETED)
+                for future in done:
+                    task = futures.pop(future)
+                    try:
+                        ai_results[(task["sender"], task["target"], task["action"])] = future.result()
+                    except Exception as e: 
+                        print(f"Thread error: {e}")
+                        ai_results[(task["sender"], task["target"], task["action"])] = {
+                            "accepted": True, "message": f"THREAD ERROR: {str(e)}", "action": "NONE", "action_target": "NONE", 
+                            "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0
+                        }
+                        
+                    # Incremental Progress logic
+                    is_human_related = (task["sender"] in human_players or task["target"] in human_players)
+                    if mode != "OFF":
+                        if immersion == "ABSOLUTE" or (immersion == "FULL" and is_human_related) or (immersion == "LITE" and is_human_related and (task["action"] == "CUSTOM_MSG" or bool(task.get("content", "").strip()))):
+                            self.responsive_tasks_completed += 1
+                            self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})..."
         
         if not getattr(self, 'force_skip_llm', False):
             executor.shutdown(wait=True)

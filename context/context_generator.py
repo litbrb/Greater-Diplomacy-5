@@ -128,7 +128,9 @@ files_to_silently_ignore = [
     "**/__pycache__/*",   # Drops everything inside any __pycache__ folder
     "**/*.pyc",           # Catches any compiled python files anywhere
     "**/.git/*",          # Hides git background files if you run this in a repo
-    "**/.env"             # Prevents accidentally leaking your environment variables!
+    "**/.env",            # Prevents accidentally leaking your environment variables!
+    "dist/**",
+    "build/**"
 ]
 
 combine_files(

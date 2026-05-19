@@ -74,7 +74,7 @@ def save_global_settings(controller):
         getattr(controller, 'chatgpt_model', ''),
         getattr(controller, 'claude_model', ''),
         getattr(controller, 'ollama_model', ''),
-        getattr(controller, 'ai_immersion_level', 'FULL'),
+        getattr(controller, 'ai_immersion_level', 'LITE'),
         getattr(controller, 'music_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
         getattr(controller, 'sfx_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
         getattr(controller, 'target_fps', getattr(c, 'TARGET_FPS', 60)),

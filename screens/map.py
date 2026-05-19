@@ -339,12 +339,28 @@ class Map(GameState):
         self.show_feedback("Maps refreshed!")
 
     def auto_assign_cores(self):
-        for province in self.map_data.values():
-            owner = province.get("owner", "Unclaimed")
-            province["cores"] = [owner] if owner not in ["Unclaimed", "None", "Ocean", "Lakes"] else []
-        self.show_feedback("Auto-assigned all cores!")
-        if self.map_mode == "CORES":
-            self.refresh_cores_map()
+        import tkinter as tk
+        from tkinter import messagebox
+        from data import queries
+        
+        # Ask for confirmation first before doing anything destructive
+        root = queries.get_transient_tk_root()
+        confirm = messagebox.askyesno(
+            "Confirm Auto-Core", 
+            "Are you sure you want to auto-assign all cores?\nThis will overwrite existing core data for every province on the map based on current ownership.",
+            parent=root
+        )
+        queries.destroy_tk_root(root)
+        
+        if confirm:
+            for province in self.map_data.values():
+                owner = province.get("owner", "Unclaimed")
+                province["cores"] = [owner] if owner not in ["Unclaimed", "None", "Ocean", "Lakes"] else []
+            self.show_feedback("Auto-assigned all cores!")
+            if self.map_mode == "CORES":
+                self.refresh_cores_map()
+        else:
+            self.show_feedback("Auto-core cancelled.")
 
     def exit_to_menu(self): 
         self.show_exit_confirmation = True

@@ -394,7 +394,8 @@ class Controller:
             
             # --- HYBRID SONG END CHECK ---
             if c.USE_SOLOUD:
-                if hasattr(self, 'music_handle') and self.music_handle is not None:
+                # FIX: Check self.now_playing != "None" to prevent infinite loops when playlist is empty
+                if hasattr(self, 'music_handle') and self.music_handle is not None and self.now_playing != "None":
                     if not self.soloud.is_valid_voice_handle(self.music_handle):
                         self.play_random_song()
                         if self.active_state == self.states.get("MUSIC_PLAYER"):

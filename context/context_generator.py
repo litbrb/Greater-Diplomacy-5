@@ -115,6 +115,8 @@ files_to_skip_but_list = [
     "data/**/*.json",
     "data\editors/**/*.py",
     "soloud.py",
+    "data\constants.py",
+    "data\queries.py",
     "context\context_generator.py",
     "map_tools\**",
     #"ui\**",

@@ -35,7 +35,7 @@ from screens.map_related_screens.faction import Faction_Screen, Faction_Territor
 from screens.select_base_map import Select_Base_Map
 from screens.random_setup import Random_Setup
 
-pygame.display.set_caption("Greater Diplomacy 5")
+pygame.display.set_caption("Greater Diplomacy 5 Prototype")
 
 class Controller:
     def __init__(self):

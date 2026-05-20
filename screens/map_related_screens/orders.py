@@ -9,6 +9,10 @@ from map_logic.rendering.font_manager import fonts
 from data import queries
 
 class Orders_Screen(GameState):
+    # Constants for panel layout to avoid hardcoding
+    PANEL_X = 80
+    PANEL_WIDTH = 760
+
     def __init__(self):
         super().__init__()
         self.bg_color = (20, 20, 40)
@@ -191,9 +195,18 @@ class Orders_Screen(GameState):
             
             # --- Handle Mousewheel Scrolling ---
             if event.type == pygame.MOUSEWHEEL:
-                self.scroll_y += event.y * 30
-                self.scroll_y = max(self.max_scroll_y, min(0, self.scroll_y))
-                self.refresh_ui()
+                # FIX: Only scroll if mouse is over the orders panel
+                mx, my = pygame.mouse.get_pos()
+                units = self.target_province.get("units", [])
+                player_units = [u for u in units if u.get("owner") == self.map_screen.player_country]
+                
+                # Check for collision if units exist
+                if player_units:
+                    bg_rect = pygame.Rect(self.PANEL_X, self.panel_top, self.PANEL_WIDTH, self.panel_max_h)
+                    if bg_rect.collidepoint(mx, my):
+                        self.scroll_y += event.y * 30
+                        self.scroll_y = max(self.max_scroll_y, min(0, self.scroll_y))
+                        self.refresh_ui()
 
             super().handle_events([event])
             self.additional_events(event)
@@ -206,7 +219,7 @@ class Orders_Screen(GameState):
         units = self.target_province.get("units", [])
         player_units = [u for u in units if u.get("owner") == self.map_screen.player_country]
         if player_units:
-            bg_rect = pygame.Rect(80, self.panel_top, 760, self.panel_max_h)
+            bg_rect = pygame.Rect(self.PANEL_X, self.panel_top, self.PANEL_WIDTH, self.panel_max_h)
             if bg_rect.collidepoint(mx, my):
                 on_ui = True
                 
@@ -412,7 +425,7 @@ class Orders_Screen(GameState):
         owner_color = self.map_screen.nation_colors.get(self.map_screen.player_country, (255, 255, 0))
         
         if player_units:
-            bg_rect = pygame.Rect(80, self.panel_top, 760, self.panel_max_h)
+            bg_rect = pygame.Rect(self.PANEL_X, self.panel_top, self.PANEL_WIDTH, self.panel_max_h)
             
             # Draw semi-transparent panel
             panel_surf = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)

@@ -30,6 +30,9 @@ def conquer_province(self, province, new_owner):
         # Flag this for an update later rather than doing the heavy math instantly
         self.centers_need_update = True
 
+        if not province.get("cores"):
+            province["cores"] = [new_owner]
+
 def get_mixed_core_color(cores):
     """Helper function to average the colors of all cores on a tile."""
     nations_dict = country_io.get_nation_colors() 

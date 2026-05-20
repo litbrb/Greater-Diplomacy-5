@@ -17,12 +17,20 @@ class Orders_Screen(GameState):
         self.selected_unit_index = None 
         self.cancel_rects = []
         
+        # --- NEW: Scroll Variables & Layout Constants ---
+        self.scroll_y = 0
+        self.max_scroll_y = 0
+        self.row_height = 80
+        self.panel_top = 140
+        self.panel_max_h = 580
+        
         # Load unit library so we can check unit stats (like naval_unit) dynamically
         self.unit_library = queries.get_unit_library()
-    
+
     def start_with_province(self, province, map_ref):
         self.target_province = province
         self.map_screen = map_ref
+        self.scroll_y = 0 # Reset scroll
         
         # --- NEW: Auto-select logic ---
         # Gather the exact list indices of the units you own on this tile
@@ -44,6 +52,9 @@ class Orders_Screen(GameState):
         units = self.target_province.get("units", [])
         player_units = [u for u in units if u.get("owner") == self.map_screen.player_country]
         
+        total_content_h = len(player_units) * self.row_height
+        self.max_scroll_y = min(0, self.panel_max_h - total_content_h - 20)
+
         # --- NEW: Select All Button ---
         if len(player_units) > 1:
             all_color = "blue" if self.selected_unit_index == "ALL" else "grey"
@@ -55,63 +66,66 @@ class Orders_Screen(GameState):
             if unit.get("owner") != self.map_screen.player_country:
                 continue
                 
-            # Expanded row height to 80px to fit everything comfortably
-            y_pos = 150 + (display_index * 80)
+            # Adjusted Y position by scroll
+            y_pos = self.panel_top + (display_index * self.row_height) + self.scroll_y
             
-            # 1. Selection Button (Name)
-            color = "blue" if self.selected_unit_index == i or self.selected_unit_index == "ALL" else "grey"
-            unit_name = unit["type"]
-            btn_sel = Button(100, y_pos, "medium", color, f"{unit_name}", lambda idx=i: self.select_unit(idx))
-            self.elements.append(btn_sel)
+            # Clipping: Only add buttons if they are within the visible panel area
+            if self.panel_top - 10 < y_pos < self.panel_top + self.panel_max_h - self.row_height:
+                # 1. Selection Button (Name)
+                color = "blue" if self.selected_unit_index == i or self.selected_unit_index == "ALL" else "grey"
+                unit_name = unit["type"]
+                btn_sel = Button(100, y_pos, "medium", color, f"{unit_name}", lambda idx=i: self.select_unit(idx))
+                self.elements.append(btn_sel)
 
-            order = unit.get("order", {})
-            order_type = order.get("type", "")
+                order = unit.get("order", {})
+                order_type = order.get("type", "")
 
-            # Combat / Location checks
-            player_country = self.map_screen.player_country
-            in_combat = queries.is_nation_in_combat_here(player_country, self.target_province, self.map_screen.nation_data)
-            is_water = self.target_province.get("terrain") in c.WATER_TERRAINS
-            is_coastal = self.target_province.get("is_coastal", False)
+                # Combat / Location checks
+                player_country = self.map_screen.player_country
+                in_combat = queries.is_nation_in_combat_here(player_country, self.target_province, self.map_screen.nation_data)
+                is_water = self.target_province.get("terrain") in c.WATER_TERRAINS
+                is_coastal = self.target_province.get("is_coastal", False)
+                
+                is_convoy = unit_name.startswith("Convoy")
+                is_truck = unit_name.startswith("Truck")
+                is_naval = queries.is_naval_unit(unit_name)
+
+                # 2. Inline Convoy Conversion Button
+                if order_type == "CONVERT":
+                    btn_conv = Button(600, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
+                elif in_combat:
+                    btn_conv = Button(600, y_pos, "small", "grey", "In Combat", lambda: None)
+                elif is_convoy:
+                    if not is_water:
+                        btn_conv = Button(600, y_pos, "small", "blue", "To Land", lambda idx=i: self.convert_unit(idx))
+                    else:
+                        btn_conv = Button(600, y_pos, "small", "grey", "Need Land", lambda: None)
+                elif is_truck:
+                    if is_coastal or is_water:
+                        btn_conv = Button(600, y_pos, "small", "blue", "To Ship", lambda idx=i: self.convert_unit(idx))
+                    else:
+                        btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
+                elif not is_naval:
+                    if is_coastal or is_water:
+                        btn_conv = Button(600, y_pos, "small", "blue", "To Convoy", lambda idx=i: self.convert_unit(idx))
+                    else:
+                        btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
+                else: # is_naval
+                    if is_coastal or not is_water:
+                        btn_conv = Button(600, y_pos, "small", "blue", "To Truck", lambda idx=i: self.convert_unit(idx))
+                    else:
+                        btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
+                
+                self.elements.append(btn_conv)
+
+                # 3. Inline Disband Button
+                if order_type == "DISBAND":
+                    btn_disband = Button(720, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
+                else:
+                    btn_disband = Button(720, y_pos, "small", "red", "Disband", lambda idx=i: self.disband_unit(idx))
+                
+                self.elements.append(btn_disband)
             
-            is_convoy = unit_name.startswith("Convoy")
-            is_truck = unit_name.startswith("Truck")
-            is_naval = queries.is_naval_unit(unit_name)
-
-            # 2. Inline Convoy Conversion Button
-            if order_type == "CONVERT":
-                btn_conv = Button(600, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
-            elif in_combat:
-                btn_conv = Button(600, y_pos, "small", "grey", "In Combat", lambda: None)
-            elif is_convoy:
-                if not is_water:
-                    btn_conv = Button(600, y_pos, "small", "blue", "To Land", lambda idx=i: self.convert_unit(idx))
-                else:
-                    btn_conv = Button(600, y_pos, "small", "grey", "Need Land", lambda: None)
-            elif is_truck:
-                if is_coastal or is_water:
-                    btn_conv = Button(600, y_pos, "small", "blue", "To Ship", lambda idx=i: self.convert_unit(idx))
-                else:
-                    btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
-            elif not is_naval:
-                if is_coastal or is_water:
-                    btn_conv = Button(600, y_pos, "small", "blue", "To Convoy", lambda idx=i: self.convert_unit(idx))
-                else:
-                    btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
-            else: # is_naval
-                if is_coastal or not is_water:
-                    btn_conv = Button(600, y_pos, "small", "blue", "To Truck", lambda idx=i: self.convert_unit(idx))
-                else:
-                    btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
-            
-            self.elements.append(btn_conv)
-
-            # 3. Inline Disband Button
-            if order_type == "DISBAND":
-                btn_disband = Button(720, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
-            else:
-                btn_disband = Button(720, y_pos, "small", "red", "Disband", lambda idx=i: self.disband_unit(idx))
-            
-            self.elements.append(btn_disband)
             display_index += 1
 
     def disband_unit(self, index):
@@ -174,6 +188,12 @@ class Orders_Screen(GameState):
                     if rect.collidepoint(event.pos):
                         self.cancel_unit_order(idx)
                         return
+            
+            # --- Handle Mousewheel Scrolling ---
+            if event.type == pygame.MOUSEWHEEL:
+                self.scroll_y += event.y * 30
+                self.scroll_y = max(self.max_scroll_y, min(0, self.scroll_y))
+                self.refresh_ui()
 
             super().handle_events([event])
             self.additional_events(event)
@@ -186,14 +206,17 @@ class Orders_Screen(GameState):
         units = self.target_province.get("units", [])
         player_units = [u for u in units if u.get("owner") == self.map_screen.player_country]
         if player_units:
-            # Mask updated to match new widened background size
-            bg_rect = pygame.Rect(80, 130, 760, len(player_units) * 80 + 40)
+            bg_rect = pygame.Rect(80, self.panel_top, 760, self.panel_max_h)
             if bg_rect.collidepoint(mx, my):
                 on_ui = True
                 
         # Pass scroll and pan events to your centralized map camera
         if event.type in (pygame.MOUSEWHEEL, pygame.MOUSEMOTION):
-            self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
+            # Only allow camera zoom/pan if not scrolling the unit list
+            if event.type == pygame.MOUSEWHEEL and on_ui:
+                pass 
+            else:
+                self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
 
         # --- Dynamic Map Hover Update ---
         if event.type == pygame.MOUSEMOTION:
@@ -221,7 +244,6 @@ class Orders_Screen(GameState):
                 self.map_screen.hover_glow_surf = None
 
         # --- Standard Order Placement Click ---
-        # FIX: Added 'and event.button == 1' to ignore scroll wheel (buttons 4/5) and right clicks
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.selected_unit_index is not None:
             dest = self.get_clicked_province(event.pos)
             if not dest: return
@@ -314,7 +336,7 @@ class Orders_Screen(GameState):
                 return False
                 
             if not dest_is_water and not queries.can_land_units_enter(unit["owner"], dest, self.map_screen.nation_data):
-                self.map_screen.show_feedback(f"Neutral {dest_owner} territory!")
+                self.map_screen.show_feedback(f"Neutral territory!")
                 return False
         # ----------------------------------
 
@@ -335,7 +357,7 @@ class Orders_Screen(GameState):
             return False
             
         return True
-    
+
     def get_clicked_province(self, mouse_pos):
         cam = self.map_screen.camera
         mx, my = mouse_pos
@@ -390,8 +412,7 @@ class Orders_Screen(GameState):
         owner_color = self.map_screen.nation_colors.get(self.map_screen.player_country, (255, 255, 0))
         
         if player_units:
-            # Widened to 760 and multiplied height step by 80
-            bg_rect = pygame.Rect(80, 130, 760, len(player_units) * 80 + 40)
+            bg_rect = pygame.Rect(80, self.panel_top, 760, self.panel_max_h)
             
             # Draw semi-transparent panel
             panel_surf = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
@@ -400,6 +421,17 @@ class Orders_Screen(GameState):
             
             # Draw border
             pygame.draw.rect(surface, (100, 100, 250), bg_rect, 2)
+            
+            # --- NEW: Scroll Bar Rendering ---
+            total_content_h = len(player_units) * self.row_height
+            if total_content_h > self.panel_max_h:
+                track_rect = pygame.Rect(70, self.panel_top, 10, self.panel_max_h)
+                pygame.draw.rect(surface, (20, 20, 30), track_rect)
+                
+                ratio = self.panel_max_h / total_content_h
+                bar_h = max(20, self.panel_max_h * ratio)
+                bar_y = self.panel_top + (abs(self.scroll_y) / (total_content_h - self.panel_max_h)) * (self.panel_max_h - bar_h)
+                pygame.draw.rect(surface, (100, 100, 150), (70, bar_y, 10, bar_h))
         
         # --- Helper for Split Path Drawing ---
         def draw_split_path(start_prov, path, speed, base_color):
@@ -421,33 +453,35 @@ class Orders_Screen(GameState):
             if unit.get("owner") != self.map_screen.player_country:
                 continue
 
-            y_pos = 150 + (display_index * 80)
+            y_pos = self.panel_top + (display_index * self.row_height) + self.scroll_y
             
-            # --- Inline Stats Rendering ---
-            hp = int(unit.get("health", 0))
-            m_hp = int(unit.get("max_health", 0))
-            atk = unit.get("attack", 0)
-            dff = unit.get("defense", 0)
-            spd = unit.get("speed", 0)
-            stats_txt = f"HP:{hp}/{m_hp} | ATK:{atk} | DEF:{dff} | SPD:{spd}"
-            txt_surf = small_font.render(stats_txt, True, (200, 200, 200))
-            surface.blit(txt_surf, (315, y_pos + 15))
+            # Only draw stats/paths if within the visible panel
+            if self.panel_top - 10 < y_pos < self.panel_top + self.panel_max_h - 20:
+                # --- Inline Stats Rendering ---
+                hp = int(unit.get("health", 0))
+                m_hp = int(unit.get("max_health", 0))
+                atk = unit.get("attack", 0)
+                dff = unit.get("defense", 0)
+                spd = unit.get("speed", 0)
+                stats_txt = f"HP:{hp}/{m_hp} | ATK:{atk} | DEF:{dff} | SPD:{spd}"
+                txt_surf = small_font.render(stats_txt, True, (200, 200, 200))
+                surface.blit(txt_surf, (315, y_pos + 15))
 
-            order = unit.get("order", {})
-            path = order.get("path", [])
+                order = unit.get("order", {})
+                path = order.get("path", [])
 
-            if path:
-                txt = small_font.render(f"PATH: {' -> '.join(map(str, path))}", True, (255, 255, 0))
-                surface.blit(txt, (140, y_pos + 55))
-                
-                cancel_rect = pygame.Rect(100, y_pos + 50, 25, 25)
-                pygame.draw.rect(surface, (150, 0, 0), cancel_rect)
-                x_label = small_font.render("X", True, (255, 255, 255))
-                surface.blit(x_label, x_label.get_rect(center=cancel_rect.center))
-                self.cancel_rects.append((cancel_rect, i))
-                
-                # Split draw using the helper function
-                draw_split_path(self.target_province, path, unit.get("speed", 1), owner_color)
+                if path:
+                    txt = small_font.render(f"PATH: {' -> '.join(map(str, path))}", True, (255, 255, 0))
+                    surface.blit(txt, (140, y_pos + self.row_height - 20))
+                    
+                    cancel_rect = pygame.Rect(100, y_pos + self.row_height - 25, 25, 25)
+                    pygame.draw.rect(surface, (150, 0, 0), cancel_rect)
+                    x_label = small_font.render("X", True, (255, 255, 255))
+                    surface.blit(x_label, x_label.get_rect(center=cancel_rect.center))
+                    self.cancel_rects.append((cancel_rect, i))
+                    
+                    # Split draw using the helper function
+                    draw_split_path(self.target_province, path, unit.get("speed", 1), owner_color)
 
             display_index += 1
 
@@ -490,25 +524,26 @@ class Orders_Screen(GameState):
                                 if 0 <= sx <= c.SCREEN_WIDTH and 0 <= sy <= c.SCREEN_HEIGHT:
                                     pygame.draw.circle(surface, (0, 255, 0), (int(sx), int(sy)), 12, 3)
 
-                mouse_pos = pygame.mouse.get_pos()
-                hovered = self.get_clicked_province(mouse_pos)
-                if hovered and hovered["id"] in last_node["neighbors"]:
-                    
-                    # Calculate speed limit based on group or individual selection
-                    speed_limit = min(u.get("speed", 1) for u in player_units) if self.selected_unit_index == "ALL" else active_unit.get("speed", 1)
-                    
-                    # Determine styling based on if this specific hover step exceeds the speed
-                    is_queued = len(active_path) >= speed_limit
-                    
-                    preview_color = owner_color
-                    preview_alpha = 255
-                    
-                    if is_queued:
-                        preview_color = (min(255, owner_color[0] + 150), min(255, owner_color[1] + 150), min(255, owner_color[2] + 150))
-                        preview_alpha = 120
+                    mouse_pos = pygame.mouse.get_pos()
+                    hovered = self.get_clicked_province(mouse_pos)
+                    if hovered and hovered["id"] in last_node["neighbors"]:
                         
-                    # Use the owner's color to draw the cursor hover with correct alpha logic
-                    overlay_renderer.draw_movement_path(surface, self.map_screen, last_node, [hovered["id"]], color=preview_color, alpha=preview_alpha)
+                        # Calculate speed limit based on group or individual selection
+                        speed_limit = min(u.get("speed", 1) for u in player_units) if self.selected_unit_index == "ALL" else active_unit.get("speed", 1)
+                        
+                        # Determine styling based on if this specific hover step exceeds the speed
+                        is_queued = len(active_path) >= speed_limit
+                        
+                        preview_color = owner_color
+                        preview_alpha = 255
+                        
+                        if is_queued:
+                            preview_color = (min(255, owner_color[0] + 150), min(255, owner_color[1] + 150), min(255, owner_color[2] + 150))
+                            preview_alpha = 120
+                            
+                        # Use the owner's color to draw the cursor hover with correct alpha logic
+                        overlay_renderer.draw_movement_path(surface, self.map_screen, last_node, [hovered["id"]], color=preview_color, alpha=preview_alpha)
+
     def update(self):
         super().update()
         # Ensure the camera keeps running its smooth zoom/pan lerp math 
@@ -518,6 +553,6 @@ class Orders_Screen(GameState):
 
     def exit_to_map(self):
         self.next_state, self.done = "MAP", True
-    
+
     def handle_back_key(self):
         self.exit_to_map()

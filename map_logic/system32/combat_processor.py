@@ -1,6 +1,6 @@
 import data.constants as c
 from data import queries
-from map_logic.rendering import edit_province_ownership
+from map_logic.system32 import edit_province_ownership
 import random # Imported for the random tiebreaker
 
 def apply_group_damage(total_atk, target_units):

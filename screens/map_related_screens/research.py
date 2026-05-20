@@ -443,7 +443,9 @@ class Research_Screen(GameState):
             surface.blit(big_icon, (panel_rect.x + 30, panel_rect.y + 100))
 
         cost = self.active_modal["cost"]
-        base_time = max(1, cost // 100) # Standardized division assuming 100 pts per turn
+        # Use dynamic points per turn calculation here as well
+        pts_per_turn = c.BASE_RESEARCH_POINTS_PER_DAY * c.DAYS_PER_TURN
+        base_time = max(1, cost // max(1, pts_per_turn)) 
         cost_txt = font_med.render(f"Base Research Cost: {cost} pts ({base_time} turns)", True, (255, 215, 0))
         surface.blit(cost_txt, (panel_rect.x + 200, panel_rect.y + 100))
 
@@ -625,7 +627,9 @@ class Research_Screen(GameState):
         ts = font.render(f"VIEWING: {self.current_category}", True, (255, 255, 255))
         surface.blit(ts, (c.SCREEN_WIDTH//2 - ts.get_width()//2, 75))
 
-        output_text = font.render("RESEARCH OUTPUT: 100 pts/turn", True, (0, 255, 255))
+        # --- DYNAMIC OUTPUT CALCULATION ---
+        pts_per_turn = int(c.BASE_RESEARCH_POINTS_PER_DAY * c.DAYS_PER_TURN)
+        output_text = font.render(f"RESEARCH OUTPUT: {pts_per_turn} pts/turn", True, (0, 255, 255))
         surface.blit(output_text, (c.SCREEN_WIDTH - output_text.get_width() - 30, 85))
 
         if self.current_category == "COMPLETED":

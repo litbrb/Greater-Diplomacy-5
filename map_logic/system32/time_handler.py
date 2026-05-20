@@ -27,6 +27,12 @@ class TimeHandler:
                 self.month_index = 0
                 self.year += 1
 
+        # Round up to the next 15 or 30 day turn increment
+        if self.day <= 15:
+            self.day = 15
+        else:
+            self.day = 30
+
     def get_date_string(self):
         """Returns a formatted string for the UI."""
         month_name = self.months[self.month_index]

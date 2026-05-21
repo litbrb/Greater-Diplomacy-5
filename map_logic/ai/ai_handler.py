@@ -168,7 +168,7 @@ def call_ollama(system_prompt, user_prompt, turn_id=None):
         # This initiates the blocking request. If conn.sock.shutdown() is called from the UI thread,
         # the OS will instantly throw a ConnectionAbortedError here and wake up this thread.
         conn.request("POST", parsed_url.path, body=payload_bytes, headers=headers)
-        response = conn.getresponse()
+        response = conn.getcall()
         
         if response.status >= 400:
             return {"message": f"OLLAMA HTTP ERROR: {response.status}"}
@@ -225,11 +225,14 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     mode = get_ai_mode()
     immersion = get_ai_immersion_level()
     
-    # Base 50/50 fallback logic
-    accepted = random.choice([True, False])
+    ai_stats = nation_data.get(ai_nation, {})
+    at_war = len(ai_stats.get("at_war_with", [])) > 0
+    in_faction = bool(ai_stats.get("faction", ""))
 
-    # PLEASE BE SMARTER ABOUT THIS
-    accepted = True
+    accepted = False
+    if at_war and not in_faction:
+        if action_type in ["FACTION_INVITE", "CREATE_FACTION", "CEASEFIRE"]:
+            accepted = True
 
     # Check if this is an AI talking to an AI
     is_ai_to_ai = (ai_nation not in human_players) and (sender_nation not in human_players)

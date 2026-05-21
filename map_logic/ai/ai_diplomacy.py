@@ -230,6 +230,41 @@ def process_basic_proactive_ai(map_screen):
                             "fallback": fallback,
                             "action_type": "JOIN_FACTION_REQ"
                         })
+            else:
+                # Find nations also at war with our enemy who aren't in a faction to form a new one with
+                potential_partners = []
+                for enemy in my_enemies:
+                    enemy_wars = map_screen.nation_data.get(enemy, {}).get("at_war_with", [])
+                    for mutual_combatant in enemy_wars:
+                        if mutual_combatant == ai_name or mutual_combatant not in active_nations:
+                            continue
+                        fac = map_screen.nation_data.get(mutual_combatant, {}).get("faction", "")
+                        if not fac and mutual_combatant not in potential_partners:
+                            potential_partners.append(mutual_combatant)
+
+                if potential_partners:
+                    target_partner = potential_partners[0]
+                    if not queries.is_ai_diplo_on_cooldown(ai_name, target_partner, "CREATE_FACTION", map_screen.nation_data):
+                        existing = pending.get(target_partner, {})
+                        turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+
+                        if target_partner not in pending or turns == 0:
+                            action_context = "proposing to create a new faction together to combat mutual threats"
+                            fallback = "We propose establishing a new faction together."
+                            pending[target_partner] = {
+                                "action": "CREATE_FACTION",
+                                "turns": 0,
+                                "message": fallback
+                            }
+                            queries.set_ai_diplo_cooldown(ai_name, target_partner, "CREATE_FACTION", map_screen.nation_data)
+                            
+                            map_screen.proactive_llm_tasks.append({
+                                "sender": ai_name,
+                                "target": target_partner,
+                                "context": action_context,
+                                "fallback": fallback,
+                                "action_type": "CREATE_FACTION"
+                            })
 
         # --- 2. Call to Arms Logic ---
         if is_already_at_war and my_faction:

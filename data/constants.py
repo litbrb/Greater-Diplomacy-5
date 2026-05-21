@@ -400,7 +400,9 @@ SYMBOL_BASE_SCALES = {
     "Militia": 0.8,
 }
 
-BUILDING_ICON_SCALE = 1.2
+LARGE_ICON_BUILDING_GROUPS = ["industry", "recruitment"]
+SMALL_ICON_BUILDING_GROUPS = ["aircraft carrier"]
+BUILDING_ICON_SCALE = 1.0
 
 # ==========================================
 # STAT ICONS

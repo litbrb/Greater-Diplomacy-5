@@ -325,7 +325,7 @@ def draw_overlay_content(self, surface):
                         offset_y = 0
                         
                         sym_name = b_name
-                        symbol = symbol_loader.get_symbol(sym_name, self.camera.zoom * 0.8)
+                        symbol = symbol_loader.get_symbol(sym_name, self.camera.zoom * c.BUILDING_ICON_SCALE)
                         
                         if symbol:
                             if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', False):

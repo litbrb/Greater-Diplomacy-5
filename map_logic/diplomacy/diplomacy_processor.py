@@ -39,6 +39,18 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
             # Prevents declaring war while an alliance request is pending, etc.
             return "A diplomatic action is already pending with this nation!"
             
+    # --- THE FIX: Prevent multiple faction requests ---
+    faction_actions = ["CREATE_FACTION", "JOIN_FACTION_REQ", "ACCEPT_CREATE_FACTION", "ACCEPT_FACTION_INVITE", "ACCEPT_JOIN_FACTION_REQ"]
+    if action_type in faction_actions:
+        if nation_data[player_name].get("faction", ""):
+            return "Cannot do this while already in a faction!"
+        
+        for other_target, info in pending.items():
+            act = info.get("action", "") if isinstance(info, dict) else info
+            if act in faction_actions and other_target != target_name:
+                return "You already have a pending faction request!"
+    # ------------------------------------------------
+        
     pending[target_name] = {"action": action_type, "turns": 0, "message": custom_msg}
     return "Message drafted. Will send at end of turn."
 
@@ -323,7 +335,7 @@ def process_diplomacy_turn(self):
                         if mode != "OFF":
                             if immersion == "ABSOLUTE" or (immersion == "FULL" and is_human_related) or (immersion == "LITE" and is_human_related and (task["action"] == "CUSTOM_MSG" or bool(task.get("content", "").strip()))):
                                 self.responsive_tasks_completed += 1
-                                self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})..."
+                                self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})...."
                     try:
                         executor.shutdown(wait=False, cancel_futures=True)
                     except TypeError:
@@ -487,12 +499,21 @@ def process_diplomacy_turn(self):
                         msg_text = custom_msg if custom_msg else f"We accepted your {orig_action.replace('_', ' ').lower()}."
                         
                         if orig_action == "FACTION_INVITE":
-                            finalize_faction_join(self.map_data, self.nation_data, target, country_name)
+                            if not self.nation_data[country_name].get("faction", ""):
+                                finalize_faction_join(self.map_data, self.nation_data, target, country_name)
+                            else:
+                                msg_text = "We wanted to accept, but we are already in a faction."
                         elif orig_action == "JOIN_FACTION_REQ":
-                            finalize_faction_join(self.map_data, self.nation_data, country_name, target)
+                            if not self.nation_data[target].get("faction", ""):
+                                finalize_faction_join(self.map_data, self.nation_data, country_name, target)
+                            else:
+                                msg_text = "We cannot accept as you are already in a faction."
                         elif orig_action == "CREATE_FACTION":
-                            finalize_create_faction(self.map_data, self.nation_data, target)
-                            finalize_faction_join(self.map_data, self.nation_data, target, country_name)
+                            if not self.nation_data[country_name].get("faction", "") and not self.nation_data[target].get("faction", ""):
+                                finalize_create_faction(self.map_data, self.nation_data, target)
+                                finalize_faction_join(self.map_data, self.nation_data, target, country_name)
+                            else:
+                                msg_text = "The proposed faction could not be formed because one of us is already bound by other treaties."
                         elif orig_action == "CEASEFIRE":
                             finalize_neutral(self.nation_data, country_name, target)
                         elif orig_action == "CALL_TO_ARMS":
@@ -502,7 +523,8 @@ def process_diplomacy_turn(self):
                             log_global_event(self.nation_data, f"ESCALATION: {target} has joined the wars of {country_name}!")
                         
                         send_message(self, country_name, target, msg_text, "DIPLOMACY")
-                        log_global_event(self.nation_data, f"Diplomatic agreement reached between {country_name} and {target}.")
+                        if msg_text == custom_msg or "accepted" in msg_text:
+                            log_global_event(self.nation_data, f"Diplomatic agreement reached between {country_name} and {target}.")
                         
                         # Clear the original request from the sender
                         if target in self.nation_data and "pending_diplomacy" in self.nation_data[target]:
@@ -661,18 +683,27 @@ def process_diplomacy_turn(self):
                         
                         if accepted:
                             if action == "FACTION_INVITE":
-                                finalize_faction_join(self.map_data, self.nation_data, country_name, target)
+                                if not self.nation_data[target].get("faction", ""):
+                                    finalize_faction_join(self.map_data, self.nation_data, country_name, target)
+                                else:
+                                    message = "We wanted to accept, but we are already in a faction."
                             elif action == "JOIN_FACTION_REQ":
-                                finalize_faction_join(self.map_data, self.nation_data, target, country_name)
+                                if not self.nation_data[country_name].get("faction", ""):
+                                    finalize_faction_join(self.map_data, self.nation_data, target, country_name)
+                                else:
+                                    message = "We cannot accept as you are already in a faction."
                             elif action == "CEASEFIRE":
                                 finalize_neutral(self.nation_data, country_name, target)
                             elif action == "CALL_TO_ARMS":
                                 join_faction_wars(self.map_data, self.nation_data, target, country_name)
                                 log_global_event(self.nation_data, f"ESCALATION: {target} answered the call to arms of {country_name}!")
                             elif action == "CREATE_FACTION":
-                                finalize_create_faction(self.map_data, self.nation_data, country_name)
-                                finalize_faction_join(self.map_data, self.nation_data, country_name, target)
-                                log_global_event(self.nation_data, f"{country_name} and {target} have formed a new global faction!")
+                                if not self.nation_data[country_name].get("faction", "") and not self.nation_data[target].get("faction", ""):
+                                    finalize_create_faction(self.map_data, self.nation_data, country_name)
+                                    finalize_faction_join(self.map_data, self.nation_data, country_name, target)
+                                    log_global_event(self.nation_data, f"{country_name} and {target} have formed a new global faction!")
+                                else:
+                                    message = "The proposed faction could not be formed because one of us is already bound by other treaties."
                             elif action == "JOIN_WARS":
                                 join_faction_wars(self.map_data, self.nation_data, country_name, target)
                                 log_global_event(self.nation_data, f"ESCALATION: {country_name} has joined the wars of {target}!")

@@ -191,80 +191,88 @@ def process_basic_proactive_ai(map_screen):
 
         # --- 1.5. Defensive Faction Seeking Logic ---
         if is_already_at_war and not my_faction:
-            potential_leaders = []
-            for enemy in my_enemies:
-                # Find nations also at war with our enemy
-                enemy_wars = map_screen.nation_data.get(enemy, {}).get("at_war_with", [])
-                for mutual_combatant in enemy_wars:
-                    if mutual_combatant == ai_name or mutual_combatant not in active_nations:
-                        continue
-                    # If they have a faction, we want to talk to the leader
-                    fac = map_screen.nation_data.get(mutual_combatant, {}).get("faction", "")
-                    if fac:
-                        fac_leader = queries.get_faction_leader(fac, map_screen.nation_data)
-                        if fac_leader and fac_leader not in potential_leaders and fac_leader in active_nations:
-                            potential_leaders.append(fac_leader)
-
-            if potential_leaders:
-                # Just ask the first valid leader we found
-                target_leader = potential_leaders[0]
-                if not queries.is_ai_diplo_on_cooldown(ai_name, target_leader, "JOIN_FACTION_REQ", map_screen.nation_data):
-                    existing = pending.get(target_leader, {})
-                    turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
-
-                    if target_leader not in pending or turns == 0:
-                        # --- REFACTORED TO PULL FROM AI_PROMPTS ---
-                        action_context = ai_prompts.get_proactive_action_context("JOIN_FACTION_REQ")
-                        fallback = ai_prompts.AI_FALLBACK_RESPONSES["PROACTIVE_JOIN_WAR"]
-                        pending[target_leader] = {
-                            "action": "JOIN_FACTION_REQ",
-                            "turns": 0,
-                            "message": fallback
-                        }
-                        queries.set_ai_diplo_cooldown(ai_name, target_leader, "JOIN_FACTION_REQ", map_screen.nation_data)
-                        
-                        map_screen.proactive_llm_tasks.append({
-                            "sender": ai_name,
-                            "target": target_leader,
-                            "context": action_context,
-                            "fallback": fallback,
-                            "action_type": "JOIN_FACTION_REQ"
-                        })
-            else:
-                # Find nations also at war with our enemy who aren't in a faction to form a new one with
-                potential_partners = []
+            # --- THE FIX: Prevent sending multiple faction requests ---
+            has_pending_faction_req = False
+            for target_nation, info in pending.items():
+                if isinstance(info, dict) and info.get("action") in ["CREATE_FACTION", "JOIN_FACTION_REQ"]:
+                    has_pending_faction_req = True
+                    break
+                    
+            if not has_pending_faction_req:
+                potential_leaders = []
                 for enemy in my_enemies:
+                    # Find nations also at war with our enemy
                     enemy_wars = map_screen.nation_data.get(enemy, {}).get("at_war_with", [])
                     for mutual_combatant in enemy_wars:
                         if mutual_combatant == ai_name or mutual_combatant not in active_nations:
                             continue
+                        # If they have a faction, we want to talk to the leader
                         fac = map_screen.nation_data.get(mutual_combatant, {}).get("faction", "")
-                        if not fac and mutual_combatant not in potential_partners:
-                            potential_partners.append(mutual_combatant)
+                        if fac:
+                            fac_leader = queries.get_faction_leader(fac, map_screen.nation_data)
+                            if fac_leader and fac_leader not in potential_leaders and fac_leader in active_nations:
+                                potential_leaders.append(fac_leader)
 
-                if potential_partners:
-                    target_partner = potential_partners[0]
-                    if not queries.is_ai_diplo_on_cooldown(ai_name, target_partner, "CREATE_FACTION", map_screen.nation_data):
-                        existing = pending.get(target_partner, {})
+                if potential_leaders:
+                    # Just ask the first valid leader we found
+                    target_leader = potential_leaders[0]
+                    if not queries.is_ai_diplo_on_cooldown(ai_name, target_leader, "JOIN_FACTION_REQ", map_screen.nation_data):
+                        existing = pending.get(target_leader, {})
                         turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
 
-                        if target_partner not in pending or turns == 0:
-                            action_context = "proposing to create a new faction together to combat mutual threats"
-                            fallback = "We propose establishing a new faction together."
-                            pending[target_partner] = {
-                                "action": "CREATE_FACTION",
+                        if target_leader not in pending or turns == 0:
+                            # --- REFACTORED TO PULL FROM AI_PROMPTS ---
+                            action_context = ai_prompts.get_proactive_action_context("JOIN_FACTION_REQ")
+                            fallback = ai_prompts.AI_FALLBACK_RESPONSES["PROACTIVE_JOIN_WAR"]
+                            pending[target_leader] = {
+                                "action": "JOIN_FACTION_REQ",
                                 "turns": 0,
                                 "message": fallback
                             }
-                            queries.set_ai_diplo_cooldown(ai_name, target_partner, "CREATE_FACTION", map_screen.nation_data)
+                            queries.set_ai_diplo_cooldown(ai_name, target_leader, "JOIN_FACTION_REQ", map_screen.nation_data)
                             
                             map_screen.proactive_llm_tasks.append({
                                 "sender": ai_name,
-                                "target": target_partner,
+                                "target": target_leader,
                                 "context": action_context,
                                 "fallback": fallback,
-                                "action_type": "CREATE_FACTION"
+                                "action_type": "JOIN_FACTION_REQ"
                             })
+                else:
+                    # Find nations also at war with our enemy who aren't in a faction to form a new one with
+                    potential_partners = []
+                    for enemy in my_enemies:
+                        enemy_wars = map_screen.nation_data.get(enemy, {}).get("at_war_with", [])
+                        for mutual_combatant in enemy_wars:
+                            if mutual_combatant == ai_name or mutual_combatant not in active_nations:
+                                continue
+                            fac = map_screen.nation_data.get(mutual_combatant, {}).get("faction", "")
+                            if not fac and mutual_combatant not in potential_partners:
+                                potential_partners.append(mutual_combatant)
+
+                    if potential_partners:
+                        target_partner = potential_partners[0]
+                        if not queries.is_ai_diplo_on_cooldown(ai_name, target_partner, "CREATE_FACTION", map_screen.nation_data):
+                            existing = pending.get(target_partner, {})
+                            turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+
+                            if target_partner not in pending or turns == 0:
+                                action_context = "proposing to create a new faction together to combat mutual threats"
+                                fallback = "We propose establishing a new faction together."
+                                pending[target_partner] = {
+                                    "action": "CREATE_FACTION",
+                                    "turns": 0,
+                                    "message": fallback
+                                }
+                                queries.set_ai_diplo_cooldown(ai_name, target_partner, "CREATE_FACTION", map_screen.nation_data)
+                                
+                                map_screen.proactive_llm_tasks.append({
+                                    "sender": ai_name,
+                                    "target": target_partner,
+                                    "context": action_context,
+                                    "fallback": fallback,
+                                    "action_type": "CREATE_FACTION"
+                                })
 
         # --- 2. Call to Arms Logic ---
         if is_already_at_war and my_faction:

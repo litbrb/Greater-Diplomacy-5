@@ -229,7 +229,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     at_war = len(ai_stats.get("at_war_with", [])) > 0
     in_faction = bool(ai_stats.get("faction", ""))
 
-    accepted = True
+    accepted = False
     if at_war and not in_faction:
         if action_type in ["FACTION_INVITE", "CREATE_FACTION", "CEASEFIRE"]:
             accepted = True

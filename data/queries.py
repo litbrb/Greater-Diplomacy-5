@@ -487,7 +487,7 @@ def get_best_preferred_unit(player_research, unit_library, preference_list):
                 return base_pref
 
             # For numbered tiers, find the highest roman numeral available
-            romans = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII"}
+            romans = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII", 9: "IX", 10: "X"}
             for check_lvl in range(res_lvl, 0, -1):
                 test_name = f"{base_pref} {romans.get(check_lvl, str(check_lvl))}"
                 if test_name in unit_library:

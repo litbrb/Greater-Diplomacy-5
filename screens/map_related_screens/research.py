@@ -120,7 +120,7 @@ class Research_Screen(GameState):
         
         if tech_key == "cavalry": return "Cavalry"
         
-        romans = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII"}
+        romans = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII", 8: "VIII", 9: "IX", 10: "X"}
         
         if tech_key == "civilian_car": return "Civilian Car"
         if tech_key == "ww1_armored_car": return "WW1 Armored Car"

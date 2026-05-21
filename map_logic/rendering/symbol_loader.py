@@ -24,7 +24,7 @@ def load_symbols():
 # --- NEW: NumPy Colorizer ---
 def colorize_red_image(img, new_color):
     """Treats the Red channel as brightness, but ONLY for red-tinted pixels.
-        Leaves white, grey, and black pixels completely untouched."""
+       Leaves white, grey, and black pixels completely untouched."""
     
     # 1. Extract RGB and Alpha channels. Convert to float32 for precise math.
     rgb = pygame.surfarray.pixels3d(img).astype(np.float32)
@@ -65,6 +65,22 @@ def get_symbol(name, zoom, color=None):
     # 1. Resolve base name
     base_name = name
     
+    # --- NEW: RANGE-BASED IMAGE LOOKUP (Lvl X-Y) ---
+    if base_name not in SYMBOLS:
+        lvl_match = re.search(r'^(.*?)\s+Lvl\s+(\d+)$', name, re.IGNORECASE)
+        if lvl_match:
+            base_type = lvl_match.group(1)
+            target_lvl = int(lvl_match.group(2))
+            
+            # Check for range keys (e.g., "Factory Lvl 1-3")
+            for sym_key in SYMBOLS.keys():
+                range_match = re.match(rf'^{re.escape(base_type)}\s+Lvl\s+(\d+)-(\d+)$', sym_key, re.IGNORECASE)
+                if range_match:
+                    start_lvl, end_lvl = int(range_match.group(1)), int(range_match.group(2))
+                    if start_lvl <= target_lvl <= end_lvl:
+                        base_name = sym_key
+                        break
+
     if base_name not in SYMBOLS:
         # Check if there is a 4-digit year in the name (e.g., "Infantry Type 1860")
         year_match = re.search(r'\b(\d{4})\b', name)

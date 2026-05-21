@@ -227,6 +227,8 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     
     # Base 50/50 fallback logic
     accepted = random.choice([True, False])
+
+    # PLEASE BE SMARTER ABOUT THIS
     accepted = True
 
     # Check if this is an AI talking to an AI

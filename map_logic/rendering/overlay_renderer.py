@@ -319,9 +319,10 @@ def draw_overlay_content(self, surface):
                     # Draw Buildings
                     buildings = province.get("buildings", [])
                     for i, b_name in enumerate(buildings):
-                        # Offset building icons so they don't stack perfectly
-                        offset_x = (i % 2) * 20
-                        offset_y = (i // 2) * 20
+
+                        # Just in case we want to offset it for some reason
+                        offset_x = 0
+                        offset_y = 0
                         
                         sym_name = b_name
                         symbol = symbol_loader.get_symbol(sym_name, self.camera.zoom * 0.8)
@@ -329,15 +330,27 @@ def draw_overlay_content(self, surface):
                         if symbol:
                             if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', False):
                                 symbol = pygame.transform.scale(symbol, (symbol.get_width(), int(symbol.get_height() * self.camera.tilt_factor)))
-                            surface.blit(symbol, (sx + offset_x, sy + offset_y))
+                            
+                            # Center the symbol based on the calculated sx/sy
+                            draw_x = sx + offset_x - (symbol.get_width() // 2)
+                            draw_y = sy + offset_y - (symbol.get_height() // 2)
+                            surface.blit(symbol, (draw_x, draw_y))
                         else:
                             # Fallback colored squares for different types
                             color = (150, 150, 150) # Grey for workshop
                             if "Factory" in b_name: color = (100, 100, 200) # Blue-ish for factory
                             if "Refinery" in b_name: color = (200, 100, 100) # Red-ish for refinery
                             
+                            w_scaled = int(12 * self.camera.zoom)
                             h_scaled = int(12 * self.camera.zoom * (getattr(self.camera, 'tilt_factor', 1.0) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else 1.0))
-                            rect = pygame.Rect(sx + offset_x, sy + offset_y, 12 * self.camera.zoom, h_scaled)
+                            
+                            # Center the rect using the same logic
+                            rect = pygame.Rect(
+                                sx + offset_x - (w_scaled // 2), 
+                                sy + offset_y - (h_scaled // 2), 
+                                w_scaled, 
+                                h_scaled
+                            )
                             pygame.draw.rect(surface, color, rect)
                             pygame.draw.rect(surface, (255, 255, 255), rect, 1) # Border
                     

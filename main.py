@@ -23,6 +23,7 @@ from screens.map import Map
 from screens.menu import Menu
 from screens.new_game import New_Game
 from screens.settings import Settings
+from screens.credits import Credits
 from screens.music_player import Music_Player
 from screens.map_related_screens.orders import Orders_Screen
 from data.io import keybind_io
@@ -205,6 +206,7 @@ class Controller:
             "RANDOM_SETUP": Random_Setup(),
             "LOAD_GAME": Load_Game(),
             "SETTINGS": Settings(self), 
+            "CREDITS": Credits(), 
             "MUSIC_PLAYER": Music_Player(self),
             "SELECT_BASE_MAP": Select_Base_Map(),
             "MAP": None,

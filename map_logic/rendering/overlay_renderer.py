@@ -318,6 +318,12 @@ def draw_overlay_content(self, surface):
                 elif self.secondary_mode == "ECONOMY":
                     # Draw Buildings
                     buildings = province.get("buildings", [])
+                    
+                    # Sort buildings to ensure recruitment centers render on top
+                    # Grouping is retrieved from building_library via queries
+                    b_lib = queries.get_building_library()
+                    buildings = sorted(buildings, key=lambda b: 1 if b_lib.get(b, {}).get("group") == "recruitment" else 0)
+                    
                     for i, b_name in enumerate(buildings):
 
                         # Just in case we want to offset it for some reason

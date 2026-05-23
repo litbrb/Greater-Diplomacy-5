@@ -116,7 +116,11 @@ def render_buttons(self):
     self.btn_spec_disband_fac = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "red", "Disband Faction", lambda: spectator_menus.spec_disband_faction(self))
 
     # General Controls
-    self.btn_spectator = Button(c.LEFT_UI_BAR_X, c.BTN_SPECTATOR_Y, "medium", "grey", "Spectator Mode", lambda: player_setup.start_spectator(self))
+    def start_spectator_action():
+        player_setup.start_spectator(self)
+        self.refresh_fog_map()
+
+    self.btn_spectator = Button(c.LEFT_UI_BAR_X, c.BTN_SPECTATOR_Y, "medium", "grey", "Spectator Mode", start_spectator_action)
     self.btn_close_info = Button(c.SCREEN_WIDTH - 120, c.TOP_BAR_UI_CENTER_Y, "small", "red", "X", self.deselect_province)
     self.btn_exit_to_menu = Button(c.SCREEN_WIDTH - 120, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Exit", self.exit_to_menu)
 

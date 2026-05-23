@@ -71,7 +71,8 @@ CREDITS_DATA = [
 ]
 
 # --- FOG OF WAR ---
-FOG_OF_WAR_ALPHA = 160
+USE_FOG_OF_WAR = True # Toggle Fog of War mechanics on or off
+FOG_OF_WAR_ALPHA = 160 # How dark unseen provinces get (0-255)
 
 # ==========================================
 # DIPLOMATIC POPUPS

@@ -216,6 +216,8 @@ def handle_map_events(self, event):
             if self.pending_selection:
                 if hasattr(self, 'confirm_rect') and self.confirm_rect.collidepoint(mx, my):
                     player_setup.confirm_player_country(self)
+                    # Refresh the fog map as soon as the player officially takes control of the country
+                    self.refresh_fog_map()
                 elif hasattr(self, 'cancel_rect') and self.cancel_rect.collidepoint(mx, my):
                     player_setup.cancel_selection(self)
                 return 

@@ -419,6 +419,12 @@ def refresh_fog_map(self):
     """Builds a semi-transparent fog surface to darken unseen provinces."""
     timer = pygame.time.get_ticks()
     
+    # Turn off the fog entirely if disabled in constants OR if the player is currently selecting a country
+    if not getattr(c, 'USE_FOG_OF_WAR', True) or getattr(self, 'selection_mode', False):
+        self.fog_map = None
+        self.visible_provinces = None
+        return
+
     # Dynamically fetch get_visible_provinces from queries
     self.visible_provinces = queries.get_visible_provinces(self.player_country, self.map_data, self.nation_data)
 

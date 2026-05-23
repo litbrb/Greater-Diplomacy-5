@@ -432,6 +432,8 @@ def render_settings_buttons(settings_screen):
     settings_screen.elements = [
         Button(50, 50, "small", "red", "Back", settings_screen.go_back),
         Button(keybind_x, 100, "medium", "blue", "Toggle Fullscreen", settings_screen.toggle_full),
+        Button(keybind_x, 160, "medium", "green" if settings_screen.show_fps else "red", 
+               f"Show FPS: {'ON' if settings_screen.show_fps else 'OFF'}", settings_screen.toggle_fps),
     ]
 
     # --- MASTER AI TOGGLE BUTTON ---

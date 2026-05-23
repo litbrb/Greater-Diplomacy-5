@@ -9,7 +9,7 @@ def save_settings(keybind_dict, sfx_volume, music_volume, num_players=1, ai_mode
                   gemini_api_key="", chatgpt_api_key="", claude_api_key="", ollama_api_key="",
                   gemini_model="", chatgpt_model="", claude_model="", ollama_model="",
                   ai_immersion_level="LITE", music_pitch=0.5, sfx_pitch=0.5, target_fps=60,
-                  ai_threads=1):
+                  ai_threads=1, show_fps=True):
     """Converts key codes to strings and saves all config data to JSON."""
     readable_binds = {}
     for action, key_code in keybind_dict.items():
@@ -33,7 +33,8 @@ def save_settings(keybind_dict, sfx_volume, music_volume, num_players=1, ai_mode
         "ollama_model": ollama_model,
         "ai_immersion_level": ai_immersion_level,
         "target_fps": target_fps,
-        "ai_threads": ai_threads
+        "ai_threads": ai_threads,
+        "show_fps": show_fps
     }
     queries.save_cached_json("settings", data_to_save)
 
@@ -49,7 +50,7 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
                 getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini"), 
                 getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307"), 
                 getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3"), 
-                "LITE", default_pitch, default_pitch, getattr(c, 'TARGET_FPS', 60), getattr(c, 'DEFAULT_AI_THREADS', 1))
+                "LITE", default_pitch, default_pitch, getattr(c, 'TARGET_FPS', 60), getattr(c, 'DEFAULT_AI_THREADS', 1), True)
     
     try:
         # Utilize the caching manager
@@ -99,7 +100,8 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
             s.get("music_pitch", s.get("music_speed", default_pitch)), 
             s.get("sfx_pitch", s.get("sfx_speed", default_pitch)),
             s.get("target_fps", getattr(c, 'TARGET_FPS', 60)),
-            s.get("ai_threads", getattr(c, 'DEFAULT_AI_THREADS', 1))
+            s.get("ai_threads", getattr(c, 'DEFAULT_AI_THREADS', 1)),
+            s.get("show_fps", getattr(c, 'SHOW_FPS', True))
         )
     except Exception as e:
         print(f"Error loading settings: {e}")
@@ -109,4 +111,4 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
                 getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini"), 
                 getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307"), 
                 getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3"), 
-                "LITE", default_pitch, default_pitch, getattr(c, 'TARGET_FPS', 60), getattr(c, 'DEFAULT_AI_THREADS', 1))
+                "LITE", default_pitch, default_pitch, getattr(c, 'TARGET_FPS', 60), getattr(c, 'DEFAULT_AI_THREADS', 1), True)

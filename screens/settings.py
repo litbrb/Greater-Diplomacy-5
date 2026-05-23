@@ -42,6 +42,13 @@ class Settings(GameState):
         self.active_input = None # Dynamically track which box is selected: "{MODE}_KEY" or "{MODE}_MOD"
 
         self.ai_threads = getattr(self.controller, 'ai_threads', getattr(c, 'DEFAULT_AI_THREADS', 1))
+        self.show_fps = getattr(self.controller, 'show_fps', getattr(c, 'SHOW_FPS', True))
+        self.refresh_ui()
+
+    def toggle_fps(self):
+        self.show_fps = not self.show_fps
+        self.controller.show_fps = self.show_fps
+        queries.save_global_settings(self.controller)
         self.refresh_ui()
 
     def set_ai_threads(self, val):

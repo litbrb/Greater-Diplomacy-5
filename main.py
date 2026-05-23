@@ -187,7 +187,8 @@ class Controller:
         self.sfx_pitch = loaded_data[15] if len(loaded_data) > 15 else getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
         self.target_fps = loaded_data[16] if len(loaded_data) > 16 else getattr(c, 'TARGET_FPS', 60)
         self.ai_threads = loaded_data[17] if len(loaded_data) > 17 else getattr(c, 'DEFAULT_AI_THREADS', 1)
-        
+        self.show_fps = loaded_data[18] if len(loaded_data) > 18 else getattr(c, 'SHOW_FPS', True)
+
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.sfx_volume
         ui_elements.global_sfx_pitch = self.sfx_pitch
@@ -435,7 +436,7 @@ class Controller:
             self.active_state.update()
             self.active_state.draw(self.screen)
 
-            if c.SHOW_FPS:
+            if self.show_fps:
                 fps_surface = self.fps_font.render(f"FPS: {int(self.clock.get_fps())}", True, (255, 255, 255))
                 self.screen.blit(fps_surface, (c.SCREEN_WIDTH - 75, 10))
 

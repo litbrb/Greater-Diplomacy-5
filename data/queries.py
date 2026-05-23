@@ -107,7 +107,8 @@ def save_global_settings(controller):
         getattr(controller, 'music_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
         getattr(controller, 'sfx_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
         getattr(controller, 'target_fps', getattr(c, 'TARGET_FPS', 60)),
-        getattr(controller, 'ai_threads', getattr(c, 'DEFAULT_AI_THREADS', 1))
+        getattr(controller, 'ai_threads', getattr(c, 'DEFAULT_AI_THREADS', 1)),
+        getattr(controller, 'show_fps', getattr(c, 'SHOW_FPS', True))
     )
 
 def get_ai_threads():

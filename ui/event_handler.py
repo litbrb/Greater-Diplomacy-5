@@ -23,6 +23,7 @@ def handle_map_events(self, event):
                 # CRITICAL: Re-bake the relations/cores from the perspective of the new player!
                 self.refresh_relations_map() 
                 self.refresh_political_map() 
+                self.refresh_fog_map()
                 
                 self.show_feedback(f"Turn started for {self.player_country}")
         return # Block all other map events!

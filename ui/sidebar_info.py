@@ -25,6 +25,12 @@ def draw_sidebar_info(self, surface):
     if not province:
         return
 
+    # --- FOG OF WAR VISIBILITY CHECK ---
+    is_visible = True
+    if getattr(self, 'visible_provinces', None) is not None:
+        if province["id"] not in self.visible_provinces:
+            is_visible = False
+            
     owner_id = province.get("owner", "Unclaimed")
     terrain = province.get("terrain", "Unknown")
     units = province.get("units", [])
@@ -74,21 +80,26 @@ def draw_sidebar_info(self, surface):
     surface.blit(header, (text_x, current_y))
     current_y += 25
 
-    buildings = province.get("buildings", [])
-    if not buildings:
-        txt = self.small_font.render("(None)", True, (150, 150, 150))
+    if not is_visible:
+        txt = self.small_font.render("(Hidden by Fog of War)", True, (150, 150, 150))
         surface.blit(txt, (text_x + 5, current_y))
         current_y += 25
     else:
-        for b in buildings[:5]:
-            txt = self.small_font.render(f"- {b}", True, (200, 200, 200))
+        buildings = province.get("buildings", [])
+        if not buildings:
+            txt = self.small_font.render("(None)", True, (150, 150, 150))
             surface.blit(txt, (text_x + 5, current_y))
-            current_y += 20
-            
-        if len(buildings) > 5:
-            txt = self.small_font.render(f" + {len(buildings) - 5} more", True, (150, 150, 150))
-            surface.blit(txt, (text_x + 5, current_y))
-            current_y += 20
+            current_y += 25
+        else:
+            for b in buildings[:5]:
+                txt = self.small_font.render(f"- {b}", True, (200, 200, 200))
+                surface.blit(txt, (text_x + 5, current_y))
+                current_y += 20
+                
+            if len(buildings) > 5:
+                txt = self.small_font.render(f" + {len(buildings) - 5} more", True, (150, 150, 150))
+                surface.blit(txt, (text_x + 5, current_y))
+                current_y += 20
 
     current_y += 10 # Padding before next section
 
@@ -101,39 +112,44 @@ def draw_sidebar_info(self, surface):
     surface.blit(header, (text_x, current_y))
     current_y += 25
 
-    if not units:
-        txt = self.small_font.render("(Empty)", True, (150, 150, 150))
+    if not is_visible:
+        txt = self.small_font.render("(Hidden by Fog of War)", True, (150, 150, 150))
         surface.blit(txt, (text_x + 5, current_y))
         current_y += 25
     else:
-        # Scale back the list size if combat is happening to fit the UI height limit
-        display_limit = 4 if is_combat else 12 
-        for u in units[:display_limit]:
-            u_name = u.get("type", "Unit")
-            u_owner_id = u.get("owner", "Unknown")
-            u_owner_display = self.nation_data.get(u_owner_id, {}).get("name", u_owner_id)
-            
-            # --- FIX: Grab the combat stats ---
-            atk = u.get("attack", 0)
-            defense = u.get("defense", 0)
-            hp = int(u.get("health", 0))
-            
-            # --- FIX: Format the string to match the combat zone ---
-            display_text = f"- {u_name} ({u_owner_display}) (ATK: {atk}) (DEF: {defense}) (HP: {hp})"
-            
-            txt = self.small_font.render(display_text, True, (200, 200, 200))
+        if not units:
+            txt = self.small_font.render("(Empty)", True, (150, 150, 150))
             surface.blit(txt, (text_x + 5, current_y))
-            current_y += 20
-            
-        if len(units) > display_limit:
-            txt = self.small_font.render(f" + {len(units) - display_limit} more", True, (150, 150, 150))
-            surface.blit(txt, (text_x + 5, current_y))
-            current_y += 20
+            current_y += 25
+        else:
+            # Scale back the list size if combat is happening to fit the UI height limit
+            display_limit = 4 if is_combat else 12 
+            for u in units[:display_limit]:
+                u_name = u.get("type", "Unit")
+                u_owner_id = u.get("owner", "Unknown")
+                u_owner_display = self.nation_data.get(u_owner_id, {}).get("name", u_owner_id)
+                
+                # --- FIX: Grab the combat stats ---
+                atk = u.get("attack", 0)
+                defense = u.get("defense", 0)
+                hp = int(u.get("health", 0))
+                
+                # --- FIX: Format the string to match the combat zone ---
+                display_text = f"- {u_name} ({u_owner_display}) (ATK: {atk}) (DEF: {defense}) (HP: {hp})"
+                
+                txt = self.small_font.render(display_text, True, (200, 200, 200))
+                surface.blit(txt, (text_x + 5, current_y))
+                current_y += 20
+                
+            if len(units) > display_limit:
+                txt = self.small_font.render(f" + {len(units) - display_limit} more", True, (150, 150, 150))
+                surface.blit(txt, (text_x + 5, current_y))
+                current_y += 20
 
     current_y += 10 # Padding before next section
 
     # 6. Draw the Combat Zone Section
-    if is_combat:
+    if is_combat and is_visible:
         x_offset = c.SIDEBAR_INFO_X + 10
         header = self.font.render("--- COMBAT ZONE ---", True, (255, 50, 50))
         surface.blit(header, (x_offset, current_y))

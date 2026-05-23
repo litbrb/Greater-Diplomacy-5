@@ -6,6 +6,35 @@ import itertools
 import pygame
 import data.constants as c
 
+def get_visible_provinces(player_country, map_data, nation_data):
+    """Calculates and returns a set of province IDs currently visible to the player."""
+    if player_country in ["Spectator", "Editor", "None"] or player_country not in nation_data:
+        return None # Returns None to signify "Full Visibility / Ignore Fog"
+        
+    friendly_nations = {player_country}
+    player_faction = nation_data[player_country].get("faction", "")
+    if player_faction:
+        friendly_nations.update(get_faction_members(player_faction, nation_data))
+        
+    visible_set = set()
+    
+    for prov in map_data.values():
+        owner = prov.get("owner", "")
+        
+        has_friendly_unit = False
+        for u in prov.get("units", []):
+            if u.get("owner") in friendly_nations:
+                has_friendly_unit = True
+                break
+                
+        # If we own it, or a friendly unit is on it, it (and its neighbors) are visible
+        if owner in friendly_nations or has_friendly_unit:
+            visible_set.add(prov["id"])
+            for n_id in prov.get("neighbors", []):
+                visible_set.add(n_id)
+                
+    return visible_set
+
 # ==========================================
 # UNIFIED CACHE MANAGER
 # ==========================================

@@ -29,6 +29,7 @@ def advance_time(map_screen):
             ("Refreshing Factions Map...", map_screen.refresh_factions_map),
             ("Refreshing Core Map...", map_screen.refresh_cores_map),
             ("Refreshing Territories...", map_screen.refresh_faction_territories_map),
+            ("Refreshing Fog of War...", map_screen.refresh_fog_map),
             ("Updating Map Labels...", map_screen.update_country_centers)
         ]
         
@@ -98,8 +99,8 @@ def trigger_ai_thread(map_screen):
     map_screen.responsive_tasks_total = -1
     map_screen.responsive_tasks_completed = 0
     
-    # Map Refresh always executes exactly 6 background render passes
-    map_screen.refresh_tasks_total = 6
+    # Map Refresh always executes exactly 7 background render passes now
+    map_screen.refresh_tasks_total = 7
     map_screen.refresh_tasks_completed = 0
     
     # Fire and forget the background process

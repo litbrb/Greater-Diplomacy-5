@@ -8,6 +8,13 @@ def draw_tooltip(self, surface):
 
     mx, my = pygame.mouse.get_pos()
     prov = self.hovered_province
+    
+    # --- FOG OF WAR VISIBILITY CHECK ---
+    is_visible = True
+    if getattr(self, 'visible_provinces', None) is not None:
+        if prov["id"] not in self.visible_provinces:
+            is_visible = False
+            
     owner_id = prov.get('owner', 'Unclaimed')
     owner_display = self.nation_data.get(owner_id, {}).get("name", owner_id)
     
@@ -33,28 +40,34 @@ def draw_tooltip(self, surface):
         pass
         
     elif self.secondary_mode == "UNITS":
-        units = prov.get("units", [])
-        if not units:
-            lines.append("No Units Present")
+        if not is_visible:
+            lines.append("(Units hidden by Fog of War)")
         else:
-            lines.append("--- Units ---")
-            # Show first 5 units to keep tooltip size reasonable
-            for u in units[:5]:
-                u_name = u.get("type", "Unit")
-                level = u.get("level", 0)
-                
-                if level > 0:
-                    # refactor: Use 'Type' for Infantry, 'Lvl' for others
-                    base_name = queries.get_base_unit_name(u_name)
-                    label = "Type" if base_name == "Infantry" else "Lvl"
-                    lines.append(f"- {u_name} ({label} {level})")
-                else:
-                    lines.append(f"- {u_name}")
+            units = prov.get("units", [])
+            if not units:
+                lines.append("No Units Present")
+            else:
+                lines.append("--- Units ---")
+                # Show first 5 units to keep tooltip size reasonable
+                for u in units[:5]:
+                    u_name = u.get("type", "Unit")
+                    level = u.get("level", 0)
                     
-            if len(units) > 5:
-                lines.append(f"...and {len(units)-5} more")
+                    if level > 0:
+                        # refactor: Use 'Type' for Infantry, 'Lvl' for others
+                        base_name = queries.get_base_unit_name(u_name)
+                        label = "Type" if base_name == "Infantry" else "Lvl"
+                        lines.append(f"- {u_name} ({label} {level})")
+                    else:
+                        lines.append(f"- {u_name}")
+                        
+                if len(units) > 5:
+                    lines.append(f"...and {len(units)-5} more")
     
     elif self.secondary_mode == "RESOURCES":
+        if not is_visible:
+            lines.append("(Resources hidden by Fog of War)")
+        else:
             resources = prov.get("resources", {})
             if isinstance(resources, dict) and resources:
                 lines.append("--- Resources ---")
@@ -92,24 +105,27 @@ def draw_tooltip(self, surface):
         if not is_core and owner_id not in c.UNPLAYABLE_NATIONS:
             lines.append("  *(Non-Core Penalties Applied)*")
 
-        buildings = prov.get("buildings", [])
-        if buildings:
-            lines.append("--- Buildings ---")
-            bldg_lib = queries.get_building_library()
-            for b in buildings:
-                # Determine production text dynamically based on building stats
-                stats = bldg_lib.get(b, {})
-                p_mat = stats.get('prod_materials', 0)
-                p_man = stats.get('prod_manpower', 0)
-                p_fuel = stats.get('prod_fuel', 0)
-                
-                yields = []
-                if p_man > 0: yields.append(f"+{p_man}Man")
-                if p_mat > 0: yields.append(f"+{p_mat}Mat")
-                if p_fuel > 0: yields.append(f"+{p_fuel}Fuel")
-                
-                prod_hint = f"({', '.join(yields)})" if yields else ""
-                lines.append(f"- {b} {prod_hint}")
+        lines.append("--- Buildings ---")
+        if not is_visible:
+            lines.append("(Hidden by Fog of War)")
+        else:
+            buildings = prov.get("buildings", [])
+            if buildings:
+                bldg_lib = queries.get_building_library()
+                for b in buildings:
+                    # Determine production text dynamically based on building stats
+                    stats = bldg_lib.get(b, {})
+                    p_mat = stats.get('prod_materials', 0)
+                    p_man = stats.get('prod_manpower', 0)
+                    p_fuel = stats.get('prod_fuel', 0)
+                    
+                    yields = []
+                    if p_man > 0: yields.append(f"+{p_man}Man")
+                    if p_mat > 0: yields.append(f"+{p_mat}Mat")
+                    if p_fuel > 0: yields.append(f"+{p_fuel}Fuel")
+                    
+                    prod_hint = f"({', '.join(yields)})" if yields else ""
+                    lines.append(f"- {b} {prod_hint}")
 
     # 3. Render the Tooltip
     # Calculate dimensions

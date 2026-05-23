@@ -52,19 +52,46 @@ def draw_map_screen(self, surface):
         w1 = int(min(vw, self.map_w - x1))
         h1 = int(min(vh, self.map_h - y1))
         if w1 > 0 and h1 > 0:
+            # Base Map
             v1 = current_base.subsurface((x1, y1, w1, h1))
-            surface.blit(pygame.transform.scale(v1, (int(w1*self.camera.zoom), int(h1*self.camera.zoom*getattr(self.camera, 'tilt_factor', 1.0)))), (0, self.top_ui_height + int(render_y_offset)))
+            scaled_w1 = int(w1*self.camera.zoom)
+            scaled_h1 = int(h1*self.camera.zoom*getattr(self.camera, 'tilt_factor', 1.0))
+            surface.blit(pygame.transform.scale(v1, (scaled_w1, scaled_h1)), (0, self.top_ui_height + int(render_y_offset)))
+            
+            # Fog Map
+            if getattr(self, 'fog_map', None):
+                f1 = self.fog_map.subsurface((x1, y1, w1, h1))
+                surface.blit(pygame.transform.scale(f1, (scaled_w1, scaled_h1)), (0, self.top_ui_height + int(render_y_offset)))
+                
         if w1 < vw and h1 > 0:
             wrap_w = int(vw - w1)
             if wrap_w > 0:
+                scaled_wrap_w = int(wrap_w*self.camera.zoom)
+                scaled_h1 = int(h1*self.camera.zoom*getattr(self.camera, 'tilt_factor', 1.0))
+                
+                # Base Map
                 v2 = current_base.subsurface((0, y1, wrap_w, h1))
-                surface.blit(pygame.transform.scale(v2, (int(wrap_w*self.camera.zoom), int(h1*self.camera.zoom*getattr(self.camera, 'tilt_factor', 1.0)))), (int(w1*self.camera.zoom), self.top_ui_height + int(render_y_offset)))
+                surface.blit(pygame.transform.scale(v2, (scaled_wrap_w, scaled_h1)), (int(w1*self.camera.zoom), self.top_ui_height + int(render_y_offset)))
+                
+                # Fog Map
+                if getattr(self, 'fog_map', None):
+                    f2 = self.fog_map.subsurface((0, y1, wrap_w, h1))
+                    surface.blit(pygame.transform.scale(f2, (scaled_wrap_w, scaled_h1)), (int(w1*self.camera.zoom), self.top_ui_height + int(render_y_offset)))
     else:
         src_rect = pygame.Rect(x1, y1, int(vw), int(vh))
         clipped = src_rect.clip(current_base.get_rect())
         if clipped.width > 0 and clipped.height > 0:
+            scaled_w = int(clipped.width*self.camera.zoom)
+            scaled_h = int(clipped.height*self.camera.zoom*getattr(self.camera, 'tilt_factor', 1.0))
+            
+            # Base Map
             view = current_base.subsurface(clipped)
-            surface.blit(pygame.transform.scale(view, (int(clipped.width*self.camera.zoom), int(clipped.height*self.camera.zoom*getattr(self.camera, 'tilt_factor', 1.0)))), (0, self.top_ui_height + int(render_y_offset)))
+            surface.blit(pygame.transform.scale(view, (scaled_w, scaled_h)), (0, self.top_ui_height + int(render_y_offset)))
+            
+            # Fog Map
+            if getattr(self, 'fog_map', None):
+                f_view = self.fog_map.subsurface(clipped)
+                surface.blit(pygame.transform.scale(f_view, (scaled_w, scaled_h)), (0, self.top_ui_height + int(render_y_offset)))
 
     # --- LAYER 2: SELECTION & HOVER ---
     if not self.selected_province:

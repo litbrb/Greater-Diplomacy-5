@@ -55,7 +55,7 @@ def draw_turn_loading_screen(map_screen, surface):
     draw_bar(center_y - 100, "1. Analyzing Global Strategy", getattr(map_screen, 'proactive_tasks_completed', 0), getattr(map_screen, 'proactive_tasks_total', -1))
     draw_bar(center_y - 100 + spacing, "2. Drafting Proactive Diplomatics", getattr(map_screen, 'proactive_llm_tasks_completed', 0), getattr(map_screen, 'proactive_llm_tasks_total', -1))
     draw_bar(center_y - 100 + spacing*2, "3. Processing Global Responses", getattr(map_screen, 'responsive_tasks_completed', 0), getattr(map_screen, 'responsive_tasks_total', -1))
-    draw_bar(center_y - 100 + spacing*3, "4. Re-Rendering World Maps", getattr(map_screen, 'refresh_tasks_completed', 0), getattr(map_screen, 'refresh_tasks_total', 6))
+    draw_bar(center_y - 100 + spacing*3, "4. Re-Rendering World Maps", getattr(map_screen, 'refresh_tasks_completed', 0), getattr(map_screen, 'refresh_tasks_total', 7))
 
     # --- Draw the Force Skip Button ---
     # Only show it if there are LLM tasks that might get stuck

@@ -414,3 +414,40 @@ def refresh_faction_territories_map(self):
         self.active_map = self.faction_territories_map
         
     print(f"Faction Territories map refreshed in {pygame.time.get_ticks() - timer} ms")
+
+def refresh_fog_map(self):
+    """Builds a semi-transparent fog surface to darken unseen provinces."""
+    timer = pygame.time.get_ticks()
+    
+    # Dynamically fetch get_visible_provinces from queries
+    self.visible_provinces = queries.get_visible_provinces(self.player_country, self.map_data, self.nation_data)
+
+    if self.visible_provinces is None:
+        self.fog_map = None
+        return
+
+    id_array, id_2d = get_id_2d_array(self.id_map)
+    lut = np.full(16777216, getattr(c, 'FOG_OF_WAR_ALPHA', 160), dtype=np.uint8)
+
+    for color_key, data in self.map_data.items():
+        if data["id"] in self.visible_provinces:
+            packed_key = (color_key[0] << 16) | (color_key[1] << 8) | color_key[2]
+            lut[packed_key] = 0 # 0 Alpha = Completely visible
+
+    alpha_2d = lut[id_2d]
+
+    fog_surf = pygame.Surface(self.id_map.get_size(), pygame.SRCALPHA)
+    fog_surf.fill((0, 0, 0, 0)) # Base transparent layer
+    
+    # Lock alpha array to write NumPy output to it directly
+    alpha_array = pygame.surfarray.pixels_alpha(fog_surf)
+    np.copyto(alpha_array, alpha_2d)
+    del alpha_array
+    
+    # Force RGB to black (so it applies a dark shadow instead of a white one)
+    rgb_array = pygame.surfarray.pixels3d(fog_surf)
+    rgb_array[...] = 0
+    del rgb_array
+
+    self.fog_map = fog_surf
+    print(f"Fog map refreshed in {pygame.time.get_ticks() - timer} ms")

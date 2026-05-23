@@ -137,6 +137,7 @@ class Map(GameState):
         self.refresh_factions_map()
         self.refresh_cores_map()
         self.refresh_faction_territories_map()
+        self.refresh_fog_map()
         
         buttons.render_buttons(self)
 
@@ -327,6 +328,7 @@ class Map(GameState):
     def refresh_factions_map(self): refresh_map.refresh_factions_map(self)
     def refresh_cores_map(self): refresh_map.refresh_cores_map(self)
     def refresh_faction_territories_map(self): refresh_map.refresh_faction_territories_map(self)
+    def refresh_fog_map(self): refresh_map.refresh_fog_map(self)
 
     def refresh_all_maps(self):
         """Unified method to refresh all visual map layers and text at once."""
@@ -336,6 +338,7 @@ class Map(GameState):
         self.refresh_factions_map()
         self.refresh_cores_map()
         self.refresh_faction_territories_map()
+        self.refresh_fog_map()
         self.show_feedback("Maps refreshed!")
 
     def auto_assign_cores(self):
@@ -577,6 +580,7 @@ class Map(GameState):
             self.refresh_factions_map()
             self.refresh_cores_map()
             self.refresh_faction_territories_map()
+            self.refresh_fog_map()
             self.update_country_centers()
             
             self.viewing_ai_moves = False # Safely unlock PyGame UI rendering
@@ -597,6 +601,7 @@ class Map(GameState):
             else:
                 self.refresh_political_map()
                 self.refresh_relations_map()
+                self.refresh_fog_map()
                 self.viewing_ai_moves = True
                 buttons.render_buttons(self)
                 elapsed_seconds = (pygame.time.get_ticks() - self.turn_start_time) / 1000.0

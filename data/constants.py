@@ -70,6 +70,9 @@ CREDITS_DATA = [
     {"main_text": "Terrain Art: ", "link_text": "litbrb", "url": "https://github.com/litbrb"},
 ]
 
+# --- FOG OF WAR ---
+FOG_OF_WAR_ALPHA = 160
+
 # ==========================================
 # DIPLOMATIC POPUPS
 # ==========================================

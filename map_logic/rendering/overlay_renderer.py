@@ -21,26 +21,16 @@ def draw_combat_bubbles(self_map, surface):
     if player_faction:
         friendly_nations.update(queries.get_faction_members(player_faction, self_map.nation_data))
     
-    """for pred in predictions:
-        # Check if the player is involved
-        is_involved = False
-        if player_country == "Spectator":
-            is_involved = True
-        elif pred["type"] == "meeting":
-            s1_owner = pred["side1"][0]["owner"] if pred["side1"] else ""
-            s2_owner = pred["side2"][0]["owner"] if pred["side2"] else ""
-            if s1_owner in friendly_nations or s2_owner in friendly_nations:
-                is_involved = True
-        else:
-            for owner in pred["forces"].keys():
-                if owner in friendly_nations:
-                    is_involved = True
-                    break
-        
-        if not is_involved:
-            continue"""
-    
     for pred in predictions:
+        # --- FOG OF WAR COMBAT VISIBILITY CHECK ---
+        if getattr(self_map, 'visible_provinces', None) is not None:
+            if pred["type"] == "meeting":
+                if pred["loc"][0] not in self_map.visible_provinces and pred["loc"][1] not in self_map.visible_provinces:
+                    continue
+            else:
+                if pred["loc"] not in self_map.visible_provinces:
+                    continue
+    
         friendly_atk = 0
         enemy_atk = 0
         involved = False
@@ -277,6 +267,11 @@ def draw_overlay_content(self, surface):
     # ---------------------------------------------
 
     for color_key, province in self.map_data.items():
+        
+        # --- FOG OF WAR VISIBILITY CHECK ---
+        if getattr(self, 'visible_provinces', None) is not None and province["id"] not in self.visible_provinces:
+            continue
+            
         cx, cy = province["center"]
         
         # Wrapping logic for screen coordinates

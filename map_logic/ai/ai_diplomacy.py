@@ -35,7 +35,7 @@ def process_proactive_llm_tasks(map_screen):
     
     map_screen.loading_status_text = f"Drafting Proactive Responses (0/{map_screen.proactive_llm_tasks_total})..."
     
-    active_nations = list(queries.get_living_nations(map_screen.map_data))
+    active_nations = set(queries.get_living_nations(map_screen.map_data))
     
     # If skipping, bypass the executor entirely to save time and prevent thread leakage
     if getattr(map_screen, 'force_skip_llm', False):
@@ -125,7 +125,7 @@ def process_proactive_llm_tasks(map_screen):
 
 def process_basic_proactive_ai(map_screen):
     """Hardcoded basic logic for AI to declare war for cores and join faction wars."""
-    active_nations = list(queries.get_living_nations(map_screen.map_data))
+    active_nations = set(queries.get_living_nations(map_screen.map_data))
     ai_nations = queries.get_active_ai_nations(map_screen)
     
     # Grab the active players to pass down for our FULL/ABSOLUTE optimization check

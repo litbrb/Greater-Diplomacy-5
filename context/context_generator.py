@@ -123,7 +123,7 @@ files_to_skip_but_list = [
     #"data\queries.py",
     "context\context_generator.py",
     "map_tools\**",
-    "data\**",
+    #"data\**",
 
     #"ui\**",
     #"screens\**",

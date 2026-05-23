@@ -195,6 +195,14 @@ EDIT_COUNTRY_UI_X3 = 850
 EDITOR_BOT_BTN_START_X = SCREEN_WIDTH - 120
 EDITOR_BOT_BTN_STEP_X = 110
 
+# --- Appearance Switcher & Formatting Layout Nodes ---
+EDIT_COUNTRY_SWITCH_BTN_X = 350
+EDIT_COUNTRY_SWITCH_BTN_Y = 20
+EDIT_COUNTRY_TITLE_X = 600
+EDIT_COUNTRY_TITLE_Y = 20
+EDIT_COUNTRY_ID_DISPLAY_X = SCREEN_WIDTH - 250
+EDIT_COUNTRY_ID_DISPLAY_Y = SCREEN_HEIGHT - 40
+
 # ==========================================
 # PROVINCE MENU
 # ==========================================

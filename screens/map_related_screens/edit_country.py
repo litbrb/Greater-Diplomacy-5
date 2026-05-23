@@ -290,6 +290,67 @@ class Edit_Country_Screen(GameState):
     def cancel_reset(self):
         self.resetting_type = None
 
+    def open_switch_appearance_menu(self):
+        """Opens a floating Tkinter tree configuration list to copy assets from another nation."""
+        import tkinter as tk
+
+        root = tk.Tk()
+        root.title("Switch Appearance Profile")
+        root.geometry("300x450")
+        root.attributes("-topmost", True)
+        self.menu_active = True
+
+        def close_menu():
+            self.menu_active = False
+            root.destroy()
+
+        root.protocol("WM_DELETE_WINDOW", close_menu)
+        tk.Label(root, text="Select Target Country look:", font=("Arial", 12)).pack(pady=10)
+        
+        frame = tk.Frame(root)
+        frame.pack(fill="both", expand=True, padx=10)
+        scrollbar = tk.Scrollbar(frame)
+        scrollbar.pack(side="right", fill="y")
+        
+        countries = sorted(list(self.map_screen.nation_data.keys()))
+        lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
+        for country in countries:
+            if country not in c.UNPLAYABLE_NATIONS and country != self.editing_country:
+                lb.insert(tk.END, country)
+        lb.pack(side="left", fill="both", expand=True)
+        scrollbar.config(command=lb.yview)
+        
+        def on_select(event=None):
+            selection = lb.curselection()
+            if selection:
+                chosen_country = lb.get(selection[0])
+                src_data = self.map_screen.nation_data[chosen_country]
+                
+                # Transfer textural profile definitions
+                self.country_name = src_data.get("name", chosen_country)
+                self.leader_name = src_data.get("leader_name", "")
+                self.leader_title = src_data.get("leader_title", "")
+                self.new_map_color = list(src_data.get("color", [150, 150, 150]))
+                
+                # Fetch asset matrices safely into local storage caches
+                self.flag_surf = queries.decode_b64_to_surf(src_data.get("flag_data", "DEFAULT"), self.flag_size, is_portrait=False, country_name=chosen_country)
+                self.portrait_surf = queries.decode_b64_to_surf(src_data.get("portrait_data", "DEFAULT"), self.portrait_size, is_portrait=True, country_name=chosen_country)
+                
+                self.save_state()
+                self.map_screen.show_feedback(f"Appearance copied from {chosen_country}!")
+            close_menu()
+
+        tk.Button(root, text="Apply Configuration", command=on_select, bg="#FF9800", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
+        lb.bind('<Double-1>', on_select)
+
+        while self.menu_active and not self.done:
+            try:
+                root.update()
+                pygame.event.pump()
+                pygame.time.wait(getattr(c, 'CPU_LIMITER', 10))
+            except:
+                break
+
     def save_and_exit(self):
         p_data = self.map_screen.nation_data[self.editing_country]
         p_data["name"] = self.country_name
@@ -445,7 +506,7 @@ class Edit_Country_Screen(GameState):
         heading_font = fonts.get("heading2")
         normal_font = fonts.get("normal")
 
-        surface.blit(title_font.render("Edit Country Identity", True, (255, 255, 255)), (350, 20))
+        surface.blit(title_font.render("Edit Country Identity", True, (255, 255, 255)), (getattr(c, 'EDIT_COUNTRY_TITLE_X', 600), getattr(c, 'EDIT_COUNTRY_TITLE_Y', 20)))
 
         # Render Scaled Canvases
         scaled_flag = pygame.transform.scale(self.flag_surf, (self.flag_rect.width, self.flag_rect.height))
@@ -564,6 +625,13 @@ class Edit_Country_Screen(GameState):
             
             surface.blit(yes_txt, yes_txt.get_rect(center=yes_rect.center))
             surface.blit(no_txt, no_txt.get_rect(center=no_rect.center))
+
+        # --- Draw Original Key Country ID block ---
+        id_display_x = getattr(c, 'EDIT_COUNTRY_ID_DISPLAY_X', c.SCREEN_WIDTH - 250)
+        id_display_y = getattr(c, 'EDIT_COUNTRY_ID_DISPLAY_Y', c.SCREEN_HEIGHT - 40)
+        id_text = f"Country ID: {self.editing_country}"
+        id_surf = normal_font.render(id_text, True, (150, 150, 150))
+        surface.blit(id_surf, (id_display_x, id_display_y))
 
     def handle_back_key(self):
         self.exit_to_map()

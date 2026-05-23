@@ -369,6 +369,14 @@ def render_edit_country_buttons(edit_screen):
     edit_screen.btn_cancel = Button(20, 20, "small", "red", "Cancel", edit_screen.exit_to_map)
     edit_screen.btn_save = Button(140, 20, "medium", "green", "Save Changes", edit_screen.save_and_exit)
     
+    # Switch country graphics configuration handler
+    edit_screen.btn_switch_appearance = Button(
+        getattr(c, 'EDIT_COUNTRY_SWITCH_BTN_X', 350), 
+        getattr(c, 'EDIT_COUNTRY_SWITCH_BTN_Y', 20), 
+        "medium", "orange", "Switch Appearance", 
+        edit_screen.open_switch_appearance_menu
+    )
+    
     edit_screen.btn_exp_flag = Button(c.EDIT_COUNTRY_UI_X1, 420, "small_square", "blue", "Export Flag", edit_screen.export_flag, image=icons.get("export"), show_text=False)
     edit_screen.btn_imp_flag = Button(c.EDIT_COUNTRY_UI_X1 + 50, 420, "small_square", "green", "Import Flag", edit_screen.import_flag, image=icons.get("import"), show_text=False)
     edit_screen.btn_reset_flag = Button(c.EDIT_COUNTRY_UI_X1 + 100, 420, "small", "red", "Reset", lambda: edit_screen.trigger_reset("FLAG"))
@@ -378,7 +386,7 @@ def render_edit_country_buttons(edit_screen):
     edit_screen.btn_reset_port = Button(c.EDIT_COUNTRY_UI_X2 + 100, 520, "small", "red", "Reset", lambda: edit_screen.trigger_reset("PORTRAIT"))
     
     edit_screen.elements.extend([
-        edit_screen.btn_cancel, edit_screen.btn_save,
+        edit_screen.btn_cancel, edit_screen.btn_save, edit_screen.btn_switch_appearance,
         edit_screen.btn_exp_flag, edit_screen.btn_imp_flag, edit_screen.btn_reset_flag,
         edit_screen.btn_exp_port, edit_screen.btn_imp_port, edit_screen.btn_reset_port
     ])

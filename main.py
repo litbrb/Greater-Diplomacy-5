@@ -45,6 +45,7 @@ class Controller:
         
         # --- FPS CLOCK FIX ---
         self.clock = pygame.time.Clock()
+        self.fps_font = pygame.font.Font(None, 24)
         
         # --- OS COMPATIBILITY CHECK ---
         import platform
@@ -436,7 +437,13 @@ class Controller:
 
             if self.active_state.done:
                 self.flip_state()
+                
+            fps_surface = self.fps_font.render(f"FPS: {int(self.clock.get_fps())}", True, (255, 255, 255))
+            self.screen.blit(fps_surface, (c.SCREEN_WIDTH - 75, 10))
 
+            if self.active_state.done:
+                self.flip_state()
+                
             pygame.display.flip()
 
 if __name__ == "__main__":

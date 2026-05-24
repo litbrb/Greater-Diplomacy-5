@@ -11,7 +11,7 @@ from map_logic.rendering import symbol_loader
 
 class Orders_Screen(GameState):
     PANEL_X = 80
-    PANEL_WIDTH = 400
+    PANEL_WIDTH = 380
     PANEL_TRANSPARENCY = 255
 
     def __init__(self):
@@ -25,8 +25,8 @@ class Orders_Screen(GameState):
         self.scroll_y = 0
         self.max_scroll_y = 0
         self.row_height = 80
-        self.panel_top = 140
-        self.panel_max_h = 280
+        self.panel_top = 180
+        self.panel_max_h = 200
         
         self.unit_library = queries.get_unit_library()
 
@@ -98,41 +98,41 @@ class Orders_Screen(GameState):
                 is_truck = unit_name.startswith("Truck")
                 is_naval = queries.is_naval_unit(unit_name)
 
-                x_pos = 300
+                x_pos = 280
 
                 # 2. Inline Convoy Conversion Button
                 if order_type == "CONVERT":
-                    btn_conv = Button(x_pos, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
+                    btn_conv = Button(x_pos, y_pos, "orders_panel_button", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx), font_preset="normal")
                 elif in_combat:
-                    btn_conv = Button(x_pos, y_pos, "small", "grey", "In Combat", lambda: None)
+                    btn_conv = Button(x_pos, y_pos, "orders_panel_button", "grey", "In Combat", lambda: None, font_preset="normal")
                 elif is_convoy:
                     if not is_water:
-                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Land", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "blue", "To Land", lambda idx=i: self.convert_unit(idx), font_preset="normal")
                     else:
-                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Land", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "grey", "Need Land", lambda: None, font_preset="normal")
                 elif is_truck:
                     if is_coastal or is_water:
-                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Ship", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "blue", "To Ship", lambda idx=i: self.convert_unit(idx), font_preset="normal")
                     else:
-                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Coast", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "grey", "Req Coast", lambda: None, font_preset="normal")
                 elif not is_naval:
                     if is_coastal or is_water:
-                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Convoy", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "blue", "To Convoy", lambda idx=i: self.convert_unit(idx), font_preset="normal")
                     else:
-                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Coast", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "grey", "Req Coast", lambda: None, font_preset="normal")
                 else: # is_naval
                     if is_coastal or not is_water:
-                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Truck", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "blue", "To Truck", lambda idx=i: self.convert_unit(idx), font_preset="normal")
                     else:
-                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Coast", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "orders_panel_button", "grey", "Req Coast", lambda: None, font_preset="normal")
                 
                 self.elements.append(btn_conv)
 
                 # 3. Inline Disband Button
                 if order_type == "DISBAND":
-                    btn_disband = Button(x_pos + 120, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
+                    btn_disband = Button(x_pos + 85, y_pos, "orders_panel_button_2", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx), font_preset="normal")
                 else:
-                    btn_disband = Button(x_pos + 120, y_pos, "small", "red", "Disband", lambda idx=i: self.disband_unit(idx))
+                    btn_disband = Button(x_pos + 85, y_pos, "orders_panel_button_2", "red", "Disband", lambda idx=i: self.disband_unit(idx), font_preset="normal")
                 
                 self.elements.append(btn_disband)
             

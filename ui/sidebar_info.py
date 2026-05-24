@@ -194,7 +194,7 @@ def draw_owner_portrait(self, surface):
 
     owner_data = self.nation_data.get(owner_id, {})
     leader_name = owner_data.get("leader_name", "Unknown Leader")
-    leader_title = owner_data.get("leader_title", "").strip()
+    leader_title = owner_data.get("leader_title", "Unknown Title").strip()
     portrait_str = owner_data.get("portrait_data", "DEFAULT")
 
     # Position safely beside the Left UI Bar and below the Top UI Bar

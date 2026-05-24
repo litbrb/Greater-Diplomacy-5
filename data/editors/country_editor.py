@@ -166,7 +166,11 @@ class CountryEditor:
                 "research": self.get_default_research_dict(),
                  "manpower": 0, "materials": 0, "fuel": 0,     
                 "is_playable": True,
-                "at_war_with": [], "allied_with": []
+                "at_war_with": [], "allied_with": [],
+                "leader_name": "",
+                "leader_title": "",
+                "flag_data": "",
+                "portrait_data": ""
             }
         
         with open(PATH, "w") as f:

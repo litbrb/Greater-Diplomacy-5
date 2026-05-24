@@ -316,6 +316,7 @@ SIZES = {
     "new_game": (300, 50),
     "orders": (100, 50),
     "small": (100, 40),
+    "top_orders_panel_button": (90, 40),
     "orders_panel_button": (80, 40),
     "orders_panel_button_2": (70, 40),
     "left_ui_bar": (120, 50),

@@ -59,11 +59,19 @@ class Orders_Screen(GameState):
         total_content_h = len(player_units) * self.row_height
         self.max_scroll_y = min(0, self.panel_max_h - total_content_h - 20)
 
-        # --- NEW: Select All Button ---
-        if len(player_units) > 1:
-            all_color = "blue" if self.selected_unit_index == "ALL" else "grey"
-            btn_all = Button(100, 90, "medium", all_color, "Select All", lambda: self.select_unit("ALL"))
-            self.elements.append(btn_all)
+        # --- NEW: Select All & Clear Orders Buttons ---
+        if player_units:
+            if len(player_units) > 1:
+                all_color = "blue" if self.selected_unit_index == "ALL" else "grey"
+                btn_all = Button(100, 90, "top_orders_panel_button", all_color, "Select All", lambda: self.select_unit("ALL"), font_preset="normal")
+                self.elements.append(btn_all)
+                
+                btn_clear = Button(200, 90, "top_orders_panel_button", "red", "Clear Orders", self.clear_all_orders, font_preset="normal")
+                self.elements.append(btn_clear)
+            else:
+                # If there's only 1 unit, just put the clear orders button where select all would have been
+                btn_clear = Button(100, 90, "top_orders_panel_button", "red", "Clear Orders", self.clear_all_orders, font_preset="normal")
+                self.elements.append(btn_clear)
 
         display_index = 0
         for i, unit in enumerate(units):
@@ -190,6 +198,20 @@ class Orders_Screen(GameState):
                 del units[index]["order"]
                 self.map_screen.show_feedback("Order Cancelled")
                 self.refresh_ui()
+
+    def clear_all_orders(self):
+        units = self.target_province.get("units", [])
+        cleared_any = False
+        
+        for unit in units:
+            if unit.get("owner") == self.map_screen.player_country:
+                if "order" in unit:
+                    del unit["order"]
+                    cleared_any = True
+                    
+        if cleared_any:
+            self.map_screen.show_feedback("All orders cleared")
+            self.refresh_ui()
 
     def handle_events(self, events):
         for event in events:

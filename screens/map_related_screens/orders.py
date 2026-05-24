@@ -7,11 +7,11 @@ from gameState import GameState
 from ui_elements import Button
 from map_logic.rendering.font_manager import fonts
 from data import queries
+from map_logic.rendering import symbol_loader
 
 class Orders_Screen(GameState):
-    # Constants for panel layout to avoid hardcoding
     PANEL_X = 80
-    PANEL_WIDTH = 760
+    PANEL_WIDTH = 400
 
     def __init__(self):
         super().__init__()
@@ -21,14 +21,12 @@ class Orders_Screen(GameState):
         self.selected_unit_index = None 
         self.cancel_rects = []
         
-        # --- NEW: Scroll Variables & Layout Constants ---
         self.scroll_y = 0
         self.max_scroll_y = 0
         self.row_height = 80
         self.panel_top = 140
         self.panel_max_h = 280
         
-        # Load unit library so we can check unit stats (like naval_unit) dynamically
         self.unit_library = queries.get_unit_library()
 
     def start_with_province(self, province, map_ref):
@@ -78,7 +76,7 @@ class Orders_Screen(GameState):
                 # 1. Selection Button (Name)
                 color = "blue" if self.selected_unit_index == i or self.selected_unit_index == "ALL" else "grey"
                 unit_name = unit["type"]
-                btn_sel = Button(100, y_pos, "medium", color, f"{unit_name}", lambda idx=i: self.select_unit(idx))
+                btn_sel = Button(100, y_pos, "medium_square", color, f"{unit_name}", lambda idx=i: self.select_unit(idx))
                 self.elements.append(btn_sel)
 
                 order = unit.get("order", {})
@@ -94,39 +92,41 @@ class Orders_Screen(GameState):
                 is_truck = unit_name.startswith("Truck")
                 is_naval = queries.is_naval_unit(unit_name)
 
+                x_pos = 300
+
                 # 2. Inline Convoy Conversion Button
                 if order_type == "CONVERT":
-                    btn_conv = Button(600, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
+                    btn_conv = Button(x_pos, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
                 elif in_combat:
-                    btn_conv = Button(600, y_pos, "small", "grey", "In Combat", lambda: None)
+                    btn_conv = Button(x_pos, y_pos, "small", "grey", "In Combat", lambda: None)
                 elif is_convoy:
                     if not is_water:
-                        btn_conv = Button(600, y_pos, "small", "blue", "To Land", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Land", lambda idx=i: self.convert_unit(idx))
                     else:
-                        btn_conv = Button(600, y_pos, "small", "grey", "Need Land", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Land", lambda: None)
                 elif is_truck:
                     if is_coastal or is_water:
-                        btn_conv = Button(600, y_pos, "small", "blue", "To Ship", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Ship", lambda idx=i: self.convert_unit(idx))
                     else:
-                        btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Coast", lambda: None)
                 elif not is_naval:
                     if is_coastal or is_water:
-                        btn_conv = Button(600, y_pos, "small", "blue", "To Convoy", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Convoy", lambda idx=i: self.convert_unit(idx))
                     else:
-                        btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Coast", lambda: None)
                 else: # is_naval
                     if is_coastal or not is_water:
-                        btn_conv = Button(600, y_pos, "small", "blue", "To Truck", lambda idx=i: self.convert_unit(idx))
+                        btn_conv = Button(x_pos, y_pos, "small", "blue", "To Truck", lambda idx=i: self.convert_unit(idx))
                     else:
-                        btn_conv = Button(600, y_pos, "small", "grey", "Need Coast", lambda: None)
+                        btn_conv = Button(x_pos, y_pos, "small", "grey", "Need Coast", lambda: None)
                 
                 self.elements.append(btn_conv)
 
                 # 3. Inline Disband Button
                 if order_type == "DISBAND":
-                    btn_disband = Button(720, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
+                    btn_disband = Button(x_pos + 120, y_pos, "small", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx))
                 else:
-                    btn_disband = Button(720, y_pos, "small", "red", "Disband", lambda idx=i: self.disband_unit(idx))
+                    btn_disband = Button(x_pos + 120, y_pos, "small", "red", "Disband", lambda idx=i: self.disband_unit(idx))
                 
                 self.elements.append(btn_disband)
             
@@ -469,17 +469,14 @@ class Orders_Screen(GameState):
 
             y_pos = self.panel_top + (display_index * self.row_height) + self.scroll_y
             
-            # Only draw stats/paths if within the visible panel
             if self.panel_top - 10 < y_pos < self.panel_top + self.panel_max_h - 20:
-                # --- Inline Stats Rendering ---
                 hp = int(unit.get("health", 0))
                 m_hp = int(unit.get("max_health", 0))
-                atk = unit.get("attack", 0)
-                dff = unit.get("defense", 0)
-                spd = unit.get("speed", 0)
-                stats_txt = f"HP:{hp}/{m_hp} | ATK:{atk} | DEF:{dff} | SPD:{spd}"
+                
+                stats_txt = f"HP: {hp}/{m_hp}"
                 txt_surf = small_font.render(stats_txt, True, (200, 200, 200))
-                surface.blit(txt_surf, (315, y_pos + 15))
+                
+                surface.blit(txt_surf, (160, y_pos + 15))
 
                 order = unit.get("order", {})
                 path = order.get("path", [])

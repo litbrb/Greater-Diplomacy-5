@@ -21,7 +21,7 @@ class TopBarOverlay:
     def draw(self, surface):
         # Draw solid backgrounds over the scrolling area
         pygame.draw.rect(surface, (35, 35, 45), (0, 0, c.MUSIC_LEFT_PANE_W, 120))
-        pygame.draw.rect(surface, (25, 25, 30), (c.MUSIC_LEFT_PANE_W, 0, c.SCREEN_WIDTH - c.MUSIC_LEFT_PANE_W, 140))
+        pygame.draw.rect(surface, (25, 25, 30), (c.MUSIC_LEFT_PANE_W, 0, c.SCREEN_WIDTH - c.MUSIC_LEFT_PANE_W, 200)) # Increased height to fit the scrubber
         
         # Re-draw the divider line over the header
         pygame.draw.line(surface, (100, 100, 100), (c.MUSIC_LEFT_PANE_W, 0), (c.MUSIC_LEFT_PANE_W, c.SCREEN_HEIGHT), 2)
@@ -30,7 +30,7 @@ class TopBarOverlay:
         font_norm = fonts.get("normal")
         surface.blit(font_title.render("ALBUMS", True, (255, 255, 255)), (20, 80))
         
-        np_text = f"Now Playing: {os.path.basename(self.controller.now_playing)}" if self.controller.now_playing != "None" else "Now Playing: Nothing"
+        np_text = f"Now Playing: {os.path.basename(self.controller.now_playing)}" if getattr(self.controller, 'now_playing', "None") != "None" else "Now Playing: Nothing"
         surface.blit(font_norm.render(np_text, True, (255, 215, 0)), (c.MUSIC_LEFT_PANE_W + 20, 30))
 
 class Music_Player(GameState):
@@ -56,6 +56,10 @@ class Music_Player(GameState):
         self.album_handle_rect = None
         self.track_track_rect = None
         self.track_handle_rect = None
+        
+        # Scrubbing state
+        self.slider_dragging = False
+        self._track_lengths = {}
         
         self.refresh_ui()
 
@@ -103,7 +107,7 @@ class Music_Player(GameState):
         self.max_album_scroll = min(0, c.SCREEN_HEIGHT - 120 - album_content_h - 20)
 
         # --- 2. Right Column: Tracks (Scrolling) ---
-        track_y = 140 + self.track_scroll_y
+        track_y = 200 + self.track_scroll_y # Adjusted to start below new scrubber
         track_content_h = 0
         
         for track_path in self.controller.playlist:
@@ -112,14 +116,14 @@ class Music_Player(GameState):
             color = "orange" if is_playing else "grey"
             
             # Conditionally fire the callback ONLY if the mouse is below the clipping header!
-            track_cb = lambda p=track_path: self.play_track(p) if pygame.mouse.get_pos()[1] >= 140 else None
+            track_cb = lambda p=track_path: self.play_track(p) if pygame.mouse.get_pos()[1] >= 200 else None
             
             self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, track_y, "song", color, track_name, track_cb))
             track_y += song_y
             track_content_h += song_y
 
         # Calculate max boundary for Track scrolling
-        self.max_track_scroll = min(0, c.SCREEN_HEIGHT - 140 - track_content_h - 20)
+        self.max_track_scroll = min(0, c.SCREEN_HEIGHT - 200 - track_content_h - 20)
 
         # --- 3. Top Layer: Fixed Overlay & Buttons ---
         self.elements.append(TopBarOverlay(self.controller))
@@ -127,6 +131,14 @@ class Music_Player(GameState):
         self.elements.append(Button(20, 20, "small", "red", "Back", self.handle_back_key))
         # Anchored relative to the UI so it never scrolls away!
         self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 20, 80, "medium", "green", "Skip / Random Song", self.play_track))
+        
+        # Add Pause Button
+        pause_text = "Play" if getattr(self.controller, 'is_paused', False) else "Pause"
+        self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 240, 80, "medium", "orange", pause_text, self.toggle_pause))
+        
+        # Add Progress Slider
+        self.progress_slider = Slider(c.MUSIC_LEFT_PANE_W + 20, 140, 400, "Track Progress", 0.0, self.scrub_music)
+        self.elements.append(self.progress_slider)
         
         # --- 4. Top Layer: Audio Sliders ---
         slider_x = c.SCREEN_WIDTH - 250
@@ -149,7 +161,98 @@ class Music_Player(GameState):
             self.controller.play_specific_song(track_path)
         else:
             self.controller.play_random_song()
+        
+        self.controller.is_paused = False # Safety reset
         self.refresh_ui()
+
+    def toggle_pause(self):
+        if not hasattr(self.controller, 'is_paused'):
+            self.controller.is_paused = False
+            
+        self.controller.is_paused = not self.controller.is_paused
+        
+        if c.USE_SOLOUD:
+            if getattr(self.controller, 'music_handle', None) is not None:
+                self.controller.soloud.set_pause(self.controller.music_handle, self.controller.is_paused)
+        else:
+            if self.controller.is_paused:
+                pygame.mixer.music.pause()
+            else:
+                pygame.mixer.music.unpause()
+        
+        self.refresh_ui()
+
+    def scrub_music(self, val):
+        # Only trigger seek if currently playing a valid track
+        if not getattr(self.controller, 'now_playing', None) or self.controller.now_playing == "None":
+            return
+            
+        length = self.get_current_track_length()
+        if length <= 0: return
+        
+        target_time = val * length
+        
+        if c.USE_SOLOUD:
+            if getattr(self.controller, 'music_handle', None) is not None:
+                self.controller.soloud.seek(self.controller.music_handle, target_time)
+        else:
+            try:
+                # Note: pygame mixer set_pos behavior is format dependent 
+                pygame.mixer.music.set_pos(target_time)
+            except Exception as e:
+                print(f"Cannot scrub format: {e}")
+
+    def get_current_track_length(self):
+        track = getattr(self.controller, 'now_playing', None)
+        if not track or track == "None": return 0
+        
+        if track not in self._track_lengths:
+            try:
+                sound = pygame.mixer.Sound(track)
+                self._track_lengths[track] = sound.get_length()
+            except Exception:
+                self._track_lengths[track] = 0
+                
+        return self._track_lengths[track]
+
+    def get_current_track_pos(self):
+        if c.USE_SOLOUD:
+            if getattr(self.controller, 'music_handle', None) is not None:
+                return self.controller.soloud.get_stream_time(self.controller.music_handle)
+        else:
+            return pygame.mixer.music.get_pos() / 1000.0
+        return 0
+
+    def update(self):
+        super().update()
+        
+        # Sync slider with song progress automatically if not interacting with it
+        if hasattr(self, 'progress_slider'):
+            mx, my = pygame.mouse.get_pos()
+            is_clicking = pygame.mouse.get_pressed()[0]
+            
+            # Check if user is actively dragging the scrubber slider
+            if is_clicking and self.progress_slider.rect.collidepoint(mx, my):
+                self.slider_dragging = True
+            elif not is_clicking:
+                self.slider_dragging = False
+
+            if not getattr(self, 'slider_dragging', False):
+                length = self.get_current_track_length()
+                pos = self.get_current_track_pos()
+                
+                if length > 0:
+                    # Prevent slider from blowing past 100% or going negative
+                    self.progress_slider.value = min(1.0, max(0.0, pos / length))
+                    
+                    def fmt(secs):
+                        s = int(secs)
+                        return f"{s//60:02d}:{s%60:02d}"
+                        
+                    self.progress_slider.text = f"{fmt(pos)} / {fmt(length)}"
+                else:
+                    self.progress_slider.value = 0.0
+                    self.progress_slider.text = "Track Progress"
 
     # --- AUDIO MODIFICATION HANDLERS ---
     def reset_audio_defaults(self):
@@ -176,7 +279,7 @@ class Music_Player(GameState):
     def set_music_volume(self, val):
         self.controller.music_volume = val
         if c.USE_SOLOUD:
-            if self.controller.music_handle is not None:
+            if getattr(self.controller, 'music_handle', None) is not None:
                 self.controller.soloud.set_volume(self.controller.music_handle, val)
         else:
             pygame.mixer.music.set_volume(val)
@@ -184,7 +287,7 @@ class Music_Player(GameState):
 
     def set_music_pitch(self, val):
         self.controller.music_pitch = val
-        if self.controller.music_handle is not None:
+        if getattr(self.controller, 'music_handle', None) is not None:
             # Shifted from 0.5 + (val * 1.5) to a clean 0.5 + val mapping
             speed_mult = 0.5 + val 
             self.controller.soloud.set_relative_play_speed(self.controller.music_handle, speed_mult)
@@ -220,9 +323,9 @@ class Music_Player(GameState):
         self.refresh_ui()
 
     def _snap_track_scroll(self, my):
-        view_h = c.SCREEN_HEIGHT - 140
+        view_h = c.SCREEN_HEIGHT - 200
         handle_h = max(30, int(view_h * (view_h / (view_h - self.max_track_scroll))))
-        rel_y = my - 140 - (handle_h / 2)
+        rel_y = my - 200 - (handle_h / 2)
         max_y = view_h - handle_h
         ratio = max(0.0, min(1.0, rel_y / max(1, max_y)))
         self.track_scroll_y = ratio * self.max_track_scroll
@@ -302,14 +405,14 @@ class Music_Player(GameState):
             self.album_handle_rect = None
 
         # 2. Track Scrollbar
-        track_view_h = c.SCREEN_HEIGHT - 140
+        track_view_h = c.SCREEN_HEIGHT - 200
         if self.max_track_scroll < 0:
-            track_bg = pygame.Rect(c.SCREEN_WIDTH - 280, 140, 10, track_view_h)
+            track_bg = pygame.Rect(c.SCREEN_WIDTH - 280, 200, 10, track_view_h)
             pygame.draw.rect(surface, (50, 50, 60), track_bg)
             
             ratio = self.track_scroll_y / self.max_track_scroll
             handle_h = max(30, int(track_view_h * (track_view_h / (track_view_h - self.max_track_scroll))))
-            handle_y = 140 + ratio * (track_view_h - handle_h)
+            handle_y = 200 + ratio * (track_view_h - handle_h)
             
             handle_rect = pygame.Rect(c.SCREEN_WIDTH - 280, handle_y, 10, handle_h)
             pygame.draw.rect(surface, (150, 150, 150), handle_rect, border_radius=5)

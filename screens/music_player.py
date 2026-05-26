@@ -143,6 +143,7 @@ class Music_Player(GameState):
         
         # Track auto-plays so UI syncs when a song naturally ends
         self._last_playing_track = getattr(self.controller, 'now_playing', None)
+        self._awaiting_seek_confirm = False
         
         # Ensure directories and files exist
         if not os.path.exists(c.MUSIC_DIR):
@@ -260,10 +261,9 @@ class Music_Player(GameState):
 
     def play_track(self, track_path=None):
         """Helper to play a track and instantly update the UI colors."""
-        # Reset Pygame tracking vars
-        self.controller._pygame_playback_offset = 0.0
-        self.controller._pygame_scrub_base_pos = 0.0
-        self.controller._pygame_frozen_time = 0.0
+        self.controller._playback_offset = 0.0
+        self.controller._scrub_base_pos = 0.0
+        self.controller._frozen_time = 0.0
         pygame.mixer.music._custom_is_paused = False
         
         if track_path:
@@ -272,6 +272,7 @@ class Music_Player(GameState):
             self.controller.play_random_song()
         
         self.controller.is_paused = False # Safety reset
+        self._awaiting_seek_confirm = True # Allow update loop to capture the initial stream base position
         self.refresh_ui()
 
     def toggle_pause(self):
@@ -306,6 +307,11 @@ class Music_Player(GameState):
         if c.USE_SOLOUD:
             if getattr(self.controller, 'music_handle', None) is not None:
                 self.controller.soloud.seek(self.controller.music_handle, target_time)
+                
+                # Manual tracking baseline to prevent rubber-banding
+                self.controller._playback_offset = target_time
+                self.controller._frozen_time = target_time
+                self._awaiting_seek_confirm = True
         else:
             # Unpause automatically if scrubbing while paused
             if getattr(pygame.mixer.music, '_custom_is_paused', False):
@@ -323,9 +329,9 @@ class Music_Player(GameState):
                 except Exception as e:
                     print(f"Cannot scrub format: {e}")
                     
-            self.controller._pygame_playback_offset = target_time
-            self.controller._pygame_scrub_base_pos = pygame.mixer.music.get_pos() / 1000.0
-            self.controller._pygame_frozen_time = target_time
+            self.controller._playback_offset = target_time
+            self.controller._frozen_time = target_time
+            self._awaiting_seek_confirm = True
 
     def get_current_track_length(self):
         track = getattr(self.controller, 'now_playing', None)
@@ -341,23 +347,33 @@ class Music_Player(GameState):
         return self._track_lengths[track]
 
     def get_current_track_pos(self):
+        # If waiting for the backend to update its internal buffer, return the frozen time
+        if getattr(self, '_awaiting_seek_confirm', False):
+            return getattr(self.controller, '_frozen_time', 0.0)
+
         if c.USE_SOLOUD:
+            if getattr(self.controller, 'is_paused', False):
+                return getattr(self.controller, '_frozen_time', 0.0)
+                
             if getattr(self.controller, 'music_handle', None) is not None:
-                return self.controller.soloud.get_stream_time(self.controller.music_handle)
+                raw_pos = self.controller.soloud.get_stream_time(self.controller.music_handle)
+                offset = getattr(self.controller, '_playback_offset', 0.0)
+                base_pos = getattr(self.controller, '_scrub_base_pos', 0.0)
+                
+                current = offset + (raw_pos - base_pos)
+                self.controller._frozen_time = current
+                return current
             return 0
         else:
             if getattr(pygame.mixer.music, '_custom_is_paused', False):
-                return getattr(self.controller, '_pygame_frozen_time', 0.0)
+                return getattr(self.controller, '_frozen_time', 0.0)
                 
             raw_pos = pygame.mixer.music.get_pos() / 1000.0
-            offset = getattr(self.controller, '_pygame_playback_offset', 0.0)
-            base_pos = getattr(self.controller, '_pygame_scrub_base_pos', 0.0)
+            offset = getattr(self.controller, '_playback_offset', 0.0)
+            base_pos = getattr(self.controller, '_scrub_base_pos', 0.0)
             
-            # The actual position is the offset we scrubbed to + the time elapsed SINCE the scrub
             current = offset + (raw_pos - base_pos)
-            
-            # Save this in case the user pauses next frame
-            self.controller._pygame_frozen_time = current
+            self.controller._frozen_time = current
             return current
 
     def update(self):
@@ -367,12 +383,20 @@ class Music_Player(GameState):
         current_track = getattr(self.controller, 'now_playing', None)
         if getattr(self, '_last_playing_track', None) != current_track:
             self._last_playing_track = current_track
-            self.controller._pygame_playback_offset = 0.0
-            self.controller._pygame_scrub_base_pos = 0.0
-            self.controller._pygame_frozen_time = 0.0
+            self.controller._playback_offset = 0.0
+            self.controller._frozen_time = 0.0
+            self._awaiting_seek_confirm = True # Allow it to settle for a frame
             pygame.mixer.music._custom_is_paused = False
             self.controller.is_paused = False
             self.refresh_ui()
+            
+        # Capture the raw stream position one frame after seeking so it's guaranteed to have updated its buffer
+        if getattr(self, '_awaiting_seek_confirm', False):
+            self._awaiting_seek_confirm = False
+            if c.USE_SOLOUD and getattr(self.controller, 'music_handle', None) is not None:
+                self.controller._scrub_base_pos = self.controller.soloud.get_stream_time(self.controller.music_handle)
+            elif not c.USE_SOLOUD:
+                self.controller._scrub_base_pos = pygame.mixer.music.get_pos() / 1000.0
         
         # Continuously sync the scrubber visual and text with actual audio progress
         if hasattr(self, 'progress_slider'):

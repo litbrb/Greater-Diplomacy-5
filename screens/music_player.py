@@ -33,6 +33,84 @@ class TopBarOverlay:
         np_text = f"Now Playing: {os.path.basename(self.controller.now_playing)}" if getattr(self.controller, 'now_playing', "None") != "None" else "Now Playing: Nothing"
         surface.blit(font_norm.render(np_text, True, (255, 215, 0)), (c.MUSIC_LEFT_PANE_W + 20, 30))
 
+class MusicScrubber:
+    """A dedicated interactive UI slider specifically for scrubbing music playback."""
+    def __init__(self, x, y, width, height, callback):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.callback = callback
+        self.value = 0.0  # Range: 0.0 to 1.0
+        self.is_dragging = False
+        self.visible = True
+        self.current_time_str = "00:00"
+        self.total_time_str = "00:00"
+
+    def _format_time(self, seconds):
+        s = int(max(0, seconds))
+        return f"{s // 60:02d}:{s % 60:02d}"
+
+    def update_progress(self, current_sec, total_sec):
+        if total_sec > 0:
+            self.total_time_str = self._format_time(total_sec)
+            self.current_time_str = self._format_time(current_sec)
+            if not self.is_dragging:
+                self.value = max(0.0, min(1.0, current_sec / total_sec))
+        else:
+            self.total_time_str = "00:00"
+            self.current_time_str = "00:00"
+            if not self.is_dragging:
+                self.value = 0.0
+
+    def handle_event(self, event):
+        if not self.visible: return
+        
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # Expand hitbox slightly vertically to make it easier to grab
+            hitbox = self.rect.inflate(0, 10)
+            if hitbox.collidepoint(event.pos):
+                self.is_dragging = True
+                self._update_value_from_mouse(event.pos[0])
+                
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if self.is_dragging:
+                self.is_dragging = False
+                if self.callback:
+                    self.callback(self.value)
+                    
+        elif event.type == pygame.MOUSEMOTION:
+            if self.is_dragging:
+                self._update_value_from_mouse(event.pos[0])
+
+    def _update_value_from_mouse(self, mouse_x):
+        rel_x = max(0, min(mouse_x - self.rect.x, self.rect.width))
+        self.value = rel_x / self.rect.width
+
+    def draw(self, surface):
+        if not self.visible: return
+        
+        # Draw text above the track
+        font = fonts.get("tiny")
+        text_str = f"Progress:  {self.current_time_str} / {self.total_time_str}"
+        text_surf = font.render(text_str, True, (255, 255, 255))
+        text_rect = text_surf.get_rect(topleft=(self.rect.x, self.rect.y - 20))
+        surface.blit(text_surf, text_rect)
+        
+        # Draw track background
+        pygame.draw.rect(surface, (50, 50, 60), self.rect, border_radius=5)
+        
+        # Draw filled progress
+        fill_width = int(self.value * self.rect.width)
+        if fill_width > 0:
+            fill_rect = pygame.Rect(self.rect.x, self.rect.y, fill_width, self.rect.height)
+            pygame.draw.rect(surface, (255, 150, 50), fill_rect, border_radius=5)
+            
+        # Draw draggable handle
+        handle_x = self.rect.x + fill_width
+        handle_rect = pygame.Rect(handle_x - 5, self.rect.y - 5, 10, self.rect.height + 10)
+        pygame.draw.rect(surface, (200, 200, 200), handle_rect, border_radius=3)
+        
+        # Draw outline
+        pygame.draw.rect(surface, (100, 100, 100), self.rect, 2, border_radius=5)
+
 class Music_Player(GameState):
     def __init__(self, controller):
         super().__init__()
@@ -58,7 +136,6 @@ class Music_Player(GameState):
         self.track_handle_rect = None
         
         # Scrubbing state
-        self.slider_dragging = False
         self._track_lengths = {}
         
         self.refresh_ui()
@@ -136,8 +213,8 @@ class Music_Player(GameState):
         pause_text = "Play" if getattr(self.controller, 'is_paused', False) else "Pause"
         self.elements.append(Button(c.MUSIC_LEFT_PANE_W + 240, 80, "medium", "orange", pause_text, self.toggle_pause))
         
-        # Add Progress Slider
-        self.progress_slider = Slider(c.MUSIC_LEFT_PANE_W + 20, 140, 400, "Track Progress", 0.0, self.scrub_music)
+        # Add Progress Slider (Custom MusicScrubber)
+        self.progress_slider = MusicScrubber(c.MUSIC_LEFT_PANE_W + 20, 155, 400, 15, self.scrub_music)
         self.elements.append(self.progress_slider)
         
         # --- 4. Top Layer: Audio Sliders ---
@@ -226,33 +303,11 @@ class Music_Player(GameState):
     def update(self):
         super().update()
         
-        # Sync slider with song progress automatically if not interacting with it
+        # Continuously sync the scrubber visual and text with actual audio progress
         if hasattr(self, 'progress_slider'):
-            mx, my = pygame.mouse.get_pos()
-            is_clicking = pygame.mouse.get_pressed()[0]
-            
-            # Check if user is actively dragging the scrubber slider
-            if is_clicking and self.progress_slider.rect.collidepoint(mx, my):
-                self.slider_dragging = True
-            elif not is_clicking:
-                self.slider_dragging = False
-
-            if not getattr(self, 'slider_dragging', False):
-                length = self.get_current_track_length()
-                pos = self.get_current_track_pos()
-                
-                if length > 0:
-                    # Prevent slider from blowing past 100% or going negative
-                    self.progress_slider.value = min(1.0, max(0.0, pos / length))
-                    
-                    def fmt(secs):
-                        s = int(secs)
-                        return f"{s//60:02d}:{s%60:02d}"
-                        
-                    self.progress_slider.text = f"{fmt(pos)} / {fmt(length)}"
-                else:
-                    self.progress_slider.value = 0.0
-                    self.progress_slider.text = "Track Progress"
+            length = self.get_current_track_length()
+            pos = self.get_current_track_pos()
+            self.progress_slider.update_progress(pos, length)
 
     # --- AUDIO MODIFICATION HANDLERS ---
     def reset_audio_defaults(self):

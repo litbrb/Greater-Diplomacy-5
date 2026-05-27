@@ -12,7 +12,7 @@ class Select_Base_Map(GameState):
 
     def refresh_maps(self):
         self.elements = [
-            Button(50, 50, "small", "red", "Back", self.exit_to_menu),
+            Button(20, 20, "small", "red", "Back", self.exit_to_menu),
         ]
         
         base_dir = c.BASE_MAPS_DIR

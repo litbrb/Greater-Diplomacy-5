@@ -11,7 +11,7 @@ class Credits(GameState):
         self.bg_color = (10, 10, 40) # Midnight Blue
 
         self.elements = [
-            Button(50, 50, "small", "red", "Back", self.exit_to_menu),
+            Button(20, 20, "small", "red", "Back", self.exit_to_menu),
         ]
         
         self.credits_list = []

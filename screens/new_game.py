@@ -13,7 +13,7 @@ class New_Game(GameState):
 
     def refresh_scenarios(self):
         self.elements = [
-            Button(50, 50, "small", "red", "Back", self.exit_to_menu),
+            Button(20, 20, "small", "red", "Back", self.exit_to_menu),
             Button("centered", "centered + 200", "new_game", "orange", "RANDOM SCENARIO", self.start_random_scenario),
             # Button("centered", "centered", "big", "red", "Check map tools", self.map_selected),
         ]

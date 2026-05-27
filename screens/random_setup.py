@@ -57,7 +57,7 @@ class Random_Setup(GameState):
 
     def refresh_ui(self):
         self.elements = [
-            Button(50, 50, "small", "red", "Back", self.go_back),
+            Button(20, 20, "small", "red", "Back", self.go_back),
             
             # Sliders 
             Slider((c.SCREEN_WIDTH/2) - 100, 300, 200, f"Countries: {self.current_countries}", self.country_slider_val, self.update_countries),

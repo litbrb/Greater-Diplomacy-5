@@ -28,8 +28,8 @@ class Load_Game(GameState):
 
     def refresh_save_list(self):
         self.elements = [
-            Button(50, 50, "small", "red", "Back", self.exit_to_menu),
-            Button(160, 50, "medium", "green", "Import .zip", self.import_save_zip)
+            Button(20, 20, "small", "red", "Back", self.exit_to_menu),
+            Button(160, 20, "medium", "green", "Import .zip", self.import_save_zip)
         ]
         
         if not os.path.exists(c.SAVES_DIR):
@@ -37,26 +37,26 @@ class Load_Game(GameState):
             
         save_folders = os.listdir(c.SAVES_DIR)
         for i, folder in enumerate(save_folders):
-            btn_y = 120 + (i * 60)
+            btn_y = 120 + (i * 40)
             
             # Hide buttons for the row being renamed or deleted
             if self.renaming_folder == folder or self.deleting_folder == folder:
                 continue
 
             # Load
-            self.elements.append(Button(200, btn_y, "medium", "blue", folder, 
+            self.elements.append(Button(20, btn_y, "save_file", "blue", folder, 
                                        lambda f=folder: self.load_specific_save(f)))
             # History
-            self.elements.append(Button(420, btn_y, "small", "purple", "History", 
+            self.elements.append(Button(830, btn_y, "small_save_button", "purple", "History", 
                                        lambda f=folder: self.open_history_menu(f)))
             # Rename
-            self.elements.append(Button(530, btn_y, "small", "grey", "Rename", 
+            self.elements.append(Button(940, btn_y, "small_save_button", "grey", "Rename", 
                                        lambda f=folder: self.start_rename(f)))
             # Export
-            self.elements.append(Button(640, btn_y, "small", "blue", "Export", 
+            self.elements.append(Button(1050, btn_y, "small_save_button", "green", "Export", 
                                        lambda f=folder: self.export_save_zip(f)))
             # Delete trigger
-            self.elements.append(Button(750, btn_y, "small", "red", "Del", 
+            self.elements.append(Button(1160, btn_y, "small_save_button", "red", "Del", 
                                        lambda f=folder: self.trigger_delete_conf(f)))
 
     def trigger_delete_conf(self, folder_name):

@@ -263,7 +263,7 @@ class Music_Player(GameState):
         """Helper to play a track and instantly update the UI colors."""
         self.controller._frozen_time = 0.0
         self.controller._last_raw_pos = 0.0
-        self._seek_ignore_until = pygame.time.get_ticks() + 150 # Protect track start
+        self._last_ticks = pygame.time.get_ticks() # Initialize real-world clock tracker
         pygame.mixer.music._custom_is_paused = False
         
         if track_path:
@@ -324,10 +324,8 @@ class Music_Player(GameState):
                 except Exception as e:
                     print(f"Cannot scrub format: {e}")
                     
-        # Update our integrator baseline instantly and lock it for 150ms 
-        # so the backend audio thread has time to execute the jump without corrupting the UI
+        # Instantly update timeline. We don't need a hacky 150ms lock anymore!
         self.controller._frozen_time = target_time
-        self._seek_ignore_until = pygame.time.get_ticks() + 150
 
     def get_current_track_length(self):
         track = getattr(self.controller, 'now_playing', None)
@@ -352,19 +350,21 @@ class Music_Player(GameState):
                 return getattr(self.controller, '_frozen_time', 0.0)
             raw_pos = pygame.mixer.music.get_pos() / 1000.0
 
-        # Wait out the 150ms buffer lock so async thread jumps don't blow up our delta math
-        current_ticks = pygame.time.get_ticks()
-        if current_ticks < getattr(self, '_seek_ignore_until', 0):
-            self.controller._last_raw_pos = raw_pos
-            return getattr(self.controller, '_frozen_time', 0.0)
-
-        # Delta-Time Integrator
+        # Audio stream delta
         last_raw = getattr(self.controller, '_last_raw_pos', raw_pos)
         delta = raw_pos - last_raw
         self.controller._last_raw_pos = raw_pos
 
-        # Failsafe: Ignore massive jumps (lag spikes) or negative jumps (engine resets/loops)
-        if delta < 0 or delta > 1.0:
+        # Wall-clock tracker to detect async background thread jumps
+        current_ticks = pygame.time.get_ticks()
+        last_ticks = getattr(self, '_last_ticks', current_ticks)
+        wall_delta = (current_ticks - last_ticks) / 1000.0
+        self._last_ticks = current_ticks
+
+        # THE FIX: Compare audio delta to real-world time.
+        # If the audio buffer advanced significantly faster than the physical game clock, 
+        # or if it jumped backwards, it is a backend seek executing, NOT normal playback.
+        if delta < 0 or delta > (wall_delta + 0.15):
             delta = 0.0
 
         # Scale ONLY the tiny frame delta by the pitch, making the timeline perfectly immune to desyncs
@@ -392,7 +392,7 @@ class Music_Player(GameState):
             self._last_playing_track = current_track
             self.controller._frozen_time = 0.0
             self.controller._last_raw_pos = 0.0
-            self._seek_ignore_until = pygame.time.get_ticks() + 150
+            self._last_ticks = pygame.time.get_ticks()
             pygame.mixer.music._custom_is_paused = False
             self.controller.is_paused = False
             self.refresh_ui()

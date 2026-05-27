@@ -143,17 +143,17 @@ class Load_Game(GameState):
             surface.blit(overlay, (0, 0))
             
             # Draw Popup Box
-            pop_rect = pygame.Rect(600, 350, 400, 200)
+            pop_rect = pygame.Rect(550, 10, 500, 100)
             pygame.draw.rect(surface, (60, 20, 20), pop_rect)
             pygame.draw.rect(surface, (255, 50, 50), pop_rect, 3)
             
             font = fonts.get("heading2")
             msg = font.render(f"Delete '{self.deleting_folder}'?", True, (255, 255, 255))
-            msg_rect = msg.get_rect(center=(800, 400))
+            msg_rect = msg.get_rect(center=(800, 40))
             surface.blit(msg, msg_rect)
             
             sub_msg = font.render("Press Enter to Confirm or Esc to Cancel", True, (200, 200, 200))
-            sub_rect = sub_msg.get_rect(center=(800, 450))
+            sub_rect = sub_msg.get_rect(center=(800, 80))
             surface.blit(sub_msg, sub_rect)
 
         # --- Draw Scrollbar ---

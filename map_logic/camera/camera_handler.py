@@ -18,7 +18,22 @@ class MapCamera:
             max_zoom = c.MAX_CAMERA_ZOOM
             self.target_zoom = max(self_map.min_zoom, min(self.target_zoom + zoom_change, max_zoom))
 
-        if event.type == pygame.MOUSEMOTION and event.buttons[2] and not on_ui:
+        # Check the current state of all mouse buttons
+        mouse_buttons = pygame.mouse.get_pressed()
+        
+        # Determine which button(s) are valid for dragging based on constants
+        drag_toggle = getattr(c, 'DRAG_MOUSE_BUTTON_TOGGLE', 'RIGHT')
+        drag_active = False
+        
+        # Pygame mouse_buttons indices: 0=Left, 1=Middle, 2=Right
+        if drag_toggle == "LEFT":
+            drag_active = mouse_buttons[0]
+        elif drag_toggle == "BOTH":
+            drag_active = mouse_buttons[0] or mouse_buttons[2]
+        else: # Default "RIGHT"
+            drag_active = mouse_buttons[2]
+
+        if event.type == pygame.MOUSEMOTION and drag_active and not on_ui:
             self.pos.x -= event.rel[0] / self.zoom
             self.pos.y -= event.rel[1] / (self.zoom * getattr(self, 'tilt_factor', 1.0))
             self.target_pos = pygame.Vector2(self.pos)

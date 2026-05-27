@@ -18,6 +18,7 @@ from screens.map_related_screens.messages import Messages_Screen
 from map_logic.rendering.font_manager import fonts
 import ui_elements
 import data.constants as c
+from data import queries
 from screens.load_game import Load_Game
 from screens.map import Map
 from screens.menu import Menu
@@ -192,6 +193,10 @@ class Controller:
         self.target_fps = loaded_data[16] if len(loaded_data) > 16 else getattr(c, 'TARGET_FPS', 60)
         self.ai_threads = loaded_data[17] if len(loaded_data) > 17 else getattr(c, 'DEFAULT_AI_THREADS', 1)
         self.show_fps = loaded_data[18] if len(loaded_data) > 18 else getattr(c, 'SHOW_FPS', True)
+        
+        # --- FIXED MOUSE TOGGLE LOADING BLOCKS ---
+        self.drag_mouse_button_toggle = loaded_data[19] if len(loaded_data) > 19 else getattr(c, 'DRAG_MOUSE_BUTTON_TOGGLE', 'RIGHT')
+        c.DRAG_MOUSE_BUTTON_TOGGLE = self.drag_mouse_button_toggle
 
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.sfx_volume

@@ -671,15 +671,12 @@ def calculate_all_economies(map_data, nation_data):
         n_data = nation_data.get(name, {})
         conv_rate = min(n_data.get("mat_to_fuel_slider", 0.0), get_max_fuel_conversion(n_data))
         
-        # Calculate raw material income vs upkeep to find out what we have safely
+        # Calculate raw material income
         raw_inc_mat = sum(data["breakdown"]["materials"].values())
-        raw_upk_mat = data["upkeep"]["materials"]
         
-        # Only use the income gained this turn, don't drain the storage
-        net_inc_mat = max(0, raw_inc_mat - raw_upk_mat)
-        
-        if conv_rate > 0 and net_inc_mat >= 10:
-            convert_amount = int(net_inc_mat * conv_rate)
+        # Conversion is based on Gross Income, not Net Income (Expenses are ignored)
+        if conv_rate > 0 and raw_inc_mat >= 10:
+            convert_amount = int(raw_inc_mat * conv_rate)
             convert_amount = (convert_amount // 10) * 10
             fuel_gained = convert_amount // 10
             

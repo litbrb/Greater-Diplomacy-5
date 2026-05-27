@@ -437,6 +437,7 @@ def render_settings_buttons(settings_screen):
         Button(keybind_x, 100, "medium", "blue", "Toggle Fullscreen", settings_screen.toggle_full),
         Button(keybind_x, 160, "medium", "green" if settings_screen.show_fps else "red", 
                f"Show FPS: {'ON' if settings_screen.show_fps else 'OFF'}", settings_screen.toggle_fps),
+        Button(keybind_x, 220, "medium", "purple", f"Drag Key: {settings_screen.drag_mouse_button_toggle}", settings_screen.toggle_drag_button),
     ]
 
     # --- MASTER AI TOGGLE BUTTON ---

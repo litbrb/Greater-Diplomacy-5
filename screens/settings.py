@@ -30,6 +30,9 @@ class Settings(GameState):
         self.gemini_api_key_text = getattr(self.controller, 'gemini_api_key', '')
         self.gemini_model_text = getattr(self.controller, 'gemini_model', 'gemini-2.5-flash')
 
+        # Load dynamic mouse button config from controller, fallback to constants configuration setting
+        self.drag_mouse_button_toggle = getattr(self.controller, 'drag_mouse_button_toggle', getattr(c, 'DRAG_MOUSE_BUTTON_TOGGLE', 'RIGHT'))
+
         self.ollama_api_key_text = getattr(self.controller, 'ollama_api_key', '')
         self.ollama_model_text = getattr(self.controller, 'ollama_model', 'llama3')
 
@@ -48,6 +51,21 @@ class Settings(GameState):
     def toggle_fps(self):
         self.show_fps = not self.show_fps
         self.controller.show_fps = self.show_fps
+        queries.save_global_settings(self.controller)
+        self.refresh_ui()
+
+    def toggle_drag_button(self):
+        """Cycles the dynamic mouse button configuration toggle value string."""
+        options = ["RIGHT", "LEFT", "BOTH"]
+        current_idx = options.index(self.drag_mouse_button_toggle)
+        next_idx = (current_idx + 1) % len(options)
+        
+        self.drag_mouse_button_toggle = options[next_idx]
+        
+        # Inject the modification to the global fallback configuration value AND controller
+        c.DRAG_MOUSE_BUTTON_TOGGLE = self.drag_mouse_button_toggle
+        self.controller.drag_mouse_button_toggle = self.drag_mouse_button_toggle
+        
         queries.save_global_settings(self.controller)
         self.refresh_ui()
 
@@ -113,6 +131,10 @@ class Settings(GameState):
         
         self.controller.num_players = 1
         self.num_players = self.controller.num_players
+
+        self.drag_mouse_button_toggle = "RIGHT"
+        c.DRAG_MOUSE_BUTTON_TOGGLE = "RIGHT"
+        self.controller.drag_mouse_button_toggle = "RIGHT"
         
         queries.save_global_settings(self.controller)
         self.refresh_ui()

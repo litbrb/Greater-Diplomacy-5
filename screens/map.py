@@ -94,6 +94,10 @@ class Map(GameState):
         else:
             load_map.load_map_assets(self, load_path)
 
+        # Sync constants mapping directly from loaded configuration store values if they exist
+        if hasattr(self, 'controller') and getattr(self.controller, 'drag_mouse_button_toggle', None):
+            c.DRAG_MOUSE_BUTTON_TOGGLE = self.controller.drag_mouse_button_toggle
+
         # --- 3. Visuals & UI Setup ---
         self.bg_color = (20, 20, 20)
         self.font = fonts.get("normal") 

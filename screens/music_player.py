@@ -261,9 +261,10 @@ class Music_Player(GameState):
 
     def play_track(self, track_path=None):
         """Helper to play a track and instantly update the UI colors."""
+        self.controller._playback_offset = 0.0
+        self.controller._scrub_base_pos = 0.0
         self.controller._frozen_time = 0.0
-        self.controller._last_raw_pos = 0.0
-        self._last_ticks = pygame.time.get_ticks() # Initialize real-world clock tracker
+        self._last_ticks = pygame.time.get_ticks() # Setup pure wall-clock for SoLoud
         pygame.mixer.music._custom_is_paused = False
         
         if track_path:
@@ -271,7 +272,8 @@ class Music_Player(GameState):
         else:
             self.controller.play_random_song()
         
-        self.controller.is_paused = False # Safety reset
+        self.controller.is_paused = False
+        self._awaiting_seek_confirm = True # Restored for Pygame compatibility
         self.refresh_ui()
 
     def toggle_pause(self):
@@ -294,22 +296,24 @@ class Music_Player(GameState):
         self.refresh_ui()
 
     def scrub_music(self, val):
-        # Only trigger seek if currently playing a valid track
         if not getattr(self.controller, 'now_playing', None) or self.controller.now_playing == "None":
             return
             
         length = self.get_current_track_length()
         if length <= 0: return
         
-        # Clamp slightly to prevent SoLoud End-of-File crashes
+        # Clamp slightly to prevent End-of-File crashes
         safe_length = max(0, length - 0.5)
         target_time = val * safe_length
         
         if c.USE_SOLOUD:
             if getattr(self.controller, 'music_handle', None) is not None:
                 self.controller.soloud.seek(self.controller.music_handle, target_time)
+                # Pure UI tracking: ignore SoLoud's internal clock completely
+                self.controller._frozen_time = target_time
+                self._last_ticks = pygame.time.get_ticks()
         else:
-            # Unpause automatically if scrubbing while paused
+            # Original Pygame logic restored
             if getattr(pygame.mixer.music, '_custom_is_paused', False):
                 pygame.mixer.music._custom_is_paused = False
                 self.controller.is_paused = False
@@ -324,8 +328,9 @@ class Music_Player(GameState):
                 except Exception as e:
                     print(f"Cannot scrub format: {e}")
                     
-        # Instantly update timeline. We don't need a hacky 150ms lock anymore!
-        self.controller._frozen_time = target_time
+            self.controller._playback_offset = target_time
+            self.controller._frozen_time = target_time
+            self._awaiting_seek_confirm = True
 
     def get_current_track_length(self):
         track = getattr(self.controller, 'now_playing', None)
@@ -341,47 +346,54 @@ class Music_Player(GameState):
         return self._track_lengths[track]
 
     def get_current_track_pos(self):
-        if c.USE_SOLOUD:
-            if getattr(self.controller, 'is_paused', False) or getattr(self.controller, 'music_handle', None) is None:
+        # ----------------------------------------------------
+        # PYGAME: Uses original offset logic
+        # ----------------------------------------------------
+        if not c.USE_SOLOUD:
+            if getattr(self, '_awaiting_seek_confirm', False):
                 return getattr(self.controller, '_frozen_time', 0.0)
-            raw_pos = self.controller.soloud.get_stream_time(self.controller.music_handle)
-        else:
+                
             if getattr(pygame.mixer.music, '_custom_is_paused', False):
                 return getattr(self.controller, '_frozen_time', 0.0)
+                
             raw_pos = pygame.mixer.music.get_pos() / 1000.0
+            offset = getattr(self.controller, '_playback_offset', 0.0)
+            base_pos = getattr(self.controller, '_scrub_base_pos', 0.0)
+            
+            current = offset + (raw_pos - base_pos)
+            self.controller._frozen_time = current
+            return current
 
-        # Audio stream delta
-        last_raw = getattr(self.controller, '_last_raw_pos', raw_pos)
-        delta = raw_pos - last_raw
-        self.controller._last_raw_pos = raw_pos
+        # ----------------------------------------------------
+        # SOLOUD: Uses Pure Wall-Clock Integrator
+        # ----------------------------------------------------
+        else:
+            if getattr(self.controller, 'is_paused', False) or getattr(self.controller, 'music_handle', None) is None:
+                self._last_ticks = pygame.time.get_ticks() # Prevent jumping when unpaused
+                return getattr(self.controller, '_frozen_time', 0.0)
 
-        # Wall-clock tracker to detect async background thread jumps
-        current_ticks = pygame.time.get_ticks()
-        last_ticks = getattr(self, '_last_ticks', current_ticks)
-        wall_delta = (current_ticks - last_ticks) / 1000.0
-        self._last_ticks = current_ticks
+            # Measure real time passed since last frame
+            current_ticks = pygame.time.get_ticks()
+            wall_delta = (current_ticks - getattr(self, '_last_ticks', current_ticks)) / 1000.0
+            self._last_ticks = current_ticks
 
-        # THE FIX: Compare audio delta to real-world time.
-        # If the audio buffer advanced significantly faster than the physical game clock, 
-        # or if it jumped backwards, it is a backend seek executing, NOT normal playback.
-        if delta < 0 or delta > (wall_delta + 0.15):
-            delta = 0.0
+            # Failsafe: if the user drags the window and freezes the game loop, ignore the massive time jump
+            if wall_delta > 0.5:
+                wall_delta = 0.0
 
-        # Scale ONLY the tiny frame delta by the pitch, making the timeline perfectly immune to desyncs
-        speed_mult = 1.0
-        if c.USE_SOLOUD:
+            # Scale only the pure time delta by the pitch
             speed_mult = 0.5 + getattr(self.controller, 'music_pitch', 0.5)
+            
+            current = getattr(self.controller, '_frozen_time', 0.0)
+            current += (wall_delta * speed_mult)
+            
+            # Prevent the visual bar from bleeding past the end
+            max_len = self.get_current_track_length()
+            if max_len > 0:
+                current = min(current, max_len)
 
-        current = getattr(self.controller, '_frozen_time', 0.0)
-        current += (delta * speed_mult)
-        
-        # Clamp to max track length so it never bleeds past visually
-        max_len = self.get_current_track_length()
-        if max_len > 0:
-            current = min(current, max_len)
-
-        self.controller._frozen_time = current
-        return current
+            self.controller._frozen_time = current
+            return current
 
     def update(self):
         super().update()
@@ -390,12 +402,18 @@ class Music_Player(GameState):
         current_track = getattr(self.controller, 'now_playing', None)
         if getattr(self, '_last_playing_track', None) != current_track:
             self._last_playing_track = current_track
+            self.controller._playback_offset = 0.0
             self.controller._frozen_time = 0.0
-            self.controller._last_raw_pos = 0.0
             self._last_ticks = pygame.time.get_ticks()
+            self._awaiting_seek_confirm = True # Pygame sync
             pygame.mixer.music._custom_is_paused = False
             self.controller.is_paused = False
             self.refresh_ui()
+            
+        # Capture Pygame's raw stream position one frame after seeking
+        if getattr(self, '_awaiting_seek_confirm', False) and not c.USE_SOLOUD:
+            self._awaiting_seek_confirm = False
+            self.controller._scrub_base_pos = pygame.mixer.music.get_pos() / 1000.0
             
         # Continuously sync the scrubber visual and text with actual audio progress
         if hasattr(self, 'progress_slider'):

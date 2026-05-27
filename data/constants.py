@@ -622,5 +622,5 @@ HISTORY_INDENT = None # this used to be 4
 SAVE_INDENT = None # this also used to be 4
 
 # Camera Settings
-
-DRAG_MOUSE_BUTTON_TOGGLE = "BOTH" # Options: "RIGHT", "LEFT", "BOTH"
+DEFAULT_MOUSE_BUTTON_TOGGLE = "RIGHT"
+DRAG_MOUSE_BUTTON_TOGGLE = DEFAULT_MOUSE_BUTTON_TOGGLE # Options: "RIGHT", "LEFT", "BOTH"

@@ -30,7 +30,7 @@ class MapCamera:
             drag_active = mouse_buttons[0]
         elif drag_toggle == "BOTH":
             drag_active = mouse_buttons[0] or mouse_buttons[2]
-        else: # Default "RIGHT"
+        else: # "RIGHT"
             drag_active = mouse_buttons[2]
 
         if event.type == pygame.MOUSEMOTION and drag_active and not on_ui:

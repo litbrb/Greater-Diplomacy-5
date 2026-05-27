@@ -132,9 +132,9 @@ class Settings(GameState):
         self.controller.num_players = 1
         self.num_players = self.controller.num_players
 
-        self.drag_mouse_button_toggle = "RIGHT"
-        c.DRAG_MOUSE_BUTTON_TOGGLE = "RIGHT"
-        self.controller.drag_mouse_button_toggle = "RIGHT"
+        self.drag_mouse_button_toggle = c.DEFAULT_MOUSE_BUTTON_TOGGLE
+        c.DRAG_MOUSE_BUTTON_TOGGLE = c.DEFAULT_MOUSE_BUTTON_TOGGLE
+        self.controller.drag_mouse_button_toggle = c.DEFAULT_MOUSE_BUTTON_TOGGLE
         
         queries.save_global_settings(self.controller)
         self.refresh_ui()

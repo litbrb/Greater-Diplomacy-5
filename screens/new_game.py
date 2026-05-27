@@ -61,6 +61,21 @@ class New_Game(GameState):
                 
                 # 2. Execute the official resync pipeline (handles unit synchronization, country updates, and tech scrubbing)
                 temp_map_context.refresh_nation_data()
+                print(f"refreshed")
+                
+                # Set all playable country resources to 0 before compounding income calculations
+                for nation_name, stats in temp_map_context.nation_data.items():
+                    if nation_name != "GLOBAL_EVENTS" and nation_name not in c.UNPLAYABLE_NATIONS:
+                        stats["manpower"] = 0
+                        stats["materials"] = 0
+                        stats["fuel"] = 0
+
+                # Process exactly 1 clean turn of income starting from a blank treasury base
+                # actually for some reason this adds 2 clean turns of income
+                # might be best if this is commented out...
+                
+                # from map_logic.system32 import economy_processor
+                # economy_processor.process_economy(temp_map_context)
                 
                 # 3. Clean country flags/portraits inside memory before serializing
                 queries.scrub_default_images(temp_map_context.nation_data)

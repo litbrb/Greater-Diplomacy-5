@@ -36,6 +36,7 @@ from screens.map_related_screens.production import Production_Screen
 from screens.map_related_screens.faction import Faction_Screen, Faction_Territories_Screen
 from screens.select_base_map import Select_Base_Map
 from screens.random_setup import Random_Setup
+from screens.scenario_settings import Scenario_Settings
 
 pygame.display.set_caption("Greater Diplomacy 5 Prototype")
 
@@ -228,7 +229,8 @@ class Controller:
             "EDIT_COUNTRY": Edit_Country_Screen(),
             "MESSAGES": Messages_Screen(),
             "FACTION": Faction_Screen(),
-            "FACTION_TERRITORIES": Faction_Territories_Screen()
+            "FACTION_TERRITORIES": Faction_Territories_Screen(),
+            "SCENARIO_SETTINGS": Scenario_Settings()
         }
         self.active_state = self.states["MENU"]
 

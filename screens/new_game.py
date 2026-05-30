@@ -19,7 +19,8 @@ class New_Game(GameState):
             Button(20, 20, "small", "red", "Back", self.exit_to_menu),
             Button("centered", "centered + 200", "new_game", "orange", "RANDOM SCENARIO", self.start_random_scenario),
             # Button for global data refresh positioned via configuration anchors
-            Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 80, "medium", "purple", "Data Refresh", self.trigger_global_data_refresh),
+            Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 160, "medium", "purple", "Data Refresh", self.trigger_global_data_refresh),
+            Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 80, "medium", "pink", "Scenario Settings", self.scenario_settings),
         ]
         
         # Look for scenarios in the scenarios folder
@@ -152,6 +153,10 @@ class New_Game(GameState):
 
     def exit_to_menu(self):
         self.next_state = "MENU"
+        self.done = True
+    
+    def scenario_settings(self):
+        self.next_state = "SCENARIO_SETTINGS"
         self.done = True
 
     def handle_back_key(self):

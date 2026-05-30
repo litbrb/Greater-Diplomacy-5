@@ -87,6 +87,14 @@ def load_map_assets(self, load_path):
         with open(meta_path, "r") as f:
             save_meta = json.load(f)
 
+    # --- APPLY SCENARIO SETTINGS ---
+    if save_meta and "scenario_settings" in save_meta:
+        self.scenario_settings = save_meta["scenario_settings"]
+        c.USE_FOG_OF_WAR = self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)
+    else:
+        self.scenario_settings = {"fog_of_war": c.DEFAULT_FOG_OF_WAR}
+        c.USE_FOG_OF_WAR = c.DEFAULT_FOG_OF_WAR
+
     if load_path:
         history_path = os.path.join(load_path, "history.json")
         if os.path.exists(history_path):

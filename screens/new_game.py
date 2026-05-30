@@ -12,6 +12,8 @@ class New_Game(GameState):
         super().__init__()
         self.bg_color = (0, 50, 0)
         self.selected_scenario_path = None
+        # Shared settings object
+        self.settings_data = {"fog_of_war": c.DEFAULT_FOG_OF_WAR}
         self.refresh_scenarios()
 
     def refresh_scenarios(self):
@@ -36,6 +38,20 @@ class New_Game(GameState):
                 Button("centered", btn_y, "new_game", "blue", name, 
                        lambda n=name: self.start_scenario(n))
             )
+    def scenario_settings(self):
+        # We assume you need to modify your GameState/Menu flow to pass this
+        # or store this in a global manager. For now, we inject into the instance.
+        from screens.scenario_settings import Scenario_Settings
+        # You may need to update your game flow to pass self.scenario_settings
+        self.next_state = "SCENARIO_SETTINGS"
+        self.done = True
+
+    def start_scenario(self, scenario_name):
+        self.selected_save_path = os.path.join(c.SCENARIOS_DIR, scenario_name)
+        # Pass the settings to the Map class
+        self.map_settings = self.scenario_settings 
+        self.next_state = "MAP"
+        self.done = True
 
     def trigger_global_data_refresh(self):
         """Headlessly instantiates each map scenario, runs internal data sync cleaners, and forces an in-place write to disk."""

@@ -39,7 +39,8 @@ def save_map_data(self, save_name=None):
         "current_player_index": getattr(self, "current_player_index", 0),
         "default_research": getattr(self, "default_research", None),
         "nation_data": self.nation_data,
-        "provinces": {}
+        "provinces": {},
+        "scenario_settings": getattr(self, "scenario_settings", {"fog_of_war": c.DEFAULT_FOG_OF_WAR})
     }
     
     for data in self.map_data.values():

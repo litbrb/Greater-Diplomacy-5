@@ -74,6 +74,7 @@ SHOW_FPS = True
 
 # --- FOG OF WAR ---
 USE_FOG_OF_WAR = True # Toggle Fog of War mechanics on or off
+DEFAULT_FOG_OF_WAR = True
 FOG_OF_WAR_ALPHA = 160 # How dark unseen provinces get (0-255)
 
 # ==========================================

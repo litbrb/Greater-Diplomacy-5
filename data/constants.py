@@ -261,6 +261,7 @@ BASE_RESEARCH_POINTS_PER_DAY = 10
 # Random Scenario Settings
 RANDOM_SCENARIO_SPAWN_UNITS = True
 RANDOM_SCENARIO_MIN_INFANTRY = 3 # Minimum ground army before buying ships/tanks
+RANDOM_SCENARIO_MIN_FACTORIES = 2 # Minimum factories a country should spawn with
 
 # Unlocked tech exception for starting exactly in 1910
 DEFAULT_1910_TECH = {

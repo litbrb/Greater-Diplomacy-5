@@ -207,61 +207,78 @@ def randomize_all_provinces(map_screen, settings):
             prov["buildings"].append(fac)
             if "Basic Factory" in fac or "Factory Lvl" in fac:
                 has_factory = True
-            
-        # Guarantee recruitment centers only spawn where basic factories exist
-        if has_factory:
-            if allowed_recruitment and random.random() < 0.30:
-                prov["buildings"].append(random.choice(allowed_recruitment))
+        
+        # Guarantee every factory gets a recruitment center of a random level (if unlocked)
+        if has_factory and allowed_recruitment:
+            prov["buildings"].append(random.choice(allowed_recruitment))
 
     # --- Step D: Guarantee Minimum Buildings (Balanced by Tech) ---
     best_factory = allowed_factories[-1] if allowed_factories else getattr(c, 'DEFAULT_STARTING_FACTORY', "Basic Factory")
     best_recruitment = allowed_recruitment[-1] if allowed_recruitment else None
+    min_factories_required = getattr(c, 'RANDOM_SCENARIO_MIN_FACTORIES', 2)
 
     for nation in active_nations:
         owned_provs = [p for p in valid_land_provinces if p["owner"] == nation]
         if not owned_provs: continue
 
-        has_best_factory = False
-        has_best_recruitment = False
-        
         factory_provs = []
         recruitment_provs = []
 
         for prov in owned_provs:
             bldgs = prov.get("buildings", [])
             
-            # Check if they randomly received the best tier buildings
-            if best_factory and best_factory in bldgs: has_best_factory = True
-            if best_recruitment and best_recruitment in bldgs: has_best_recruitment = True
-            
-            # Track existing building locations for grouping
+            # Enforce rule: Recruitment centers always spawn with a factory if possible
+            has_fac = any("Factory" in b for b in bldgs)
+            if not has_fac and any("Recruitment" in b for b in bldgs):
+                # Remove the orphaned recruitment center
+                prov["buildings"] = [b for b in bldgs if "Recruitment" not in b]
+                bldgs = prov.get("buildings", [])
+                
+            # Enforce new rule: Every factory MUST have a recruitment center (if researched)
+            if has_fac and not any("Recruitment" in b for b in bldgs) and allowed_recruitment:
+                prov["buildings"].append(random.choice(allowed_recruitment))
+                bldgs = prov.get("buildings", [])
+                
             if any("Factory" in b for b in bldgs): factory_provs.append(prov)
             if any("Recruitment" in b for b in bldgs): recruitment_provs.append(prov)
 
-        # 1. Guarantee best factory
-        if best_factory and not has_best_factory:
-            # Safely prioritize upgrading an existing lower-tier factory
-            if factory_provs:
-                target_prov = random.choice(factory_provs)
-                # Remove the old factory to upgrade it
-                target_prov["buildings"] = [b for b in target_prov["buildings"] if "Factory" not in b]
-            else:
-                target_prov = random.choice(recruitment_provs) if recruitment_provs else random.choice(owned_provs)
-                factory_provs.append(target_prov)
+        # 1. Guarantee Minimum Factories (RANDOM_SCENARIO_MIN_FACTORIES unless 1 tile big)
+        target_factory_count = min(min_factories_required, len(owned_provs))
+        
+        while len(factory_provs) < target_factory_count:
+            no_fac_provs = [p for p in owned_provs if p not in factory_provs]
+            if not no_fac_provs: break # Failsafe
             
-            target_prov.setdefault("buildings", []).append(best_factory)
+            target_prov = random.choice(no_fac_provs)
+            fac_to_place = random.choice(allowed_factories) if allowed_factories else best_factory
+            target_prov.setdefault("buildings", []).append(fac_to_place)
+            
+            # Guarantee it gets a recruitment center if unlocked
+            if allowed_recruitment:
+                target_prov["buildings"].append(random.choice(allowed_recruitment))
+                if target_prov not in recruitment_provs:
+                    recruitment_provs.append(target_prov)
+            
+            factory_provs.append(target_prov)
 
-        # 2. Guarantee best recruitment center
+        # 2. Guarantee Best Factory
+        has_best_factory = any(best_factory in p.get("buildings", []) for p in factory_provs)
+        if best_factory and not has_best_factory and factory_provs:
+            # Upgrade an existing factory
+            target_prov = random.choice(factory_provs)
+            target_prov["buildings"] = [b for b in target_prov.get("buildings", []) if "Factory" not in b]
+            target_prov["buildings"].append(best_factory)
+
+        # 3. Guarantee Best Recruitment Center
+        has_best_recruitment = any(best_recruitment in p.get("buildings", []) for p in recruitment_provs)
         if best_recruitment and not has_best_recruitment:
-            # Recruitment centers should also ideally be on tiles with factories
-            if recruitment_provs:
-                target_prov = random.choice(recruitment_provs)
-                # Remove the old recruitment center to upgrade it
-                target_prov["buildings"] = [b for b in target_prov["buildings"] if "Recruitment" not in b]
-            else:
-                target_prov = random.choice(factory_provs) if factory_provs else random.choice(owned_provs)
-            
-            target_prov.setdefault("buildings", []).append(best_recruitment)
+            if factory_provs:
+                # Place it strictly on a factory province
+                target_prov = random.choice(factory_provs)
+                target_prov["buildings"] = [b for b in target_prov.get("buildings", []) if "Recruitment" not in b]
+                target_prov["buildings"].append(best_recruitment)
+                if target_prov not in recruitment_provs:
+                    recruitment_provs.append(target_prov)
 
     # --- Step E: Generate Starting Armies & Spread Across Borders ---
     if getattr(c, 'RANDOM_SCENARIO_SPAWN_UNITS', True):

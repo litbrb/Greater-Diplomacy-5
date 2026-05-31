@@ -141,8 +141,10 @@ class Music_Player(GameState):
         self.bg_color = (25, 25, 30)
         self.return_state = "MENU"
         
-        # Track auto-plays so UI syncs when a song naturally ends
-        self._last_playing_track = getattr(self.controller, 'now_playing', None)
+        # Track auto-plays so UI syncs when a song naturally ends.
+        # FIX: Explicitly set to None on boot so the UI forcefully syncs 
+        # to the audio engine the very first time the menu is opened.
+        self._last_playing_track = None
         self._awaiting_seek_confirm = False
         
         # Ensure directories and files exist
@@ -271,6 +273,8 @@ class Music_Player(GameState):
             self.controller.play_specific_song(track_path)
         else:
             self.controller.play_random_song()
+            
+        self._last_playing_track = getattr(self.controller, 'now_playing', None)
         
         self.controller.is_paused = False
         self._awaiting_seek_confirm = True # Restored for Pygame compatibility
@@ -357,6 +361,7 @@ class Music_Player(GameState):
                 return getattr(self.controller, '_frozen_time', 0.0)
                 
             raw_pos = pygame.mixer.music.get_pos() / 1000.0
+            if raw_pos < 0: raw_pos = 0.0
             offset = getattr(self.controller, '_playback_offset', 0.0)
             base_pos = getattr(self.controller, '_scrub_base_pos', 0.0)
             
@@ -377,8 +382,21 @@ class Music_Player(GameState):
             wall_delta = (current_ticks - getattr(self, '_last_ticks', current_ticks)) / 1000.0
             self._last_ticks = current_ticks
 
-            # Failsafe: if the user drags the window and freezes the game loop, ignore the massive time jump
+            # FIX: If delta is huge (e.g. user was on Map screen), sync directly with SoLoud's backend!
             if wall_delta > 0.5:
+                try:
+                    if hasattr(self.controller.soloud, 'get_stream_position'):
+                        current = self.controller.soloud.get_stream_position(self.controller.music_handle)
+                        self.controller._frozen_time = current
+                        return current
+                    elif hasattr(self.controller.soloud, 'get_stream_time'):
+                        current = self.controller.soloud.get_stream_time(self.controller.music_handle)
+                        self.controller._frozen_time = current
+                        return current
+                except Exception:
+                    pass
+                wall_delta = 0.0 # Fallback if backend query fails
+            elif wall_delta < 0:
                 wall_delta = 0.0
 
             # Scale only the pure time delta by the pitch
@@ -398,14 +416,34 @@ class Music_Player(GameState):
     def update(self):
         super().update()
         
-        # Sync UI if track auto-plays/changes externally
+        # Sync UI if track auto-plays/changes externally or upon first opening the menu
         current_track = getattr(self.controller, 'now_playing', None)
         if getattr(self, '_last_playing_track', None) != current_track:
             self._last_playing_track = current_track
-            self.controller._playback_offset = 0.0
-            self.controller._frozen_time = 0.0
+            
+            # --- FIX: Retrieve actual elapsed time from backend so scrubber doesn't start at 0:00 ---
+            actual_pos = 0.0
+            if c.USE_SOLOUD and getattr(self.controller, 'music_handle', None) is not None:
+                try:
+                    if hasattr(self.controller.soloud, 'get_stream_position'):
+                        actual_pos = self.controller.soloud.get_stream_position(self.controller.music_handle)
+                    elif hasattr(self.controller.soloud, 'get_stream_time'):
+                        actual_pos = self.controller.soloud.get_stream_time(self.controller.music_handle)
+                except Exception:
+                    pass
+            elif not c.USE_SOLOUD:
+                try:
+                    actual_pos = pygame.mixer.music.get_pos() / 1000.0
+                    if actual_pos < 0: actual_pos = 0.0
+                except Exception:
+                    pass
+
+            self.controller._playback_offset = actual_pos
+            self.controller._scrub_base_pos = actual_pos
+            self.controller._frozen_time = actual_pos
             self._last_ticks = pygame.time.get_ticks()
-            self._awaiting_seek_confirm = True # Pygame sync
+            
+            self._awaiting_seek_confirm = False # FIX: Do not await seek on natural track change
             pygame.mixer.music._custom_is_paused = False
             self.controller.is_paused = False
             self.refresh_ui()

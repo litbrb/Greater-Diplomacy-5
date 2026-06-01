@@ -11625,7 +11625,7 @@
     },
     "(253, 1, 0)": {
         "id": 509,
-        "terrain": "plains",
+        "terrain": "forest",
         "is_coastal": true,
         "center": [
             922,
@@ -11672,7 +11672,7 @@
     },
     "(255, 1, 0)": {
         "id": 511,
-        "terrain": "plains",
+        "terrain": "forest",
         "is_coastal": false,
         "center": [
             906,
@@ -11918,7 +11918,7 @@
     },
     "(10, 2, 0)": {
         "id": 522,
-        "terrain": "plains",
+        "terrain": "jungle",
         "is_coastal": true,
         "center": [
             1003,
@@ -13025,7 +13025,7 @@
     },
     "(58, 2, 0)": {
         "id": 570,
-        "terrain": "plains",
+        "terrain": "jungle",
         "is_coastal": true,
         "center": [
             1003,

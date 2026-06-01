@@ -40,6 +40,10 @@ class Random_Setup(GameState):
         self.current_countries = min(20, self.max_countries)
         self.country_slider_val = self.current_countries / self.max_countries
         
+        self.current_island_size = getattr(c, 'RANDOM_SCENARIO_DEFAULT_ISLAND_FILTER', 4)
+        max_island = getattr(c, 'RANDOM_SCENARIO_MAX_ISLAND_FILTER', 20)
+        self.island_size_slider_val = (self.current_island_size - 1) / (max_island - 1)
+        
         self.map_index = 0
 
     def toggle_procedural_type(self):
@@ -61,7 +65,8 @@ class Random_Setup(GameState):
             
             # Sliders 
             Slider((c.SCREEN_WIDTH/2) - 100, 300, 200, f"Countries: {self.current_countries}", self.country_slider_val, self.update_countries),
-            Slider((c.SCREEN_WIDTH/2) - 100, 400, 200, f"Start Year: {self.current_year}", self.year_slider_val, self.update_year),
+            Slider((c.SCREEN_WIDTH/2) - 100, 360, 200, f"Start Year: {self.current_year}", self.year_slider_val, self.update_year),
+            Slider((c.SCREEN_WIDTH/2) - 100, 420, 200, f"Island Filter Size: {self.current_island_size}", self.island_size_slider_val, self.update_island_size),
             
             # Controls
             Button("centered", 500, "medium", "grey", "Reset Defaults", self.do_reset),
@@ -112,6 +117,12 @@ class Random_Setup(GameState):
         self.current_year = int(c.START_YEAR + (val * (c.END_YEAR - c.START_YEAR)))
         self.elements[2].text = f"Start Year: {self.current_year}"
 
+    def update_island_size(self, val):
+        self.island_size_slider_val = val
+        max_island = getattr(c, 'RANDOM_SCENARIO_MAX_ISLAND_FILTER', 20)
+        self.current_island_size = 1 + int(val * (max_island - 1))
+        self.elements[3].text = f"Island Filter Size: {self.current_island_size}"
+
     def do_reset(self):
         self.reset_to_defaults()
         self.refresh_ui()
@@ -132,6 +143,7 @@ class Random_Setup(GameState):
             "map_path": selected_path,
             "countries": self.current_countries,
             "year": self.current_year,
+            "island_filter_size": self.current_island_size,
             "procedural_type": self.procedural_types[self.proc_type_index]
         }
         self.next_state = "MAP"

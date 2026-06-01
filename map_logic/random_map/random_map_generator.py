@@ -6,6 +6,7 @@ from data import queries
 def randomize_all_provinces(map_screen, settings):
     target_country_count = settings["countries"]
     start_year = settings["year"]
+    island_filter_size = settings.get("island_filter_size", getattr(c, 'RANDOM_SCENARIO_DEFAULT_ISLAND_FILTER', 4))
 
     playable_nations = [
         name for name, stats in map_screen.nation_data.items()
@@ -42,7 +43,7 @@ def randomize_all_provinces(map_screen, settings):
                     visited.add(n_id)
                     queue.append(n_id)
 
-        if len(comp) >= 4:
+        if len(comp) >= island_filter_size:
             valid_land_provinces.extend(comp)
             
     if not valid_land_provinces: return

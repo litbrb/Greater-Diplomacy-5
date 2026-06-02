@@ -488,7 +488,6 @@ def process_diplomacy_turn(self):
                 # DELIVER messages to inbox on Turn 0
                 elif action.startswith("MSG:"):
                     send_message(self, country_name, target, action[4:], "TEXT")
-                    actions_to_clear.append(target)
                 
                 # --- PROCESS ACCEPT / REJECT INSTANTLY ON TURN 0 ---
                 elif action.startswith("ACCEPT_"):

@@ -168,7 +168,7 @@ def call_ollama(system_prompt, user_prompt, turn_id=None):
         # This initiates the blocking request. If conn.sock.shutdown() is called from the UI thread,
         # the OS will instantly throw a ConnectionAbortedError here and wake up this thread.
         conn.request("POST", parsed_url.path, body=payload_bytes, headers=headers)
-        response = conn.getcall()
+        response = conn.getresponse()
         
         if response.status >= 400:
             return {"message": f"OLLAMA HTTP ERROR: {response.status}"}

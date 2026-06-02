@@ -73,23 +73,26 @@ class Random_Setup(GameState):
             Button("centered", 600, "large", "green", "START GAME", self.start_game),
         ]
         
+        random_map_x = 100
+        random_map_y = 120
+
         # 1. Isolated Procedural Options (Placed above the table display)
         if self.procedural_world:
             # Side-by-side positioning when procedural is active
             proc_x = (c.SCREEN_WIDTH // 2) - 210
             type_x = (c.SCREEN_WIDTH // 2) + 10
             
-            proc_btn = Button(proc_x, 90, "medium", "orange", "Random Map", self.toggle_procedural)
+            proc_btn = Button(random_map_x, random_map_y, "medium", "blue", "Random Map", self.toggle_procedural)
             proc_btn.is_selected = True
             self.elements.append(proc_btn)
             
             map_type_str = self.procedural_types[self.proc_type_index]
             self.elements.append(
-                Button(type_x, 90, "medium", "red", f"Type: {map_type_str}", self.toggle_procedural_type)
+                Button(random_map_x + 220, random_map_y, "medium", "red", f"Type: {map_type_str}", self.toggle_procedural_type)
             )
         else:
             # Perfectly centered when it's the lone option
-            proc_btn = Button("centered", 90, "medium", "grey", "Random Map", self.toggle_procedural)
+            proc_btn = Button(random_map_x, random_map_y, "medium", "blue", "Random Map", self.toggle_procedural)
             self.elements.append(proc_btn)
         
         # 2. Base Maps Table Layout

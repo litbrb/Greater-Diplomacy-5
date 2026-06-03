@@ -586,6 +586,8 @@ PORTRAITS_DIR = "assets/portraits"
 MUSIC_DIR = "assets/music"
 SAVES_DIR = "saves"
 SCENARIOS_DIR = "scenarios"
+SCENARIOS_HISTORICAL_DIR = "scenarios/historical"
+SCENARIOS_ALTERNATE_DIR = "scenarios/alternate"
 BASE_MAPS_DIR = "base_maps"
 
 # Default Map Assets

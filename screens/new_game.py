@@ -6,46 +6,70 @@ from gameState import GameState
 from ui_elements import Button
 import data.constants as c
 from data import queries
+from map_logic.rendering.font_manager import fonts
 
 class New_Game(GameState):
     def __init__(self):
         super().__init__()
         self.bg_color = (0, 50, 0)
         self.selected_scenario_path = None
-        # Shared settings object
         self.settings_data = {"fog_of_war": c.DEFAULT_FOG_OF_WAR}
+        self.sub_state = "CATEGORY" # "CATEGORY", "HISTORICAL", "ALTERNATE"
         self.refresh_scenarios()
 
     def refresh_scenarios(self):
-        self.elements = [
-            Button(20, 20, "small", "red", "Back", self.exit_to_menu),
-            Button("centered", "centered + 200", "new_game", "orange", "RANDOM SCENARIO", self.start_random_scenario),
-            # Button for global data refresh positioned via configuration anchors
-            Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 160, "medium", "purple", "Data Refresh", self.trigger_global_data_refresh),
-            Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 80, "medium", "pink", "Scenario Settings", self.scenario_settings),
-        ]
+        self.elements = []
         
-        # Look for scenarios in the scenarios folder
-        scenario_dir = c.SCENARIOS_DIR
-        if not os.path.exists(scenario_dir):
-            os.makedirs(scenario_dir)
+        if self.sub_state == "CATEGORY":
+            self.elements = [
+                Button(20, 20, "small", "red", "Back", self.exit_to_menu),
+                Button("centered", 200, "large", "blue", "Historical Scenarios", lambda: self.set_sub_state("HISTORICAL")),
+                Button("centered", 300, "large", "purple", "Alternate Scenarios", lambda: self.set_sub_state("ALTERNATE")),
+                Button("centered", 400, "large", "orange", "Random Scenario", self.start_random_scenario),
+            ]
+        else:
+            self.elements = [
+                Button(20, 20, "small", "red", "Back", lambda: self.set_sub_state("CATEGORY")),
+                Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 160, "medium", "purple", "Data Refresh", self.trigger_global_data_refresh),
+                Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 80, "medium", "pink", "Scenario Settings", self.scenario_settings),
+            ]
             
-        scenarios = os.listdir(scenario_dir)
-        for i, name in enumerate(scenarios):
-            btn_y = 200 + (i * 60)
-            # Create a button for each scenario
-            self.elements.append(
-                Button("centered", btn_y, "new_game", "blue", name, 
-                       lambda n=name: self.start_scenario(n))
-            )
+            scenario_dir = c.SCENARIOS_HISTORICAL_DIR if self.sub_state == "HISTORICAL" else c.SCENARIOS_ALTERNATE_DIR
+            if not os.path.exists(scenario_dir):
+                os.makedirs(scenario_dir)
+                
+            scenarios = os.listdir(scenario_dir)
+            for i, name in enumerate(scenarios):
+                btn_y = 200 + (i * 60)
+                # Create a button for each scenario
+                self.elements.append(
+                    Button("centered", btn_y, "new_game", "blue", name, 
+                           lambda n=name, d=scenario_dir: self.start_scenario(n, d))
+                )
+
+    def additional_draw(self, surface):
+        if self.sub_state == "CATEGORY":
+            title_text = "NEW GAME"
+        elif self.sub_state == "HISTORICAL":
+            title_text = "HISTORICAL SCENARIOS"
+        else:
+            title_text = "ALTERNATE SCENARIOS"
+            
+        title = fonts.get("heading1").render(title_text, True, (255, 255, 255))
+        surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
+
+    def set_sub_state(self, state):
+        self.sub_state = state
+        self.refresh_scenarios()
+
     def scenario_settings(self):
         from screens.scenario_settings import Scenario_Settings
         Scenario_Settings.return_screen = "NEW_GAME"
         self.next_state = "SCENARIO_SETTINGS"
         self.done = True
 
-    def start_scenario(self, scenario_name):
-        self.selected_save_path = os.path.join(c.SCENARIOS_DIR, scenario_name)
+    def start_scenario(self, scenario_name, directory):
+        self.selected_save_path = os.path.join(directory, scenario_name)
         # Pass the settings to the Map class
         self.map_settings = queries.get_scenario_settings() 
         self.next_state = "MAP"
@@ -55,100 +79,95 @@ class New_Game(GameState):
         """Headlessly instantiates each map scenario, runs internal data sync cleaners, and forces an in-place write to disk."""
         from screens.map import Map
         
-        scenario_dir = c.SCENARIOS_DIR
-        if not os.path.exists(scenario_dir):
-            return
-
-        scenarios = os.listdir(scenario_dir)
         scenarios_processed = 0
+        dirs_to_check = [c.SCENARIOS_HISTORICAL_DIR, c.SCENARIOS_ALTERNATE_DIR]
 
-        for name in scenarios:
-            scenario_path = os.path.join(scenario_dir, name)
-            map_json_path = os.path.join(scenario_path, "map_data.json")
-            
-            # Boundary guard to ensure it's a valid directory file structure containing a playable scenario template
-            if not os.path.isdir(scenario_path) or not os.path.exists(map_json_path):
+        for scenario_dir in dirs_to_check:
+            if not os.path.exists(scenario_dir):
                 continue
-                
-            try:
-                # 1. Instantiate Map with standard singleplayer configurations to pull existing meta/map data into memory
-                temp_map_context = Map(load_path=scenario_path, is_scenario=True)
-                
-                # 2. Execute the official resync pipeline (handles unit synchronization, country updates, and tech scrubbing)
-                temp_map_context.refresh_nation_data()
-                print(f"refreshed")
-                
-                # Set all playable country resources to 0 before compounding income calculations
-                for nation_name, stats in temp_map_context.nation_data.items():
-                    if nation_name != "GLOBAL_EVENTS" and nation_name not in c.UNPLAYABLE_NATIONS:
-                        stats["manpower"] = 0
-                        stats["materials"] = 0
-                        stats["fuel"] = 0
 
-                # Process exactly 1 clean turn of income starting from a blank treasury base
-                # actually for some reason this adds 2 clean turns of income
-                # might be best if this is commented out...
+            scenarios = os.listdir(scenario_dir)
+
+            for name in scenarios:
+                scenario_path = os.path.join(scenario_dir, name)
+                map_json_path = os.path.join(scenario_path, "map_data.json")
                 
-                # from map_logic.system32 import economy_processor
-                # economy_processor.process_economy(temp_map_context)
-                
-                # 3. Clean country flags/portraits inside memory before serializing
-                queries.scrub_default_images(temp_map_context.nation_data)
-                
-                # 4. Reconstruct the exact structural configuration payload generated by save_map_data()
-                save_dict = {
-                    "date": {
-                        "day": temp_map_context.time_manager.day,
-                        "month": temp_map_context.time_manager.month_index,
-                        "year": temp_map_context.time_manager.year,
-                        "total_turns": getattr(temp_map_context.time_manager, 'total_turns', 0)
-                    },
-                    "loop_map": temp_map_context.loop_map,
-                    "player_country": temp_map_context.player_country,
-                    "active_players": getattr(temp_map_context, "active_players", [temp_map_context.player_country]),
-                    "current_player_index": getattr(temp_map_context, "current_player_index", 0),
-                    "default_research": getattr(temp_map_context, "default_research", None),
-                    "nation_data": temp_map_context.nation_data,
-                    "provinces": {}
-                }
-                
-                for data in temp_map_context.map_data.values():
-                    save_dict["provinces"][data["json_key"]] = {
-                        "owner": data["owner"],
-                        "cores": data.get("cores", []),
-                        "is_coastal": data.get("is_coastal", False),
-                        "units": data.get("units", []),
-                        "deployment_queue": data.get("deployment_queue", []),
-                        "orders": data.get("orders", []),
-                        "resources": data.get("resources", []),
-                        "buildings": data.get("buildings", [])
+                # Boundary guard to ensure it's a valid directory file structure containing a playable scenario template
+                if not os.path.isdir(scenario_path) or not os.path.exists(map_json_path):
+                    continue
+                    
+                try:
+                    # 1. Instantiate Map with standard singleplayer configurations to pull existing meta/map data into memory
+                    temp_map_context = Map(load_path=scenario_path, is_scenario=True)
+                    
+                    # 2. Execute the official resync pipeline (handles unit synchronization, country updates, and tech scrubbing)
+                    temp_map_context.refresh_nation_data()
+                    print(f"refreshed {name}")
+                    
+                    # Set all playable country resources to 0 before compounding income calculations
+                    for nation_name, stats in temp_map_context.nation_data.items():
+                        if nation_name != "GLOBAL_EVENTS" and nation_name not in c.UNPLAYABLE_NATIONS:
+                            stats["manpower"] = 0
+                            stats["materials"] = 0
+                            stats["fuel"] = 0
+                    
+                    # 3. Clean country flags/portraits inside memory before serializing
+                    queries.scrub_default_images(temp_map_context.nation_data)
+                    
+                    # 4. Reconstruct the exact structural configuration payload generated by save_map_data()
+                    save_dict = {
+                        "date": {
+                            "day": temp_map_context.time_manager.day,
+                            "month": temp_map_context.time_manager.month_index,
+                            "year": temp_map_context.time_manager.year,
+                            "total_turns": getattr(temp_map_context.time_manager, 'total_turns', 0)
+                        },
+                        "loop_map": temp_map_context.loop_map,
+                        "player_country": temp_map_context.player_country,
+                        "active_players": getattr(temp_map_context, "active_players", [temp_map_context.player_country]),
+                        "current_player_index": getattr(temp_map_context, "current_player_index", 0),
+                        "default_research": getattr(temp_map_context, "default_research", None),
+                        "nation_data": temp_map_context.nation_data,
+                        "provinces": {}
                     }
+                    
+                    for data in temp_map_context.map_data.values():
+                        save_dict["provinces"][data["json_key"]] = {
+                            "owner": data["owner"],
+                            "cores": data.get("cores", []),
+                            "is_coastal": data.get("is_coastal", False),
+                            "units": data.get("units", []),
+                            "deployment_queue": data.get("deployment_queue", []),
+                            "orders": data.get("orders", []),
+                            "resources": data.get("resources", []),
+                            "buildings": data.get("buildings", [])
+                        }
 
-                # 5. Perform the manual write operations in-place inside the scenario path directory
-                indent_val = getattr(c, 'SAVE_INDENT', None)
-                
-                # Overwrite master operational dataset file
-                with open(os.path.join(scenario_path, "meta.json"), "w") as f:
-                    json.dump(save_dict, f, indent=indent_val)
+                    # 5. Perform the manual write operations in-place inside the scenario path directory
+                    indent_val = getattr(c, 'SAVE_INDENT', None)
                     
-                # Overwrite master geometric vector layout file 
-                with open(map_json_path, "w") as f:
-                    json.dump(temp_map_context.raw_json_data, f, indent=indent_val)
-                    
-                # Overwrite turning history logs if applicable
-                if hasattr(temp_map_context, 'history'):
-                    with open(os.path.join(scenario_path, "history.json"), "w") as f:
-                        json.dump(temp_map_context.history, f, indent=getattr(c, 'HISTORY_INDENT', None))
+                    # Overwrite master operational dataset file
+                    with open(os.path.join(scenario_path, "meta.json"), "w") as f:
+                        json.dump(save_dict, f, indent=indent_val)
                         
-                # Overwrite visual map files in place
-                pygame.image.save(temp_map_context.political_map, os.path.join(scenario_path, "political.png"))
-                pygame.image.save(temp_map_context.terrain_map, os.path.join(scenario_path, "terrain.png"))
-                pygame.image.save(temp_map_context.id_map, os.path.join(scenario_path, "id_map.png"))
-                pygame.image.save(temp_map_context.cores_map, os.path.join(scenario_path, "cores.png"))
-                
-                scenarios_processed += 1
-            except Exception as e:
-                print(f"[REFRESH ERROR] Failed to automatically sync structural data profiles for scenario '{name}': {e}")
+                    # Overwrite master geometric vector layout file 
+                    with open(map_json_path, "w") as f:
+                        json.dump(temp_map_context.raw_json_data, f, indent=indent_val)
+                        
+                    # Overwrite turning history logs if applicable
+                    if hasattr(temp_map_context, 'history'):
+                        with open(os.path.join(scenario_path, "history.json"), "w") as f:
+                            json.dump(temp_map_context.history, f, indent=getattr(c, 'HISTORY_INDENT', None))
+                            
+                    # Overwrite visual map files in place
+                    pygame.image.save(temp_map_context.political_map, os.path.join(scenario_path, "political.png"))
+                    pygame.image.save(temp_map_context.terrain_map, os.path.join(scenario_path, "terrain.png"))
+                    pygame.image.save(temp_map_context.id_map, os.path.join(scenario_path, "id_map.png"))
+                    pygame.image.save(temp_map_context.cores_map, os.path.join(scenario_path, "cores.png"))
+                    
+                    scenarios_processed += 1
+                except Exception as e:
+                    print(f"[REFRESH ERROR] Failed to automatically sync structural data profiles for scenario '{name}': {e}")
 
         # Post an alert back onto the UI layout template frame
         print(f"Synced {scenarios_processed} scenarios!")
@@ -162,7 +181,10 @@ class New_Game(GameState):
         self.done = True
     
     def handle_back_key(self):
-        self.exit_to_menu()
+        if self.sub_state != "CATEGORY":
+            self.set_sub_state("CATEGORY")
+        else:
+            self.exit_to_menu()
 
     def start_random_scenario(self):
         self.next_state = "RANDOM_SETUP"

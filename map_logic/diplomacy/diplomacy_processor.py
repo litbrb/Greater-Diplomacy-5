@@ -12,7 +12,7 @@ from map_logic.diplomacy.diplomacy_agreements import (
     join_faction_wars, finalize_faction_kick
 )
 
-def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, custom_msg=""):
+def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, custom_msg="", timer=0):
     pending = nation_data[player_name].setdefault("pending_diplomacy", {})
     current_action = get_pending_action(nation_data, player_name, target_name)
     
@@ -51,7 +51,7 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
                 return "You already have a pending faction request!"
     # ------------------------------------------------
         
-    pending[target_name] = {"action": action_type, "turns": 0, "message": custom_msg}
+    pending[target_name] = {"action": action_type, "turns": 0, "timer": timer, "message": custom_msg}
     return "Message drafted. Will send at end of turn."
 
 def process_diplomacy_turn(self):
@@ -85,7 +85,7 @@ def process_diplomacy_turn(self):
                 
                 # Inject it as a fresh action for this turn, bypassing the LLM
                 if target not in pending or (isinstance(pending[target], dict) and pending[target].get("turns", 0) == 0):
-                    pending[target] = {"action": action_type, "turns": 0, "message": "Following through on our previous declaration."}
+                    pending[target] = {"action": action_type, "turns": 0, "timer": 0, "message": "Following through on our previous declaration."}
             data["queued_ai_actions"] = []
 
     # --- 0. FIND ALIVE NATIONS ---
@@ -180,7 +180,7 @@ def process_diplomacy_turn(self):
         pending = data.get("pending_diplomacy", {})
         for target, info in pending.items():
             if isinstance(info, str):
-                info = {"action": info, "turns": 1}
+                info = {"action": info, "turns": 1, "timer": 0}
                 pending[target] = info
 
             action = info.get("action", "")
@@ -453,9 +453,18 @@ def process_diplomacy_turn(self):
         for target, info in pending.items():
             action = info.get("action", "")
             turns = info.get("turns", 0)
+            timer = info.get("timer", 0)
             custom_msg = info.get("message", "")
 
             is_unilateral = action in c.UNILATERAL_ACTIONS
+
+            # --- NEW: COUNTDOWN TIMERS ---
+            if timer > 0:
+                info["timer"] -= 1
+                if info["timer"] > 0:
+                    continue
+                else:
+                    turns = 0 # Force execution this turn
 
             if turns == 0:
                 # EXECUTE unilateral actions instantly on Turn 0
@@ -751,4 +760,4 @@ def process_diplomacy_turn(self):
     for sender, receiver, act, tns, msg in delayed_responses:
         pd = self.nation_data.get(sender, {}).setdefault("pending_diplomacy", {})
         if receiver not in pd or (isinstance(pd[receiver], dict) and pd[receiver].get("turns", 0) == 0):
-            pd[receiver] = {"action": act, "turns": tns, "message": msg}
+            pd[receiver] = {"action": act, "turns": tns, "timer": 0, "message": msg}

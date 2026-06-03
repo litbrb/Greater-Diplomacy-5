@@ -1,3 +1,4 @@
+# --- Start of file: .\ui\buttons.py ---
 import pygame
 from map_logic.system32 import turn_manager
 import ui_elements
@@ -93,16 +94,16 @@ def render_buttons(self):
     # Domestic Set
     self.btn_go_orders = Button(280, 603, "orders", "blue", "Give Orders", lambda: self.change_state("ORDERS"), image=icons.get("paper"), show_text=False)
     self.btn_go_production = Button(280, 543, "orders", "orange", "Production", lambda: self.change_state_if_owned("PRODUCTION", requires_land=True), image=icons.get("industry"), show_text=False)
-    #mwsium_square
 
     # Foreign Set
     self.btn_declare_war = Button(diplo_x, c.ACTION_BTN_START_Y, "diplomatic", "red", "Declare War", lambda: player_diplomacy_actions.handle_declare_war(self))
-    self.btn_join_wars = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 1, "diplomatic", "orange", "Join Wars", lambda: player_diplomacy_actions.handle_join_wars(self))
-    self.btn_call_to_arms = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 2, "diplomatic", "red", "Call to Arms", lambda: player_diplomacy_actions.handle_call_to_arms(self))
-    self.btn_fac_invite = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "green", "Invite to Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "FACTION_INVITE"))
-    self.btn_fac_join_req = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 4, "diplomatic", "green", "Req. Join Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "JOIN_FACTION_REQ"))
-    self.btn_fac_kick = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 5, "diplomatic", "red", "Kick from Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "KICK_FACTION_MEMBER"))
-    self.btn_fac_create = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 6, "diplomatic", "blue", "Create Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "CREATE_FACTION"))
+    self.btn_justify_war = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 1, "diplomatic", "orange", "Justify War Goal", lambda: player_diplomacy_actions.handle_justify_war(self))
+    self.btn_join_wars = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "orange", "Join Wars", lambda: player_diplomacy_actions.handle_join_wars(self))
+    self.btn_call_to_arms = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 4, "diplomatic", "red", "Call to Arms", lambda: player_diplomacy_actions.handle_call_to_arms(self))
+    self.btn_fac_invite = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 5, "diplomatic", "green", "Invite to Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "FACTION_INVITE"))
+    self.btn_fac_join_req = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 6, "diplomatic", "green", "Req. Join Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "JOIN_FACTION_REQ"))
+    self.btn_fac_kick = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 7, "diplomatic", "red", "Kick from Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "KICK_FACTION_MEMBER"))
+    self.btn_fac_create = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 8, "diplomatic", "blue", "Create Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "CREATE_FACTION"))
     self.btn_accept_req = Button(diplo_x, c.ACTION_BTN_START_Y, "diplomatic", "green", "Accept Request", lambda: player_diplomacy_actions.handle_accept_req(self))
     self.btn_reject_req = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y, "diplomatic", "red", "Reject Request", lambda: player_diplomacy_actions.handle_reject_req(self))
 
@@ -134,7 +135,7 @@ def render_buttons(self):
         self.btn_ed_unit, self.btn_ed_refresh, self.btn_ed_date, self.btn_ed_diplo,
         self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
         self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_go_orders, self.btn_go_production,
-        self.btn_declare_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
+        self.btn_declare_war, self.btn_justify_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
         self.btn_fac_join_req, self.btn_fac_kick, self.btn_fac_create,
         self.btn_accept_req, self.btn_reject_req, self.btn_force_war, self.btn_force_peace,
         self.btn_spec_create_fac, self.btn_spec_join_fac, self.btn_spec_invite_fac, self.btn_spec_leave_fac,
@@ -253,7 +254,7 @@ def update_button_states(map_screen):
             else:
                 btn.visible = not is_sel
 
-        # --- ADD THIS LOGIC TO GREY OUT THE FACTION BUTTON ---
+        # GREY OUT THE FACTION BUTTON
         my_faction = map_screen.nation_data.get(map_screen.player_country, {}).get("faction", "")
         map_screen.btn_gp_faction.disabled = not bool(my_faction)
 
@@ -323,14 +324,23 @@ def update_button_states(map_screen):
                 i_am_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
                 target_is_leader = queries.is_faction_leader(owner, map_screen.nation_data)
 
-                # Freed up the UI! The Accept/Reject override block has been removed from here.
-                
+                # War / Peace UI routing
                 dw_enabled = not (not at_war and in_same_faction)
-                if pending_action == "CEASEFIRE": dw_text = get_status_text("CEASEFIRE")
-                elif pending_action == "WAR_DECLARATION": dw_text = get_status_text("WAR")
-                else: dw_text = "Ceasefire" if at_war else "Declare War"
+                if pending_action == "PEACE_TREATY" or pending_action == "CEASEFIRE": 
+                    dw_text = get_status_text("PEACE") 
+                elif pending_action == "WAR_DECLARATION": 
+                    dw_text = get_status_text("WAR")
+                else: 
+                    dw_text = "Ceasefire / Peace" if at_war else "Declare War"
+                    
                 set_btn(map_screen.btn_declare_war, True, dw_enabled, dw_text, "red")
                 
+                # Justify wargoal UI
+                if pending_action == "JUSTIFY_WARGOAL":
+                    set_btn(map_screen.btn_justify_war, True, True, get_status_text("JUSTIFY"), "orange")
+                else:
+                    set_btn(map_screen.btn_justify_war, True, not at_war, "Justify War Goal", "orange")
+
                 target_wars = queries.get_enemies(owner, map_screen.nation_data)
                 player_wars = queries.get_enemies(map_screen.player_country, map_screen.nation_data)
                 can_join_wars = bool(in_same_faction and any(w for w in target_wars if w not in player_wars))

@@ -7,7 +7,7 @@ from data import queries
 from map_logic.diplomacy.diplomacy_events import log_global_event
 from map_logic.diplomacy.diplomacy_messages import get_pending_action, send_message
 from map_logic.diplomacy.diplomacy_agreements import (
-    finalize_war, finalize_neutral, finalize_create_faction,
+    finalize_war, finalize_neutral, execute_peace_treaty, finalize_create_faction,
     finalize_disband_faction, finalize_faction_join, finalize_faction_leave,
     join_faction_wars, finalize_faction_kick
 )
@@ -132,14 +132,14 @@ def process_diplomacy_turn(self):
                     del a_data[nation_b]
                     del b_data[nation_a]
                     
-                elif a_action == "WAR_DECLARATION" and b_action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ"]:
+                elif a_action == "WAR_DECLARATION" and b_action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "PEACE_TREATY"]:
                     action_name = b_action.split('_')[0].lower()
                     msg = ai_prompts.AI_FALLBACK_RESPONSES["CROSS_WAR_DECLARATION"].format(action=action_name)
                     
                     send_message(self, nation_a, nation_b, msg, "DIPLOMACY")
                     del b_data[nation_a] 
                     
-                elif b_action == "WAR_DECLARATION" and a_action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ"]:
+                elif b_action == "WAR_DECLARATION" and a_action in ["FACTION_INVITE", "CEASEFIRE", "JOIN_FACTION_REQ", "PEACE_TREATY"]:
                     action_name = a_action.split('_')[0].lower()
                     msg = ai_prompts.AI_FALLBACK_RESPONSES["CROSS_WAR_DECLARATION"].format(action=action_name)
                     
@@ -459,11 +459,24 @@ def process_diplomacy_turn(self):
 
             if turns == 0:
                 # EXECUTE unilateral actions instantly on Turn 0
-                if action == "WAR_DECLARATION":
+                if action == "JUSTIFY_WARGOAL":
+                    prov_ids = [int(x) for x in custom_msg.split(",") if x]
+                    self.nation_data[country_name].setdefault("claims", []).extend(prov_ids)
+                    self.nation_data[country_name]["claims"] = list(set(self.nation_data[country_name]["claims"]))
+                    self.nation_data[country_name].setdefault("wargoals", {})[target] = {"type": getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims")}
+                    log_global_event(self.nation_data, f"{country_name} has justified a wargoal against {target}.")
+                    if country_name == self.player_country:
+                        self.show_feedback(f"Wargoal Justification Complete against {target}!")
+                    actions_to_clear.append(target)
+                    
+                elif action == "WAR_DECLARATION":
+                    # Store active wargoal in war data
+                    self.nation_data[country_name].setdefault("wargoals", {})[target] = {"type": custom_msg}
                     log_global_event(self.nation_data, f"WAR DECLARED: {country_name} has declared war on {target}!")
-                    msg_text = custom_msg if custom_msg else "We have declared WAR upon you!"
+                    msg_text = f"We have declared war! Goal: {custom_msg}"
                     send_message(self, country_name, target, msg_text, "DIPLOMACY")
                     finalize_war(self.map_data, self.nation_data, country_name, target) 
+                    actions_to_clear.append(target)
                 
                 elif action == "JOIN_WARS":
                     if not queries.are_in_same_faction(country_name, target, self.nation_data):
@@ -515,6 +528,10 @@ def process_diplomacy_turn(self):
                                 msg_text = "The proposed faction could not be formed because one of us is already bound by other treaties."
                         elif orig_action == "CEASEFIRE":
                             finalize_neutral(self.nation_data, country_name, target)
+                        elif orig_action == "PEACE_TREATY":
+                            treaty_type = other_pending.get("message", getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)"))
+                            execute_peace_treaty(self.map_data, self.nation_data, target, country_name, treaty_type, self)
+                            msg_text = f"We accepted your peace terms: {treaty_type}."
                         elif orig_action == "CALL_TO_ARMS":
                             join_faction_wars(self.map_data, self.nation_data, country_name, target)
                         elif orig_action == "JOIN_WARS":
@@ -553,6 +570,10 @@ def process_diplomacy_turn(self):
                 
                 elif action == "CEASEFIRE":
                     msg_text = custom_msg if custom_msg else "We offer terms for a ceasefire."
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
+
+                elif action == "PEACE_TREATY":
+                    msg_text = f"We propose a peace treaty: {custom_msg}."
                     send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "CREATE_FACTION":
@@ -693,6 +714,9 @@ def process_diplomacy_turn(self):
                                     message = "We cannot accept as you are already in a faction."
                             elif action == "CEASEFIRE":
                                 finalize_neutral(self.nation_data, country_name, target)
+                            elif action == "PEACE_TREATY":
+                                treaty_type = info.get("message", getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)"))
+                                execute_peace_treaty(self.map_data, self.nation_data, country_name, target, treaty_type, self)
                             elif action == "CALL_TO_ARMS":
                                 join_faction_wars(self.map_data, self.nation_data, target, country_name)
                                 log_global_event(self.nation_data, f"ESCALATION: {target} answered the call to arms of {country_name}!")
@@ -720,7 +744,8 @@ def process_diplomacy_turn(self):
                     info["turns"] += 1
 
         for t in actions_to_clear:
-            del pending[t]
+            if t in pending:
+                del pending[t]
 
     # Process delayed AI responses (like war declarations) converting them to normal queued diplomacy actions
     for sender, receiver, act, tns, msg in delayed_responses:

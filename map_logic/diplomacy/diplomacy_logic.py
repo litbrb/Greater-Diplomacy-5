@@ -15,6 +15,7 @@ from map_logic.diplomacy.diplomacy_messages import (
 from map_logic.diplomacy.diplomacy_agreements import (
     finalize_war, 
     finalize_neutral, 
+    execute_peace_treaty,
     finalize_create_faction,
     finalize_disband_faction, 
     finalize_faction_join, 

@@ -277,6 +277,17 @@ DEFAULT_1910_TECH = {
 }
 
 # ==========================================
+# WARGOALS & PEACE TREATIES
+# ==========================================
+
+WARGOAL_TAKE_CLAIMS = "Take Claims"
+WARGOAL_ANNEX = "Total Annexation"
+
+PEACE_SURRENDER = "Surrender"
+PEACE_WHITE_PEACE = "Ceasefire (White Peace)"
+PEACE_DEMAND_CLAIMS = "Demand Claims"
+
+# ==========================================
 # INPUT SETTINGS
 # ==========================================
 
@@ -530,7 +541,8 @@ UNILATERAL_ACTIONS = [
     "BREAK_ALLIANCE",
     "KICK_FACTION_MEMBER",
     "LEAVE_FACTION",
-    "DISBAND_FACTION"
+    "DISBAND_FACTION",
+    "JUSTIFY_WARGOAL"
 ]
 
 # Proposals that require the target to explicitly Accept or Reject
@@ -540,7 +552,8 @@ BILATERAL_ACTIONS = [
     "JOIN_FACTION_REQ",
     "CEASEFIRE",
     "CALL_TO_ARMS",
-    "CREATE_FACTION"
+    "CREATE_FACTION",
+    "PEACE_TREATY"
 ]
 
 # ==========================================

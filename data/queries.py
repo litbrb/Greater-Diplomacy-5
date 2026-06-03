@@ -1274,6 +1274,27 @@ def set_ai_diplo_cooldown(sender, target, action, nation_data, duration=None):
     target_cooldowns = cooldowns.setdefault(target, {})
     target_cooldowns[action] = duration
 
+def get_valid_claim_targets(nation, target_nation, map_data):
+    """Returns a list of province dicts owned by target_nation that can be claimed."""
+    targets = []
+    for prov in map_data.values():
+        if prov.get("owner") == target_nation:
+            targets.append(prov)
+    return targets
+
+def calculate_justification_time(nation, target_prov_ids, id_to_province):
+    """Calculates the time needed to justify a wargoal. 1 turn + non-cores."""
+    time = 1
+    for pid in target_prov_ids:
+        prov = id_to_province.get(pid)
+        if prov and nation not in prov.get("cores", []):
+            time += 1
+    return time
+
+def has_wargoal(nation, target_nation, nation_data):
+    """Returns True if the nation has a justified wargoal against the target."""
+    return target_nation in nation_data.get(nation, {}).get("wargoals", {})
+
 # ==========================================
 # TKINTER DIALOG HELPERS
 # ==========================================

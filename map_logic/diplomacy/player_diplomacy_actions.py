@@ -1,21 +1,45 @@
 from data import queries
 from map_logic.diplomacy import diplomacy_logic
+import data.constants as c
 
 def handle_declare_war(map_screen):
     target = map_screen.selected_province.get("owner")
     at_war = queries.are_at_war(map_screen.player_country, target, map_screen.nation_data)
     
+    if at_war:
+        handle_ceasefire(map_screen)
+        return
+
     # --- FIX: Prevent declaring war on your own faction ---
-    if not at_war and queries.are_in_same_faction(map_screen.player_country, target, map_screen.nation_data):
+    if queries.are_in_same_faction(map_screen.player_country, target, map_screen.nation_data):
         map_screen.show_feedback("Cannot declare war on a faction member!")
         return
 
-    action = "CEASEFIRE" if at_war else "WAR_DECLARATION"
-    
-    custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
-    msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, action, custom_msg)
-    map_screen.mail_input_active = False
-    map_screen.show_feedback(msg)
+    # Check if has wargoal
+    if not queries.has_wargoal(map_screen.player_country, target, map_screen.nation_data):
+        map_screen.show_feedback("You must justify a wargoal first!")
+        return
+
+    # Direct import to bypass __init__.py namespace issues
+    from ui.player_diplomacy_menus import open_wargoal_selection_menu
+    open_wargoal_selection_menu(map_screen, target)
+
+def handle_justify_war(map_screen):
+    target = map_screen.selected_province.get("owner")
+    at_war = queries.are_at_war(map_screen.player_country, target, map_screen.nation_data)
+    if at_war:
+        map_screen.show_feedback("Already at war!")
+        return
+        
+    # Direct import to bypass __init__.py namespace issues
+    from ui.player_diplomacy_menus import open_justify_menu
+    open_justify_menu(map_screen, target)
+
+def handle_ceasefire(map_screen):
+    target = map_screen.selected_province.get("owner")
+    # Direct import to bypass __init__.py namespace issues
+    from ui.player_diplomacy_menus import open_peace_menu
+    open_peace_menu(map_screen, target)
 
 def handle_specific_action(map_screen, action_type):
     """A clean, generic handler replacing the overloaded faction button logic."""

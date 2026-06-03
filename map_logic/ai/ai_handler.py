@@ -1,6 +1,5 @@
 import json
 import requests
-import random
 import urllib.parse
 import http.client
 import socket
@@ -234,7 +233,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
     # --- IMPROVED FACTION LOGIC ---
     # 1. Check for basic aggressive acceptance
     if at_war and not in_faction:
-        if action_type in ["FACTION_INVITE", "CREATE_FACTION", "CEASEFIRE"]:
+        if action_type in ["FACTION_INVITE", "CREATE_FACTION", "CEASEFIRE", "PEACE_TREATY"]:
             accepted = True
             
     # 2. Check for Join Faction Requests (If we are the leader)
@@ -251,6 +250,10 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
         threshold = getattr(c, 'AI_RELATION_FACTION_THRESHOLD', 50)
         if relation_score >= threshold or share_enemies:
             accepted = True
+
+    # 3. Always accept peace deals for now (Per the user request)
+    if action_type == "PEACE_TREATY":
+        accepted = True
     # ------------------------------
 
     # Check if this is an AI talking to an AI

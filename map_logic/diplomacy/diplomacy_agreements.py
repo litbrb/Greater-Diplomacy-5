@@ -1,3 +1,4 @@
+from map_logic.system32 import edit_province_ownership
 from data import queries
 import data.constants as c
 
@@ -45,6 +46,40 @@ def finalize_neutral(nation_data, a, b):
 
     if fac_a: queries.clear_faction_pre_war_map_if_peace(fac_a, nation_data)
     if fac_b: queries.clear_faction_pre_war_map_if_peace(fac_b, nation_data)
+
+def execute_peace_treaty(map_data, nation_data, proposer, target, peace_type, map_screen):
+    """Executes the specific terms of a peace deal based on its type."""
+
+    if peace_type == c.PEACE_WHITE_PEACE:
+        pass # Just regular finalize_neutral happens at the end
+
+    elif peace_type == c.PEACE_DEMAND_CLAIMS:
+        # Proposer demands claims from target
+        claims = nation_data.get(proposer, {}).get("claims", [])
+        for prov in map_data.values():
+            if prov["id"] in claims and prov.get("owner") == target:
+                edit_province_ownership.conquer_province(map_screen, prov, proposer)
+
+    elif peace_type == c.PEACE_SURRENDER:
+        # Target gets their claims, or annexes if their wargoal was ANNEX
+        wargoal = nation_data.get(target, {}).get("wargoals", {}).get(proposer, {}).get("type", "")
+        if wargoal == c.WARGOAL_ANNEX:
+            for prov in map_data.values():
+                if prov.get("owner") == proposer:
+                    edit_province_ownership.conquer_province(map_screen, prov, target)
+        else:
+            claims = nation_data.get(target, {}).get("claims", [])
+            for prov in map_data.values():
+                if prov["id"] in claims and prov.get("owner") == proposer:
+                    edit_province_ownership.conquer_province(map_screen, prov, target)
+
+    # Clear wargoals between the two
+    if proposer in nation_data.get(target, {}).get("wargoals", {}):
+        del nation_data[target]["wargoals"][proposer]
+    if target in nation_data.get(proposer, {}).get("wargoals", {}):
+        del nation_data[proposer]["wargoals"][target]
+
+    finalize_neutral(nation_data, proposer, target)
 
 def finalize_create_faction(map_data, nation_data, creator):
     fac = f"The {nation_data[creator].get('name', creator)} Pact"

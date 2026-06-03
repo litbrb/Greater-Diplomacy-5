@@ -345,10 +345,10 @@ def process_basic_proactive_ai(map_screen):
                             })
                             break # Act once per turn to avoid conflicts
 
-        # --- 4. Declare War for Cores Logic (Border Check Only) ---
+        # --- 4. Declare War for Cores Logic ---
         if not is_already_at_war:
             current_turn = queries.get_total_turns(map_screen.time_manager)
-            if current_turn >= c.TURNS_TO_WAIT_BEFORE_WAR:
+            if current_turn >= getattr(c, 'TURNS_TO_WAIT_BEFORE_WAR', 12):
                 targets_holding_cores = queries.get_nations_holding_our_cores(ai_name, map_screen.map_data)
                 
                 if targets_holding_cores:
@@ -367,7 +367,7 @@ def process_basic_proactive_ai(map_screen):
                         # Prevent division by zero if they have literally no troops on the border
                         target_border_str = max(1, target_border_str)
                         
-                        # --- MODIFIED: Consider total alliance strength, economy, and distractions ---
+                        # Consider total alliance strength, economy, and distractions
                         my_alliance_str = queries.get_alliance_military_strength(ai_name, map_screen.map_data, map_screen.nation_data)
                         target_alliance_str = queries.get_alliance_military_strength(target, map_screen.map_data, map_screen.nation_data)
                         
@@ -380,36 +380,53 @@ def process_basic_proactive_ai(map_screen):
                         # Add the target's distraction to our perceived power
                         my_total_power = my_alliance_str + my_econ_power + target_distraction_str
                         target_total_power = max(1.0, target_alliance_str + target_econ_power)
-                        # ---------------------------------------------------------
                         
                         # AI needs local border superiority AND overall global viability to declare war
-                        if my_border_str >= (target_border_str * c.AI_WAR_STRENGTH_THRESHOLD) and my_total_power >= (target_total_power * c.AI_GLOBAL_STRENGTH_THRESHOLD):
+                        if my_border_str >= (target_border_str * getattr(c, 'AI_WAR_STRENGTH_THRESHOLD', 1.2)) and my_total_power >= (target_total_power * getattr(c, 'AI_GLOBAL_STRENGTH_THRESHOLD', 0.8)):
                             
                             # Random chance to actually declare war
                             if random.random() <= getattr(c, 'AI_WAR_DECLARATION_CHANCE', 0.50):
-                                if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
-                                    existing = pending.get(target, {})
-                                    turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
-                                    
-                                    if target not in pending or turns == 0:
-                                        action_context = ai_prompts.get_proactive_action_context("WAR_DECLARATION", target)
-                                        fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
-
-                                        pending[target] = {
-                                            "action": "WAR_DECLARATION",
-                                            "turns": 0,
-                                            "message": fallback
-                                        }
-                                        queries.set_ai_diplo_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data)
+                                has_wargoal = queries.has_wargoal(ai_name, target, map_screen.nation_data)
+                                if has_wargoal:
+                                    if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
+                                        existing = pending.get(target, {})
+                                        turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
                                         
-                                        map_screen.proactive_llm_tasks.append({
-                                            "sender": ai_name,
-                                            "target": target,
-                                            "context": action_context,
-                                            "fallback": fallback,
-                                            "action_type": "WAR_DECLARATION"
-                                        })
-                                        break
+                                        if target not in pending or turns == 0:
+                                            action_context = ai_prompts.get_proactive_action_context("WAR_DECLARATION", target)
+                                            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_DECLARE_WAR", "Your occupation of our rightful territory ends now!")
+
+                                            pending[target] = {
+                                                "action": "WAR_DECLARATION",
+                                                "turns": 0,
+                                                "message": getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims")
+                                            }
+                                            queries.set_ai_diplo_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data)
+                                            
+                                            map_screen.proactive_llm_tasks.append({
+                                                "sender": ai_name,
+                                                "target": target,
+                                                "context": action_context,
+                                                "fallback": fallback,
+                                                "action_type": "WAR_DECLARATION"
+                                            })
+                                            break
+                                else:
+                                    if not queries.is_ai_diplo_on_cooldown(ai_name, target, "JUSTIFY_WARGOAL", map_screen.nation_data):
+                                        core_ids = []
+                                        for prov in map_screen.map_data.values():
+                                            if prov.get("owner") == target and ai_name in prov.get("cores", []):
+                                                core_ids.append(prov["id"])
+
+                                        if core_ids:
+                                            time_needed = queries.calculate_justification_time(ai_name, core_ids, map_screen.id_to_province)
+                                            pending[target] = {
+                                                "action": "JUSTIFY_WARGOAL",
+                                                "turns": time_needed,
+                                                "message": ",".join(map(str, core_ids))
+                                            }
+                                            queries.set_ai_diplo_cooldown(ai_name, target, "JUSTIFY_WARGOAL", map_screen.nation_data, duration=time_needed + 5)
+                                            break
                         
         # --- Update Progress Bar ---
         map_screen.proactive_tasks_completed += 1

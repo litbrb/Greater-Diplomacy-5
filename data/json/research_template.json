@@ -19,6 +19,7 @@
     "battleship": { "category": "NAVY", "max_lvl": 1, "cost": 2400, "req": {"dreadnought": 1}, "years": [1920] },
     "destroyer": { "category": "NAVY", "max_lvl": 10, "cost": 2400, "req": {}, "years": [1910, 1914, 1918, 1922, 1926, 1930, 1934, 1938, 1942, 1946] },
     "aircraft_carrier": { "category": "NAVY", "max_lvl": 4, "cost": 2400, "req": {"battleship": 1}, "years": [1930, 1935, 1940, 1945] },
+     "submarine": { "category": "NAVY", "max_lvl": 10, "cost": 2400, "req": {}, "years": [1910, 1914, 1918, 1922, 1926, 1930, 1934, 1938, 1942, 1946] },
 
     "basic_factory": { "category": "INDUSTRY", "max_lvl": 1, "cost": 1200, "req": {}, "years": [1910] },
     "factory": { "category": "INDUSTRY", "max_lvl": 20, "cost": 1200, "req": {"basic_factory": 1}, "years": [1912, 1914, 1916, 1918, 1920, 1922, 1924, 1926, 1928, 1930, 1932, 1934, 1936, 1938, 1940, 1942, 1944, 1946, 1948, 1950] },

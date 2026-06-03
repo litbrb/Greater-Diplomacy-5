@@ -242,7 +242,6 @@ def process_combat(self):
 def check_for_post_combat_captures(self):
     """Assigns province ownership to units standing in an undefended enemy province."""
     for province in self.map_data.values():
-        # --- FIX: Water tiles cannot be captured by anyone ---
         if province.get("terrain") in c.WATER_TERRAINS:
             continue
 
@@ -263,15 +262,21 @@ def check_for_post_combat_captures(self):
                 edit_province_ownership.conquer_province(self, province, turn_start_owner)
             continue
             
-        # If the original owner is gone, we evaluate based on who has the most HP.
-        # Tally HP for all units on the tile to see who claims it
-        hp_totals = {}
+        # --- CRITICAL FIX: Ensure capturer is legally allowed to take the tile ---
+        valid_capturer_units = []
         for u in units:
+            # You can't steal land from someone you are at peace with!
+            if current_owner in ["Unclaimed", "None", "Ocean", "Lakes"] or queries.are_at_war(u["owner"], current_owner, self.nation_data):
+                valid_capturer_units.append(u)
+
+        if not valid_capturer_units:
+            continue # No one here is legally allowed to capture the tile
+            
+        # Tally HP for all VALID units on the tile to see who claims it
+        hp_totals = {}
+        for u in valid_capturer_units:
             o = u["owner"]
             hp_totals[o] = hp_totals.get(o, 0) + u.get("health", 0)
-    
-        if not hp_totals:
-            continue
 
         # Find the nation(s) with the highest combined HP
         max_hp = -1

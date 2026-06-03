@@ -52,6 +52,7 @@ class Research_Screen(GameState):
             "carrack": 350, "ironclad": 350, "pre-dreadnought": 350, "dreadnought": 350,
             "battleship": 350,
             "aircraft_carrier": 350,
+            "submarine": 450,
             "workshop": 250, "basic_factory": 250, "factory": 250,
             "bergius_process": 350, "fuel_refining": 350,
             "basic_recruitment": 450, "recruitment_buildings": 450,
@@ -201,7 +202,7 @@ class Research_Screen(GameState):
     def get_button_size(self, tech_key, display_name):
         """Returns the appropriate button size based on category or specific items."""
         # Check for our specific large ships
-        special_ships = ["aircraft carrier", "battleship", "dreadnought"]
+        special_ships = ["aircraft carrier", "battleship", "dreadnought", "submarine"]
         if any(ship in display_name.lower() for ship in special_ships):
             return "tech_square_ultra_wide"
         

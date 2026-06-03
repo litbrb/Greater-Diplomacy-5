@@ -43,39 +43,90 @@ class Declare_War_Screen(GameState):
         self.target_nation = target_nation
         
         wargoals = map_screen.nation_data.get(map_screen.player_country, {}).get("wargoals", {}).get(target_nation, {})
-        self.available_wargoals = []
+        has_wg = queries.has_wargoal(map_screen.player_country, target_nation, map_screen.nation_data)
+        wg_type = wargoals.get("type", "") if has_wg else ""
         
         # Determine available wargoals to choose from
-        if wargoals:
-            self.available_wargoals.append(wargoals.get("type", getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims")))
-        else:
-            self.available_wargoals.append(getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"))
-            self.available_wargoals.append(getattr(c, 'WARGOAL_ANNEX', "Total Annexation"))
+        take_claims_enabled = has_wg and (wg_type == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims") or not wg_type)
+        annex_enabled = has_wg and wg_type == getattr(c, 'WARGOAL_ANNEX', "Total Annexation")
+        
+        # Spectator / Override catch: if it's the spectator, let them force it anyway
+        if map_screen.player_country == "Spectator":
+            take_claims_enabled = True
+            annex_enabled = True
+
+        self.wargoal_options = [
+            {"label": getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"), "enabled": take_claims_enabled},
+            {"label": getattr(c, 'WARGOAL_ANNEX', "Total Annexation"), "enabled": annex_enabled},
+            {"label": "Don't Declare War", "enabled": True}
+        ]
             
-        self.selected_wargoal_idx = 0
+        self.selected_wargoal_idx = 2 # Default to Don't Declare War
+        
+        # Check if a war declaration is already queued
+        pending = map_screen.nation_data.get(map_screen.player_country, {}).get("pending_diplomacy", {}).get(target_nation, {})
+        self.is_editing = isinstance(pending, dict) and pending.get("action") == "WAR_DECLARATION"
+        
+        if self.is_editing:
+            pending_msg = pending.get("message", "")
+            for i, opt in enumerate(self.wargoal_options):
+                if opt["label"] == pending_msg and opt["enabled"]:
+                    self.selected_wargoal_idx = i
+                    break
+        else:
+            # Auto-select the first enabled wargoal that actually declares war if available
+            for i, opt in enumerate(self.wargoal_options):
+                if opt["enabled"] and i != 2:
+                    self.selected_wargoal_idx = i
+                    break
+
         self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 200, c.SCREEN_HEIGHT//2 - 150, 400, 300)
         self.refresh_ui()
 
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Cancel", self.exit_screen)]
         
-        btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "red", "Declare War", self.confirm)
+        confirm_text = "Update Declaration" if self.is_editing else "Confirm"
+        btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "red", confirm_text, self.confirm)
         self.elements.append(btn_confirm)
         
-        for i, wg in enumerate(self.available_wargoals):
-            color = "green" if self.selected_wargoal_idx == i else "grey"
-            btn = Button(self.panel_rect.centerx - 150, self.panel_rect.y + 80 + (i * 60), "new_game", color, wg, lambda idx=i: self.select_wg(idx))
+        for i, opt in enumerate(self.wargoal_options):
+            if opt["enabled"]:
+                color = "green" if self.selected_wargoal_idx == i else "blue"
+            else:
+                color = "grey"
+                
+            btn = Button(self.panel_rect.centerx - 150, self.panel_rect.y + 60 + (i * 55), "new_game", color, opt["label"], lambda idx=i: self.select_wg(idx))
+            if not opt["enabled"]:
+                btn.disabled = True
             self.elements.append(btn)
 
     def select_wg(self, idx):
-        self.selected_wargoal_idx = idx
-        self.refresh_ui()
+        if self.wargoal_options[idx]["enabled"]:
+            self.selected_wargoal_idx = idx
+            self.refresh_ui()
 
     def confirm(self):
-        wg = self.available_wargoals[self.selected_wargoal_idx]
-        msg = diplomacy_logic.toggle_diplomacy_action(self.map_screen.nation_data, self.map_screen.player_country, self.target_nation, "WAR_DECLARATION", wg)
-        self.map_screen.show_feedback(msg)
-        self.done = True
+        wg = self.wargoal_options[self.selected_wargoal_idx]["label"]
+        
+        if wg == "Don't Declare War":
+            pending = self.map_screen.nation_data[self.map_screen.player_country].get("pending_diplomacy", {})
+            if self.target_nation in pending and pending[self.target_nation].get("action") == "WAR_DECLARATION":
+                del pending[self.target_nation]
+            self.map_screen.show_feedback("War Declaration Cancelled.")
+            self.done = True
+        else:
+            # Overwrite any existing declaration natively without triggering the toggle/delete logic
+            pending = self.map_screen.nation_data[self.map_screen.player_country].setdefault("pending_diplomacy", {})
+            
+            pending[self.target_nation] = {
+                "action": "WAR_DECLARATION",
+                "turns": 0,
+                "timer": 0,
+                "message": wg
+            }
+            self.map_screen.show_feedback("War Declaration Queued!" if not self.is_editing else "War Declaration Updated!")
+            self.done = True
 
     def exit_screen(self):
         self.done = True

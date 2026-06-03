@@ -329,7 +329,7 @@ def update_button_states(map_screen):
                 if pending_action == "PEACE_TREATY" or pending_action == "CEASEFIRE": 
                     dw_text = get_status_text("PEACE") 
                 elif pending_action == "WAR_DECLARATION": 
-                    dw_text = get_status_text("WAR")
+                    dw_text = "Edit War Declaration"
                 else: 
                     dw_text = "Ceasefire / Peace" if at_war else "Declare War"
                     

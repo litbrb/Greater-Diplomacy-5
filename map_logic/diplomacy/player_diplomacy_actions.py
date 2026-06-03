@@ -15,11 +15,6 @@ def handle_declare_war(map_screen):
         map_screen.show_feedback("Cannot declare war on a faction member!")
         return
 
-    # Check if has wargoal
-    if not queries.has_wargoal(map_screen.player_country, target, map_screen.nation_data):
-        map_screen.show_feedback("You must justify a wargoal first!")
-        return
-
     # Direct import to bypass __init__.py namespace issues
     from ui.player_diplomacy_menus import open_wargoal_selection_menu
     open_wargoal_selection_menu(map_screen, target)

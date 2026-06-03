@@ -23,6 +23,7 @@ new_research_block = {
     "dreadnought": 0,
     "battleship": 0,
     "aircraft_carrier": 0,
+    "submarine": 0,
     "basic_factory": 0,
     "factory": 0,
     "bergius_process": 0,

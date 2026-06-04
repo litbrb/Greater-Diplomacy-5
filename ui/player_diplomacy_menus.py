@@ -182,6 +182,9 @@ class Justify_Screen(GameState):
         self.map_screen = map_screen
         self.target_nation = target_nation
         
+        self.at_war = queries.are_at_war(map_screen.player_country, target_nation, map_screen.nation_data)
+        self.has_wargoal = queries.has_wargoal(map_screen.player_country, target_nation, map_screen.nation_data)
+        
         self.valid_targets = queries.get_valid_claim_targets(map_screen.player_country, target_nation, map_screen.map_data)
         self.valid_ids = [p["id"] for p in self.valid_targets]
         
@@ -192,12 +195,17 @@ class Justify_Screen(GameState):
         self.original_total_turns = 0
         
         pending = map_screen.nation_data.get(map_screen.player_country, {}).get("pending_diplomacy", {}).get(target_nation, {})
+        player_claims = map_screen.nation_data.get(map_screen.player_country, {}).get("claims", [])
+        
         if isinstance(pending, dict) and pending.get("action") == "JUSTIFY_WARGOAL":
             self.is_editing = True
             self.selected_ids = [int(x) for x in pending.get("message", "").split(",") if x]
             self.original_selected_ids = list(self.selected_ids)
             self.remaining_turns = pending.get("timer", 0)
             self.original_total_turns = queries.calculate_justification_time(map_screen.player_country, self.original_selected_ids, map_screen.id_to_province)
+        elif self.has_wargoal:
+            self.selected_ids = [pid for pid in self.valid_ids if pid in player_claims]
+            self.original_selected_ids = list(self.selected_ids)
         else:
             self.selected_ids = []
         
@@ -208,14 +216,20 @@ class Justify_Screen(GameState):
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
         
-        if self.is_editing:
+        if self.at_war:
+            # Read-only mode, no confirm buttons
+            pass
+        elif self.is_editing:
             btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 130, "new_game", "orange", "Update Justification", self.confirm)
             btn_cancel = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "red", "Cancel Justification", self.cancel_justification)
             self.elements.extend([btn_confirm, btn_cancel])
+        elif self.has_wargoal:
+            btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "orange", "Restart Justification", self.confirm)
+            self.elements.append(btn_confirm)
         else:
             btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "orange", "Start Justification", self.confirm)
             self.elements.append(btn_confirm)
-        
+                
     def confirm(self):
         if not self.selected_ids:
             self.map_screen.show_feedback("Select at least one province!")
@@ -266,7 +280,7 @@ class Justify_Screen(GameState):
             on_ui = self.panel_rect.collidepoint(pygame.mouse.get_pos()) or self.map_screen.top_bar_rect.collidepoint(pygame.mouse.get_pos())
             
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if not on_ui:
+                if not on_ui and not self.at_war:
                     dest = self.get_clicked_province(event.pos)
                     if dest and dest["id"] in self.valid_ids:
                         if dest["id"] in self.selected_ids:
@@ -340,7 +354,8 @@ class Justify_Screen(GameState):
 
         # Title
         font = fonts.get("heading1")
-        title = font.render(f"Justify Wargoal: {self.target_nation}", True, (255, 255, 255))
+        title_str = f"View War Goal: {self.target_nation}" if (self.has_wargoal and not self.is_editing) else f"Justify Wargoal: {self.target_nation}"
+        title = font.render(title_str, True, (255, 255, 255))
         surface.blit(title, (c.SCREEN_WIDTH//2 - title.get_width()//2, c.TOP_BAR_UI_CENTER_Y))
 
         # Panel
@@ -370,19 +385,24 @@ class Justify_Screen(GameState):
                 txt = tiny_font.render(f"...and {len(self.selected_ids)-10} more", True, (150, 150, 150))
                 surface.blit(txt, (self.panel_rect.x + 30, y_off))
 
-        new_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.selected_ids, self.map_screen.id_to_province) if self.selected_ids else 0
-        if self.is_editing:
-            elapsed = self.original_total_turns - self.remaining_turns
-            current_estimated_turns = max(1, new_total_turns - elapsed) if self.selected_ids else 0
+        if self.at_war:
+            time_txt = sub_font.render("War Goal Active (Read-Only)", True, (200, 200, 200))
+            time_y = self.panel_rect.bottom - 110
         else:
-            current_estimated_turns = new_total_turns
+            new_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.selected_ids, self.map_screen.id_to_province) if self.selected_ids else 0
+            if self.is_editing:
+                elapsed = self.original_total_turns - self.remaining_turns
+                current_estimated_turns = max(1, new_total_turns - elapsed) if self.selected_ids else 0
+            else:
+                current_estimated_turns = new_total_turns
+                
+            if self.is_editing and self.selected_ids == self.original_selected_ids:
+                time_txt = sub_font.render(f"Time Remaining: {self.remaining_turns} turns", True, (255, 100, 100))
+            else:
+                time_txt = sub_font.render(f"Estimated Time: {current_estimated_turns} turns", True, (255, 100, 100))
+                
+            time_y = self.panel_rect.bottom - (170 if self.is_editing else 110)
             
-        if self.is_editing and self.selected_ids == self.original_selected_ids:
-            time_txt = sub_font.render(f"Time Remaining: {self.remaining_turns} turns", True, (255, 100, 100))
-        else:
-            time_txt = sub_font.render(f"Estimated Time: {current_estimated_turns} turns", True, (255, 100, 100))
-            
-        time_y = self.panel_rect.bottom - (170 if self.is_editing else 110)
         surface.blit(time_txt, (self.panel_rect.centerx - time_txt.get_width()//2, time_y))
 
         # Draw UI elements manually to prevent super().draw() from filling the screen with a solid background color

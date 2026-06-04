@@ -22,7 +22,9 @@ def handle_declare_war(map_screen):
 def handle_justify_war(map_screen):
     target = map_screen.selected_province.get("owner")
     at_war = queries.are_at_war(map_screen.player_country, target, map_screen.nation_data)
-    if at_war:
+    has_wargoal = queries.has_wargoal(map_screen.player_country, target, map_screen.nation_data)
+    
+    if at_war and not has_wargoal:
         map_screen.show_feedback("Already at war!")
         return
         

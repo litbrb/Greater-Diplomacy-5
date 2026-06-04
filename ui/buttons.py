@@ -336,8 +336,12 @@ def update_button_states(map_screen):
                 set_btn(map_screen.btn_declare_war, True, dw_enabled, dw_text, "red")
                 
                 # Justify wargoal UI
+                has_wargoal = queries.has_wargoal(map_screen.player_country, owner, map_screen.nation_data)
+                
                 if pending_action == "JUSTIFY_WARGOAL":
                     set_btn(map_screen.btn_justify_war, True, True, "Edit Justification", "orange")
+                elif has_wargoal:
+                    set_btn(map_screen.btn_justify_war, True, True, "View War Goal", "orange")
                 else:
                     set_btn(map_screen.btn_justify_war, True, not at_war, "Justify War Goal", "orange")
                 

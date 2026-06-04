@@ -470,8 +470,19 @@ def process_diplomacy_turn(self):
                 # EXECUTE unilateral actions instantly on Turn 0
                 if action == "JUSTIFY_WARGOAL":
                     prov_ids = [int(x) for x in custom_msg.split(",") if x]
-                    self.nation_data[country_name].setdefault("claims", []).extend(prov_ids)
-                    self.nation_data[country_name]["claims"] = list(set(self.nation_data[country_name]["claims"]))
+                    
+                    # Remove old claims that are currently owned by the target to allow unclaiming
+                    current_claims = self.nation_data[country_name].get("claims", [])
+                    new_claims = []
+                    for cid in current_claims:
+                        prov = self.id_to_province.get(cid)
+                        if prov and prov.get("owner") == target:
+                            continue # Drop it so it can be overwritten
+                        new_claims.append(cid)
+                        
+                    new_claims.extend(prov_ids)
+                    self.nation_data[country_name]["claims"] = list(set(new_claims))
+                    
                     self.nation_data[country_name].setdefault("wargoals", {})[target] = {"type": getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims")}
                     log_global_event(self.nation_data, f"{country_name} has justified a wargoal against {target}.")
                     if country_name == self.player_country:

@@ -197,6 +197,8 @@ class Justify_Screen(GameState):
         pending = map_screen.nation_data.get(map_screen.player_country, {}).get("pending_diplomacy", {}).get(target_nation, {})
         player_claims = map_screen.nation_data.get(map_screen.player_country, {}).get("claims", [])
         
+        self.view_only_mode = False
+        
         if isinstance(pending, dict) and pending.get("action") == "JUSTIFY_WARGOAL":
             self.is_editing = True
             self.selected_ids = [int(x) for x in pending.get("message", "").split(",") if x]
@@ -206,8 +208,12 @@ class Justify_Screen(GameState):
         elif self.has_wargoal:
             self.selected_ids = [pid for pid in self.valid_ids if pid in player_claims]
             self.original_selected_ids = list(self.selected_ids)
+            self.view_only_mode = True # Default to view-only when opening a completed wargoal
         else:
             self.selected_ids = []
+            
+        if self.at_war:
+            self.view_only_mode = True # Always view-only during war
         
         # Left Panel mimic
         self.panel_rect = pygame.Rect(80, 120, 380, c.SCREEN_HEIGHT - 240)
@@ -224,11 +230,25 @@ class Justify_Screen(GameState):
             btn_cancel = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "red", "Cancel Justification", self.cancel_justification)
             self.elements.extend([btn_confirm, btn_cancel])
         elif self.has_wargoal:
-            btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "orange", "Restart Justification", self.confirm)
-            self.elements.append(btn_confirm)
+            if self.view_only_mode:
+                btn_edit = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "blue", "Edit Justification", self.enable_editing)
+                self.elements.append(btn_edit)
+            else:
+                btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 130, "new_game", "orange", "Confirm Edit", self.confirm)
+                btn_cancel = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "red", "Cancel", self.cancel_edit)
+                self.elements.extend([btn_confirm, btn_cancel])
         else:
             btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "orange", "Start Justification", self.confirm)
             self.elements.append(btn_confirm)
+            
+    def enable_editing(self):
+        self.view_only_mode = False
+        self.refresh_ui()
+        
+    def cancel_edit(self):
+        self.view_only_mode = True
+        self.selected_ids = list(self.original_selected_ids)
+        self.refresh_ui()
                 
     def confirm(self):
         if not self.selected_ids:
@@ -280,7 +300,7 @@ class Justify_Screen(GameState):
             on_ui = self.panel_rect.collidepoint(pygame.mouse.get_pos()) or self.map_screen.top_bar_rect.collidepoint(pygame.mouse.get_pos())
             
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if not on_ui and not self.at_war:
+                if not on_ui and not self.view_only_mode:
                     dest = self.get_clicked_province(event.pos)
                     if dest and dest["id"] in self.valid_ids:
                         if dest["id"] in self.selected_ids:
@@ -354,7 +374,7 @@ class Justify_Screen(GameState):
 
         # Title
         font = fonts.get("heading1")
-        title_str = f"View War Goal: {self.target_nation}" if (self.has_wargoal and not self.is_editing) else f"Justify Wargoal: {self.target_nation}"
+        title_str = f"View War Goal: {self.target_nation}" if self.view_only_mode else f"Justify Wargoal: {self.target_nation}"
         title = font.render(title_str, True, (255, 255, 255))
         surface.blit(title, (c.SCREEN_WIDTH//2 - title.get_width()//2, c.TOP_BAR_UI_CENTER_Y))
 
@@ -388,6 +408,9 @@ class Justify_Screen(GameState):
         if self.at_war:
             time_txt = sub_font.render("War Goal Active (Read-Only)", True, (200, 200, 200))
             time_y = self.panel_rect.bottom - 110
+        elif self.has_wargoal and self.view_only_mode:
+            time_txt = sub_font.render("War Goal Ready", True, (100, 255, 100))
+            time_y = self.panel_rect.bottom - 110
         else:
             new_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.selected_ids, self.map_screen.id_to_province) if self.selected_ids else 0
             if self.is_editing:
@@ -401,7 +424,8 @@ class Justify_Screen(GameState):
             else:
                 time_txt = sub_font.render(f"Estimated Time: {current_estimated_turns} turns", True, (255, 100, 100))
                 
-            time_y = self.panel_rect.bottom - (170 if self.is_editing else 110)
+            is_two_buttons = self.is_editing or (self.has_wargoal and not self.view_only_mode)
+            time_y = self.panel_rect.bottom - (170 if is_two_buttons else 110)
             
         surface.blit(time_txt, (self.panel_rect.centerx - time_txt.get_width()//2, time_y))
 

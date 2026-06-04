@@ -259,11 +259,15 @@ class Justify_Screen(GameState):
         if self.is_editing:
             elapsed = self.original_total_turns - self.remaining_turns
             final_timer = max(1, new_total_turns - elapsed)
+        elif self.has_wargoal:
+            # Calculate the time for ONLY the new provinces being added
+            original_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.original_selected_ids, self.map_screen.id_to_province)
+            final_timer = max(1, new_total_turns - original_total_turns + 1)
         else:
             final_timer = new_total_turns
             
         pending = self.map_screen.nation_data[self.map_screen.player_country].setdefault("pending_diplomacy", {})
-        
+
         # Manually set the dictionary to bypass the toggle/delete logic in toggle_diplomacy_action
         pending[self.target_nation] = {
             "action": "JUSTIFY_WARGOAL",
@@ -416,6 +420,9 @@ class Justify_Screen(GameState):
             if self.is_editing:
                 elapsed = self.original_total_turns - self.remaining_turns
                 current_estimated_turns = max(1, new_total_turns - elapsed) if self.selected_ids else 0
+            elif self.has_wargoal:
+                original_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.original_selected_ids, self.map_screen.id_to_province)
+                current_estimated_turns = max(1, new_total_turns - original_total_turns + 1) if self.selected_ids else 0
             else:
                 current_estimated_turns = new_total_turns
                 

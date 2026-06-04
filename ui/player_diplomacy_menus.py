@@ -273,12 +273,15 @@ class Justify_Screen(GameState):
             
         pending = self.map_screen.nation_data[self.map_screen.player_country].setdefault("pending_diplomacy", {})
 
+        # Ensure that if the AI was notified on turn 1 previously, we do not regress back to 0 which resets the action
+        existing_turns = pending.get(self.target_nation, {}).get("turns", 0)
+
         # Manually set the dictionary to bypass the toggle/delete logic in toggle_diplomacy_action
         pending[self.target_nation] = {
             "action": "JUSTIFY_WARGOAL",
-            "turns": 0,
+            "turns": existing_turns,
             "timer": final_timer,
-            "message": ",".join(map(str, self.selected_ids))
+            "message": ",".join(str(i) for i in self.selected_ids)
         }
         self.map_screen.show_feedback("Justification Updated!" if self.is_editing else "Justification Started!")
         self.done = True

@@ -251,7 +251,7 @@ class Justify_Screen(GameState):
         self.refresh_ui()
                 
     def confirm(self):
-        if not self.selected_ids:
+        if not self.selected_ids and not self.has_wargoal and not self.is_editing:
             self.map_screen.show_feedback("Select at least one province!")
             return
             
@@ -416,16 +416,19 @@ class Justify_Screen(GameState):
             time_txt = sub_font.render("War Goal Ready", True, (100, 255, 100))
             time_y = self.panel_rect.bottom - 110
         else:
-            new_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.selected_ids, self.map_screen.id_to_province) if self.selected_ids else 0
-            if self.is_editing:
-                elapsed = self.original_total_turns - self.remaining_turns
-                current_estimated_turns = max(1, new_total_turns - elapsed) if self.selected_ids else 0
-            elif self.has_wargoal:
-                original_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.original_selected_ids, self.map_screen.id_to_province)
-                current_estimated_turns = max(1, new_total_turns - original_total_turns + 1) if self.selected_ids else 0
+            if not self.selected_ids and not self.has_wargoal and not self.is_editing:
+                current_estimated_turns = 0
             else:
-                current_estimated_turns = new_total_turns
-                
+                new_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.selected_ids, self.map_screen.id_to_province)
+                if self.is_editing:
+                    elapsed = self.original_total_turns - self.remaining_turns
+                    current_estimated_turns = max(1, new_total_turns - elapsed)
+                elif self.has_wargoal:
+                    original_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.original_selected_ids, self.map_screen.id_to_province)
+                    current_estimated_turns = max(1, new_total_turns - original_total_turns + 1)
+                else:
+                    current_estimated_turns = new_total_turns
+                    
             if self.is_editing and self.selected_ids == self.original_selected_ids:
                 time_txt = sub_font.render(f"Time Remaining: {self.remaining_turns} turns", True, (255, 100, 100))
             else:

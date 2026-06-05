@@ -573,11 +573,8 @@ class Peace_Screen(GameState):
         proposer = self.map_screen.player_country
         target = self.target_nation
 
-        if peace_type == getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire"):
-            if curr == proposer and target in prov.get("cores", []) and proposer not in prov.get("cores", []):
-                proj = target
-            elif curr == target and proposer in prov.get("cores", []) and target not in prov.get("cores", []):
-                proj = proposer
+        if peace_type == getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)"):
+            pass # A ceasefire freezes the map exactly as it is right now.
         elif peace_type == getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims"):
             claims = self.map_screen.nation_data.get(proposer, {}).get("claims", [])
             # Proposer gets their claims/cores that the target currently owns

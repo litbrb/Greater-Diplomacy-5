@@ -456,8 +456,8 @@ class Peace_Screen(GameState):
         ]
         
         self.terms_enabled = [
-            my_wargoal != getattr(c, 'WARGOAL_NO_CB', "No Casus Belli") and their_wargoal != getattr(c, 'WARGOAL_NO_CB', "No Casus Belli"),
-            my_wargoal == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims") or their_wargoal != "", # Allowed if we claimed OR if it's a defensive war!
+            True, # Surrender is always an option if at war
+            my_wargoal in [getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"), getattr(c, 'WARGOAL_NO_CB', "No Casus Belli")] or their_wargoal != "", # Allowed if we claimed, No CB, or if it's a defensive war!
             True
         ]
         
@@ -480,13 +480,28 @@ class Peace_Screen(GameState):
             self.selected_term_idx = 2 # Default to Ceasefire
             
         # Restructured to be a wide, short banner docked cleanly above the bottom UI bar
-        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 350, c.SCREEN_HEIGHT - 220, 700, 160)
+        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 350, c.SCREEN_HEIGHT - 250, 700, 190)
         self.refresh_ui()
 
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Cancel", self.exit_screen)]
         
-        for i, term in enumerate(self.terms):
+        term = self.terms[self.selected_term_idx]
+        is_human = self.target_nation in getattr(self.map_screen, 'active_players', [])
+        
+        if is_human:
+            self.acceptance_text = "This is another player, whether they accept this deal or not is up to them."
+            self.acceptance_color = (200, 200, 200)
+        else:
+            will_accept = queries.will_ai_accept_peace(self.target_nation, self.map_screen.player_country, term, self.map_screen.map_data, self.map_screen.nation_data)
+            if will_accept:
+                self.acceptance_text = "The AI will accept this peace deal."
+                self.acceptance_color = (100, 255, 100)
+            else:
+                self.acceptance_text = "The AI will REJECT this peace deal."
+                self.acceptance_color = (255, 100, 100)
+
+        for i, term_str in enumerate(self.terms):
             is_enabled = self.terms_enabled[i]
             if is_enabled:
                 color = "green" if self.selected_term_idx == i else "blue"
@@ -495,18 +510,18 @@ class Peace_Screen(GameState):
                 
             # Place the 3 main terms left-to-right
             btn_x = self.panel_rect.centerx - 330 + (i * 220)
-            btn_y = self.panel_rect.y + 50
+            btn_y = self.panel_rect.y + 80
             
-            btn = Button(btn_x, btn_y, "medium", color, term, lambda idx=i: self.select_term(idx))
+            btn = Button(btn_x, btn_y, "medium", color, term_str, lambda idx=i: self.select_term(idx))
             if not is_enabled:
                 btn.disabled = True
             self.elements.append(btn)
 
         confirm_text = "Update Offer" if self.is_editing else "Send Proposal"
-        self.elements.append(Button(self.panel_rect.centerx - 100, self.panel_rect.y + 110, "medium", "green", confirm_text, self.confirm))
+        self.elements.append(Button(self.panel_rect.centerx - 100, self.panel_rect.y + 140, "medium", "green", confirm_text, self.confirm))
         
         if self.is_editing:
-            self.elements.append(Button(self.panel_rect.right - 140, self.panel_rect.y + 110, "small", "red", "Cancel Offer", self.revoke_offer))
+            self.elements.append(Button(self.panel_rect.right - 140, self.panel_rect.y + 140, "small", "red", "Cancel Offer", self.revoke_offer))
 
     def select_term(self, idx):
         if self.terms_enabled[idx]:
@@ -637,8 +652,12 @@ class Peace_Screen(GameState):
         pygame.draw.rect(surface, (50, 255, 50), self.panel_rect, 3)
 
         font = fonts.get("heading1")
+        small_font = fonts.get("normal")
         title = font.render(f"Peace Terms: {self.target_nation}", True, (255, 255, 255))
         surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
+
+        acc_surf = small_font.render(getattr(self, 'acceptance_text', ""), True, getattr(self, 'acceptance_color', (200, 200, 200)))
+        surface.blit(acc_surf, (self.panel_rect.centerx - acc_surf.get_width()//2, self.panel_rect.y + 50))
 
         for el in self.elements:
             if getattr(el, 'visible', True):

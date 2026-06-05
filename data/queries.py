@@ -1318,6 +1318,12 @@ def has_wargoal(nation, target_nation, nation_data, map_data=None):
                 return True
     return target_nation in nation_data.get(nation, {}).get("wargoals", {})
 
+def will_ai_accept_peace(target_nation, proposer_nation, peace_type, map_data, nation_data):
+    """Evaluates if the AI will accept the proposed peace deal."""
+    # Currently, the AI handler is hardcoded to accept all peace treaties.
+    # This query acts as a centralized place to expand logic later (e.g. check war score).
+    return True
+
 # ==========================================
 # TKINTER DIALOG HELPERS
 # ==========================================

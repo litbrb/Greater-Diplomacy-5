@@ -381,16 +381,16 @@ class Peace_Screen(GameState):
         their_wargoal = map_screen.nation_data.get(target_nation, {}).get("wargoals", {}).get(map_screen.player_country, {}).get("type", "")
         
         self.terms = [
-            getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)"),
-            getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims"),
-            getattr(c, 'PEACE_SURRENDER', "Surrender"),
+            getattr(c, 'PEACE_SURRENDER'),
+            getattr(c, 'PEACE_WHITE_PEACE'),
+            getattr(c, 'PEACE_DEMAND_CLAIMS'),
             "Don't offer peace"
         ]
         
         self.terms_enabled = [
-            True,
-            my_wargoal == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"),
             my_wargoal != getattr(c, 'WARGOAL_NO_CB', "No Casus Belli") and their_wargoal != getattr(c, 'WARGOAL_NO_CB', "No Casus Belli"),
+            my_wargoal == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"),
+            True,
             True
         ]
         
@@ -408,11 +408,11 @@ class Peace_Screen(GameState):
             
             # Catch raw CEASEFIRE actions from legacy behavior
             if self.selected_term_idx == 3 and pending.get("action") == "CEASEFIRE":
-                self.selected_term_idx = 0
+                self.selected_term_idx = 2
         else:
-            self.selected_term_idx = 0
+            self.selected_term_idx = 2 # Default to Ceasefire
             
-        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 200, c.SCREEN_HEIGHT//2 - 190, 400, 380)
+        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 350, c.SCREEN_HEIGHT//2 - 160, 700, 320)
         self.refresh_ui()
 
     def refresh_ui(self):
@@ -428,7 +428,17 @@ class Peace_Screen(GameState):
             else:
                 color = "grey"
                 
-            btn = Button(self.panel_rect.centerx - 150, self.panel_rect.y + 60 + (i * 55), "new_game", color, term, lambda idx=i: self.select_term(idx))
+            # Place the 3 main terms left-to-right, drop the 4th term to the next row
+            if i < 3:
+                btn_x = self.panel_rect.centerx - 320 + (i * 220)
+                btn_y = self.panel_rect.y + 80
+                btn_size = "medium"
+            else:
+                btn_x = self.panel_rect.centerx - 100
+                btn_y = self.panel_rect.y + 150
+                btn_size = "medium"
+                
+            btn = Button(btn_x, btn_y, btn_size, color, term, lambda idx=i: self.select_term(idx))
             if not is_enabled:
                 btn.disabled = True
             self.elements.append(btn)

@@ -301,7 +301,7 @@ WARGOAL_TAKE_CLAIMS = "Take Claims"
 WARGOAL_NO_CB = "No Casus Belli"
 
 PEACE_SURRENDER = "Surrender"
-PEACE_WHITE_PEACE = "Ceasefire (White Peace)"
+PEACE_WHITE_PEACE = "Ceasefire"
 PEACE_DEMAND_CLAIMS = "Demand Claims"
 
 # ==========================================

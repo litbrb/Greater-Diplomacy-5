@@ -78,7 +78,8 @@ class Declare_War_Screen(GameState):
                     self.selected_wargoal_idx = i
                     break
 
-        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 200, c.SCREEN_HEIGHT//2 - 150, 400, 300)
+        # Widen the panel to fit buttons side-by-side
+        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 250, c.SCREEN_HEIGHT//2 - 160, 500, 320)
         self.refresh_ui()
 
     def refresh_ui(self):
@@ -94,7 +95,21 @@ class Declare_War_Screen(GameState):
             else:
                 color = "grey"
                 
-            btn = Button(self.panel_rect.centerx - 150, self.panel_rect.y + 60 + (i * 55), "new_game", color, opt["label"], lambda idx=i: self.select_wg(idx))
+            # Place the first two buttons left and right, and the 3rd centered below
+            if i == 0:
+                btn_x = self.panel_rect.centerx - 210
+                btn_y = self.panel_rect.y + 80
+                btn_size = "medium"
+            elif i == 1:
+                btn_x = self.panel_rect.centerx + 10
+                btn_y = self.panel_rect.y + 80
+                btn_size = "medium"
+            else:
+                btn_x = self.panel_rect.centerx - 100
+                btn_y = self.panel_rect.y + 150
+                btn_size = "medium"
+
+            btn = Button(btn_x, btn_y, btn_size, color, opt["label"], lambda idx=i: self.select_wg(idx))
             if not opt["enabled"]:
                 btn.disabled = True
             self.elements.append(btn)

@@ -40,7 +40,10 @@ def save_map_data(self, save_name=None):
         "default_research": getattr(self, "default_research", None),
         "nation_data": self.nation_data,
         "provinces": {},
-        "scenario_settings": getattr(self, "scenario_settings", {"fog_of_war": c.DEFAULT_FOG_OF_WAR})
+        "scenario_settings": getattr(self, "scenario_settings", {
+            "fog_of_war": getattr(c, 'DEFAULT_FOG_OF_WAR', True),
+            "casus_belli_required": getattr(c, 'DEFAULT_CASUS_BELLI', True)
+        })
     }
     
     for data in self.map_data.values():

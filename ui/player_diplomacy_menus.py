@@ -49,7 +49,9 @@ class Declare_War_Screen(GameState):
         # Determine available wargoals to choose from
         take_claims_enabled = has_wg and (wg_type == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims") or not wg_type)
         
-        cb_required = map_screen.scenario_settings.get("casus_belli_required", getattr(c, 'CASUS_BELLI_REQUIRED', False))
+        # Safely parse the setting in case it was saved as a string in the JSON
+        raw_cb_setting = map_screen.scenario_settings.get("casus_belli_required", getattr(c, 'CASUS_BELLI_REQUIRED', True))
+        cb_required = False if str(raw_cb_setting).lower() == "false" else bool(raw_cb_setting)
 
         # Spectator / Override catch: if it's the spectator, let them force it anyway
         if map_screen.player_country == "Spectator":

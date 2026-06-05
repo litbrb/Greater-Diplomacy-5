@@ -72,10 +72,18 @@ CREDITS_DATA = [
 
 SHOW_FPS = True
 
+# ==========================================
+# SCENARIO SETTINGS
+# ==========================================
+
 # --- FOG OF WAR ---
 USE_FOG_OF_WAR = True # Toggle Fog of War mechanics on or off
 DEFAULT_FOG_OF_WAR = True
 FOG_OF_WAR_ALPHA = 160 # How dark unseen provinces get (0-255)
+
+# --- CASUS BELLI ---
+CASUS_BELLI_REQUIRED = True
+DEFAULT_CASUS_BELLI = True
 
 # ==========================================
 # DIPLOMATIC POPUPS
@@ -648,7 +656,3 @@ SAVE_INDENT = 4
 # Camera Settings
 DEFAULT_MOUSE_BUTTON_TOGGLE = "RIGHT"
 DRAG_MOUSE_BUTTON_TOGGLE = DEFAULT_MOUSE_BUTTON_TOGGLE # Options: "RIGHT", "LEFT", "BOTH"
-
-
-# --- CASUS BELLI ---
-CASUS_BELLI_REQUIRED = True

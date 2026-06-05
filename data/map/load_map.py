@@ -34,8 +34,12 @@ def load_map_assets(self, load_path):
     # --- UNIFIED SETTINGS LOADING ---
     scenario_settings = queries.get_scenario_settings()
     # Ensure we always have a dictionary to reference
-    self.scenario_settings = scenario_settings if scenario_settings is not None else {"fog_of_war": c.DEFAULT_FOG_OF_WAR}
-    c.USE_FOG_OF_WAR = self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)
+    self.scenario_settings = scenario_settings if scenario_settings is not None else {
+        "fog_of_war": getattr(c, 'DEFAULT_FOG_OF_WAR', True),
+        "casus_belli_required": getattr(c, 'DEFAULT_CASUS_BELLI', True)
+    }
+    c.USE_FOG_OF_WAR = self.scenario_settings.get("fog_of_war", getattr(c, 'DEFAULT_FOG_OF_WAR', True))
+    c.CASUS_BELLI_REQUIRED = self.scenario_settings.get("casus_belli_required", getattr(c, 'DEFAULT_CASUS_BELLI', True))
     print(f"[SYSTEM] Fog of War set to: {c.USE_FOG_OF_WAR}")
 
     # --- PROCEDURAL INTERCEPT ---
@@ -97,7 +101,8 @@ def load_map_assets(self, load_path):
     # 3. OVERRIDE: If we are loading an existing save file, prefer settings from inside the save
     if save_meta and "scenario_settings" in save_meta:
         self.scenario_settings = save_meta["scenario_settings"]
-        c.USE_FOG_OF_WAR = self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)
+        c.USE_FOG_OF_WAR = self.scenario_settings.get("fog_of_war", getattr(c, 'DEFAULT_FOG_OF_WAR', True))
+        c.CASUS_BELLI_REQUIRED = self.scenario_settings.get("casus_belli_required", getattr(c, 'DEFAULT_CASUS_BELLI', True))
 
     if load_path:
         history_path = os.path.join(load_path, "history.json")

@@ -99,7 +99,13 @@ class Map(GameState):
             c.DRAG_MOUSE_BUTTON_TOGGLE = self.controller.drag_mouse_button_toggle
 
         # Capture settings passed from New_Game
-        self.scenario_settings = map_settings if map_settings else {"fog_of_war": c.DEFAULT_FOG_OF_WAR}
+        if map_settings:
+            self.scenario_settings = map_settings
+        elif not hasattr(self, 'scenario_settings'):
+            self.scenario_settings = {
+                "fog_of_war": getattr(c, 'DEFAULT_FOG_OF_WAR', True),
+                "casus_belli_required": getattr(c, 'DEFAULT_CASUS_BELLI', True)
+            }
 
         # --- 3. Visuals & UI Setup ---
         self.bg_color = (20, 20, 20)

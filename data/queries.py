@@ -1308,8 +1308,14 @@ def calculate_justification_time(nation, target_prov_ids, id_to_province):
             time += 1
     return time
 
-def has_wargoal(nation, target_nation, nation_data):
-    """Returns True if the nation has a justified wargoal against the target."""
+def has_wargoal(nation, target_nation, nation_data, map_data=None):
+    """Returns True if the nation has active claims on the target, or a justified wargoal."""
+    if map_data:
+        claims = nation_data.get(nation, {}).get("claims", [])
+        if claims:
+            for prov in map_data.values():
+                if prov.get("owner") == target_nation and prov["id"] in claims:
+                    return True
     return target_nation in nation_data.get(nation, {}).get("wargoals", {})
 
 # ==========================================

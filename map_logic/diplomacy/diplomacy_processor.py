@@ -773,3 +773,21 @@ def process_diplomacy_turn(self):
         pd = self.nation_data.get(sender, {}).setdefault("pending_diplomacy", {})
         if receiver not in pd or (isinstance(pd[receiver], dict) and pd[receiver].get("turns", 0) == 0):
             pd[receiver] = {"action": act, "turns": tns, "timer": 0, "message": msg}
+
+    # --- PROCESS CLAIM QUEUES ---
+    for country_name, data in list(self.nation_data.items()):
+        if not isinstance(data, dict): 
+            continue
+            
+        claim_queue = data.get("claim_queue", [])
+        if claim_queue:
+            current_claim = claim_queue[0]
+            current_claim["turns_left"] -= 1
+            
+            if current_claim["turns_left"] <= 0:
+                prov_id = current_claim["prov_id"]
+                data.setdefault("claims", []).append(prov_id)
+                claim_queue.pop(0)
+                
+                if country_name == self.player_country:
+                    self.show_feedback(f"Claim on Province {prov_id} complete!")

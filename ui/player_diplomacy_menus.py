@@ -42,12 +42,7 @@ class Declare_War_Screen(GameState):
         self.map_screen = map_screen
         self.target_nation = target_nation
         
-        wargoals = map_screen.nation_data.get(map_screen.player_country, {}).get("wargoals", {}).get(target_nation, {})
-        has_wg = queries.has_wargoal(map_screen.player_country, target_nation, map_screen.nation_data)
-        wg_type = wargoals.get("type", "") if has_wg else ""
-        
-        # Determine available wargoals to choose from
-        take_claims_enabled = has_wg and (wg_type == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims") or not wg_type)
+        has_wg = queries.has_wargoal(map_screen.player_country, target_nation, map_screen.nation_data, map_screen.map_data)
         
         # Safely parse the setting in case it was saved as a string in the JSON
         raw_cb_setting = map_screen.scenario_settings.get("casus_belli_required", getattr(c, 'CASUS_BELLI_REQUIRED', True))
@@ -55,11 +50,11 @@ class Declare_War_Screen(GameState):
 
         # Spectator / Override catch: if it's the spectator, let them force it anyway
         if map_screen.player_country == "Spectator":
-            take_claims_enabled = True
+            has_wg = True
             cb_required = False
 
         self.wargoal_options = [
-            {"label": getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"), "enabled": take_claims_enabled},
+            {"label": getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"), "enabled": has_wg},
             {"label": getattr(c, 'WARGOAL_NO_CB', "No Casus Belli"), "enabled": not cb_required},
             {"label": "Don't Declare War", "enabled": True}
         ]
@@ -176,121 +171,38 @@ class Declare_War_Screen(GameState):
                 el.draw(surface)
 
 # ==========================================
-# JUSTIFY WARGOAL SCREEN
+# CLAIMS SCREEN
 # ==========================================
 
-class Justify_Screen(GameState):
-    def __init__(self, map_screen, target_nation):
+class Claims_Screen(GameState):
+    def __init__(self, map_screen):
         super().__init__()
         self.map_screen = map_screen
-        self.target_nation = target_nation
-        
-        self.at_war = queries.are_at_war(map_screen.player_country, target_nation, map_screen.nation_data)
-        self.has_wargoal = queries.has_wargoal(map_screen.player_country, target_nation, map_screen.nation_data)
-        
-        self.valid_targets = queries.get_valid_claim_targets(map_screen.player_country, target_nation, map_screen.map_data)
-        self.valid_ids = [p["id"] for p in self.valid_targets]
-        
-        # Check for existing justification
-        self.is_editing = False
-        self.original_selected_ids = []
-        self.remaining_turns = 0
-        self.original_total_turns = 0
-        
-        pending = map_screen.nation_data.get(map_screen.player_country, {}).get("pending_diplomacy", {}).get(target_nation, {})
-        player_claims = map_screen.nation_data.get(map_screen.player_country, {}).get("claims", [])
-        
-        self.view_only_mode = False
-        
-        if isinstance(pending, dict) and pending.get("action") == "JUSTIFY_WARGOAL":
-            self.is_editing = True
-            self.selected_ids = [int(x) for x in pending.get("message", "").split(",") if x]
-            self.original_selected_ids = list(self.selected_ids)
-            self.remaining_turns = pending.get("timer", 0)
-            self.original_total_turns = queries.calculate_justification_time(map_screen.player_country, self.original_selected_ids, map_screen.id_to_province)
-            self.view_only_mode = True # Default to view-only when opening a processing justification
-        elif self.has_wargoal:
-            self.selected_ids = [pid for pid in self.valid_ids if pid in player_claims]
-            self.original_selected_ids = list(self.selected_ids)
-            self.view_only_mode = True # Default to view-only when opening a completed wargoal
-        else:
-            self.selected_ids = []
-            
-        if self.at_war:
-            self.view_only_mode = True # Always view-only during war
-        
-        # Left Panel mimic
+        self.player = map_screen.player_country
         self.panel_rect = pygame.Rect(80, 120, 380, c.SCREEN_HEIGHT - 240)
         self.refresh_ui()
 
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
         
-        if self.at_war:
-            # Read-only mode, no confirm buttons
-            pass
-        elif self.is_editing:
-            # btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 130, "new_game", "orange", "Update Justification", self.confirm)
-            btn_cancel = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "red", "Cancel Justification", self.cancel_justification)
-            self.elements.extend([btn_cancel])
-        elif self.has_wargoal:
-            if self.view_only_mode:
-                btn_edit = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "blue", "Edit Justification", self.enable_editing)
-                self.elements.append(btn_edit)
-            else:
-                btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 130, "new_game", "orange", "Confirm Edit", self.confirm)
-                btn_cancel = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "red", "Cancel", self.cancel_edit)
-                self.elements.extend([btn_confirm, btn_cancel])
-        else:
-            btn_confirm = Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "orange", "Start Justification", self.confirm)
-            self.elements.append(btn_confirm)
-            
-    def enable_editing(self):
-        self.view_only_mode = False
-        self.refresh_ui()
-        
-    def cancel_edit(self):
-        self.view_only_mode = True
-        self.selected_ids = list(self.original_selected_ids)
-        self.refresh_ui()
-                
-    def confirm(self):
-        if not self.selected_ids and not self.has_wargoal and not self.is_editing:
-            self.map_screen.show_feedback("Select at least one province!")
-            return
-            
-        new_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.selected_ids, self.map_screen.id_to_province)
-        if self.is_editing:
-            elapsed = self.original_total_turns - self.remaining_turns
-            final_timer = max(1, new_total_turns - elapsed)
-        elif self.has_wargoal:
-            # Calculate the time for ONLY the new provinces being added
-            original_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.original_selected_ids, self.map_screen.id_to_province)
-            final_timer = max(1, new_total_turns - original_total_turns + 1)
-        else:
-            final_timer = new_total_turns
-            
-        pending = self.map_screen.nation_data[self.map_screen.player_country].setdefault("pending_diplomacy", {})
-
-        # Manually set the dictionary to bypass the toggle/delete logic in toggle_diplomacy_action
-        pending[self.target_nation] = {
-            "action": "JUSTIFY_WARGOAL",
-            "turns": 0,
-            "timer": final_timer,
-            "message": ",".join(map(str, self.selected_ids))
-        }
-        self.map_screen.show_feedback("Justification Updated!" if self.is_editing else "Justification Started!")
-        self.done = True
-
-    def cancel_justification(self):
-        pending = self.map_screen.nation_data[self.map_screen.player_country].get("pending_diplomacy", {})
-        if self.target_nation in pending:
-            del pending[self.target_nation]
-        self.map_screen.show_feedback("Justification Cancelled.")
-        self.done = True
-
     def exit_screen(self):
         self.done = True
+
+    def handle_events(self, events):
+        for event in events:
+            for el in self.elements:
+                el.handle_event(event)
+
+            on_ui = self.panel_rect.collidepoint(pygame.mouse.get_pos()) or self.map_screen.top_bar_rect.collidepoint(pygame.mouse.get_pos())
+            
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if not on_ui:
+                    dest = self.get_clicked_province(event.pos)
+                    if dest and dest.get("owner") != self.player and dest.get("owner") not in c.UNPLAYABLE_NATIONS:
+                        self.toggle_claim(dest)
+                        
+            elif event.type in (pygame.MOUSEWHEEL, pygame.MOUSEMOTION):
+                self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
 
     def get_clicked_province(self, mouse_pos):
         cam = self.map_screen.camera
@@ -302,48 +214,45 @@ class Justify_Screen(GameState):
             return self.map_screen.map_data.get((color.r, color.g, color.b))
         return None
 
-    def handle_events(self, events):
-        for event in events:
-            # Sub-UI Logic checks
-            on_ui = self.panel_rect.collidepoint(pygame.mouse.get_pos()) or self.map_screen.top_bar_rect.collidepoint(pygame.mouse.get_pos())
-            
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if not on_ui and not self.view_only_mode:
-                    dest = self.get_clicked_province(event.pos)
-                    if dest and dest["id"] in self.valid_ids:
-                        if dest["id"] in self.selected_ids:
-                            self.selected_ids.remove(dest["id"])
-                        else:
-                            self.selected_ids.append(dest["id"])
-                        self.refresh_ui()
-            
-            # Map Hover feedback
-            elif event.type == pygame.MOUSEMOTION:
-                dest = self.get_clicked_province(event.pos)
-                if dest and dest["id"] in self.valid_ids and not self.panel_rect.collidepoint(event.pos):
-                    self.hovered_prov = dest
-                else:
-                    self.hovered_prov = None
-
-            # Route panning and scrolling back to the active world map camera
-            if event.type in (pygame.MOUSEWHEEL, pygame.MOUSEMOTION):
-                self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
-
-            for el in self.elements:
-                el.handle_event(event)
+    def toggle_claim(self, dest):
+        pid = dest["id"]
+        data = self.map_screen.nation_data.get(self.player)
+        if not data: return
+        
+        claims = data.setdefault("claims", [])
+        queue = data.setdefault("claim_queue", [])
+        
+        # Revoke existing claim
+        if pid in claims:
+            claims.remove(pid)
+            self.map_screen.show_feedback("Claim revoked.")
+            self.refresh_ui()
+            return
+        
+        # Cancel claim in progress
+        for i, q in enumerate(queue):
+            if q["prov_id"] == pid:
+                queue.pop(i)
+                self.map_screen.show_feedback("Claim removed from queue.")
+                self.refresh_ui()
+                return
+        
+        # Begin fabricating a new claim
+        is_core = self.player in dest.get("cores", [])
+        turns = getattr(c, 'CLAIM_TURN_CORE', 1) if is_core else getattr(c, 'CLAIM_TURN_NON_CORE', 2)
+        queue.append({"prov_id": pid, "turns_left": turns})
+        self.map_screen.show_feedback(f"Claim queued ({turns} turns).")
+        self.refresh_ui()
 
     def update(self):
         super().update()
         self.map_screen.camera.update(self.map_screen, c.SCREEN_HEIGHT)
 
     def draw(self, surface):
-        # FIX: Wipe the frame clean to prevent the "Solitaire Effect" smearing through the transparent oceans
         surface.fill(self.map_screen.bg_color)
-        
         temp_prov = self.map_screen.selected_province
         self.map_screen.selected_province = None
         self.map_screen.hide_raised_rect = True
-
         self.map_screen.hide_tooltip = True
         self.map_screen.hide_resource_hud = True
         self.map_screen.hide_minimap = True
@@ -356,98 +265,80 @@ class Justify_Screen(GameState):
         self.map_screen.hide_minimap = False
         self.map_screen.selected_province = temp_prov
 
-        # Draw Ellipse target highlights for claimed targets
-        for pid in self.selected_ids:
-            prov = self.map_screen.id_to_province.get(pid)
-            if prov:
-                cx, cy = prov["center"]
-                for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
-                    sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
-                    sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * getattr(self.map_screen.camera, 'tilt_factor', 1.0) + self.map_screen.top_ui_height
-                    if -100 < sx < c.SCREEN_WIDTH + 100:
-                        radius_x = max(2, int(4 * self.map_screen.camera.zoom))
-                        radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else radius_x
-                        pygame.draw.ellipse(surface, (255, 165, 0), pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
-
-        # Draw Hovered target
-        if getattr(self, 'hovered_prov', None):
-            cx, cy = self.hovered_prov["center"]
-            for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
-                sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
-                sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * getattr(self.map_screen.camera, 'tilt_factor', 1.0) + self.map_screen.top_ui_height
-                if -100 < sx < c.SCREEN_WIDTH + 100:
-                    radius_x = max(6, int(8 * self.map_screen.camera.zoom))
-                    radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else radius_x
-                    pygame.draw.ellipse(surface, (255, 255, 255), pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
-
-        # Title
-        font = fonts.get("heading1")
-        title_str = f"View War Goal: {self.target_nation}" if self.view_only_mode else f"Justify Wargoal: {self.target_nation}"
-        title = font.render(title_str, True, (255, 255, 255))
-        surface.blit(title, (c.SCREEN_WIDTH//2 - title.get_width()//2, c.TOP_BAR_UI_CENTER_Y))
-
-        # Panel
+        # Draw territorial highlights
+        data = self.map_screen.nation_data.get(self.player, {})
+        claims = data.get("claims", [])
+        queue = data.get("claim_queue", [])
+        
+        for pid in claims:
+            self.draw_highlight(surface, pid, (255, 215, 0)) # Gold (Claimed)
+            
+        for q in queue:
+            self.draw_highlight(surface, q["prov_id"], (0, 150, 255)) # Blue (In Queue)
+            
+        # Draw Information Panel
         panel_surf = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)
         panel_surf.fill((30, 30, 50, 230))
         surface.blit(panel_surf, self.panel_rect.topleft)
-        pygame.draw.rect(surface, (200, 150, 50), self.panel_rect, 2)
+        pygame.draw.rect(surface, (100, 150, 255), self.panel_rect, 2)
 
+        font = fonts.get("heading1")
         sub_font = fonts.get("heading2")
         tiny_font = fonts.get("normal")
 
-        surface.blit(sub_font.render("Selected Provinces:", True, (255, 255, 255)), (self.panel_rect.x + 20, self.panel_rect.y + 20))
+        title = font.render("Territory Claims", True, (255, 255, 255))
+        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 20))
         
-        y_off = self.panel_rect.y + 60
-        if not self.selected_ids:
-            surface.blit(tiny_font.render("No provinces selected.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
+        y_off = self.panel_rect.y + 70
+        surface.blit(sub_font.render("Queued Claims:", True, (150, 200, 255)), (self.panel_rect.x + 20, y_off))
+        y_off += 30
+        
+        if not queue:
+            surface.blit(tiny_font.render("No claims queued.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
+            y_off += 25
         else:
-            # Cut down max items to 10 to ensure it doesn't overlap our newly placed buttons!
-            for i, pid in enumerate(self.selected_ids[:10]):
-                is_core = self.map_screen.player_country in self.map_screen.id_to_province[pid].get("cores", [])
-                core_str = " (CORE)" if is_core else ""
-                txt = tiny_font.render(f"- Province {pid}{core_str}", True, (200, 200, 200))
+            for q in queue:
+                prov = self.map_screen.id_to_province.get(q["prov_id"])
+                owner = prov.get("owner", "Unknown") if prov else "Unknown"
+                owner_name = self.map_screen.nation_data.get(owner, {}).get("name", owner)
+                txt = tiny_font.render(f"- Prov {q['prov_id']} ({owner_name}): {q['turns_left']} turns left", True, (200, 200, 200))
                 surface.blit(txt, (self.panel_rect.x + 30, y_off))
                 y_off += 25
-            
-            if len(self.selected_ids) > 10:
-                txt = tiny_font.render(f"...and {len(self.selected_ids)-10} more", True, (150, 150, 150))
+                
+        y_off += 10
+        surface.blit(sub_font.render("Active Claims:", True, (255, 215, 0)), (self.panel_rect.x + 20, y_off))
+        y_off += 30
+        
+        if not claims:
+            surface.blit(tiny_font.render("No active claims.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
+        else:
+            display_claims = claims[:15]
+            for pid in display_claims:
+                prov = self.map_screen.id_to_province.get(pid)
+                owner = prov.get("owner", "Unknown") if prov else "Unknown"
+                owner_name = self.map_screen.nation_data.get(owner, {}).get("name", owner)
+                txt = tiny_font.render(f"- Prov {pid} ({owner_name})", True, (200, 200, 200))
+                surface.blit(txt, (self.panel_rect.x + 30, y_off))
+                y_off += 25
+            if len(claims) > 15:
+                txt = tiny_font.render(f"...and {len(claims)-15} more", True, (150, 150, 150))
                 surface.blit(txt, (self.panel_rect.x + 30, y_off))
 
-        if self.at_war:
-            time_txt = sub_font.render("War Goal Active (Read-Only)", True, (200, 200, 200))
-            time_y = self.panel_rect.bottom - 110
-        # ADDED 'and not self.is_editing' so it shows the edit timer instead of "War Goal Ready"
-        elif self.has_wargoal and self.view_only_mode and not self.is_editing: 
-            time_txt = sub_font.render("War Goal Ready", True, (100, 255, 100))
-            time_y = self.panel_rect.bottom - 110
-        else:
-            if not self.selected_ids and not self.has_wargoal and not self.is_editing:
-                current_estimated_turns = 0
-            else:
-                new_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.selected_ids, self.map_screen.id_to_province)
-                if self.is_editing:
-                    elapsed = self.original_total_turns - self.remaining_turns
-                    current_estimated_turns = max(1, new_total_turns - elapsed)
-                elif self.has_wargoal:
-                    original_total_turns = queries.calculate_justification_time(self.map_screen.player_country, self.original_selected_ids, self.map_screen.id_to_province)
-                    current_estimated_turns = max(1, new_total_turns - original_total_turns + 1)
-                else:
-                    current_estimated_turns = new_total_turns
-                    
-            if self.is_editing and self.selected_ids == self.original_selected_ids:
-                time_txt = sub_font.render(f"Time Remaining: {self.remaining_turns} turns", True, (255, 100, 100))
-            else:
-                time_txt = sub_font.render(f"Estimated Time: {current_estimated_turns} turns", True, (255, 100, 100))
-                
-            is_two_buttons = (self.has_wargoal and not self.view_only_mode)
-            time_y = self.panel_rect.bottom - (170 if is_two_buttons else 110)
-
-        surface.blit(time_txt, (self.panel_rect.centerx - time_txt.get_width()//2, time_y))
-
-        # Draw UI elements manually to prevent super().draw() from filling the screen with a solid background color
         for el in self.elements:
             if getattr(el, 'visible', True):
                 el.draw(surface)
+
+    def draw_highlight(self, surface, pid, color):
+        prov = self.map_screen.id_to_province.get(pid)
+        if not prov: return
+        cx, cy = prov["center"]
+        for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
+            sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
+            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * getattr(self.map_screen.camera, 'tilt_factor', 1.0) + self.map_screen.top_ui_height
+            if -100 < sx < c.SCREEN_WIDTH + 100:
+                radius_x = max(2, int(4 * self.map_screen.camera.zoom))
+                radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else radius_x
+                pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
 
 # ==========================================
 # CEASEFIRE / PEACE SCREEN
@@ -595,8 +486,8 @@ def open_wargoal_selection_menu(map_screen, target_nation):
     screen = Declare_War_Screen(map_screen, target_nation)
     _run_pygame_sub_screen(map_screen, screen)
 
-def open_justify_menu(map_screen, target_nation):
-    screen = Justify_Screen(map_screen, target_nation)
+def open_claims_menu(map_screen):
+    screen = Claims_Screen(map_screen)
     _run_pygame_sub_screen(map_screen, screen)
 
 def open_peace_menu(map_screen, target_nation):

@@ -80,7 +80,7 @@ def render_buttons(self):
     self.btn_gp_settings = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 6, "left_ui_button", "pink", "Settings", lambda: self.change_state("SETTINGS"), image=icons.get("settings"), show_text=True)
     self.btn_gp_music = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 7, "left_ui_button", "pink", "Music", lambda: self.change_state("MUSIC_PLAYER"), image=icons.get("music"), show_text=True)
     self.btn_gp_faction = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 8, "left_ui_button", "pink", "Faction", lambda: self.change_state("FACTION"), image=icons.get("faction"), show_text=True)
-    self.btn_gp_claims = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 9, "left_ui_button", "pink", "Claims", lambda: self.change_state("FACTION"), image=icons.get("paper"), show_text=True)
+    self.btn_gp_claims = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 9, "left_ui_button", "pink", "Claims", lambda: player_diplomacy_actions.open_claims_menu(self), image=icons.get("paper"), show_text=True)
 
     # NEW: Register the Slider below the Faction button
     slider_y = int(start_y_val + c.LEFT_UI_BAR_STEP_Y * 11)
@@ -98,7 +98,6 @@ def render_buttons(self):
 
     # Foreign Set
     self.btn_declare_war = Button(diplo_x, c.ACTION_BTN_START_Y, "diplomatic", "red", "Declare War", lambda: player_diplomacy_actions.handle_declare_war(self))
-    self.btn_justify_war = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 1, "diplomatic", "orange", "Justify War Goal", lambda: player_diplomacy_actions.handle_justify_war(self))
     self.btn_join_wars = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "orange", "Join Wars", lambda: player_diplomacy_actions.handle_join_wars(self))
     self.btn_call_to_arms = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 4, "diplomatic", "red", "Call to Arms", lambda: player_diplomacy_actions.handle_call_to_arms(self))
     self.btn_fac_invite = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 5, "diplomatic", "green", "Invite to Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "FACTION_INVITE"))
@@ -136,7 +135,7 @@ def render_buttons(self):
         self.btn_ed_unit, self.btn_ed_refresh, self.btn_ed_date, self.btn_ed_diplo,
         self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
         self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_gp_claims, self.btn_go_orders, self.btn_go_production,
-        self.btn_declare_war, self.btn_justify_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
+        self.btn_declare_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
         self.btn_fac_join_req, self.btn_fac_kick, self.btn_fac_create,
         self.btn_accept_req, self.btn_reject_req, self.btn_force_war, self.btn_force_peace,
         self.btn_spec_create_fac, self.btn_spec_join_fac, self.btn_spec_invite_fac, self.btn_spec_leave_fac,
@@ -335,16 +334,6 @@ def update_button_states(map_screen):
                     dw_text = "Ceasefire / Peace" if at_war else "Declare War"
                     
                 set_btn(map_screen.btn_declare_war, True, dw_enabled, dw_text, "red")
-                
-                # Justify wargoal UI
-                has_wargoal = queries.has_wargoal(map_screen.player_country, owner, map_screen.nation_data)
-                
-                if pending_action == "JUSTIFY_WARGOAL":
-                    set_btn(map_screen.btn_justify_war, True, True, "Edit Justification", "orange")
-                elif has_wargoal:
-                    set_btn(map_screen.btn_justify_war, True, True, "View War Goal", "orange")
-                else:
-                    set_btn(map_screen.btn_justify_war, True, not at_war, "Justify War Goal", "orange")
                 
                 target_wars = queries.get_enemies(owner, map_screen.nation_data)
                 player_wars = queries.get_enemies(map_screen.player_country, map_screen.nation_data)

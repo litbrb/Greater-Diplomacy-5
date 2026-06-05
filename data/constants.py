@@ -294,6 +294,9 @@ DEFAULT_1910_TECH = {
 # WARGOALS & PEACE TREATIES
 # ==========================================
 
+CLAIM_TURN_CORE = 1
+CLAIM_TURN_NON_CORE = 2
+
 WARGOAL_TAKE_CLAIMS = "Take Claims"
 WARGOAL_NO_CB = "No Casus Belli"
 

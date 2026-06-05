@@ -386,7 +386,7 @@ def process_basic_proactive_ai(map_screen):
                             
                             # Random chance to actually declare war
                             if random.random() <= getattr(c, 'AI_WAR_DECLARATION_CHANCE', 0.50):
-                                has_wargoal = queries.has_wargoal(ai_name, target, map_screen.nation_data)
+                                has_wargoal = queries.has_wargoal(ai_name, target, map_screen.nation_data, map_screen.map_data)
                                 if has_wargoal:
                                     if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
                                         existing = pending.get(target, {})
@@ -412,21 +412,20 @@ def process_basic_proactive_ai(map_screen):
                                             })
                                             break
                                 else:
-                                    if not queries.is_ai_diplo_on_cooldown(ai_name, target, "JUSTIFY_WARGOAL", map_screen.nation_data):
+                                    if not queries.is_ai_diplo_on_cooldown(ai_name, target, "MAKE_CLAIM", map_screen.nation_data):
                                         core_ids = []
                                         for prov in map_screen.map_data.values():
                                             if prov.get("owner") == target and ai_name in prov.get("cores", []):
                                                 core_ids.append(prov["id"])
 
                                         if core_ids:
-                                            time_needed = queries.calculate_justification_time(ai_name, core_ids, map_screen.id_to_province)
-                                            pending[target] = {
-                                                "action": "JUSTIFY_WARGOAL",
-                                                "turns": 0,
-                                                "timer": time_needed,
-                                                "message": ",".join(map(str, core_ids))
-                                            }
-                                            queries.set_ai_diplo_cooldown(ai_name, target, "JUSTIFY_WARGOAL", map_screen.nation_data, duration=time_needed + 5)
+                                            queue = map_screen.nation_data[ai_name].setdefault("claim_queue", [])
+                                            claims = map_screen.nation_data[ai_name].setdefault("claims", [])
+                                            for cid in core_ids:
+                                                if cid not in claims and not any(q["prov_id"] == cid for q in queue):
+                                                    queue.append({"prov_id": cid, "turns_left": getattr(c, 'CLAIM_TURN_CORE', 1)})
+                                            
+                                            queries.set_ai_diplo_cooldown(ai_name, target, "MAKE_CLAIM", map_screen.nation_data, duration=5)
                                             break
                         
         # --- Update Progress Bar ---

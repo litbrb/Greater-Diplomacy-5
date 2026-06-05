@@ -19,18 +19,9 @@ def handle_declare_war(map_screen):
     from ui.player_diplomacy_menus import open_wargoal_selection_menu
     open_wargoal_selection_menu(map_screen, target)
 
-def handle_justify_war(map_screen):
-    target = map_screen.selected_province.get("owner")
-    at_war = queries.are_at_war(map_screen.player_country, target, map_screen.nation_data)
-    has_wargoal = queries.has_wargoal(map_screen.player_country, target, map_screen.nation_data)
-    
-    if at_war and not has_wargoal:
-        map_screen.show_feedback("Already at war!")
-        return
-        
-    # Direct import to bypass __init__.py namespace issues
-    from ui.player_diplomacy_menus import open_justify_menu
-    open_justify_menu(map_screen, target)
+def open_claims_menu(map_screen):
+    from ui.player_diplomacy_menus import open_claims_menu
+    open_claims_menu(map_screen)
 
 def handle_ceasefire(map_screen):
     target = map_screen.selected_province.get("owner")

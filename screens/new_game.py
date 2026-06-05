@@ -73,6 +73,7 @@ class New_Game(GameState):
         self.selected_save_path = os.path.join(directory, scenario_name)
         # Pass the settings to the Map class
         self.map_settings = queries.get_scenario_settings() 
+        self.set_sub_state("CATEGORY")
         self.next_state = "MAP"
         self.done = True
 
@@ -178,6 +179,7 @@ class New_Game(GameState):
         self.done = True
 
     def exit_to_menu(self):
+        self.set_sub_state("CATEGORY")
         self.next_state = "MENU"
         self.done = True
     
@@ -188,5 +190,6 @@ class New_Game(GameState):
             self.exit_to_menu()
 
     def start_random_scenario(self):
+        self.set_sub_state("CATEGORY")
         self.next_state = "RANDOM_SETUP"
         self.done = True

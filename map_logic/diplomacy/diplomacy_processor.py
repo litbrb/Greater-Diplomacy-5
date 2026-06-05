@@ -805,6 +805,12 @@ def process_diplomacy_turn(self):
                     claims = data.get("claims", [])
                     if prov_id in claims:
                         claims.remove(prov_id)
+                        
+                    # --- NEW: Strip the core from the province map data! ---
+                    prov = self.id_to_province.get(prov_id)
+                    if prov and country_name in prov.get("cores", []):
+                        prov["cores"].remove(country_name)
+                        
                     revoke_queue.pop(i)
                     
                     if country_name == self.player_country:

@@ -195,6 +195,10 @@ class Claims_Screen(GameState):
         self.map_screen = map_screen
         self.player = map_screen.player_country
         self.panel_rect = pygame.Rect(80, 120, 380, c.SCREEN_HEIGHT - 240)
+        
+        self.scroll_y = 0
+        self.max_scroll = 0
+        
         self.refresh_ui()
 
     def refresh_ui(self):
@@ -216,7 +220,14 @@ class Claims_Screen(GameState):
                     if dest and dest.get("owner") != self.player and dest.get("owner") not in c.UNPLAYABLE_NATIONS:
                         self.toggle_claim(dest)
                         
-            elif event.type in (pygame.MOUSEWHEEL, pygame.MOUSEMOTION):
+            elif event.type == pygame.MOUSEWHEEL:
+                if on_ui:
+                    self.scroll_y += event.y * 30
+                    self.scroll_y = max(self.max_scroll, min(0, self.scroll_y))
+                else:
+                    self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
+                    
+            elif event.type == pygame.MOUSEMOTION:
                 self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
 
     def get_clicked_province(self, mouse_pos):
@@ -234,11 +245,7 @@ class Claims_Screen(GameState):
         data = self.map_screen.nation_data.get(self.player)
         if not data: return
         
-        # --- NEW CORE CHECK ---
         is_core = self.player in dest.get("cores", [])
-        if is_core:
-            self.map_screen.show_feedback("Core territories are automatically claimed!")
-            return
         
         claims = data.setdefault("claims", [])
         queue = data.setdefault("claim_queue", [])
@@ -252,8 +259,8 @@ class Claims_Screen(GameState):
                 self.refresh_ui()
                 return
 
-        # Revoke existing claim (takes 1 turn)
-        if pid in claims:
+        # Revoke existing claim or core (takes 1 turn)
+        if pid in claims or is_core:
             revoke_queue.append({"prov_id": pid, "turns_left": 1})
             self.map_screen.show_feedback("Revoking claim (1 turn).")
             self.refresh_ui()
@@ -267,7 +274,7 @@ class Claims_Screen(GameState):
                 self.refresh_ui()
                 return
         
-        # Begin fabricating a new claim
+        # Begin fabricating a new claim (Cores are instant, so queued claims are always non-cores)
         turns = getattr(c, 'CLAIM_TURN_NON_CORE', 2)
         queue.append({"prov_id": pid, "turns_left": turns})
         self.map_screen.show_feedback(f"Claim queued ({turns} turns).")
@@ -336,7 +343,24 @@ class Claims_Screen(GameState):
         title = font.render("Territory Claims", True, (255, 255, 255))
         surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 20))
         
-        y_off = self.panel_rect.y + 70
+        # Combine manually claimed tiles and foreign-owned cores into one list
+        # Order forced: Manual non-core claims first, then Auto-Cores at the bottom
+        display_claims = claims + [c_id for c_id in core_ids if c_id not in claims]
+        
+        # --- SCROLLING LOGIC ---
+        content_h = 40 + (len(queue) * 25 if queue else 25) + 40 + (len(display_claims) * 25 if display_claims else 25)
+        viewport_h = self.panel_rect.height - 65
+        self.max_scroll = min(0, viewport_h - content_h - 20)
+        self.scroll_y = max(self.max_scroll, min(0, self.scroll_y))
+        
+        # Clip rendering so scrolling text doesn't bleed out of the panel
+        clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 60, self.panel_rect.width - 10, viewport_h)
+        old_clip = surface.get_clip()
+        surface.set_clip(clip_rect)
+        
+        y_off = self.panel_rect.y + 70 + self.scroll_y
+        
+        # Render Queue
         surface.blit(sub_font.render("Queued Claims:", True, (150, 200, 255)), (self.panel_rect.x + 20, y_off))
         y_off += 30
         
@@ -353,40 +377,48 @@ class Claims_Screen(GameState):
                 y_off += 25
                 
         y_off += 10
+        
+        # Render Active Claims
         surface.blit(sub_font.render("Active Claims:", True, (255, 215, 0)), (self.panel_rect.x + 20, y_off))
         y_off += 30
-        
-        # Combine manually claimed tiles and foreign-owned cores into one list
-        display_claims = core_ids + claims
         
         if not display_claims:
             surface.blit(tiny_font.render("No active claims.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
         else:
-            for pid in display_claims[:15]:
+            for pid in display_claims:
                 prov = self.map_screen.id_to_province.get(pid)
                 owner = prov.get("owner", "Unknown") if prov else "Unknown"
                 owner_name = self.map_screen.nation_data.get(owner, {}).get("name", owner)
                 
                 is_core = pid in core_ids
-                if is_core:
+                revoke_item = next((r for r in revoke_queue if r["prov_id"] == pid), None)
+                
+                if revoke_item:
+                    status_text = f" (Revoking in {revoke_item['turns_left']})"
+                    color = (255, 100, 100)
+                elif is_core:
                     status_text = " (Auto-Claimed Core)"
                     color = (255, 150, 200) # Pinkish
                 else:
-                    revoke_item = next((r for r in revoke_queue if r["prov_id"] == pid), None)
-                    if revoke_item:
-                        status_text = f" (Revoking in {revoke_item['turns_left']})"
-                        color = (255, 100, 100)
-                    else:
-                        status_text = ""
-                        color = (200, 200, 200)
+                    status_text = ""
+                    color = (200, 200, 200)
 
                 txt = tiny_font.render(f"- Prov {pid} ({owner_name}){status_text}", True, color)
                 surface.blit(txt, (self.panel_rect.x + 30, y_off))
                 y_off += 25
                 
-            if len(display_claims) > 15:
-                txt = tiny_font.render(f"...and {len(display_claims)-15} more", True, (150, 150, 150))
-                surface.blit(txt, (self.panel_rect.x + 30, y_off))
+        surface.set_clip(old_clip)
+
+        # Draw a custom scrollbar if the content exceeds the box height
+        if self.max_scroll < 0:
+            track_rect = pygame.Rect(self.panel_rect.right - 15, self.panel_rect.y + 60, 10, viewport_h)
+            pygame.draw.rect(surface, (50, 50, 70), track_rect)
+            
+            ratio = self.scroll_y / self.max_scroll
+            handle_h = max(20, viewport_h * (viewport_h / (viewport_h - self.max_scroll)))
+            handle_y = track_rect.y + ratio * (track_rect.height - handle_h)
+            
+            pygame.draw.rect(surface, (150, 150, 150), pygame.Rect(track_rect.x, handle_y, 10, handle_h), border_radius=5)
 
         for el in self.elements:
             if getattr(el, 'visible', True):

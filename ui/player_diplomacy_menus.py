@@ -469,7 +469,7 @@ class Peace_Screen(GameState):
             pending_msg = pending.get("message", "")
             self.selected_term_idx = 2 # Default to Ceasefire
             for i, term in enumerate(self.terms):
-                if term == pending_msg and self.terms_enabled[i]:
+                if pending_msg.startswith(term) and self.terms_enabled[i]:
                     self.selected_term_idx = i
                     break
             
@@ -539,12 +539,38 @@ class Peace_Screen(GameState):
         term = self.terms[self.selected_term_idx]
         action_type = "CEASEFIRE" if term == getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)") else "PEACE_TREATY"
         
+        proposer = self.map_screen.player_country
+        target = self.target_nation
+        
+        # Calculate and freeze territories into the message string
+        frozen_ids = []
+        if term == getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims"):
+            claims = self.map_screen.nation_data.get(proposer, {}).get("claims", [])
+            for prov in self.map_screen.map_data.values():
+                if prov.get("owner") == target and (prov["id"] in claims or proposer in prov.get("cores", [])):
+                    frozen_ids.append(str(prov["id"]))
+            if frozen_ids:
+                term += f" (Territories demanded: {', '.join(frozen_ids)} + cores)"
+            else:
+                term += " (No territories demanded)"
+                
+        elif term == getattr(c, 'PEACE_SURRENDER', "Surrender"):
+            claims = self.map_screen.nation_data.get(target, {}).get("claims", [])
+            for prov in self.map_screen.map_data.values():
+                if prov.get("owner") == proposer and (prov["id"] in claims or target in prov.get("cores", [])):
+                    frozen_ids.append(str(prov["id"]))
+            if frozen_ids:
+                term += f" (Territories surrendered: {', '.join(frozen_ids)} + cores)"
+            else:
+                term += " (No territories surrendered)"
+        
         # Overwrite directly to bypass toggle
         pending = self.map_screen.nation_data[self.map_screen.player_country].setdefault("pending_diplomacy", {})
         pending[self.target_nation] = {
             "action": action_type,
             "turns": 0,
             "timer": 0,
+            "parameters": term,
             "message": term
         }
         self.map_screen.show_feedback("Peace Offer Updated!" if self.is_editing else "Peace Offer Queued!")

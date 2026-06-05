@@ -1312,10 +1312,10 @@ def has_wargoal(nation, target_nation, nation_data, map_data=None):
     """Returns True if the nation has active claims on the target, or a justified wargoal."""
     if map_data:
         claims = nation_data.get(nation, {}).get("claims", [])
-        if claims:
-            for prov in map_data.values():
-                if prov.get("owner") == target_nation and prov["id"] in claims:
-                    return True
+        for prov in map_data.values():
+            # If target owns the tile, and the attacker either claimed it or has a core on it
+            if prov.get("owner") == target_nation and (prov["id"] in claims or nation in prov.get("cores", [])):
+                return True
     return target_nation in nation_data.get(nation, {}).get("wargoals", {})
 
 # ==========================================

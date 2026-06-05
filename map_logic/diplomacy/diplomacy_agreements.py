@@ -51,7 +51,7 @@ def execute_peace_treaty(map_data, nation_data, proposer, target, peace_type, ma
     """Executes the specific terms of a peace deal based on its type."""
 
     if peace_type == c.PEACE_WHITE_PEACE:
-        # Return occupied cores back to their original owners (Status Quo)
+        # Status Quo: Return occupied cores back to their original owners
         for prov in map_data.values():
             if prov.get("owner") == proposer and target in prov.get("cores", []) and proposer not in prov.get("cores", []):
                 edit_province_ownership.conquer_province(map_screen, prov, target)
@@ -59,25 +59,21 @@ def execute_peace_treaty(map_data, nation_data, proposer, target, peace_type, ma
                 edit_province_ownership.conquer_province(map_screen, prov, proposer)
 
     elif peace_type == c.PEACE_DEMAND_CLAIMS:
-        # Proposer wins
+        # Proposer wins.
+        # Proposer keeps everything they currently own (occupy).
+        # Proposer gets any of their claims/cores that the Target currently owns.
         claims = nation_data.get(proposer, {}).get("claims", [])
         for prov in map_data.values():
-            # Demand Claims: Take claimed territory
-            if prov["id"] in claims and prov.get("owner") == target:
-                edit_province_ownership.conquer_province(map_screen, prov, proposer)
-            # Demand Claims: Return occupied cores back to proposer
-            elif prov.get("owner") == target and proposer in prov.get("cores", []):
+            if prov.get("owner") == target and (prov["id"] in claims or proposer in prov.get("cores", [])):
                 edit_province_ownership.conquer_province(map_screen, prov, proposer)
 
     elif peace_type == c.PEACE_SURRENDER:
-        # Target wins
+        # Target wins.
+        # Target keeps everything they currently own (occupy).
+        # Target gets any of their claims/cores that the Proposer currently owns.
         claims = nation_data.get(target, {}).get("claims", [])
         for prov in map_data.values():
-            # Surrender: Target takes claimed territory
-            if prov["id"] in claims and prov.get("owner") == proposer:
-                edit_province_ownership.conquer_province(map_screen, prov, target)
-            # Surrender: Return occupied cores back to target
-            elif prov.get("owner") == proposer and target in prov.get("cores", []):
+            if prov.get("owner") == proposer and (prov["id"] in claims or target in prov.get("cores", [])):
                 edit_province_ownership.conquer_province(map_screen, prov, target)
 
     # Clear wargoals between the two

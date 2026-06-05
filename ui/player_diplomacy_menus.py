@@ -234,6 +234,12 @@ class Claims_Screen(GameState):
         data = self.map_screen.nation_data.get(self.player)
         if not data: return
         
+        # --- NEW CORE CHECK ---
+        is_core = self.player in dest.get("cores", [])
+        if is_core:
+            self.map_screen.show_feedback("Core territories are automatically claimed!")
+            return
+        
         claims = data.setdefault("claims", [])
         queue = data.setdefault("claim_queue", [])
         revoke_queue = data.setdefault("revoke_queue", [])
@@ -262,8 +268,7 @@ class Claims_Screen(GameState):
                 return
         
         # Begin fabricating a new claim
-        is_core = self.player in dest.get("cores", [])
-        turns = getattr(c, 'CLAIM_TURN_CORE', 1) if is_core else getattr(c, 'CLAIM_TURN_NON_CORE', 2)
+        turns = getattr(c, 'CLAIM_TURN_NON_CORE', 2)
         queue.append({"prov_id": pid, "turns_left": turns})
         self.map_screen.show_feedback(f"Claim queued ({turns} turns).")
         self.refresh_ui()
@@ -296,6 +301,15 @@ class Claims_Screen(GameState):
         revoke_queue = data.get("revoke_queue", [])
         
         revoke_ids = [rq["prov_id"] for rq in revoke_queue]
+        
+        # Identify foreign cores for the distinct pink rendering
+        core_ids = [prov["id"] for prov in self.map_screen.map_data.values() 
+                    if self.player in prov.get("cores", []) 
+                    and prov.get("owner") != self.player 
+                    and prov.get("owner") not in c.UNPLAYABLE_NATIONS]
+                    
+        for pid in core_ids:
+            self.draw_highlight(surface, pid, (255, 105, 180)) # Pink (Core Claim)
         
         for pid in claims:
             if pid in revoke_ids:
@@ -342,28 +356,36 @@ class Claims_Screen(GameState):
         surface.blit(sub_font.render("Active Claims:", True, (255, 215, 0)), (self.panel_rect.x + 20, y_off))
         y_off += 30
         
-        if not claims:
+        # Combine manually claimed tiles and foreign-owned cores into one list
+        display_claims = core_ids + claims
+        
+        if not display_claims:
             surface.blit(tiny_font.render("No active claims.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
         else:
-            display_claims = claims[:15]
-            for pid in display_claims:
+            for pid in display_claims[:15]:
                 prov = self.map_screen.id_to_province.get(pid)
                 owner = prov.get("owner", "Unknown") if prov else "Unknown"
                 owner_name = self.map_screen.nation_data.get(owner, {}).get("name", owner)
                 
-                revoke_item = next((r for r in revoke_queue if r["prov_id"] == pid), None)
-                if revoke_item:
-                    status_text = f" (Revoking in {revoke_item['turns_left']})"
-                    color = (255, 100, 100)
+                is_core = pid in core_ids
+                if is_core:
+                    status_text = " (Auto-Claimed Core)"
+                    color = (255, 150, 200) # Pinkish
                 else:
-                    status_text = ""
-                    color = (200, 200, 200)
+                    revoke_item = next((r for r in revoke_queue if r["prov_id"] == pid), None)
+                    if revoke_item:
+                        status_text = f" (Revoking in {revoke_item['turns_left']})"
+                        color = (255, 100, 100)
+                    else:
+                        status_text = ""
+                        color = (200, 200, 200)
 
                 txt = tiny_font.render(f"- Prov {pid} ({owner_name}){status_text}", True, color)
                 surface.blit(txt, (self.panel_rect.x + 30, y_off))
                 y_off += 25
-            if len(claims) > 15:
-                txt = tiny_font.render(f"...and {len(claims)-15} more", True, (150, 150, 150))
+                
+            if len(display_claims) > 15:
+                txt = tiny_font.render(f"...and {len(display_claims)-15} more", True, (150, 150, 150))
                 surface.blit(txt, (self.panel_rect.x + 30, y_off))
 
         for el in self.elements:
@@ -511,15 +533,13 @@ class Peace_Screen(GameState):
                 proj = proposer
         elif peace_type == getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims"):
             claims = self.map_screen.nation_data.get(proposer, {}).get("claims", [])
-            if prov["id"] in claims and curr == target:
-                proj = proposer
-            elif curr == target and proposer in prov.get("cores", []):
+            # Proposer gets their claims/cores that the target currently owns
+            if curr == target and (prov["id"] in claims or proposer in prov.get("cores", [])):
                 proj = proposer
         elif peace_type == getattr(c, 'PEACE_SURRENDER', "Surrender"):
             claims = self.map_screen.nation_data.get(target, {}).get("claims", [])
-            if prov["id"] in claims and curr == proposer:
-                proj = target
-            elif curr == proposer and target in prov.get("cores", []):
+            # Target gets their claims/cores that the proposer currently owns
+            if curr == proposer and (prov["id"] in claims or target in prov.get("cores", [])):
                 proj = target
         return proj
 

@@ -396,16 +396,14 @@ class Peace_Screen(GameState):
         their_wargoal = map_screen.nation_data.get(target_nation, {}).get("wargoals", {}).get(map_screen.player_country, {}).get("type", "")
         
         self.terms = [
-            getattr(c, 'PEACE_SURRENDER'),
-            getattr(c, 'PEACE_WHITE_PEACE'),
-            getattr(c, 'PEACE_DEMAND_CLAIMS'),
-            "Don't offer peace"
+            getattr(c, 'PEACE_SURRENDER', "Surrender"),
+            getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims"),
+            getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)")
         ]
         
         self.terms_enabled = [
             my_wargoal != getattr(c, 'WARGOAL_NO_CB', "No Casus Belli") and their_wargoal != getattr(c, 'WARGOAL_NO_CB', "No Casus Belli"),
-            my_wargoal == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims"),
-            True,
+            my_wargoal == getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims") or their_wargoal != "", # Allowed if we claimed OR if it's a defensive war!
             True
         ]
         
@@ -415,26 +413,24 @@ class Peace_Screen(GameState):
         
         if self.is_editing:
             pending_msg = pending.get("message", "")
-            self.selected_term_idx = 3 # Default to Don't offer peace
+            self.selected_term_idx = 2 # Default to Ceasefire
             for i, term in enumerate(self.terms):
                 if term == pending_msg and self.terms_enabled[i]:
                     self.selected_term_idx = i
                     break
             
             # Catch raw CEASEFIRE actions from legacy behavior
-            if self.selected_term_idx == 3 and pending.get("action") == "CEASEFIRE":
+            if pending.get("action") == "CEASEFIRE":
                 self.selected_term_idx = 2
         else:
             self.selected_term_idx = 2 # Default to Ceasefire
             
-        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 350, c.SCREEN_HEIGHT//2 - 160, 700, 320)
+        # Restructured to be a wide, short banner docked cleanly above the bottom UI bar
+        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 350, c.SCREEN_HEIGHT - 220, 700, 160)
         self.refresh_ui()
 
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Cancel", self.exit_screen)]
-        
-        confirm_text = "Update Offer" if self.is_editing else "Send Proposal"
-        self.elements.append(Button(self.panel_rect.centerx - 150, self.panel_rect.bottom - 70, "new_game", "green", confirm_text, self.confirm))
         
         for i, term in enumerate(self.terms):
             is_enabled = self.terms_enabled[i]
@@ -443,48 +439,47 @@ class Peace_Screen(GameState):
             else:
                 color = "grey"
                 
-            # Place the 3 main terms left-to-right, drop the 4th term to the next row
-            if i < 3:
-                btn_x = self.panel_rect.centerx - 320 + (i * 220)
-                btn_y = self.panel_rect.y + 80
-                btn_size = "medium"
-            else:
-                btn_x = self.panel_rect.centerx - 100
-                btn_y = self.panel_rect.y + 150
-                btn_size = "medium"
-                
-            btn = Button(btn_x, btn_y, btn_size, color, term, lambda idx=i: self.select_term(idx))
+            # Place the 3 main terms left-to-right
+            btn_x = self.panel_rect.centerx - 330 + (i * 220)
+            btn_y = self.panel_rect.y + 50
+            
+            btn = Button(btn_x, btn_y, "medium", color, term, lambda idx=i: self.select_term(idx))
             if not is_enabled:
                 btn.disabled = True
             self.elements.append(btn)
+
+        confirm_text = "Update Offer" if self.is_editing else "Send Proposal"
+        self.elements.append(Button(self.panel_rect.centerx - 100, self.panel_rect.y + 110, "medium", "green", confirm_text, self.confirm))
+        
+        if self.is_editing:
+            self.elements.append(Button(self.panel_rect.right - 140, self.panel_rect.y + 110, "small", "red", "Cancel Offer", self.revoke_offer))
 
     def select_term(self, idx):
         if self.terms_enabled[idx]:
             self.selected_term_idx = idx
             self.refresh_ui()
 
+    def revoke_offer(self):
+        pending = self.map_screen.nation_data[self.map_screen.player_country].get("pending_diplomacy", {})
+        if self.target_nation in pending and pending[self.target_nation].get("action") in ["PEACE_TREATY", "CEASEFIRE"]:
+            del pending[self.target_nation]
+        self.map_screen.show_feedback("Peace Offer Cancelled.")
+        self.done = True
+
     def confirm(self):
         term = self.terms[self.selected_term_idx]
+        action_type = "CEASEFIRE" if term == getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)") else "PEACE_TREATY"
         
-        if term == "Don't offer peace":
-            pending = self.map_screen.nation_data[self.map_screen.player_country].get("pending_diplomacy", {})
-            if self.target_nation in pending and pending[self.target_nation].get("action") in ["PEACE_TREATY", "CEASEFIRE"]:
-                del pending[self.target_nation]
-            self.map_screen.show_feedback("Peace Offer Cancelled.")
-            self.done = True
-        else:
-            action_type = "CEASEFIRE" if term == getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)") else "PEACE_TREATY"
-            
-            # Overwrite directly to bypass toggle
-            pending = self.map_screen.nation_data[self.map_screen.player_country].setdefault("pending_diplomacy", {})
-            pending[self.target_nation] = {
-                "action": action_type,
-                "turns": 0,
-                "timer": 0,
-                "message": term
-            }
-            self.map_screen.show_feedback("Peace Offer Updated!" if self.is_editing else "Peace Offer Queued!")
-            self.done = True
+        # Overwrite directly to bypass toggle
+        pending = self.map_screen.nation_data[self.map_screen.player_country].setdefault("pending_diplomacy", {})
+        pending[self.target_nation] = {
+            "action": action_type,
+            "turns": 0,
+            "timer": 0,
+            "message": term
+        }
+        self.map_screen.show_feedback("Peace Offer Updated!" if self.is_editing else "Peace Offer Queued!")
+        self.done = True
 
     def exit_screen(self):
         self.done = True
@@ -493,9 +488,61 @@ class Peace_Screen(GameState):
         for event in events:
             for el in self.elements:
                 el.handle_event(event)
+                
+            on_ui = self.panel_rect.collidepoint(pygame.mouse.get_pos()) or self.map_screen.top_bar_rect.collidepoint(pygame.mouse.get_pos())
+            if event.type in (pygame.MOUSEWHEEL, pygame.MOUSEMOTION):
+                self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
+
+    def update(self):
+        super().update()
+        self.map_screen.camera.update(self.map_screen, c.SCREEN_HEIGHT)
+
+    def get_projected_owner(self, prov, peace_type):
+        """Simulates the execution of the peace treaty to find who gets what."""
+        curr = prov.get("owner")
+        proj = curr
+        proposer = self.map_screen.player_country
+        target = self.target_nation
+
+        if peace_type == getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)"):
+            if curr == proposer and target in prov.get("cores", []) and proposer not in prov.get("cores", []):
+                proj = target
+            elif curr == target and proposer in prov.get("cores", []) and target not in prov.get("cores", []):
+                proj = proposer
+        elif peace_type == getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims"):
+            claims = self.map_screen.nation_data.get(proposer, {}).get("claims", [])
+            if prov["id"] in claims and curr == target:
+                proj = proposer
+            elif curr == target and proposer in prov.get("cores", []):
+                proj = proposer
+        elif peace_type == getattr(c, 'PEACE_SURRENDER', "Surrender"):
+            claims = self.map_screen.nation_data.get(target, {}).get("claims", [])
+            if prov["id"] in claims and curr == proposer:
+                proj = target
+            elif curr == proposer and target in prov.get("cores", []):
+                proj = target
+        return proj
+
+    def draw_highlight(self, surface, pid, color):
+        prov = self.map_screen.id_to_province.get(pid)
+        if not prov: return
+        cx, cy = prov["center"]
+        for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
+            sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
+            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * getattr(self.map_screen.camera, 'tilt_factor', 1.0) + self.map_screen.top_ui_height
+            if -100 < sx < c.SCREEN_WIDTH + 100:
+                radius_x = max(6, int(10 * self.map_screen.camera.zoom))
+                radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else radius_x
+                
+                # Draw thick semi-transparent fill
+                ellipse_surf = pygame.Surface((radius_x*2, radius_y*2), pygame.SRCALPHA)
+                pygame.draw.ellipse(ellipse_surf, (*color, 150), ellipse_surf.get_rect())
+                surface.blit(ellipse_surf, (int(sx) - radius_x, int(sy) - radius_y))
+                
+                # Draw sharp border
+                pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
 
     def draw(self, surface):
-        # FIX: Wipe the frame clean to prevent the "Solitaire Effect" smearing through the transparent oceans
         surface.fill(self.map_screen.bg_color)
         
         temp_prov = self.map_screen.selected_province
@@ -514,18 +561,33 @@ class Peace_Screen(GameState):
         self.map_screen.hide_minimap = False
         self.map_screen.selected_province = temp_prov
 
-        overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 180))
-        surface.blit(overlay, (0, 0))
+        # --- DRAW MAP PREVIEW HIGHLIGHTS ---
+        peace_type = self.terms[self.selected_term_idx]
+        proposer = self.map_screen.player_country
+        target = self.target_nation
+        p_color = self.map_screen.nation_colors.get(proposer, (0, 255, 0))
+        t_color = self.map_screen.nation_colors.get(target, (255, 0, 0))
+        
+        for prov in self.map_screen.map_data.values():
+            curr = prov.get("owner")
+            # Only highlight provinces currently involved in the conflict between these two
+            if curr in [proposer, target]:
+                proj = self.get_projected_owner(prov, peace_type)
+                if proj == proposer:
+                    self.draw_highlight(surface, prov["id"], p_color)
+                elif proj == target:
+                    self.draw_highlight(surface, prov["id"], t_color)
 
-        pygame.draw.rect(surface, (30, 40, 30), self.panel_rect)
+        # Draw the Banner
+        panel_surf = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)
+        panel_surf.fill((30, 40, 30, 230))
+        surface.blit(panel_surf, self.panel_rect.topleft)
         pygame.draw.rect(surface, (50, 255, 50), self.panel_rect, 3)
 
         font = fonts.get("heading1")
         title = font.render(f"Peace Terms: {self.target_nation}", True, (255, 255, 255))
-        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 20))
+        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
 
-        # Draw UI elements manually to prevent super().draw() from filling the screen with a solid background color
         for el in self.elements:
             if getattr(el, 'visible', True):
                 el.draw(surface)

@@ -25,6 +25,13 @@ def open_claims_menu(map_screen):
 
 def handle_ceasefire(map_screen):
     target = map_screen.selected_province.get("owner")
+    
+    # Guard check: Prevent modifying or opening a peace offer if it has already been sent (turns > 0)
+    pending_action, pending_turns = queries.get_diplomatic_status(map_screen.player_country, target, map_screen.nation_data)
+    if pending_action in ["PEACE_TREATY", "CEASEFIRE"] and pending_turns > 0:
+        map_screen.show_feedback("You must wait for their response to your peace offer!")
+        return
+        
     # Direct import to bypass __init__.py namespace issues
     from ui.player_diplomacy_menus import open_peace_menu
     open_peace_menu(map_screen, target)

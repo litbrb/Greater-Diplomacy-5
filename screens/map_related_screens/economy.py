@@ -107,7 +107,7 @@ class Economy_Screen(GameState):
                 label = "Conversion Income" if conv_val > 0 else "Conversion Cost"
                 detail_breakdown += f"  |  {label}: {sign}{conv_val}"
 
-            surface.blit(font_small.render(detail_breakdown, True, (150, 150, 150)), (row_rect.x + 350, row_rect.y + 60))
+            surface.blit(font_small.render(detail_breakdown, True, (150, 150, 150)), (row_rect.x + 0, row_rect.y + 60))
             
             y_offset += 120
 

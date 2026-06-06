@@ -383,7 +383,7 @@ def process_basic_proactive_ai(map_screen):
                         target_total_power = max(1.0, target_alliance_str + target_econ_power)
                         
                         # AI needs local border superiority AND overall global viability to declare war
-                        if my_border_str >= (target_border_str * getattr(c, 'AI_WAR_STRENGTH_THRESHOLD', 1.2)) and my_total_power >= (target_total_power * getattr(c, 'AI_GLOBAL_STRENGTH_THRESHOLD', 0.8)):
+                        if queries.ai_thinks_it_can_win(ai_name, target, map_screen.map_data, map_screen.nation_data, map_screen.id_to_province):
                             
                             # Random chance to actually declare war
                             if random.random() <= getattr(c, 'AI_WAR_DECLARATION_CHANCE', 0.50):

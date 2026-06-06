@@ -1323,11 +1323,49 @@ def has_wargoal(nation, target_nation, nation_data, map_data=None):
                 return True
     return target_nation in nation_data.get(nation, {}).get("wargoals", {})
 
+def ai_thinks_it_can_win(ai_nation, target_nation, map_data, nation_data, id_to_province=None):
+    """Calculates if the AI believes it is strong enough to defeat the target (CTW)."""
+    if not id_to_province:
+        id_to_province = {prov["id"]: prov for prov in map_data.values()}
+
+    my_border_str, target_border_str = get_border_strength(ai_nation, target_nation, map_data, id_to_province)
+    
+    # Prevent division by zero if they have literally no troops on the border
+    target_border_str = max(1, target_border_str)
+    
+    # Consider total alliance strength, economy, and distractions
+    my_alliance_str = get_alliance_military_strength(ai_nation, map_data, nation_data)
+    target_alliance_str = get_alliance_military_strength(target_nation, map_data, nation_data)
+    
+    my_econ_power = get_economic_power(ai_nation, nation_data) / 100.0
+    target_econ_power = get_economic_power(target_nation, nation_data) / 100.0
+
+    # Factor in how distracted the target is by their existing wars
+    target_distraction_str = get_combined_enemy_strength(target_nation, map_data, nation_data) * getattr(c, 'AI_ENEMY_DISTRACTION_WEIGHT', 0.8)
+
+    # Add the target's distraction to our perceived power
+    my_total_power = my_alliance_str + my_econ_power + target_distraction_str
+    target_total_power = max(1.0, target_alliance_str + target_econ_power)
+    
+    # AI needs local border superiority AND overall global viability
+    return my_border_str >= (target_border_str * getattr(c, 'AI_WAR_STRENGTH_THRESHOLD', 1.2)) and my_total_power >= (target_total_power * getattr(c, 'AI_GLOBAL_STRENGTH_THRESHOLD', 0.8))
+
 def will_ai_accept_peace(target_nation, proposer_nation, peace_type, map_data, nation_data):
     """Evaluates if the AI will accept the proposed peace deal."""
-    # The AI declines peace deals where the other side demands claims, but accepts all others.
-    if peace_type.startswith(c.PEACE_DEMAND_CLAIMS):
+    # The AI declines peace deals where the other side demands claims.
+    if peace_type.startswith(getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims")):
         return False
+        
+    if peace_type.startswith(getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire")):
+        if map_data:
+            # If CTW is True, the AI thinks it can win, so it refuses the ceasefire.
+            if ai_thinks_it_can_win(target_nation, proposer_nation, map_data, nation_data):
+                return False
+            # If CTW is False, the AI thinks it could lose, so it accepts the ceasefire.
+            else:
+                return True
+        else:
+            return True
         
     # This query acts as a centralized place to expand logic later (e.g. check war score).
     return True

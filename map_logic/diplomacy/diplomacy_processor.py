@@ -291,7 +291,7 @@ def process_diplomacy_turn(self):
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
                 if task["action"] in c.UNILATERAL_ACTIONS or task["action"] in c.BILATERAL_ACTIONS:
-                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""), human_players, my_turn_id)
+                    future = executor.submit(ai_handler.evaluate_diplomatic_proposal, self.nation_data, self.map_data, active_nations_list, target_ai, sender, task["action"], task.get("content", ""), human_players, my_turn_id)
                     futures[future] = task
                 elif task["action"] == "CUSTOM_MSG":
                     future = executor.submit(ai_handler.process_custom_message, self.nation_data, active_nations_list, target_ai, sender, task["content"], human_players, my_turn_id)

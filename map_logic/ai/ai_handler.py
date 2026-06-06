@@ -225,7 +225,7 @@ def call_ollama(system_prompt, user_prompt, turn_id=None):
         except:
             pass
 
-def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_nation, action_type, custom_msg="", human_players=None, turn_id=None):
+def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_nation, sender_nation, action_type, custom_msg="", human_players=None, turn_id=None):
     if FORCE_SKIP or (turn_id is not None and turn_id != CURRENT_TURN_ID): 
         return {
             "accepted": True, 
@@ -270,8 +270,7 @@ def evaluate_diplomatic_proposal(nation_data, active_nations, ai_nation, sender_
 
     # 3. Evaluate peace deals dynamically using the centralized query
     if action_type in ["PEACE_TREATY", "CEASEFIRE"]:
-        # Passing None for map_data as it's not currently required for this claim check
-        accepted = queries.will_ai_accept_peace(ai_nation, sender_nation, custom_msg, None, nation_data)
+        accepted = queries.will_ai_accept_peace(ai_nation, sender_nation, custom_msg, map_data, nation_data)
     # ------------------------------
 
     # Check if this is an AI talking to an AI

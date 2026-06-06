@@ -23377,6 +23377,7 @@
         "(200, 0, 0)": {
             "owner": "Afrika Korps",
             "cores": [
+                "49ers",
                 "Afrika Korps"
             ],
             "is_coastal": true,
@@ -23461,6 +23462,7 @@
         "(208, 0, 0)": {
             "owner": "Afrika Korps",
             "cores": [
+                "49ers",
                 "Afrika Korps"
             ],
             "is_coastal": true,
@@ -23642,6 +23644,7 @@
         "(224, 0, 0)": {
             "owner": "49ers",
             "cores": [
+                "Afrika Korps",
                 "49ers"
             ],
             "is_coastal": true,
@@ -23689,6 +23692,7 @@
         "(227, 0, 0)": {
             "owner": "49ers",
             "cores": [
+                "Afrika Korps",
                 "49ers"
             ],
             "is_coastal": true,

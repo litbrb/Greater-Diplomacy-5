@@ -291,6 +291,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Proto-Finnish Holy Roman Khaganate",
             "Reichskommissariat Norwegen"
         ],
         "json_key": "(10, 0, 0)",
@@ -353,6 +354,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(12, 0, 0)",
@@ -415,6 +417,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Proto-Finnish Holy Roman Khaganate",
             "Reichskommissariat Norwegen"
         ],
         "json_key": "(14, 0, 0)",
@@ -445,6 +448,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Proto-Finnish Holy Roman Khaganate",
             "Omsk"
         ],
         "json_key": "(15, 0, 0)",
@@ -509,6 +513,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(17, 0, 0)",
@@ -541,6 +546,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Proto-Finnish Holy Roman Khaganate",
             "Omsk"
         ],
         "json_key": "(18, 0, 0)",
@@ -572,6 +578,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(19, 0, 0)",
@@ -695,6 +702,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Proto-Finnish Holy Roman Khaganate",
             "Reichskommissariat Norwegen"
         ],
         "json_key": "(23, 0, 0)",
@@ -754,6 +762,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(25, 0, 0)",
@@ -849,6 +858,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(28, 0, 0)",
@@ -1036,6 +1046,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(34, 0, 0)",
@@ -1100,6 +1111,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(36, 0, 0)",
@@ -1133,6 +1145,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Proto-Finnish Holy Roman Khaganate",
             "Omsk"
         ],
         "json_key": "(37, 0, 0)",
@@ -1166,6 +1179,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
+            "Proto-Finnish Holy Roman Khaganate",
             "Alaska"
         ],
         "json_key": "(38, 0, 0)",
@@ -1227,6 +1242,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Alaska",
             "Reichskommissariat Norwegen"
         ],
         "json_key": "(40, 0, 0)",
@@ -1258,6 +1274,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(41, 0, 0)",
@@ -1351,6 +1368,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Proto-Finnish Holy Roman Khaganate",
             "British-Japanese Empire"
         ],
         "json_key": "(44, 0, 0)",
@@ -1413,6 +1432,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Alaska",
             "Reichskommissariat Norwegen"
         ],
         "json_key": "(46, 0, 0)",
@@ -1448,6 +1468,7 @@
         ],
         "resources": {},
         "cores": [
+            "Alaska",
             "Reichskommissariat Norwegen"
         ],
         "json_key": "(47, 0, 0)",
@@ -1480,6 +1501,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Proto-Finnish Holy Roman Khaganate"
         ],
         "json_key": "(48, 0, 0)",
@@ -1510,6 +1532,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
             "Alaska"
         ],
         "json_key": "(49, 0, 0)",
@@ -1544,6 +1567,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Proto-Finnish Holy Roman Khaganate",
             "British-Japanese Empire"
         ],
         "json_key": "(50, 0, 0)",
@@ -1638,6 +1662,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Proto-Finnish Holy Roman Khaganate",
             "Napoleonic France"
         ],
         "json_key": "(53, 0, 0)",
@@ -1701,6 +1727,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Proto-Finnish Holy Roman Khaganate",
             "Napoleonic France"
         ],
         "json_key": "(55, 0, 0)",
@@ -1734,6 +1762,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "British-Japanese Empire"
         ],
         "json_key": "(56, 0, 0)",
@@ -1768,6 +1797,7 @@
         ],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
             "Alaska"
         ],
         "json_key": "(57, 0, 0)",
@@ -1926,6 +1956,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Proto-Finnish Holy Roman Khaganate",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(62, 0, 0)",
@@ -1956,6 +1988,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Alaska",
             "Reichskommissariat Norwegen"
         ],
         "json_key": "(63, 0, 0)",
@@ -1986,6 +2019,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
             "Alaska"
         ],
         "json_key": "(64, 0, 0)",
@@ -2081,6 +2115,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Proto-Finnish Holy Roman Khaganate",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(67, 0, 0)",
@@ -2427,6 +2463,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Reichskommissariat Norwegen",
             "Alaska"
         ],
         "json_key": "(78, 0, 0)",
@@ -2521,6 +2558,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "British-Japanese Empire"
         ],
         "json_key": "(81, 0, 0)",
@@ -2711,6 +2749,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Byzantine Empire"
         ],
         "json_key": "(87, 0, 0)",
@@ -2775,6 +2814,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Byzantine Empire",
             "Omsk"
         ],
         "json_key": "(89, 0, 0)",
@@ -2840,6 +2880,7 @@
         ],
         "resources": {},
         "cores": [
+            "Byzantine Empire",
             "Napoleonic France"
         ],
         "json_key": "(91, 0, 0)",
@@ -2905,6 +2946,7 @@
         ],
         "resources": {},
         "cores": [
+            "Western Command Center",
             "Khmer Rouge"
         ],
         "json_key": "(93, 0, 0)",
@@ -2935,6 +2977,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ohio",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(94, 0, 0)",
@@ -2967,6 +3010,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Byzantine Empire",
             "Napoleonic France"
         ],
         "json_key": "(95, 0, 0)",
@@ -3099,6 +3143,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ohio",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(99, 0, 0)",
@@ -3228,6 +3273,7 @@
         ],
         "resources": {},
         "cores": [
+            "Ohio",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(103, 0, 0)",
@@ -3356,6 +3402,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Czechochechnyaslovenoslovakia",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(107, 0, 0)",
@@ -3387,6 +3434,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Byzantine Empire"
         ],
         "json_key": "(108, 0, 0)",
@@ -3410,13 +3458,14 @@
             93,
             111
         ],
-        "owner": "Khmer Rouge",
+        "owner": "Western Command Center",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
+            "Western Command Center",
             "Khmer Rouge"
         ],
         "json_key": "(109, 0, 0)",
@@ -3481,6 +3530,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Western Command Center",
             "Khmer Rouge"
         ],
         "json_key": "(111, 0, 0)",
@@ -3543,6 +3593,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
             "Ohio"
         ],
         "json_key": "(113, 0, 0)",
@@ -3607,6 +3658,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Byzantine Empire"
         ],
         "json_key": "(115, 0, 0)",
@@ -3639,6 +3691,8 @@
         ],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
+            "Ohio",
             "Batavian Commune"
         ],
         "json_key": "(116, 0, 0)",
@@ -3669,6 +3723,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Western Command Center",
             "Khmer Rouge"
         ],
         "json_key": "(117, 0, 0)",
@@ -3699,6 +3754,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ohio",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(118, 0, 0)",
@@ -3762,6 +3818,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Czechochechnyaslovenoslovakia",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(120, 0, 0)",
@@ -3882,27 +3939,13 @@
             121
         ],
         "owner": "Polish-Lithuanian Commonwealth",
-        "units": [
-            {
-                "type": "Armored Car VII",
-                "owner": "Polish-Lithuanian Commonwealth",
-                "health": 1600,
-                "max_health": 1600,
-                "speed": 4,
-                "attack": 1200,
-                "defense": 120,
-                "level": 0,
-                "order": {
-                    "type": "MOVE",
-                    "path": []
-                }
-            }
-        ],
+        "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
+            "Czechochechnyaslovenoslovakia",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(124, 0, 0)",
@@ -3937,6 +3980,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ohio",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(125, 0, 0)",
@@ -3969,6 +4013,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Byzantine Empire",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(126, 0, 0)",
@@ -4130,6 +4175,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Czechochechnyaslovenoslovakia",
             "Polish-Lithuanian Commonwealth"
         ],
         "json_key": "(131, 0, 0)",
@@ -4162,6 +4208,8 @@
         ],
         "resources": {},
         "cores": [
+            "Byzantine Empire",
+            "Omsk",
             "Vorkuta"
         ],
         "json_key": "(132, 0, 0)",
@@ -4194,6 +4242,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Vorkuta"
         ],
         "json_key": "(133, 0, 0)",
@@ -4226,6 +4275,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Byzantine Empire"
         ],
         "json_key": "(134, 0, 0)",
@@ -4257,6 +4307,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
+            "Aztec Empire",
+            "Ohio",
             "Batavian Commune"
         ],
         "json_key": "(135, 0, 0)",
@@ -4289,6 +4342,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
             "Ohio"
         ],
         "json_key": "(136, 0, 0)",
@@ -4321,6 +4375,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Polish-Lithuanian Commonwealth",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(137, 0, 0)",
@@ -4353,6 +4408,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
             "Ohio"
         ],
         "json_key": "(138, 0, 0)",
@@ -4385,6 +4441,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Byzantine Empire",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(139, 0, 0)",
@@ -4419,6 +4476,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Polish-Lithuanian Commonwealth",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(140, 0, 0)",
@@ -4481,6 +4539,7 @@
         ],
         "resources": {},
         "cores": [
+            "Aztec Empire",
             "Ordensstaat Burgund"
         ],
         "json_key": "(142, 0, 0)",
@@ -4513,6 +4572,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
+            "Ohio",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(143, 0, 0)",
@@ -4540,27 +4601,13 @@
             125
         ],
         "owner": "Czechochechnyaslovenoslovakia",
-        "units": [
-            {
-                "type": "Armored Car VII",
-                "owner": "Czechochechnyaslovenoslovakia",
-                "health": 1600,
-                "max_health": 1600,
-                "speed": 4,
-                "attack": 1200,
-                "defense": 120,
-                "level": 0,
-                "order": {
-                    "type": "MOVE",
-                    "path": []
-                }
-            }
-        ],
+        "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
+            "Polish-Lithuanian Commonwealth",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(144, 0, 0)",
@@ -4594,6 +4641,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Polish-Lithuanian Commonwealth",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(145, 0, 0)",
@@ -4625,6 +4673,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Byzantine Empire",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(146, 0, 0)",
@@ -4656,6 +4706,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
+            "Ohio",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(147, 0, 0)",
@@ -4687,6 +4739,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Aztec Empire",
             "Ordensstaat Burgund"
         ],
         "json_key": "(148, 0, 0)",
@@ -4723,6 +4776,9 @@
         ],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Byzantine Empire",
+            "Anarchist Commune of America",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(149, 0, 0)",
@@ -4786,6 +4842,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Byzantine Empire",
+            "Anarchist Commune of America",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(151, 0, 0)",
@@ -4818,6 +4877,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
             "Aztec Empire"
         ],
         "json_key": "(152, 0, 0)",
@@ -4850,6 +4910,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
             "Ohio"
         ],
         "json_key": "(153, 0, 0)",
@@ -4883,6 +4944,7 @@
         ],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
             "Aztec Empire"
         ],
         "json_key": "(154, 0, 0)",
@@ -4914,6 +4976,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ohio",
             "Ordensstaat Burgund"
         ],
         "json_key": "(155, 0, 0)",
@@ -4946,6 +5009,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(156, 0, 0)",
@@ -5040,6 +5104,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
             "Aztec Empire"
         ],
         "json_key": "(159, 0, 0)",
@@ -5071,6 +5136,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(160, 0, 0)",
@@ -5106,6 +5172,10 @@
         ],
         "resources": {},
         "cores": [
+            "Totalist Italy",
+            "Austria-Hungary",
+            "Ohio",
+            "Czechochechnyaslovenoslovakia",
             "Australia-Hungary"
         ],
         "json_key": "(161, 0, 0)",
@@ -5137,6 +5207,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Aztec Empire",
             "Ordensstaat Burgund"
         ],
         "json_key": "(162, 0, 0)",
@@ -5172,6 +5243,9 @@
             "Oil": 50
         },
         "cores": [
+            "Omsk",
+            "Byzantine Empire",
+            "Anarchist Commune of America",
             "Czechochechnyaslovenoslovakia"
         ],
         "json_key": "(163, 0, 0)",
@@ -5295,6 +5369,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Anarchist Commune of America",
             "White Kaganate"
         ],
         "json_key": "(167, 0, 0)",
@@ -5327,6 +5402,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Austria-Hungary",
             "Australia-Hungary"
         ],
         "json_key": "(168, 0, 0)",
@@ -5359,6 +5435,10 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Totalist Italy",
+            "Austria-Hungary",
+            "Ohio",
+            "Czechochechnyaslovenoslovakia",
             "Australia-Hungary"
         ],
         "json_key": "(169, 0, 0)",
@@ -5421,6 +5501,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Austria-Hungary",
             "Australia-Hungary"
         ],
         "json_key": "(171, 0, 0)",
@@ -5453,6 +5534,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Austria-Hungary",
             "Australia-Hungary"
         ],
         "json_key": "(172, 0, 0)",
@@ -5484,6 +5567,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Anarchist Commune of America"
         ],
         "json_key": "(173, 0, 0)",
@@ -5519,6 +5603,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Totalist Italy",
+            "Ordensstaat Burgund",
+            "Ohio",
             "Las Vegas"
         ],
         "json_key": "(174, 0, 0)",
@@ -5550,6 +5637,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
+            "Aztec Empire",
             "Sinaloa Cartel"
         ],
         "json_key": "(175, 0, 0)",
@@ -5582,6 +5671,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Sinaloa Cartel",
             "Aztec Empire"
         ],
         "json_key": "(176, 0, 0)",
@@ -5645,6 +5735,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
+            "Aztec Empire",
             "Sinaloa Cartel"
         ],
         "json_key": "(178, 0, 0)",
@@ -5710,6 +5802,8 @@
         ],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
+            "Czechochechnyaslovenoslovakia",
             "Totalist Italy"
         ],
         "json_key": "(180, 0, 0)",
@@ -5741,6 +5835,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Austria-Hungary",
             "Australia-Hungary"
         ],
         "json_key": "(181, 0, 0)",
@@ -5804,6 +5900,10 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Totalist Italy",
+            "Australia-Hungary",
+            "Albania",
+            "Czechochechnyaslovenoslovakia",
             "Austria-Hungary"
         ],
         "json_key": "(183, 0, 0)",
@@ -5923,6 +6023,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
+            "Albania",
             "Austria-Hungary"
         ],
         "json_key": "(187, 0, 0)",
@@ -5955,6 +6057,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Anarchist Commune of America"
         ],
         "json_key": "(188, 0, 0)",
@@ -5987,6 +6090,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
+            "Aztec Empire",
             "Sinaloa Cartel"
         ],
         "json_key": "(189, 0, 0)",
@@ -6020,6 +6125,9 @@
         ],
         "resources": {},
         "cores": [
+            "Totalist Italy",
+            "Ordensstaat Burgund",
+            "Aztec Empire",
             "Las Vegas"
         ],
         "json_key": "(190, 0, 0)",
@@ -6051,6 +6159,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Totalist Italy",
+            "Ordensstaat Burgund",
             "Las Vegas"
         ],
         "json_key": "(191, 0, 0)",
@@ -6084,6 +6194,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
+            "Albania",
             "Austria-Hungary"
         ],
         "json_key": "(192, 0, 0)",
@@ -6244,6 +6356,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Austria-Hungary",
             "Australia-Hungary"
         ],
         "json_key": "(197, 0, 0)",
@@ -6308,6 +6422,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Vikramaditya",
             "Vorkuta"
         ],
         "json_key": "(199, 0, 0)",
@@ -6339,6 +6455,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Sinaloa Cartel",
             "Aztec Empire"
         ],
         "json_key": "(200, 0, 0)",
@@ -6400,6 +6517,8 @@
         ],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
+            "Albania",
             "Austria-Hungary"
         ],
         "json_key": "(202, 0, 0)",
@@ -6431,6 +6550,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Australia-Hungary",
+            "Albania",
             "Austria-Hungary"
         ],
         "json_key": "(203, 0, 0)",
@@ -6492,6 +6613,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
+            "Aztec Empire",
             "Sinaloa Cartel"
         ],
         "json_key": "(205, 0, 0)",
@@ -6525,6 +6648,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Albania",
             "Austria-Hungary"
         ],
         "json_key": "(206, 0, 0)",
@@ -6589,6 +6713,8 @@
         ],
         "resources": {},
         "cores": [
+            "Ordensstaat Burgund",
+            "Aztec Empire",
             "Sinaloa Cartel"
         ],
         "json_key": "(208, 0, 0)",
@@ -6773,6 +6899,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Pocatello",
+            "Albania",
             "Austria-Hungary"
         ],
         "json_key": "(214, 0, 0)",
@@ -6867,6 +6996,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
             "Pocatello"
         ],
         "json_key": "(217, 0, 0)",
@@ -6927,6 +7057,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Pocatello",
             "Austria-Hungary"
         ],
         "json_key": "(219, 0, 0)",
@@ -7022,6 +7154,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "49ers",
             "Basque Country"
         ],
         "json_key": "(222, 0, 0)",
@@ -7053,6 +7186,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "49ers",
             "Basque Country"
         ],
         "json_key": "(223, 0, 0)",
@@ -7085,6 +7219,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Sinaloa Cartel",
+            "49ers",
             "Basque Country"
         ],
         "json_key": "(224, 0, 0)",
@@ -7113,6 +7249,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Totalist Italy",
             "Hawaii"
         ],
         "json_key": "(225, 0, 0)",
@@ -7178,6 +7315,8 @@
         ],
         "resources": {},
         "cores": [
+            "Sinaloa Cartel",
+            "49ers",
             "Basque Country"
         ],
         "json_key": "(227, 0, 0)",
@@ -7302,6 +7441,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
+            "Vikramaditya",
             "Vorkuta"
         ],
         "json_key": "(231, 0, 0)",
@@ -7363,6 +7504,7 @@
         ],
         "resources": {},
         "cores": [
+            "White Kaganate",
             "Pocatello"
         ],
         "json_key": "(233, 0, 0)",
@@ -7393,6 +7535,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "49ers",
             "Weimar Republic"
         ],
         "json_key": "(234, 0, 0)",
@@ -7458,6 +7601,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "White Kaganate",
+            "Pocatello",
+            "Albania",
             "Carthage"
         ],
         "json_key": "(236, 0, 0)",
@@ -7521,6 +7667,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
             "Anarchist Commune of America"
         ],
         "json_key": "(238, 0, 0)",
@@ -7645,6 +7792,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
+            "Anarchist Commune of America",
             "Pennsylvania"
         ],
         "json_key": "(242, 0, 0)",
@@ -7706,6 +7855,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
             "Anarchist Commune of America"
         ],
         "json_key": "(244, 0, 0)",
@@ -7768,6 +7918,7 @@
         ],
         "resources": {},
         "cores": [
+            "Totalist Italy",
             "Hawaii"
         ],
         "json_key": "(246, 0, 0)",
@@ -7833,6 +7984,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
+            "San Francisco",
+            "Anarchist Commune of America",
             "Pennsylvania"
         ],
         "json_key": "(248, 0, 0)",
@@ -7865,6 +8019,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Albania",
             "Carthage"
         ],
         "json_key": "(249, 0, 0)",
@@ -7934,6 +8089,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
             "Pennsylvania"
         ],
         "json_key": "(251, 0, 0)",
@@ -7965,6 +8121,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
             "Anarchist Commune of America"
         ],
         "json_key": "(252, 0, 0)",
@@ -7997,6 +8154,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Sinaloa Cartel",
             "49ers"
         ],
         "json_key": "(253, 0, 0)",
@@ -8062,6 +8220,7 @@
         ],
         "resources": {},
         "cores": [
+            "49ers",
             "Weimar Republic"
         ],
         "json_key": "(255, 0, 0)",
@@ -8347,6 +8506,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
+            "San Francisco",
+            "Anarchist Commune of America",
             "Alsace-Lorraine"
         ],
         "json_key": "(8, 1, 0)",
@@ -8381,6 +8543,8 @@
         ],
         "resources": {},
         "cores": [
+            "Vikramaditya",
+            "Anarchist Commune of America",
             "Alsace-Lorraine"
         ],
         "json_key": "(9, 1, 0)",
@@ -8414,6 +8578,7 @@
         ],
         "resources": {},
         "cores": [
+            "Sinaloa Cartel",
             "49ers"
         ],
         "json_key": "(10, 1, 0)",
@@ -8446,6 +8611,7 @@
         ],
         "resources": {},
         "cores": [
+            "Albania",
             "Carthage"
         ],
         "json_key": "(11, 1, 0)",
@@ -8478,6 +8644,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
             "Pennsylvania"
         ],
         "json_key": "(12, 1, 0)",
@@ -8508,6 +8675,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "49ers",
             "Weimar Republic"
         ],
         "json_key": "(13, 1, 0)",
@@ -8539,6 +8707,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
             "Pennsylvania"
         ],
         "json_key": "(14, 1, 0)",
@@ -8758,6 +8927,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Omsk",
             "Vikramaditya"
         ],
         "json_key": "(21, 1, 0)",
@@ -8855,6 +9025,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
+            "San Francisco",
             "Sverdlovsk"
         ],
         "json_key": "(24, 1, 0)",
@@ -8921,6 +9093,10 @@
         ],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Scary Russian Empire",
+            "Reno",
+            "Afrika Korps",
             "Mega City One"
         ],
         "json_key": "(26, 1, 0)",
@@ -8989,6 +9165,8 @@
         ],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Mega City One",
             "Scary Russian Empire"
         ],
         "json_key": "(28, 1, 0)",
@@ -9084,6 +9262,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Mega City One",
             "Scary Russian Empire"
         ],
         "json_key": "(31, 1, 0)",
@@ -9116,6 +9296,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
             "Vikramaditya"
         ],
         "json_key": "(32, 1, 0)",
@@ -9147,6 +9328,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Scary Russian Empire",
             "League of Eight Provinces"
         ],
         "json_key": "(33, 1, 0)",
@@ -9177,6 +9359,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Mega City One",
             "Scary Russian Empire"
         ],
         "json_key": "(34, 1, 0)",
@@ -9364,6 +9548,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Mega City One",
             "Scary Russian Empire"
         ],
         "json_key": "(40, 1, 0)",
@@ -9424,6 +9610,10 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Scary Russian Empire",
+            "Reno",
+            "Afrika Korps",
             "Mega City One"
         ],
         "json_key": "(42, 1, 0)",
@@ -9456,6 +9646,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
+            "San Francisco",
             "Sverdlovsk"
         ],
         "json_key": "(43, 1, 0)",
@@ -9488,6 +9680,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Vikramaditya",
+            "San Francisco",
             "Sverdlovsk"
         ],
         "json_key": "(44, 1, 0)",
@@ -9553,6 +9747,7 @@
         ],
         "resources": {},
         "cores": [
+            "Scary Russian Empire",
             "League of Eight Provinces"
         ],
         "json_key": "(46, 1, 0)",
@@ -9584,6 +9779,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Scary Russian Empire",
             "League of Eight Provinces"
         ],
         "json_key": "(47, 1, 0)",
@@ -9646,6 +9842,9 @@
         ],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Mega City One",
+            "Afrika Korps",
             "Reno"
         ],
         "json_key": "(49, 1, 0)",
@@ -9712,6 +9911,8 @@
         ],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Reno",
             "Afrika Korps"
         ],
         "json_key": "(51, 1, 0)",
@@ -9771,6 +9972,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Scary Russian Empire",
             "League of Eight Provinces"
         ],
         "json_key": "(53, 1, 0)",
@@ -9803,6 +10005,8 @@
         ],
         "resources": {},
         "cores": [
+            "Vikramaditya",
+            "San Francisco",
             "Sverdlovsk"
         ],
         "json_key": "(54, 1, 0)",
@@ -9862,6 +10066,9 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Mega City One",
+            "Afrika Korps",
             "Reno"
         ],
         "json_key": "(56, 1, 0)",
@@ -9923,6 +10130,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
+            "Afrika Korps",
             "Sudwestafrika"
         ],
         "json_key": "(58, 1, 0)",
@@ -9952,6 +10161,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "League of Eight Provinces",
+            "Reno",
             "Afrika Korps"
         ],
         "json_key": "(59, 1, 0)",
@@ -10016,6 +10227,8 @@
         ],
         "resources": {},
         "cores": [
+            "San Francisco",
+            "Afrika Korps",
             "Sudwestafrika"
         ],
         "json_key": "(61, 1, 0)",
@@ -10046,6 +10259,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Afrika Korps",
             "San Francisco"
         ],
         "json_key": "(62, 1, 0)",
@@ -10164,6 +10378,7 @@
         ],
         "resources": {},
         "cores": [
+            "San Francisco",
             "Alabama"
         ],
         "json_key": "(66, 1, 0)",
@@ -10193,6 +10408,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
+            "Afrika Korps",
             "Sudwestafrika"
         ],
         "json_key": "(67, 1, 0)",
@@ -10278,6 +10495,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
+            "Afrika Korps",
             "Sudwestafrika"
         ],
         "json_key": "(70, 1, 0)",
@@ -10306,6 +10525,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "San Francisco",
             "Alabama"
         ],
         "json_key": "(71, 1, 0)",

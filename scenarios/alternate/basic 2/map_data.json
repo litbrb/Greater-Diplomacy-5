@@ -5959,6 +5959,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "49ers",
             "Afrika Korps"
         ],
         "json_key": "(200, 0, 0)",
@@ -6212,6 +6213,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "49ers",
             "Afrika Korps"
         ],
         "json_key": "(208, 0, 0)",
@@ -6705,6 +6707,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Afrika Korps",
             "49ers"
         ],
         "json_key": "(224, 0, 0)",
@@ -6792,6 +6795,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
+            "Afrika Korps",
             "49ers"
         ],
         "json_key": "(227, 0, 0)",

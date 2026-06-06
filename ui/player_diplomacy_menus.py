@@ -112,6 +112,11 @@ class Declare_War_Screen(GameState):
             btn = Button(btn_x, btn_y, btn_size, color, opt["label"], lambda idx=i: self.select_wg(idx))
             if not opt["enabled"]:
                 btn.disabled = True
+                
+            # Add the gold/yellow highlight outline
+            if self.selected_wargoal_idx == i:
+                btn.is_selected = True
+                
             self.elements.append(btn)
 
     def select_wg(self, idx):
@@ -515,6 +520,11 @@ class Peace_Screen(GameState):
             btn = Button(btn_x, btn_y, "medium", color, term_str, lambda idx=i: self.select_term(idx))
             if not is_enabled:
                 btn.disabled = True
+                
+            # Add the gold/yellow highlight outline
+            if self.selected_term_idx == i:
+                btn.is_selected = True
+                
             self.elements.append(btn)
 
         confirm_text = "Update Offer" if self.is_editing else "Send Proposal"

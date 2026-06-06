@@ -192,13 +192,15 @@
             6,
             15
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(7, 0, 0)",
         "map_color": [
             7,
@@ -280,13 +282,17 @@
             14,
             17
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(10, 0, 0)",
         "map_color": [
             10,
@@ -340,13 +346,15 @@
             22,
             30
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(12, 0, 0)",
         "map_color": [
             12,
@@ -369,13 +377,15 @@
             16,
             22
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(13, 0, 0)",
         "map_color": [
             13,
@@ -398,13 +408,15 @@
             17,
             23
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(14, 0, 0)",
         "map_color": [
             14,
@@ -426,13 +438,15 @@
             6,
             7
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(15, 0, 0)",
         "map_color": [
             15,
@@ -456,13 +470,15 @@
             22,
             26
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(16, 0, 0)",
         "map_color": [
             16,
@@ -486,13 +502,15 @@
             25,
             30
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(17, 0, 0)",
         "map_color": [
             17,
@@ -516,13 +534,15 @@
             15,
             19
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(18, 0, 0)",
         "map_color": [
             18,
@@ -545,13 +565,15 @@
             18,
             28
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(19, 0, 0)",
         "map_color": [
             19,
@@ -601,13 +623,15 @@
             16,
             5
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(21, 0, 0)",
         "map_color": [
             21,
@@ -632,13 +656,15 @@
             26,
             30
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(22, 0, 0)",
         "map_color": [
             22,
@@ -662,13 +688,15 @@
             17,
             25
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(23, 0, 0)",
         "map_color": [
             23,
@@ -719,13 +747,15 @@
             38,
             23
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(25, 0, 0)",
         "map_color": [
             25,
@@ -749,13 +779,15 @@
             48,
             22
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(26, 0, 0)",
         "map_color": [
             26,
@@ -777,13 +809,15 @@
             29,
             31
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(27, 0, 0)",
         "map_color": [
             27,
@@ -806,13 +840,15 @@
             44,
             19
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(28, 0, 0)",
         "map_color": [
             28,
@@ -833,13 +869,15 @@
             27,
             31
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(29, 0, 0)",
         "map_color": [
             29,
@@ -928,13 +966,15 @@
             18,
             61
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(32, 0, 0)",
         "map_color": [
             32,
@@ -956,13 +996,15 @@
             22,
             39
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(33, 0, 0)",
         "map_color": [
             33,
@@ -985,13 +1027,15 @@
             50,
             28
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(34, 0, 0)",
         "map_color": [
             34,
@@ -1015,13 +1059,15 @@
             22,
             26
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(35, 0, 0)",
         "map_color": [
             35,
@@ -1045,13 +1091,15 @@
             55,
             26
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(36, 0, 0)",
         "map_color": [
             36,
@@ -1076,13 +1124,15 @@
             56,
             28
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(37, 0, 0)",
         "map_color": [
             37,
@@ -1107,13 +1157,15 @@
             30,
             57
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(38, 0, 0)",
         "map_color": [
             38,
@@ -1135,13 +1187,15 @@
             45,
             30
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(39, 0, 0)",
         "map_color": [
             39,
@@ -1164,13 +1218,15 @@
             47,
             23
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(40, 0, 0)",
         "map_color": [
             40,
@@ -1193,13 +1249,15 @@
             50,
             53
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(41, 0, 0)",
         "map_color": [
             41,
@@ -1253,13 +1311,17 @@
             54,
             61
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(43, 0, 0)",
         "map_color": [
             43,
@@ -1282,13 +1344,15 @@
             56,
             28
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(44, 0, 0)",
         "map_color": [
             44,
@@ -1311,13 +1375,15 @@
             52,
             58
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(45, 0, 0)",
         "map_color": [
             45,
@@ -1340,13 +1406,15 @@
             20,
             63
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(46, 0, 0)",
         "map_color": [
             46,
@@ -1371,13 +1439,15 @@
             49,
             63
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(47, 0, 0)",
         "map_color": [
             47,
@@ -1401,13 +1471,15 @@
             26,
             62
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(48, 0, 0)",
         "map_color": [
             48,
@@ -1429,13 +1501,15 @@
             38,
             47
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(49, 0, 0)",
         "map_color": [
             49,
@@ -1461,13 +1535,15 @@
             56,
             60
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(50, 0, 0)",
         "map_color": [
             50,
@@ -1520,13 +1596,15 @@
             30,
             39
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(52, 0, 0)",
         "map_color": [
             52,
@@ -1549,13 +1627,15 @@
             55,
             60
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(53, 0, 0)",
         "map_color": [
             53,
@@ -1578,13 +1658,15 @@
             56,
             61
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(54, 0, 0)",
         "map_color": [
             54,
@@ -1608,13 +1690,15 @@
             53,
             62
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(55, 0, 0)",
         "map_color": [
             55,
@@ -1639,13 +1723,15 @@
             50,
             54
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(56, 0, 0)",
         "map_color": [
             56,
@@ -1669,13 +1755,15 @@
             49,
             30
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(57, 0, 0)",
         "map_color": [
             57,
@@ -1761,13 +1849,15 @@
             53,
             70
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(60, 0, 0)",
         "map_color": [
             60,
@@ -1792,13 +1882,15 @@
             89,
             92
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(61, 0, 0)",
         "map_color": [
             61,
@@ -1821,13 +1913,15 @@
             55,
             58
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(62, 0, 0)",
         "map_color": [
             62,
@@ -1849,13 +1943,15 @@
             46,
             47
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(63, 0, 0)",
         "map_color": [
             63,
@@ -1877,13 +1973,15 @@
             78,
             47
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(64, 0, 0)",
         "map_color": [
             64,
@@ -1970,13 +2068,15 @@
             58,
             62
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(67, 0, 0)",
         "map_color": [
             67,
@@ -2063,13 +2163,15 @@
             55,
             60
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(70, 0, 0)",
         "map_color": [
             70,
@@ -2091,13 +2193,15 @@
             61,
             133
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(71, 0, 0)",
         "map_color": [
             71,
@@ -2119,13 +2223,17 @@
             84,
             86
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(72, 0, 0)",
         "map_color": [
             72,
@@ -2150,13 +2258,15 @@
             60,
             95
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(73, 0, 0)",
         "map_color": [
             73,
@@ -2182,13 +2292,15 @@
             90,
             62
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(74, 0, 0)",
         "map_color": [
             74,
@@ -2212,13 +2324,15 @@
             89,
             61
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(75, 0, 0)",
         "map_color": [
             75,
@@ -2270,13 +2384,15 @@
             56,
             91
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(77, 0, 0)",
         "map_color": [
             77,
@@ -2298,13 +2414,15 @@
             64,
             68
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(78, 0, 0)",
         "map_color": [
             78,
@@ -2327,13 +2445,15 @@
             85,
             88
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(79, 0, 0)",
         "map_color": [
             79,
@@ -2355,13 +2475,15 @@
             68,
             110
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(80, 0, 0)",
         "map_color": [
             80,
@@ -2384,13 +2506,15 @@
             87,
             56
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(81, 0, 0)",
         "map_color": [
             81,
@@ -2445,13 +2569,15 @@
             90,
             95
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(83, 0, 0)",
         "map_color": [
             83,
@@ -2507,13 +2633,17 @@
             88,
             94
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(85, 0, 0)",
         "map_color": [
             85,
@@ -2535,13 +2665,15 @@
             84,
             93
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(86, 0, 0)",
         "map_color": [
             86,
@@ -2566,13 +2698,15 @@
             89,
             122
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(87, 0, 0)",
         "map_color": [
             87,
@@ -2597,13 +2731,15 @@
             121,
             90
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(88, 0, 0)",
         "map_color": [
             88,
@@ -2626,13 +2762,15 @@
             92,
             61
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(89, 0, 0)",
         "map_color": [
             89,
@@ -2655,13 +2793,15 @@
             83,
             88
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(90, 0, 0)",
         "map_color": [
             90,
@@ -2685,13 +2825,15 @@
             114,
             95
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(91, 0, 0)",
         "map_color": [
             91,
@@ -2715,13 +2857,15 @@
             89,
             61
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(92, 0, 0)",
         "map_color": [
             92,
@@ -2744,13 +2888,15 @@
             86,
             59
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(93, 0, 0)",
         "map_color": [
             93,
@@ -2772,13 +2918,15 @@
             85,
             103
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(94, 0, 0)",
         "map_color": [
             94,
@@ -2802,13 +2950,15 @@
             91,
             126
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(95, 0, 0)",
         "map_color": [
             95,
@@ -2830,13 +2980,15 @@
             69,
             102
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(96, 0, 0)",
         "map_color": [
             96,
@@ -2895,13 +3047,15 @@
             91,
             127
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(98, 0, 0)",
         "map_color": [
             98,
@@ -2926,13 +3080,15 @@
             123,
             125
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(99, 0, 0)",
         "map_color": [
             99,
@@ -2956,13 +3112,15 @@
             126,
             95
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(100, 0, 0)",
         "map_color": [
             100,
@@ -2984,13 +3142,15 @@
             114,
             127
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(101, 0, 0)",
         "map_color": [
             101,
@@ -3013,13 +3173,15 @@
             105,
             112
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(102, 0, 0)",
         "map_color": [
             102,
@@ -3043,13 +3205,15 @@
             120,
             94
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(103, 0, 0)",
         "map_color": [
             103,
@@ -3072,13 +3236,15 @@
             121,
             90
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(104, 0, 0)",
         "map_color": [
             104,
@@ -3100,13 +3266,15 @@
             128,
             102
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(105, 0, 0)",
         "map_color": [
             105,
@@ -3129,13 +3297,15 @@
             110,
             123
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(106, 0, 0)",
         "map_color": [
             106,
@@ -3161,13 +3331,15 @@
             124,
             94
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(107, 0, 0)",
         "map_color": [
             107,
@@ -3190,13 +3362,15 @@
             89,
             92
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(108, 0, 0)",
         "map_color": [
             108,
@@ -3218,13 +3392,15 @@
             93,
             111
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(109, 0, 0)",
         "map_color": [
             109,
@@ -3249,13 +3425,17 @@
             113,
             123
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(110, 0, 0)",
         "map_color": [
             110,
@@ -3278,13 +3458,15 @@
             119,
             93
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(111, 0, 0)",
         "map_color": [
             111,
@@ -3338,13 +3520,15 @@
             82,
             116
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(113, 0, 0)",
         "map_color": [
             113,
@@ -3368,13 +3552,15 @@
             126,
             95
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(114, 0, 0)",
         "map_color": [
             114,
@@ -3398,13 +3584,15 @@
             108,
             92
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(115, 0, 0)",
         "map_color": [
             115,
@@ -3426,13 +3614,15 @@
             82,
             138
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(116, 0, 0)",
         "map_color": [
             116,
@@ -3454,13 +3644,15 @@
             84,
             111
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(117, 0, 0)",
         "map_color": [
             117,
@@ -3482,13 +3674,15 @@
             125,
             103
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(118, 0, 0)",
         "map_color": [
             118,
@@ -3510,13 +3704,15 @@
             109,
             111
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(119, 0, 0)",
         "map_color": [
             119,
@@ -3539,13 +3735,15 @@
             118,
             125
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(120, 0, 0)",
         "map_color": [
             120,
@@ -3569,13 +3767,15 @@
             88,
             124
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(121, 0, 0)",
         "map_color": [
             121,
@@ -3598,13 +3798,15 @@
             87,
             127
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(122, 0, 0)",
         "map_color": [
             122,
@@ -3628,13 +3830,15 @@
             143,
             125
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(123, 0, 0)",
         "map_color": [
             123,
@@ -3657,13 +3861,15 @@
             144,
             121
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(124, 0, 0)",
         "map_color": [
             124,
@@ -3689,13 +3895,15 @@
             120,
             123
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(125, 0, 0)",
         "map_color": [
             125,
@@ -3719,13 +3927,15 @@
             114,
             95
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(126, 0, 0)",
         "map_color": [
             126,
@@ -3751,13 +3961,15 @@
             151,
             122
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(127, 0, 0)",
         "map_color": [
             127,
@@ -3814,13 +4026,15 @@
             117,
             119
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(129, 0, 0)",
         "map_color": [
             129,
@@ -3843,13 +4057,15 @@
             150,
             123
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(130, 0, 0)",
         "map_color": [
             130,
@@ -3872,13 +4088,15 @@
             124,
             125
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(131, 0, 0)",
         "map_color": [
             131,
@@ -3900,13 +4118,15 @@
             133,
             182
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(132, 0, 0)",
         "map_color": [
             132,
@@ -3930,13 +4150,15 @@
             182,
             92
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(133, 0, 0)",
         "map_color": [
             133,
@@ -3960,13 +4182,15 @@
             87,
             122
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(134, 0, 0)",
         "map_color": [
             134,
@@ -3989,13 +4213,15 @@
             148,
             116
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(135, 0, 0)",
         "map_color": [
             135,
@@ -4019,13 +4245,15 @@
             150,
             153
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(136, 0, 0)",
         "map_color": [
             136,
@@ -4049,13 +4277,15 @@
             121,
             126
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(137, 0, 0)",
         "map_color": [
             137,
@@ -4079,13 +4309,15 @@
             153,
             155
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(138, 0, 0)",
         "map_color": [
             138,
@@ -4109,13 +4341,15 @@
             158,
             127
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(139, 0, 0)",
         "map_color": [
             139,
@@ -4141,13 +4375,15 @@
             121,
             124
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(140, 0, 0)",
         "map_color": [
             140,
@@ -4199,14 +4435,16 @@
             152,
             159
         ],
-        "owner": "Afrika Korps",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
-            "Afrika Korps"
+            "49ers"
         ],
         "json_key": "(142, 0, 0)",
         "map_color": [
@@ -4231,13 +4469,15 @@
             123,
             125
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(143, 0, 0)",
         "map_color": [
             143,
@@ -4262,13 +4502,15 @@
             156,
             125
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(144, 0, 0)",
         "map_color": [
             144,
@@ -4293,13 +4535,15 @@
             126,
             158
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(145, 0, 0)",
         "map_color": [
             145,
@@ -4322,13 +4566,15 @@
             158,
             127
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(146, 0, 0)",
         "map_color": [
             146,
@@ -4351,13 +4597,15 @@
             156,
             125
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(147, 0, 0)",
         "map_color": [
             147,
@@ -4380,14 +4628,14 @@
             155,
             159
         ],
-        "owner": "Afrika Korps",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "Afrika Korps"
+            "49ers"
         ],
         "json_key": "(148, 0, 0)",
         "map_color": [
@@ -4414,13 +4662,15 @@
             122,
             127
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(149, 0, 0)",
         "map_color": [
             149,
@@ -4444,13 +4694,15 @@
             143,
             153
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(150, 0, 0)",
         "map_color": [
             150,
@@ -4473,13 +4725,15 @@
             149,
             127
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(151, 0, 0)",
         "map_color": [
             151,
@@ -4503,14 +4757,14 @@
             154,
             159
         ],
-        "owner": "Afrika Korps",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "Afrika Korps"
+            "49ers"
         ],
         "json_key": "(152, 0, 0)",
         "map_color": [
@@ -4535,13 +4789,15 @@
             150,
             155
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(153, 0, 0)",
         "map_color": [
             153,
@@ -4564,14 +4820,14 @@
             176,
             152
         ],
-        "owner": "Afrika Korps",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "Afrika Korps"
+            "49ers"
         ],
         "json_key": "(154, 0, 0)",
         "map_color": [
@@ -4595,14 +4851,14 @@
             148,
             153
         ],
-        "owner": "Afrika Korps",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "Afrika Korps"
+            "49ers"
         ],
         "json_key": "(155, 0, 0)",
         "map_color": [
@@ -4627,13 +4883,15 @@
             144,
             147
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(156, 0, 0)",
         "map_color": [
             156,
@@ -4687,13 +4945,15 @@
             146,
             185
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(158, 0, 0)",
         "map_color": [
             158,
@@ -4717,16 +4977,14 @@
             148,
             152
         ],
-        "owner": "Afrika Korps",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
-        "resources": {
-            "Oil": 50
-        },
+        "resources": {},
         "cores": [
-            "Afrika Korps"
+            "49ers"
         ],
         "json_key": "(159, 0, 0)",
         "map_color": [
@@ -4750,13 +5008,15 @@
             144,
             156
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(160, 0, 0)",
         "map_color": [
             160,
@@ -4781,13 +5041,15 @@
             183,
             156
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(161, 0, 0)",
         "map_color": [
             161,
@@ -4810,14 +5072,14 @@
             155,
             159
         ],
-        "owner": "Afrika Korps",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "Afrika Korps"
+            "49ers"
         ],
         "json_key": "(162, 0, 0)",
         "map_color": [
@@ -4843,13 +5105,15 @@
             182,
             188
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(163, 0, 0)",
         "map_color": [
             163,
@@ -4900,13 +5164,15 @@
             158,
             166
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(165, 0, 0)",
         "map_color": [
             165,
@@ -4930,13 +5196,15 @@
             145,
             184
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(166, 0, 0)",
         "map_color": [
             166,
@@ -4960,13 +5228,15 @@
             185,
             158
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(167, 0, 0)",
         "map_color": [
             167,
@@ -4990,13 +5260,16 @@
             181,
             156
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps",
+            "49ers"
+        ],
         "json_key": "(168, 0, 0)",
         "map_color": [
             168,
@@ -5020,13 +5293,15 @@
             183,
             153
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(169, 0, 0)",
         "map_color": [
             169,
@@ -5048,13 +5323,15 @@
             140,
             166
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(170, 0, 0)",
         "map_color": [
             170,
@@ -5078,13 +5355,16 @@
             187,
             156
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps",
+            "49ers"
+        ],
         "json_key": "(171, 0, 0)",
         "map_color": [
             171,
@@ -5108,13 +5388,15 @@
             170,
             181
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(172, 0, 0)",
         "map_color": [
             172,
@@ -5137,13 +5419,15 @@
             149,
             188
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(173, 0, 0)",
         "map_color": [
             173,
@@ -5170,13 +5454,16 @@
             190,
             191
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers",
+            "Afrika Korps"
+        ],
         "json_key": "(174, 0, 0)",
         "map_color": [
             174,
@@ -5325,13 +5612,15 @@
             177,
             149
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(179, 0, 0)",
         "map_color": [
             179,
@@ -5355,13 +5644,15 @@
             183,
             186
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(180, 0, 0)",
         "map_color": [
             180,
@@ -5384,13 +5675,15 @@
             172,
             206
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(181, 0, 0)",
         "map_color": [
             181,
@@ -5445,13 +5738,15 @@
             180,
             187
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(183, 0, 0)",
         "map_color": [
             183,
@@ -5472,13 +5767,15 @@
             165,
             166
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(184, 0, 0)",
         "map_color": [
             184,
@@ -5530,13 +5827,15 @@
             213,
             191
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(186, 0, 0)",
         "map_color": [
             186,
@@ -5558,13 +5857,15 @@
             203,
             183
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(187, 0, 0)",
         "map_color": [
             187,
@@ -5588,13 +5889,15 @@
             212,
             182
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(188, 0, 0)",
         "map_color": [
             188,
@@ -5680,13 +5983,15 @@
             186,
             190
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(191, 0, 0)",
         "map_color": [
             191,
@@ -5711,13 +6016,15 @@
             216,
             187
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(192, 0, 0)",
         "map_color": [
             192,
@@ -5742,13 +6049,15 @@
             184,
             217
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(193, 0, 0)",
         "map_color": [
             193,
@@ -5770,13 +6079,15 @@
             177,
             167
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(194, 0, 0)",
         "map_color": [
             194,
@@ -5830,13 +6141,15 @@
             220,
             188
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(196, 0, 0)",
         "map_color": [
             196,
@@ -5861,13 +6174,15 @@
             217,
             219
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(197, 0, 0)",
         "map_color": [
             197,
@@ -5923,13 +6238,15 @@
             182,
             231
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(199, 0, 0)",
         "map_color": [
             199,
@@ -5959,7 +6276,6 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers",
             "Afrika Korps"
         ],
         "json_key": "(200, 0, 0)",
@@ -5983,13 +6299,15 @@
             180,
             198
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(201, 0, 0)",
         "map_color": [
             201,
@@ -6010,13 +6328,15 @@
             198,
             183
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(202, 0, 0)",
         "map_color": [
             202,
@@ -6039,13 +6359,15 @@
             216,
             187
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(203, 0, 0)",
         "map_color": [
             203,
@@ -6131,13 +6453,15 @@
             214,
             216
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(206, 0, 0)",
         "map_color": [
             206,
@@ -6192,28 +6516,14 @@
             189
         ],
         "owner": "Afrika Korps",
-        "units": [
-            {
-                "type": "Motorized Infantry Type 1930",
-                "owner": "Afrika Korps",
-                "health": 2000,
-                "max_health": 2000,
-                "speed": 2,
-                "attack": 300,
-                "defense": 0,
-                "level": 0,
-                "order": {
-                    "type": "MOVE",
-                    "path": []
-                }
-            }
-        ],
+        "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
-            "49ers",
             "Afrika Korps"
         ],
         "json_key": "(208, 0, 0)",
@@ -6330,13 +6640,15 @@
             220,
             221
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(212, 0, 0)",
         "map_color": [
             212,
@@ -6389,13 +6701,15 @@
             206,
             219
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(214, 0, 0)",
         "map_color": [
             214,
@@ -6450,13 +6764,15 @@
             228,
             206
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(216, 0, 0)",
         "map_color": [
             216,
@@ -6479,13 +6795,15 @@
             210,
             219
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(217, 0, 0)",
         "map_color": [
             217,
@@ -6506,13 +6824,17 @@
             198,
             230
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(218, 0, 0)",
         "map_color": [
             218,
@@ -6535,13 +6857,15 @@
             214,
             217
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(219, 0, 0)",
         "map_color": [
             219,
@@ -6566,13 +6890,15 @@
             244,
             248
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(220, 0, 0)",
         "map_color": [
             220,
@@ -6593,13 +6919,15 @@
             212,
             238
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(221, 0, 0)",
         "map_color": [
             221,
@@ -6622,14 +6950,14 @@
             209,
             223
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(222, 0, 0)",
         "map_color": [
@@ -6653,14 +6981,14 @@
             241,
             222
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(223, 0, 0)",
         "map_color": [
@@ -6685,30 +7013,14 @@
             253,
             223
         ],
-        "owner": "49ers",
-        "units": [
-            {
-                "type": "Motorized Infantry Type 1930",
-                "owner": "49ers",
-                "health": 2000,
-                "max_health": 2000,
-                "speed": 2,
-                "attack": 300,
-                "defense": 0,
-                "level": 0,
-                "order": {
-                    "type": "MOVE",
-                    "path": []
-                }
-            }
-        ],
+        "owner": "Afrika Korps",
+        "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "Afrika Korps",
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(224, 0, 0)",
         "map_color": [
@@ -6729,13 +7041,15 @@
             213,
             215
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(225, 0, 0)",
         "map_color": [
             225,
@@ -6759,13 +7073,17 @@
             252,
             221
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(226, 0, 0)",
         "map_color": [
             226,
@@ -6788,15 +7106,14 @@
             215,
             253
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "Afrika Korps",
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(227, 0, 0)",
         "map_color": [
@@ -6821,13 +7138,15 @@
             216,
             249
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(228, 0, 0)",
         "map_color": [
             228,
@@ -6850,13 +7169,15 @@
             214,
             249
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(229, 0, 0)",
         "map_color": [
             229,
@@ -6877,13 +7198,15 @@
             243,
             198
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(230, 0, 0)",
         "map_color": [
             230,
@@ -6905,13 +7228,15 @@
             277,
             199
         ],
-        "owner": "Unclaimed",
+        "owner": "49ers",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "49ers"
+        ],
         "json_key": "(231, 0, 0)",
         "map_color": [
             231,
@@ -6962,13 +7287,17 @@
             250,
             219
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(233, 0, 0)",
         "map_color": [
             233,
@@ -6990,14 +7319,14 @@
             222,
             255
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(234, 0, 0)",
         "map_color": [
@@ -7023,13 +7352,15 @@
             251,
             254
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(235, 0, 0)",
         "map_color": [
             235,
@@ -7053,13 +7384,15 @@
             250,
             219
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(236, 0, 0)",
         "map_color": [
             236,
@@ -7082,13 +7415,15 @@
             250,
             254
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(237, 0, 0)",
         "map_color": [
             237,
@@ -7112,13 +7447,15 @@
             252,
             221
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(238, 0, 0)",
         "map_color": [
             238,
@@ -7143,14 +7480,14 @@
             222,
             223
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(239, 0, 0)",
         "map_color": [
@@ -7204,14 +7541,14 @@
             253,
             223
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(241, 0, 0)",
         "map_color": [
@@ -7234,13 +7571,15 @@
             220,
             268
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(242, 0, 0)",
         "map_color": [
             242,
@@ -7262,13 +7601,15 @@
             230,
             247
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(243, 0, 0)",
         "map_color": [
             243,
@@ -7291,13 +7632,15 @@
             248,
             220
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(244, 0, 0)",
         "map_color": [
             244,
@@ -7349,13 +7692,15 @@
             213,
             247
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(246, 0, 0)",
         "map_color": [
             246,
@@ -7412,13 +7757,15 @@
             281,
             220
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(248, 0, 0)",
         "map_color": [
             248,
@@ -7442,13 +7789,15 @@
             236,
             250
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(249, 0, 0)",
         "map_color": [
             249,
@@ -7509,13 +7858,15 @@
             242,
             211
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(251, 0, 0)",
         "map_color": [
             251,
@@ -7538,13 +7889,15 @@
             238,
             244
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(252, 0, 0)",
         "map_color": [
             252,
@@ -7568,14 +7921,14 @@
             240,
             241
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(253, 0, 0)",
         "map_color": [
@@ -7599,13 +7952,15 @@
             237,
             275
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(254, 0, 0)",
         "map_color": [
             254,
@@ -7629,14 +7984,14 @@
             239,
             209
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(255, 0, 0)",
         "map_color": [
@@ -7693,13 +8048,15 @@
             251,
             254
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(1, 1, 0)",
         "map_color": [
             1,
@@ -7750,13 +8107,15 @@
             274,
             260
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(3, 1, 0)",
         "map_color": [
             3,
@@ -7780,13 +8139,15 @@
             250,
             254
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(4, 1, 0)",
         "map_color": [
             4,
@@ -7844,16 +8205,14 @@
             272,
             255
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
-        "resources": {
-            "Oil": 50
-        },
+        "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(6, 1, 0)",
         "map_color": [
@@ -7878,14 +8237,14 @@
             241,
             253
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(7, 1, 0)",
         "map_color": [
@@ -7910,13 +8269,15 @@
             248,
             252
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(8, 1, 0)",
         "map_color": [
             8,
@@ -7940,13 +8301,15 @@
             283,
             252
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(9, 1, 0)",
         "map_color": [
             9,
@@ -7969,14 +8332,14 @@
             272,
             253
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(10, 1, 0)",
         "map_color": [
@@ -7999,13 +8362,15 @@
             250,
             279
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(11, 1, 0)",
         "map_color": [
             11,
@@ -8029,13 +8394,15 @@
             251,
             285
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(12, 1, 0)",
         "map_color": [
             12,
@@ -8057,14 +8424,14 @@
             262,
             255
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(13, 1, 0)",
         "map_color": [
@@ -8088,13 +8455,15 @@
             251,
             285
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(14, 1, 0)",
         "map_color": [
             14,
@@ -8117,14 +8486,14 @@
             272,
             273
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(15, 1, 0)",
         "map_color": [
@@ -8148,14 +8517,14 @@
             271,
             273
         ],
-        "owner": "49ers",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
         "cores": [
-            "49ers"
+            "Afrika Korps"
         ],
         "json_key": "(16, 1, 0)",
         "map_color": [
@@ -8212,13 +8581,15 @@
             250,
             286
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(18, 1, 0)",
         "map_color": [
             18,
@@ -8242,13 +8613,15 @@
             254,
             286
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(19, 1, 0)",
         "map_color": [
             19,
@@ -8269,13 +8642,15 @@
             278,
             247
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(20, 1, 0)",
         "map_color": [
             20,
@@ -8297,13 +8672,15 @@
             295,
             231
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(21, 1, 0)",
         "map_color": [
             21,
@@ -8392,13 +8769,15 @@
             248,
             281
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(24, 1, 0)",
         "map_color": [
             24,
@@ -8422,13 +8801,15 @@
             248,
             285
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(25, 1, 0)",
         "map_color": [
             25,
@@ -8452,13 +8833,15 @@
             247,
             284
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(26, 1, 0)",
         "map_color": [
             26,
@@ -8482,13 +8865,15 @@
             301,
             277
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(27, 1, 0)",
         "map_color": [
             27,
@@ -8512,13 +8897,15 @@
             282,
             287
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(28, 1, 0)",
         "map_color": [
             28,
@@ -8542,13 +8929,15 @@
             281,
             286
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(29, 1, 0)",
         "map_color": [
             29,
@@ -8603,13 +8992,15 @@
             273,
             284
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(31, 1, 0)",
         "map_color": [
             31,
@@ -8633,13 +9024,15 @@
             280,
             283
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(32, 1, 0)",
         "map_color": [
             32,
@@ -8662,13 +9055,15 @@
             273,
             287
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(33, 1, 0)",
         "map_color": [
             33,
@@ -8690,13 +9085,15 @@
             284,
             298
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(34, 1, 0)",
         "map_color": [
             34,
@@ -8717,13 +9114,15 @@
             293,
             279
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(35, 1, 0)",
         "map_color": [
             35,
@@ -8743,13 +9142,15 @@
             293,
             286
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(36, 1, 0)",
         "map_color": [
             36,
@@ -8807,13 +9208,15 @@
             281,
             285
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(38, 1, 0)",
         "map_color": [
             38,
@@ -8835,13 +9238,15 @@
             308,
             277
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(39, 1, 0)",
         "map_color": [
             39,
@@ -8863,13 +9268,15 @@
             303,
             287
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(40, 1, 0)",
         "map_color": [
             40,
@@ -8891,13 +9298,15 @@
             285,
             286
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(41, 1, 0)",
         "map_color": [
             41,
@@ -8919,13 +9328,15 @@
             282,
             278
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(42, 1, 0)",
         "map_color": [
             42,
@@ -8949,13 +9360,15 @@
             280,
             313
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(43, 1, 0)",
         "map_color": [
             43,
@@ -8979,13 +9392,15 @@
             280,
             281
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(44, 1, 0)",
         "map_color": [
             44,
@@ -9009,13 +9424,15 @@
             313,
             283
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(45, 1, 0)",
         "map_color": [
             45,
@@ -9038,13 +9455,15 @@
             309,
             316
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(46, 1, 0)",
         "map_color": [
             46,
@@ -9067,13 +9486,15 @@
             309,
             287
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(47, 1, 0)",
         "map_color": [
             47,
@@ -9096,13 +9517,15 @@
             300,
             306
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(48, 1, 0)",
         "map_color": [
             48,
@@ -9123,13 +9546,15 @@
             298,
             278
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(49, 1, 0)",
         "map_color": [
             49,
@@ -9153,13 +9578,15 @@
             304,
             286
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(50, 1, 0)",
         "map_color": [
             50,
@@ -9181,13 +9608,15 @@
             293,
             279
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(51, 1, 0)",
         "map_color": [
             51,
@@ -9209,13 +9638,15 @@
             301,
             295
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(52, 1, 0)",
         "map_color": [
             52,
@@ -9236,13 +9667,15 @@
             302,
             303
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(53, 1, 0)",
         "map_color": [
             53,
@@ -9264,13 +9697,15 @@
             299,
             300
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(54, 1, 0)",
         "map_color": [
             54,
@@ -9321,13 +9756,15 @@
             278,
             279
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(56, 1, 0)",
         "map_color": [
             56,
@@ -9351,13 +9788,15 @@
             310,
             319
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(57, 1, 0)",
         "map_color": [
             57,
@@ -9378,13 +9817,15 @@
             307,
             293
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(58, 1, 0)",
         "map_color": [
             58,
@@ -9405,13 +9846,17 @@
             307,
             279
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(59, 1, 0)",
         "map_color": [
             59,
@@ -9434,13 +9879,17 @@
             309,
             311
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(60, 1, 0)",
         "map_color": [
             60,
@@ -9463,13 +9912,15 @@
             314,
             318
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(61, 1, 0)",
         "map_color": [
             61,
@@ -9491,13 +9942,15 @@
             317,
             293
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(62, 1, 0)",
         "map_color": [
             62,
@@ -9518,13 +9971,15 @@
             313,
             308
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(63, 1, 0)",
         "map_color": [
             63,
@@ -9603,13 +10058,15 @@
             320,
             327
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(66, 1, 0)",
         "map_color": [
             66,
@@ -9630,13 +10087,15 @@
             317,
             326
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(67, 1, 0)",
         "map_color": [
             67,
@@ -9656,13 +10115,15 @@
             316,
             325
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(68, 1, 0)",
         "map_color": [
             68,
@@ -9683,13 +10144,15 @@
             324,
             311
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(69, 1, 0)",
         "map_color": [
             69,
@@ -9709,13 +10172,15 @@
             320,
             323
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(70, 1, 0)",
         "map_color": [
             70,
@@ -9735,13 +10200,15 @@
             320,
             322
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(71, 1, 0)",
         "map_color": [
             71,
@@ -9761,13 +10228,15 @@
             325,
             311
         ],
-        "owner": "Unclaimed",
+        "owner": "Afrika Korps",
         "units": [],
         "deployment_queue": [],
         "orders": [],
         "buildings": [],
         "resources": {},
-        "cores": [],
+        "cores": [
+            "Afrika Korps"
+        ],
         "json_key": "(72, 1, 0)",
         "map_color": [
             72,

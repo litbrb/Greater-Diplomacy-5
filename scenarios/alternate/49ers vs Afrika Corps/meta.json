@@ -21419,8 +21419,10 @@
             "buildings": []
         },
         "(7, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21449,14 +21451,18 @@
             "buildings": []
         },
         "(10, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(11, 0, 0)": {
             "owner": "Ocean",
@@ -21469,8 +21475,10 @@
             "buildings": []
         },
         "(12, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21479,8 +21487,10 @@
             "buildings": []
         },
         "(13, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21489,8 +21499,10 @@
             "buildings": []
         },
         "(14, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21499,8 +21511,10 @@
             "buildings": []
         },
         "(15, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21509,8 +21523,10 @@
             "buildings": []
         },
         "(16, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21519,8 +21535,10 @@
             "buildings": []
         },
         "(17, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21529,8 +21547,10 @@
             "buildings": []
         },
         "(18, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21539,8 +21559,10 @@
             "buildings": []
         },
         "(19, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21559,8 +21581,10 @@
             "buildings": []
         },
         "(21, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21569,8 +21593,10 @@
             "buildings": []
         },
         "(22, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21579,8 +21605,10 @@
             "buildings": []
         },
         "(23, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21599,8 +21627,10 @@
             "buildings": []
         },
         "(25, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21609,8 +21639,10 @@
             "buildings": []
         },
         "(26, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21619,8 +21651,10 @@
             "buildings": []
         },
         "(27, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21629,8 +21663,10 @@
             "buildings": []
         },
         "(28, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21639,8 +21675,10 @@
             "buildings": []
         },
         "(29, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21669,8 +21707,10 @@
             "buildings": []
         },
         "(32, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21679,8 +21719,10 @@
             "buildings": []
         },
         "(33, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21689,8 +21731,10 @@
             "buildings": []
         },
         "(34, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21699,8 +21743,10 @@
             "buildings": []
         },
         "(35, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21709,8 +21755,10 @@
             "buildings": []
         },
         "(36, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21719,8 +21767,10 @@
             "buildings": []
         },
         "(37, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21729,8 +21779,10 @@
             "buildings": []
         },
         "(38, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21739,8 +21791,10 @@
             "buildings": []
         },
         "(39, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21749,8 +21803,10 @@
             "buildings": []
         },
         "(40, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21759,8 +21815,10 @@
             "buildings": []
         },
         "(41, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21779,18 +21837,24 @@
             "buildings": []
         },
         "(43, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(44, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21799,8 +21863,10 @@
             "buildings": []
         },
         "(45, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21809,8 +21875,10 @@
             "buildings": []
         },
         "(46, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21819,8 +21887,10 @@
             "buildings": []
         },
         "(47, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21829,8 +21899,10 @@
             "buildings": []
         },
         "(48, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21839,8 +21911,10 @@
             "buildings": []
         },
         "(49, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21849,8 +21923,10 @@
             "buildings": []
         },
         "(50, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21869,8 +21945,10 @@
             "buildings": []
         },
         "(52, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21879,8 +21957,10 @@
             "buildings": []
         },
         "(53, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21889,8 +21969,10 @@
             "buildings": []
         },
         "(54, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21899,8 +21981,10 @@
             "buildings": []
         },
         "(55, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21909,8 +21993,10 @@
             "buildings": []
         },
         "(56, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21919,8 +22005,10 @@
             "buildings": []
         },
         "(57, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21949,8 +22037,10 @@
             "buildings": []
         },
         "(60, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21959,8 +22049,10 @@
             "buildings": []
         },
         "(61, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -21969,8 +22061,10 @@
             "buildings": []
         },
         "(62, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21979,8 +22073,10 @@
             "buildings": []
         },
         "(63, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -21989,8 +22085,10 @@
             "buildings": []
         },
         "(64, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22019,8 +22117,10 @@
             "buildings": []
         },
         "(67, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22049,8 +22149,10 @@
             "buildings": []
         },
         "(70, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22059,8 +22161,10 @@
             "buildings": []
         },
         "(71, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22069,18 +22173,24 @@
             "buildings": []
         },
         "(72, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(73, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22089,8 +22199,10 @@
             "buildings": []
         },
         "(74, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22099,8 +22211,10 @@
             "buildings": []
         },
         "(75, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22119,8 +22233,10 @@
             "buildings": []
         },
         "(77, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22129,8 +22245,10 @@
             "buildings": []
         },
         "(78, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22139,8 +22257,10 @@
             "buildings": []
         },
         "(79, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22149,8 +22269,10 @@
             "buildings": []
         },
         "(80, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22159,8 +22281,10 @@
             "buildings": []
         },
         "(81, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22179,8 +22303,10 @@
             "buildings": []
         },
         "(83, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22199,18 +22325,24 @@
             "buildings": []
         },
         "(85, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(86, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22219,8 +22351,10 @@
             "buildings": []
         },
         "(87, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22229,8 +22363,10 @@
             "buildings": []
         },
         "(88, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22239,8 +22375,10 @@
             "buildings": []
         },
         "(89, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22249,8 +22387,10 @@
             "buildings": []
         },
         "(90, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22259,8 +22399,10 @@
             "buildings": []
         },
         "(91, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22269,8 +22411,10 @@
             "buildings": []
         },
         "(92, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22279,8 +22423,10 @@
             "buildings": []
         },
         "(93, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22289,8 +22435,10 @@
             "buildings": []
         },
         "(94, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22299,8 +22447,10 @@
             "buildings": []
         },
         "(95, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22309,8 +22459,10 @@
             "buildings": []
         },
         "(96, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22329,8 +22481,10 @@
             "buildings": []
         },
         "(98, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22339,8 +22493,10 @@
             "buildings": []
         },
         "(99, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22349,8 +22505,10 @@
             "buildings": []
         },
         "(100, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22359,8 +22517,10 @@
             "buildings": []
         },
         "(101, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22369,8 +22529,10 @@
             "buildings": []
         },
         "(102, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22379,8 +22541,10 @@
             "buildings": []
         },
         "(103, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22389,8 +22553,10 @@
             "buildings": []
         },
         "(104, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22399,8 +22565,10 @@
             "buildings": []
         },
         "(105, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22409,8 +22577,10 @@
             "buildings": []
         },
         "(106, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22419,8 +22589,10 @@
             "buildings": []
         },
         "(107, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22429,8 +22601,10 @@
             "buildings": []
         },
         "(108, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22439,8 +22613,10 @@
             "buildings": []
         },
         "(109, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22449,18 +22625,24 @@
             "buildings": []
         },
         "(110, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(111, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22479,8 +22661,10 @@
             "buildings": []
         },
         "(113, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22489,8 +22673,10 @@
             "buildings": []
         },
         "(114, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22499,8 +22685,10 @@
             "buildings": []
         },
         "(115, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22509,8 +22697,10 @@
             "buildings": []
         },
         "(116, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22519,8 +22709,10 @@
             "buildings": []
         },
         "(117, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22529,8 +22721,10 @@
             "buildings": []
         },
         "(118, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22539,8 +22733,10 @@
             "buildings": []
         },
         "(119, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22549,8 +22745,10 @@
             "buildings": []
         },
         "(120, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22559,8 +22757,10 @@
             "buildings": []
         },
         "(121, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22569,8 +22769,10 @@
             "buildings": []
         },
         "(122, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22579,8 +22781,10 @@
             "buildings": []
         },
         "(123, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22589,8 +22793,10 @@
             "buildings": []
         },
         "(124, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22599,8 +22805,10 @@
             "buildings": []
         },
         "(125, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22609,8 +22817,10 @@
             "buildings": []
         },
         "(126, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22619,8 +22829,10 @@
             "buildings": []
         },
         "(127, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22639,8 +22851,10 @@
             "buildings": []
         },
         "(129, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22649,8 +22863,10 @@
             "buildings": []
         },
         "(130, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22659,8 +22875,10 @@
             "buildings": []
         },
         "(131, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22669,8 +22887,10 @@
             "buildings": []
         },
         "(132, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22679,8 +22899,10 @@
             "buildings": []
         },
         "(133, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22689,8 +22911,10 @@
             "buildings": []
         },
         "(134, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22699,8 +22923,10 @@
             "buildings": []
         },
         "(135, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22709,8 +22935,10 @@
             "buildings": []
         },
         "(136, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22719,8 +22947,10 @@
             "buildings": []
         },
         "(137, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22729,8 +22959,10 @@
             "buildings": []
         },
         "(138, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22739,8 +22971,10 @@
             "buildings": []
         },
         "(139, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22749,8 +22983,10 @@
             "buildings": []
         },
         "(140, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22769,20 +23005,24 @@
             "buildings": []
         },
         "(142, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "49ers",
             "cores": [
-                "Afrika Korps"
+                "49ers"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(143, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22791,8 +23031,10 @@
             "buildings": []
         },
         "(144, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22801,8 +23043,10 @@
             "buildings": []
         },
         "(145, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22811,8 +23055,10 @@
             "buildings": []
         },
         "(146, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22821,8 +23067,10 @@
             "buildings": []
         },
         "(147, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22831,9 +23079,9 @@
             "buildings": []
         },
         "(148, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "49ers",
             "cores": [
-                "Afrika Korps"
+                "49ers"
             ],
             "is_coastal": false,
             "units": [],
@@ -22843,8 +23091,10 @@
             "buildings": []
         },
         "(149, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22853,8 +23103,10 @@
             "buildings": []
         },
         "(150, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22863,8 +23115,10 @@
             "buildings": []
         },
         "(151, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22873,9 +23127,9 @@
             "buildings": []
         },
         "(152, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "49ers",
             "cores": [
-                "Afrika Korps"
+                "49ers"
             ],
             "is_coastal": true,
             "units": [],
@@ -22885,8 +23139,10 @@
             "buildings": []
         },
         "(153, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22895,9 +23151,9 @@
             "buildings": []
         },
         "(154, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "49ers",
             "cores": [
-                "Afrika Korps"
+                "49ers"
             ],
             "is_coastal": true,
             "units": [],
@@ -22907,9 +23163,9 @@
             "buildings": []
         },
         "(155, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "49ers",
             "cores": [
-                "Afrika Korps"
+                "49ers"
             ],
             "is_coastal": false,
             "units": [],
@@ -22919,8 +23175,10 @@
             "buildings": []
         },
         "(156, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22939,8 +23197,10 @@
             "buildings": []
         },
         "(158, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -22949,22 +23209,22 @@
             "buildings": []
         },
         "(159, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "49ers",
             "cores": [
-                "Afrika Korps"
+                "49ers"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
-            "resources": {
-                "Oil": 50
-            },
+            "resources": {},
             "buildings": []
         },
         "(160, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22973,8 +23233,10 @@
             "buildings": []
         },
         "(161, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -22983,9 +23245,9 @@
             "buildings": []
         },
         "(162, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "49ers",
             "cores": [
-                "Afrika Korps"
+                "49ers"
             ],
             "is_coastal": false,
             "units": [],
@@ -22995,8 +23257,10 @@
             "buildings": []
         },
         "(163, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23015,8 +23279,10 @@
             "buildings": []
         },
         "(165, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23025,8 +23291,10 @@
             "buildings": []
         },
         "(166, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23035,8 +23303,10 @@
             "buildings": []
         },
         "(167, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23045,8 +23315,11 @@
             "buildings": []
         },
         "(168, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "Afrika Korps",
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23055,8 +23328,10 @@
             "buildings": []
         },
         "(169, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23065,8 +23340,10 @@
             "buildings": []
         },
         "(170, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23075,8 +23352,11 @@
             "buildings": []
         },
         "(171, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "Afrika Korps",
+                "49ers"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23085,8 +23365,10 @@
             "buildings": []
         },
         "(172, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23095,8 +23377,10 @@
             "buildings": []
         },
         "(173, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23105,8 +23389,11 @@
             "buildings": []
         },
         "(174, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "49ers",
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23161,8 +23448,10 @@
             "buildings": []
         },
         "(179, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23171,8 +23460,10 @@
             "buildings": []
         },
         "(180, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23181,8 +23472,10 @@
             "buildings": []
         },
         "(181, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23201,8 +23494,10 @@
             "buildings": []
         },
         "(183, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23211,8 +23506,10 @@
             "buildings": []
         },
         "(184, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23231,8 +23528,10 @@
             "buildings": []
         },
         "(186, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23241,8 +23540,10 @@
             "buildings": []
         },
         "(187, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23251,8 +23552,10 @@
             "buildings": []
         },
         "(188, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23285,8 +23588,10 @@
             "buildings": []
         },
         "(191, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23295,8 +23600,10 @@
             "buildings": []
         },
         "(192, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23305,8 +23612,10 @@
             "buildings": []
         },
         "(193, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23315,8 +23624,10 @@
             "buildings": []
         },
         "(194, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23335,8 +23646,10 @@
             "buildings": []
         },
         "(196, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23345,8 +23658,10 @@
             "buildings": []
         },
         "(197, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23365,8 +23680,10 @@
             "buildings": []
         },
         "(199, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23377,7 +23694,6 @@
         "(200, 0, 0)": {
             "owner": "Afrika Korps",
             "cores": [
-                "49ers",
                 "Afrika Korps"
             ],
             "is_coastal": true,
@@ -23388,8 +23704,10 @@
             "buildings": []
         },
         "(201, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23398,8 +23716,10 @@
             "buildings": []
         },
         "(202, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23408,8 +23728,10 @@
             "buildings": []
         },
         "(203, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23440,8 +23762,10 @@
             "buildings": []
         },
         "(206, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23462,30 +23786,16 @@
         "(208, 0, 0)": {
             "owner": "Afrika Korps",
             "cores": [
-                "49ers",
                 "Afrika Korps"
             ],
             "is_coastal": true,
-            "units": [
-                {
-                    "type": "Motorized Infantry Type 1930",
-                    "owner": "Afrika Korps",
-                    "health": 2000,
-                    "max_health": 2000,
-                    "speed": 2,
-                    "attack": 300,
-                    "defense": 0,
-                    "level": 0,
-                    "order": {
-                        "type": "MOVE",
-                        "path": []
-                    }
-                }
-            ],
+            "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(209, 0, 0)": {
             "owner": "Ocean",
@@ -23518,8 +23828,10 @@
             "buildings": []
         },
         "(212, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23538,8 +23850,10 @@
             "buildings": []
         },
         "(214, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23558,8 +23872,10 @@
             "buildings": []
         },
         "(216, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23568,8 +23884,10 @@
             "buildings": []
         },
         "(217, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23578,18 +23896,24 @@
             "buildings": []
         },
         "(218, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(219, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23598,8 +23922,10 @@
             "buildings": []
         },
         "(220, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23608,8 +23934,10 @@
             "buildings": []
         },
         "(221, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23618,9 +23946,9 @@
             "buildings": []
         },
         "(222, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -23630,9 +23958,9 @@
             "buildings": []
         },
         "(223, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -23642,36 +23970,22 @@
             "buildings": []
         },
         "(224, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "Afrika Korps",
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
-            "units": [
-                {
-                    "type": "Motorized Infantry Type 1930",
-                    "owner": "49ers",
-                    "health": 2000,
-                    "max_health": 2000,
-                    "speed": 2,
-                    "attack": 300,
-                    "defense": 0,
-                    "level": 0,
-                    "order": {
-                        "type": "MOVE",
-                        "path": []
-                    }
-                }
-            ],
+            "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
             "buildings": []
         },
         "(225, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23680,20 +23994,23 @@
             "buildings": []
         },
         "(226, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(227, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "Afrika Korps",
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -23703,8 +24020,10 @@
             "buildings": []
         },
         "(228, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23713,8 +24032,10 @@
             "buildings": []
         },
         "(229, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23723,8 +24044,10 @@
             "buildings": []
         },
         "(230, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23733,8 +24056,10 @@
             "buildings": []
         },
         "(231, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "49ers",
+            "cores": [
+                "49ers"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23753,19 +24078,23 @@
             "buildings": []
         },
         "(233, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(234, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -23775,8 +24104,10 @@
             "buildings": []
         },
         "(235, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23785,8 +24116,10 @@
             "buildings": []
         },
         "(236, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23795,8 +24128,10 @@
             "buildings": []
         },
         "(237, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23805,8 +24140,10 @@
             "buildings": []
         },
         "(238, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23815,9 +24152,9 @@
             "buildings": []
         },
         "(239, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": false,
             "units": [],
@@ -23837,9 +24174,9 @@
             "buildings": []
         },
         "(241, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": false,
             "units": [],
@@ -23849,8 +24186,10 @@
             "buildings": []
         },
         "(242, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23859,8 +24198,10 @@
             "buildings": []
         },
         "(243, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23869,8 +24210,10 @@
             "buildings": []
         },
         "(244, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23889,8 +24232,10 @@
             "buildings": []
         },
         "(246, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23909,8 +24254,10 @@
             "buildings": []
         },
         "(248, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23919,8 +24266,10 @@
             "buildings": []
         },
         "(249, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23939,8 +24288,10 @@
             "buildings": []
         },
         "(251, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -23949,8 +24300,10 @@
             "buildings": []
         },
         "(252, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23959,9 +24312,9 @@
             "buildings": []
         },
         "(253, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -23971,8 +24324,10 @@
             "buildings": []
         },
         "(254, 0, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -23981,9 +24336,9 @@
             "buildings": []
         },
         "(255, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -24003,8 +24358,10 @@
             "buildings": []
         },
         "(1, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24023,8 +24380,10 @@
             "buildings": []
         },
         "(3, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24033,8 +24392,10 @@
             "buildings": []
         },
         "(4, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24053,23 +24414,21 @@
             "buildings": []
         },
         "(6, 1, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
-            "resources": {
-                "Oil": 50
-            },
+            "resources": {},
             "buildings": []
         },
         "(7, 1, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": false,
             "units": [],
@@ -24079,8 +24438,10 @@
             "buildings": []
         },
         "(8, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24089,8 +24450,10 @@
             "buildings": []
         },
         "(9, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24099,9 +24462,9 @@
             "buildings": []
         },
         "(10, 1, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -24111,8 +24474,10 @@
             "buildings": []
         },
         "(11, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24121,8 +24486,10 @@
             "buildings": []
         },
         "(12, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24131,9 +24498,9 @@
             "buildings": []
         },
         "(13, 1, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -24143,8 +24510,10 @@
             "buildings": []
         },
         "(14, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24153,9 +24522,9 @@
             "buildings": []
         },
         "(15, 1, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -24165,9 +24534,9 @@
             "buildings": []
         },
         "(16, 1, 0)": {
-            "owner": "49ers",
+            "owner": "Afrika Korps",
             "cores": [
-                "49ers"
+                "Afrika Korps"
             ],
             "is_coastal": true,
             "units": [],
@@ -24187,8 +24556,10 @@
             "buildings": []
         },
         "(18, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24197,8 +24568,10 @@
             "buildings": []
         },
         "(19, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24207,8 +24580,10 @@
             "buildings": []
         },
         "(20, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24217,8 +24592,10 @@
             "buildings": []
         },
         "(21, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24247,8 +24624,10 @@
             "buildings": []
         },
         "(24, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24257,8 +24636,10 @@
             "buildings": []
         },
         "(25, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24267,8 +24648,10 @@
             "buildings": []
         },
         "(26, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24277,8 +24660,10 @@
             "buildings": []
         },
         "(27, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24287,8 +24672,10 @@
             "buildings": []
         },
         "(28, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24297,8 +24684,10 @@
             "buildings": []
         },
         "(29, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24317,8 +24706,10 @@
             "buildings": []
         },
         "(31, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24327,8 +24718,10 @@
             "buildings": []
         },
         "(32, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24337,8 +24730,10 @@
             "buildings": []
         },
         "(33, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24347,8 +24742,10 @@
             "buildings": []
         },
         "(34, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24357,8 +24754,10 @@
             "buildings": []
         },
         "(35, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24367,8 +24766,10 @@
             "buildings": []
         },
         "(36, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24387,8 +24788,10 @@
             "buildings": []
         },
         "(38, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24397,8 +24800,10 @@
             "buildings": []
         },
         "(39, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24407,8 +24812,10 @@
             "buildings": []
         },
         "(40, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24417,8 +24824,10 @@
             "buildings": []
         },
         "(41, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24427,8 +24836,10 @@
             "buildings": []
         },
         "(42, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24437,8 +24848,10 @@
             "buildings": []
         },
         "(43, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24447,8 +24860,10 @@
             "buildings": []
         },
         "(44, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24457,8 +24872,10 @@
             "buildings": []
         },
         "(45, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24467,8 +24884,10 @@
             "buildings": []
         },
         "(46, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24477,8 +24896,10 @@
             "buildings": []
         },
         "(47, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24487,8 +24908,10 @@
             "buildings": []
         },
         "(48, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24497,8 +24920,10 @@
             "buildings": []
         },
         "(49, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24507,8 +24932,10 @@
             "buildings": []
         },
         "(50, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24517,8 +24944,10 @@
             "buildings": []
         },
         "(51, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24527,8 +24956,10 @@
             "buildings": []
         },
         "(52, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24537,8 +24968,10 @@
             "buildings": []
         },
         "(53, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24547,8 +24980,10 @@
             "buildings": []
         },
         "(54, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24567,8 +25002,10 @@
             "buildings": []
         },
         "(56, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24577,8 +25014,10 @@
             "buildings": []
         },
         "(57, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24587,8 +25026,10 @@
             "buildings": []
         },
         "(58, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24597,28 +25038,38 @@
             "buildings": []
         },
         "(59, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(60, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(61, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24627,8 +25078,10 @@
             "buildings": []
         },
         "(62, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24637,8 +25090,10 @@
             "buildings": []
         },
         "(63, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24667,8 +25122,10 @@
             "buildings": []
         },
         "(66, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24677,8 +25134,10 @@
             "buildings": []
         },
         "(67, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24687,8 +25146,10 @@
             "buildings": []
         },
         "(68, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24697,8 +25158,10 @@
             "buildings": []
         },
         "(69, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24707,8 +25170,10 @@
             "buildings": []
         },
         "(70, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24717,8 +25182,10 @@
             "buildings": []
         },
         "(71, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24727,8 +25194,10 @@
             "buildings": []
         },
         "(72, 1, 0)": {
-            "owner": "Unclaimed",
-            "cores": [],
+            "owner": "Afrika Korps",
+            "cores": [
+                "Afrika Korps"
+            ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
@@ -24736,5 +25205,9 @@
             "resources": {},
             "buildings": []
         }
+    },
+    "scenario_settings": {
+        "fog_of_war": true,
+        "casus_belli_required": false
     }
 }

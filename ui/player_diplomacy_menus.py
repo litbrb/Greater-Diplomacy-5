@@ -699,6 +699,131 @@ class Peace_Screen(GameState):
                 el.draw(surface)
 
 # ==========================================
+# VIEW PEACE TREATY SCREEN
+# ==========================================
+
+class View_Peace_Treaty_Screen(GameState):
+    def __init__(self, map_screen, proposer):
+        super().__init__()
+        self.map_screen = map_screen
+        self.proposer = proposer
+        self.target = map_screen.player_country
+        
+        # Read the parameters directly from the proposed diplomacy message
+        pending = map_screen.nation_data.get(self.proposer, {}).get("pending_diplomacy", {}).get(self.target, {})
+        self.peace_type = pending.get("parameters", pending.get("message", getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)")))
+        
+        self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
+        
+    def exit_screen(self):
+        self.done = True
+
+    def handle_events(self, events):
+        for event in events:
+            for el in self.elements:
+                el.handle_event(event)
+            
+            on_ui = self.map_screen.top_bar_rect.collidepoint(pygame.mouse.get_pos())
+            if event.type in (pygame.MOUSEWHEEL, pygame.MOUSEMOTION):
+                self.map_screen.camera.handle_input(event, self.map_screen, on_ui)
+
+    def update(self):
+        super().update()
+        self.map_screen.camera.update(self.map_screen, c.SCREEN_HEIGHT)
+
+    def get_projected_owner(self, prov, peace_type):
+        import re
+        curr = prov.get("owner")
+        proj = curr
+        proposer = self.proposer
+        target = self.target
+
+        # Same parsing logic used by 'execute_peace_treaty'
+        frozen_ids = []
+        match = re.search(r'\(Territories (?:demanded|surrendered): ([\d, ]+)', peace_type)
+        if match:
+            frozen_ids = [int(x.strip()) for x in match.group(1).split(",") if x.strip().isdigit()]
+
+        def was_original_owner(prov, nation):
+            fac = self.map_screen.nation_data.get(nation, {}).get("faction", "")
+            if fac and "FACTION_WAR_MAPS" in self.map_screen.nation_data and fac in self.map_screen.nation_data["FACTION_WAR_MAPS"]:
+                pre_war = self.map_screen.nation_data["FACTION_WAR_MAPS"][fac]
+                if str(prov["id"]) in pre_war:
+                    return pre_war[str(prov["id"])] == nation
+            return nation in prov.get("cores", [])
+
+        if peace_type.startswith(getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)")):
+            pass
+        elif peace_type.startswith(getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims")):
+            if prov["id"] in frozen_ids and curr == target:
+                proj = proposer
+            elif curr == target and was_original_owner(prov, proposer):
+                proj = proposer
+        elif peace_type.startswith(getattr(c, 'PEACE_SURRENDER', "Surrender")):
+            if prov["id"] in frozen_ids and curr == proposer:
+                proj = target
+            elif curr == proposer and was_original_owner(prov, target):
+                proj = target
+        return proj
+
+    def draw_highlight(self, surface, pid, color):
+        prov = self.map_screen.id_to_province.get(pid)
+        if not prov: return
+        cx, cy = prov["center"]
+        for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
+            sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
+            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * getattr(self.map_screen.camera, 'tilt_factor', 1.0) + self.map_screen.top_ui_height
+            if -100 < sx < c.SCREEN_WIDTH + 100:
+                radius_x = max(6, int(10 * self.map_screen.camera.zoom))
+                radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else radius_x
+                
+                ellipse_surf = pygame.Surface((radius_x*2, radius_y*2), pygame.SRCALPHA)
+                pygame.draw.ellipse(ellipse_surf, (*color, 150), ellipse_surf.get_rect())
+                surface.blit(ellipse_surf, (int(sx) - radius_x, int(sy) - radius_y))
+                pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
+
+    def draw(self, surface):
+        surface.fill(self.map_screen.bg_color)
+        
+        temp_prov = self.map_screen.selected_province
+        self.map_screen.selected_province = None
+        self.map_screen.hide_raised_rect = True
+        self.map_screen.hide_tooltip = True
+        self.map_screen.hide_resource_hud = True
+        self.map_screen.hide_minimap = True
+        
+        self.map_screen.additional_draw(surface)
+        
+        self.map_screen.hide_raised_rect = False
+        self.map_screen.hide_tooltip = False
+        self.map_screen.hide_resource_hud = False
+        self.map_screen.hide_minimap = False
+        self.map_screen.selected_province = temp_prov
+
+        p_color = self.map_screen.nation_colors.get(self.proposer, (0, 255, 0))
+        t_color = self.map_screen.nation_colors.get(self.target, (255, 0, 0))
+        
+        for prov in self.map_screen.map_data.values():
+            curr = prov.get("owner")
+            if curr in [self.proposer, self.target]:
+                proj = self.get_projected_owner(prov, self.peace_type)
+                if proj != curr:
+                    if proj == self.proposer:
+                        self.draw_highlight(surface, prov["id"], p_color)
+                    elif proj == self.target:
+                        self.draw_highlight(surface, prov["id"], t_color)
+
+        font = fonts.get("heading1")
+        title = font.render(f"Projected Map: Peace Treaty from {self.proposer}", True, (255, 255, 255))
+        bg_rect = title.get_rect(center=(c.SCREEN_WIDTH//2, 30))
+        pygame.draw.rect(surface, (0, 0, 0, 180), bg_rect.inflate(20, 10))
+        surface.blit(title, bg_rect)
+        
+        for el in self.elements:
+            if getattr(el, 'visible', True):
+                el.draw(surface)
+
+# ==========================================
 # PUBLIC INTERCEPT LAUNCHERS
 # ==========================================
 
@@ -712,4 +837,8 @@ def open_claims_menu(map_screen):
 
 def open_peace_menu(map_screen, target_nation):
     screen = Peace_Screen(map_screen, target_nation)
+    _run_pygame_sub_screen(map_screen, screen)
+
+def open_view_peace_treaty_menu(map_screen, proposer):
+    screen = View_Peace_Treaty_Screen(map_screen, proposer)
     _run_pygame_sub_screen(map_screen, screen)

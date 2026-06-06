@@ -54,6 +54,12 @@ class Messages_Screen(GameState):
         self.compose_text = ""
         self.refresh_ui()
 
+    def view_peace_treaty(self, target):
+        self.save_current_draft()
+        from ui.player_diplomacy_menus import open_view_peace_treaty_menu
+        open_view_peace_treaty_menu(self.map_screen, target)
+        self.refresh_ui()
+
     def save_current_draft(self):
         """Auto-saves whatever is currently typed or queued before switching menus/contacts."""
         if self.selected_recipient and self.map_screen:
@@ -320,6 +326,8 @@ class Messages_Screen(GameState):
                 action_name = incoming_action.replace("_", " ").title()
                 btn_y_diplo = c.SCREEN_HEIGHT - c.MSG_INPUT_H - 60
                 
+                is_peace = incoming_action in ["PEACE_TREATY", "CEASEFIRE"]
+                
                 if pending_action == f"ACCEPT_{incoming_action}":
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "green", "Undo Accept", lambda: self.accept_proposal(self.selected_recipient)))
                 elif pending_action == f"REJECT_{incoming_action}":
@@ -331,9 +339,13 @@ class Messages_Screen(GameState):
                     if is_busy:
                         self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "grey", f"Accept {action_name}", lambda: None))
                         self.elements.append(Button(c.MSG_LEFT_PANE_W + 240, btn_y_diplo, "medium", "grey", f"Reject {action_name}", lambda: None))
+                        if is_peace:
+                            self.elements.append(Button(c.MSG_LEFT_PANE_W + 460, btn_y_diplo, "medium", "grey", "View Peace Treaty", lambda: None))
                     else:
                         self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "green", f"Accept {action_name}", lambda: self.accept_proposal(self.selected_recipient)))
                         self.elements.append(Button(c.MSG_LEFT_PANE_W + 240, btn_y_diplo, "medium", "red", f"Reject {action_name}", lambda: self.reject_proposal(self.selected_recipient)))
+                        if is_peace:
+                            self.elements.append(Button(c.MSG_LEFT_PANE_W + 460, btn_y_diplo, "medium", "yellow", "View Peace Treaty", lambda: self.view_peace_treaty(self.selected_recipient)))
 
     def additional_draw(self, surface):
         if not self.map_screen: return

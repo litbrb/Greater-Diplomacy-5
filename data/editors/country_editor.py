@@ -36,12 +36,20 @@ class CountryEditor:
         self.name_ent = tk.Entry(editor_frame)
         self.name_ent.grid(row=1, column=1, sticky="we")
 
+        tk.Label(editor_frame, text="Leader Name:").grid(row=2, column=0, sticky="w")
+        self.leader_name_ent = tk.Entry(editor_frame)
+        self.leader_name_ent.grid(row=2, column=1, sticky="we")
+
+        tk.Label(editor_frame, text="Leader Title:").grid(row=3, column=0, sticky="w")
+        self.leader_title_ent = tk.Entry(editor_frame)
+        self.leader_title_ent.grid(row=3, column=1, sticky="we")
+
         self.color_btn = tk.Button(editor_frame, text="Pick Color", command=self.pick_color)
-        self.color_btn.grid(row=2, column=0, columnspan=2, sticky="we", pady=5)
+        self.color_btn.grid(row=4, column=0, columnspan=2, sticky="we", pady=5)
         self.current_color = [150, 150, 150]
 
         tk.Button(editor_frame, text="Save/Update Country", bg="#4CAF50", fg="white", 
-                  command=self.save_country).grid(row=3, column=0, columnspan=3, sticky="we")
+                  command=self.save_country).grid(row=5, column=0, columnspan=3, sticky="we")
 
         # --- Utility Bar (New Section for Bulk Actions) ---
         util_frame = tk.Frame(root, padx=10)
@@ -150,6 +158,8 @@ class CountryEditor:
         """Saves or updates a country using the dynamic tech template."""
         int_id = self.id_ent.get().strip()
         disp_name = self.name_ent.get().strip() or int_id
+        leader_name = self.leader_name_ent.get().strip()
+        leader_title = self.leader_title_ent.get().strip()
         
         if not int_id: 
             messagebox.showwarning("Error", "Internal ID cannot be empty")
@@ -158,6 +168,8 @@ class CountryEditor:
         if int_id in self.data:
             self.data[int_id]["name"] = disp_name
             self.data[int_id]["color"] = self.current_color
+            self.data[int_id]["leader_name"] = leader_name
+            self.data[int_id]["leader_title"] = leader_title
         else:
             # New Country: use the dynamic template
             self.data[int_id] = {
@@ -167,8 +179,8 @@ class CountryEditor:
                  "manpower": 0, "materials": 0, "fuel": 0,     
                 "is_playable": True,
                 "at_war_with": [], "allied_with": [],
-                "leader_name": "",
-                "leader_title": "",
+                "leader_name": leader_name,
+                "leader_title": leader_title,
                 "flag_data": "",
                 "portrait_data": ""
             }
@@ -181,6 +193,8 @@ class CountryEditor:
         self.refresh_list()
         self.id_ent.delete(0, tk.END)
         self.name_ent.delete(0, tk.END)
+        self.leader_name_ent.delete(0, tk.END)
+        self.leader_title_ent.delete(0, tk.END)
 
     def toggle_sort(self):
         if self.sort_mode == "NAME":
@@ -227,6 +241,11 @@ class CountryEditor:
         self.current_color = country.get("color", [150, 150, 150])
         hex_color = '#%02x%02x%02x' % tuple(self.current_color)
         self.color_preview.config(bg=hex_color)
+        
+        self.leader_name_ent.delete(0, tk.END)
+        self.leader_name_ent.insert(0, country.get("leader_name", ""))
+        self.leader_title_ent.delete(0, tk.END)
+        self.leader_title_ent.insert(0, country.get("leader_title", ""))
 
     def get_sort_key(self, int_id):
         if self.sort_mode == "NAME":

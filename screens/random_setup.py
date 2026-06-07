@@ -48,6 +48,7 @@ class Random_Setup(GameState):
         self.resource_chance = getattr(c, 'RANDOM_SCENARIO_DEFAULT_RESOURCE_CHANCE', 0.15)
         self.resource_slider_val = self.resource_chance
         
+        self.base_days_per_turn = getattr(c, 'DEFAULT_DAYS_PER_TURN', 15)
         self.map_index = 0
 
     def toggle_procedural_type(self):
@@ -92,6 +93,15 @@ class Random_Setup(GameState):
         self.single_tile_start = not self.single_tile_start
         self.refresh_ui()
 
+    def toggle_days_per_turn(self):
+        options = [5, 10, 15, 30, 90]
+        if self.base_days_per_turn in options:
+            idx = options.index(self.base_days_per_turn)
+            self.base_days_per_turn = options[(idx + 1) % len(options)]
+        else:
+            self.base_days_per_turn = 15
+        self.refresh_ui()
+
     def scenario_settings(self):
         from screens.scenario_settings import Scenario_Settings
         Scenario_Settings.return_screen = "RANDOM_SETUP"
@@ -116,8 +126,9 @@ class Random_Setup(GameState):
             
             # Controls
             Button((c.SCREEN_WIDTH/2) + 120, 470, "medium", "green" if self.single_tile_start else "red", f"1-Tile Start: {'ON' if self.single_tile_start else 'OFF'}", self.toggle_single_tile),
-            Button("centered", 550, "medium", "grey", "Reset Defaults", self.do_reset),
-            Button("centered", 630, "large", "green", "START GAME", self.start_game),
+            Button("centered", 550, "medium", "blue", f"Base Days Per Turn: {self.base_days_per_turn}", self.toggle_days_per_turn),
+            Button("centered", 630, "medium", "grey", "Reset Defaults", self.do_reset),
+            Button("centered", 710, "large", "green", "START GAME", self.start_game),
         ]
         
         random_map_x = 100
@@ -182,7 +193,8 @@ class Random_Setup(GameState):
             "island_filter_size": self.current_island_size,
             "procedural_type": self.procedural_types[self.proc_type_index],
             "single_tile_start": getattr(self, "single_tile_start", False),
-            "resource_chance": getattr(self, "resource_chance", 0.15)
+            "resource_chance": getattr(self, "resource_chance", 0.15),
+            "base_days_per_turn": getattr(self, "base_days_per_turn", 15)
         }
         self.next_state = "MAP"
         self.done = True

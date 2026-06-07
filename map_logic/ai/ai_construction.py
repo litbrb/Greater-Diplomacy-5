@@ -207,7 +207,7 @@ def process_ai_economy_decisions(map_screen):
                             
                             order = {
                                 "unit_type": militia_name,
-                                "turns_remaining": max(1, militia_stats.get("production_time", c.DAYS_PER_TURN) // c.DAYS_PER_TURN),
+                                "turns_remaining": max(1, militia_stats.get("production_time", 1)),
                                 "refund": {"materials": c_mat, "manpower": c_man, "fuel": c_fuel}
                             }
                             prov.setdefault("deployment_queue", []).append(order)
@@ -364,7 +364,7 @@ def process_ai_economy_decisions(map_screen):
                 
                 order = {
                     "unit_type": unit_name_to_build,
-                    "turns_remaining": max(1, unit_stats.get("production_time", c.DAYS_PER_TURN) // c.DAYS_PER_TURN),
+                    "turns_remaining": max(1, unit_stats.get("production_time", 1)),
                     "refund": {"materials": cost_mat, "manpower": cost_man, "fuel": cost_fuel}
                 }
                 target_prov.setdefault("deployment_queue", []).append(order)
@@ -435,7 +435,7 @@ def process_ai_economy_decisions(map_screen):
                         order = {
                             "order_type": "BUILDING",
                             "item_name": target_bldg,
-                            "turns_remaining": max(1, b_stats.get("time", c.DAYS_PER_TURN) // c.DAYS_PER_TURN),
+                            "turns_remaining": max(1, b_stats.get("time", getattr(c, 'DEFAULT_DAYS_PER_TURN', 15)) // getattr(c, 'DEFAULT_DAYS_PER_TURN', 15)),
                             "group": b_stats["group"],
                             "refund": {"materials": c_mat, "manpower": 0, "fuel": c_fuel}
                         }

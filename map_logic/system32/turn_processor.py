@@ -71,11 +71,11 @@ def resolve_turn_logic(self): # Renamed from resolve_turn
     """Executes time, combat, movement, and economy logic (no refreshes)."""
     print("\n--- [PHASE 2] TURN RESOLUTION START ---")
     
-    # --- NEW: Snapshot original owners for capture logic ---
+    # Snapshot original owners for capture logic
     for prov in self.map_data.values():
         prov["_turn_start_owner"] = prov.get("owner", "Unclaimed")
         
-    # --- NEW: Ghost War Cleanup ---
+    # Ghost War Cleanup
     living_nations = queries.get_living_nations(self.map_data)
     for nation, data in self.nation_data.items():
         if "at_war_with" in data:
@@ -85,29 +85,27 @@ def resolve_turn_logic(self): # Renamed from resolve_turn
             else:
                 # The nation is alive, only keep living enemies
                 data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
-    # ------------------------------
     
-    days_to_advance = c.DAYS_PER_TURN
+    days_to_advance = queries.get_days_per_turn(self.scenario_settings)
     self.time_manager.process_time(days_to_advance)
     
     print("[SYSTEM] Executing Unit Orders & Combat...")
     movement_processor.process_conversions(self)
-    movement_processor.process_disbands(self) # Added disband resolution
+    movement_processor.process_disbands(self)
     
-    # --- MOVED: Process Queues (Deployments) so new units can defend ---
+    # Process Queues (Deployments) so new units can defend
     print("[SYSTEM] Processing Queues (Deployments)...")
     economy_processor.process_queues(self)
 
-    # --- Pre-Movement Combat Mechanics ---
+    # Pre-Movement Combat Mechanics 
     combat_processor.process_pinning(self)
     combat_processor.process_meeting_engagements(self)
-    # ------------------------------------------
     
     movement_processor.process_movement(self)
     combat_processor.process_combat(self)
     combat_processor.check_for_post_combat_captures(self)
     
-    # --- Kill orphaned units and ghost wars ---
+    # Kill orphaned units and ghost wars
     movement_processor.process_dead_nations(self)
     
     print("[SYSTEM] Calculating Economy...")

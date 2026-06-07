@@ -171,6 +171,9 @@ def load_map_assets(self, load_path):
                     c_data.setdefault("relations", {})[other_c] = 100
     # --------------------------------------------------------------
 
+    if getattr(self, 'random_settings', None) and "base_days_per_turn" in self.random_settings:
+        self.scenario_settings["base_days_per_turn"] = self.random_settings["base_days_per_turn"]
+
     _load_default_images(self)
     # --- THE FIX: Use .get() with a fallback color ---
     self.nation_colors = {name: tuple(stats.get("color", [150, 150, 150])) for name, stats in self.nation_data.items()}

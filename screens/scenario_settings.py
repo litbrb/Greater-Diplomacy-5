@@ -42,9 +42,14 @@ class Scenario_Settings(GameState):
             Button("centered", 280, "medium", cb_color, cb_text, self.toggle_casus_belli)
         )
 
+        dpt_val = self.settings.get("days_per_turn", "Default")
+        self.elements.append(
+            Button("centered", 360, "medium", "blue", f"Days Per Turn: {dpt_val}", self.cycle_days_per_turn)
+        )
+
         # Reset Defaults Button
         self.elements.append(
-            Button("centered", 400, "medium", "grey", "Reset to Defaults", self.reset_defaults)
+            Button("centered", 440, "medium", "grey", "Reset to Defaults", self.reset_defaults)
         )
 
     def toggle_fog(self):
@@ -58,10 +63,23 @@ class Scenario_Settings(GameState):
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
+    def cycle_days_per_turn(self):
+        options = c.DAYS_PER_TURN_OPTIONS
+        current = self.settings.get("days_per_turn", "Default")
+        if current in options:
+            idx = options.index(current)
+            next_idx = (idx + 1) % len(options)
+        else:
+            next_idx = 0
+        self.settings["days_per_turn"] = options[next_idx]
+        queries.save_scenario_settings(self.settings)
+        self.refresh_ui()
+
     def reset_defaults(self):
         self.settings = {
             "fog_of_war": c.DEFAULT_FOG_OF_WAR,
-            "casus_belli_required": c.DEFAULT_CASUS_BELLI
+            "casus_belli_required": c.DEFAULT_CASUS_BELLI,
+            "days_per_turn": "Default"
         }
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()

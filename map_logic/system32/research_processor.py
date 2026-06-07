@@ -6,7 +6,8 @@ def process_national_research(self):
     template = queries.get_tech_tree()
     
     # Uses the new constant
-    base_points_per_turn = c.BASE_RESEARCH_POINTS_PER_DAY * c.DAYS_PER_TURN
+    days_per_turn = queries.get_days_per_turn(self.scenario_settings)
+    base_points_per_turn = c.BASE_RESEARCH_POINTS_PER_DAY * days_per_turn
 
     current_exact_year = queries.get_exact_year(self.time_manager)
 

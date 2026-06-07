@@ -56,7 +56,8 @@ UPKEEP_MODIFIERS = {
     "fuel": 0.20
 }
 
-DAYS_PER_TURN = 15
+DEFAULT_DAYS_PER_TURN = 15
+DAYS_PER_TURN_OPTIONS = ["Default", 5, 10, 15, 30, 90]
 
 # Non-core penalties
 NON_CORE_MULTIPLIERS = {

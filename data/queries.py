@@ -53,6 +53,19 @@ _JSON_CACHE = {
 def get_scenario_settings(): 
     return _load_cached_json("scenario_settings")
 
+def get_days_per_turn(scenario_settings):
+    """Resolves the number of days that pass per turn."""
+    if not scenario_settings:
+        return c.DEFAULT_DAYS_PER_TURN
+        
+    val = scenario_settings.get("days_per_turn", "Default")
+    if val == "Default":
+        return scenario_settings.get("base_days_per_turn", c.DEFAULT_DAYS_PER_TURN)
+    try:
+        return int(val)
+    except ValueError:
+        return c.DEFAULT_DAYS_PER_TURN
+
 def save_scenario_settings(data):
     save_cached_json("scenario_settings", data)
 

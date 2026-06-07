@@ -210,7 +210,7 @@ def spec_select_edit_country(self):
 
 def open_editor_date(self):
     """Opens a Tkinter window to edit the game's starting date."""
-    root = _create_editor_window("Set Start Date", "250x300")
+    root = _create_editor_window("Set Start Date", "250x350")
     self.menu_active = True
 
     def close_menu():
@@ -235,12 +235,18 @@ def open_editor_date(self):
     year_ent.insert(0, str(self.time_manager.year))
     year_ent.pack()
 
+    tk.Label(root, text="Base Days Per Turn:", font=("Arial", 10)).pack(pady=(10, 2))
+    dpt_ent = tk.Entry(root, justify="center")
+    dpt_ent.insert(0, str(self.scenario_settings.get("base_days_per_turn", getattr(c, 'DEFAULT_DAYS_PER_TURN', 15))))
+    dpt_ent.pack()
+
     def apply_date():
         try:
             # Pull directly from the Entry widget
             d = int(day_ent.get())
             m = int(month_ent.get()) - 1
             y = int(year_ent.get())
+            b_dpt = int(dpt_ent.get())
             
             if not (1 <= d <= 30):
                 messagebox.showerror("Error", "Day must be between 1 and 30.")
@@ -248,12 +254,16 @@ def open_editor_date(self):
             if not (0 <= m <= 11):
                 messagebox.showerror("Error", "Month must be between 1 and 12.")
                 return
+            if b_dpt <= 0:
+                messagebox.showerror("Error", "Days per turn must be positive.")
+                return
                 
             self.time_manager.day = d
             self.time_manager.month_index = m
             self.time_manager.year = y
+            self.scenario_settings["base_days_per_turn"] = b_dpt
             
-            self.show_feedback(f"Date set: {self.time_manager.get_date_string()}")
+            self.show_feedback(f"Date & Turn Rate set!")
             close_menu()
         except ValueError:
             messagebox.showerror("Error", "Please enter valid integers.")

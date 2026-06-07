@@ -1,16 +1,18 @@
 {
     "(1, 0, 0)": {
         "id": 1,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            28,
-            33
+            86,
+            23
         ],
         "neighbors": [
-            8,
-            2,
-            29
+            35,
+            14,
+            16,
+            22,
+            25
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -24,14 +26,14 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            98,
-            26
+            233,
+            11
         ],
         "neighbors": [
-            1,
             3,
-            29,
-            15
+            20,
+            12,
+            14
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -42,18 +44,18 @@
     },
     "(3, 0, 0)": {
         "id": 3,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            225,
-            10
+            321,
+            11
         ],
         "neighbors": [
             2,
             4,
-            13,
-            15,
-            16
+            7,
+            12,
+            13
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -67,15 +69,14 @@
         "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            321,
-            11
+            411,
+            6
         ],
         "neighbors": [
-            3,
-            5,
             9,
-            13,
-            14
+            10,
+            3,
+            7
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -86,17 +87,16 @@
     },
     "(5, 0, 0)": {
         "id": 5,
-        "terrain": "coastal_sea",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            411,
-            6
+            828,
+            14
         ],
         "neighbors": [
-            9,
-            11,
-            4,
-            12
+            19,
+            6,
+            23
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -110,13 +110,14 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            828,
-            14
+            935,
+            16
         ],
         "neighbors": [
-            18,
+            24,
+            11,
             19,
-            7
+            5
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -127,17 +128,18 @@
     },
     "(7, 0, 0)": {
         "id": 7,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            974,
-            19
+            371,
+            24
         ],
         "neighbors": [
-            8,
-            18,
-            20,
-            6
+            3,
+            4,
+            9,
+            13,
+            18
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -148,18 +150,18 @@
     },
     "(8, 0, 0)": {
         "id": 8,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            1077,
-            42
+            749,
+            51
         ],
         "neighbors": [
-            1,
-            7,
-            42,
-            20,
-            29
+            32,
+            64,
+            50,
+            23,
+            62
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -173,15 +175,15 @@
         "terrain": "forest",
         "is_coastal": true,
         "center": [
-            371,
-            24
+            397,
+            26
         ],
         "neighbors": [
             4,
-            5,
-            11,
-            14,
-            17
+            7,
+            10,
+            26,
+            29
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -192,18 +194,18 @@
     },
     "(10, 0, 0)": {
         "id": 10,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            749,
-            51
+            440,
+            44
         ],
         "neighbors": [
-            39,
-            19,
-            51,
-            52,
-            27
+            4,
+            9,
+            43,
+            26,
+            28
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -214,18 +216,17 @@
     },
     "(11, 0, 0)": {
         "id": 11,
-        "terrain": "forest",
+        "terrain": "mountain",
         "is_coastal": true,
         "center": [
-            397,
-            26
+            999,
+            19
         ],
         "neighbors": [
-            5,
-            9,
-            12,
-            21,
-            24
+            24,
+            17,
+            6,
+            15
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -236,18 +237,20 @@
     },
     "(12, 0, 0)": {
         "id": 12,
-        "terrain": "forest",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            440,
+            276,
             44
         ],
         "neighbors": [
-            35,
-            5,
-            11,
-            21,
-            23
+            33,
+            2,
+            3,
+            36,
+            13,
+            48,
+            20
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -258,20 +261,18 @@
     },
     "(13, 0, 0)": {
         "id": 13,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            276,
-            44
+            338,
+            39
         ],
         "neighbors": [
+            33,
             3,
-            4,
-            37,
-            14,
-            16,
-            28,
-            30
+            7,
+            12,
+            18
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -282,18 +283,18 @@
     },
     "(14, 0, 0)": {
         "id": 14,
-        "terrain": "forest",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            338,
-            39
+            166,
+            45
         ],
         "neighbors": [
-            4,
-            9,
-            13,
-            17,
-            28
+            1,
+            2,
+            40,
+            20,
+            25
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -304,19 +305,17 @@
     },
     "(15, 0, 0)": {
         "id": 15,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            144,
-            64
+            1047,
+            44
         ],
         "neighbors": [
-            2,
-            3,
-            47,
-            16,
-            49,
-            29
+            17,
+            42,
+            11,
+            21
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -327,18 +326,18 @@
     },
     "(16, 0, 0)": {
         "id": 16,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            215,
-            63
+            82,
+            52
         ],
         "neighbors": [
-            3,
-            37,
-            13,
-            47,
-            15
+            1,
+            35,
+            51,
+            25,
+            58
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -349,19 +348,18 @@
     },
     "(17, 0, 0)": {
         "id": 17,
-        "terrain": "inland_sea",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            359,
-            54
+            1004,
+            43
         ],
         "neighbors": [
-            33,
-            36,
-            9,
-            14,
-            24,
-            28
+            34,
+            42,
+            11,
+            15,
+            24
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -372,19 +370,19 @@
     },
     "(18, 0, 0)": {
         "id": 18,
-        "terrain": "ocean",
+        "terrain": "inland_sea",
         "is_coastal": false,
         "center": [
-            900,
-            55
+            359,
+            54
         ],
         "neighbors": [
-            6,
+            33,
+            39,
             7,
-            40,
-            46,
-            19,
-            20
+            45,
+            13,
+            29
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -398,15 +396,15 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            819,
-            65
+            878,
+            55
         ],
         "neighbors": [
+            5,
             6,
-            39,
-            10,
-            46,
-            18
+            23,
+            24,
+            57
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -420,15 +418,15 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            1002,
-            78
+            218,
+            56
         ],
         "neighbors": [
-            7,
+            2,
             40,
-            8,
-            42,
-            18
+            12,
+            14,
+            48
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -442,16 +440,14 @@
         "terrain": "forest",
         "is_coastal": false,
         "center": [
-            415,
-            66
+            1089,
+            53
         ],
         "neighbors": [
-            35,
-            11,
-            12,
+            42,
             44,
-            24,
-            31
+            22,
+            15
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -463,17 +459,18 @@
     "(22, 0, 0)": {
         "id": 22,
         "terrain": "forest",
-        "is_coastal": false,
+        "is_coastal": true,
         "center": [
-            665,
-            63
+            16,
+            51
         ],
         "neighbors": [
-            32,
-            38,
-            41,
-            26,
-            27
+            1,
+            35,
+            44,
+            46,
+            47,
+            21
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -484,18 +481,18 @@
     },
     "(23, 0, 0)": {
         "id": 23,
-        "terrain": "hills",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            490,
+            819,
             65
         ],
         "neighbors": [
-            34,
-            35,
-            12,
-            45,
-            25
+            5,
+            8,
+            50,
+            19,
+            57
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -506,18 +503,20 @@
     },
     "(24, 0, 0)": {
         "id": 24,
-        "terrain": "forest",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            379,
-            62
+            943,
+            69
         ],
         "neighbors": [
-            36,
+            34,
+            6,
             11,
             17,
-            21,
-            31
+            19,
+            52,
+            57
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -528,19 +527,20 @@
     },
     "(25, 0, 0)": {
         "id": 25,
-        "terrain": "forest",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            563,
-            69
+            126,
+            83
         ],
         "neighbors": [
-            34,
-            38,
-            43,
-            50,
-            23,
-            26
+            1,
+            67,
+            40,
+            74,
+            14,
+            16,
+            58
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -554,13 +554,16 @@
         "terrain": "forest",
         "is_coastal": false,
         "center": [
-            613,
+            415,
             66
         ],
         "neighbors": [
-            25,
-            38,
-            22
+            37,
+            9,
+            10,
+            43,
+            55,
+            29
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -571,18 +574,18 @@
     },
     "(27, 0, 0)": {
         "id": 27,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "forest",
+        "is_coastal": false,
         "center": [
-            727,
-            74
+            665,
+            63
         ],
         "neighbors": [
             32,
-            10,
-            51,
-            54,
-            22
+            38,
+            49,
+            53,
+            31
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -593,19 +596,17 @@
     },
     "(28, 0, 0)": {
         "id": 28,
-        "terrain": "coastal_sea",
+        "terrain": "hills",
         "is_coastal": false,
         "center": [
-            312,
-            70
+            490,
+            65
         ],
         "neighbors": [
-            33,
-            37,
-            13,
-            14,
-            48,
-            17,
+            41,
+            10,
+            43,
+            56,
             30
         ],
         "owner": "Unclaimed",
@@ -617,21 +618,18 @@
     },
     "(29, 0, 0)": {
         "id": 29,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            37,
-            110
+            379,
+            62
         ],
         "neighbors": [
-            1,
-            2,
-            8,
-            42,
-            15,
-            80,
-            49,
-            81
+            37,
+            9,
+            45,
+            18,
+            26
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -642,16 +640,19 @@
     },
     "(30, 0, 0)": {
         "id": 30,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "forest",
+        "is_coastal": false,
         "center": [
-            284,
-            79
+            563,
+            69
         ],
         "neighbors": [
-            37,
+            41,
+            49,
+            54,
             28,
-            13
+            61,
+            31
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -665,14 +666,13 @@
         "terrain": "forest",
         "is_coastal": false,
         "center": [
-            391,
-            79
+            613,
+            66
         ],
         "neighbors": [
-            24,
-            44,
-            21,
-            36
+            49,
+            27,
+            30
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -686,16 +686,15 @@
         "terrain": "hills",
         "is_coastal": true,
         "center": [
-            709,
-            95
+            727,
+            74
         ],
         "neighbors": [
-            64,
-            41,
-            22,
-            54,
-            56,
-            27
+            68,
+            38,
+            8,
+            27,
+            62
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -706,19 +705,20 @@
     },
     "(33, 0, 0)": {
         "id": 33,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            334,
-            92
+            312,
+            70
         ],
         "neighbors": [
             36,
-            60,
+            39,
+            12,
+            13,
             48,
-            17,
-            58,
-            28
+            18,
+            60
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -729,17 +729,19 @@
     },
     "(34, 0, 0)": {
         "id": 34,
-        "terrain": "desert",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            522,
-            84
+            997,
+            88
         ],
         "neighbors": [
-            25,
-            43,
-            45,
-            23
+            42,
+            78,
+            17,
+            52,
+            24,
+            59
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -751,18 +753,19 @@
     "(35, 0, 0)": {
         "id": 35,
         "terrain": "forest",
-        "is_coastal": false,
+        "is_coastal": true,
         "center": [
-            444,
-            86
+            41,
+            75
         ],
         "neighbors": [
-            12,
-            44,
-            45,
-            53,
-            21,
-            23
+            1,
+            46,
+            47,
+            16,
+            51,
+            22,
+            63
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -776,17 +779,13 @@
         "terrain": "plains",
         "is_coastal": true,
         "center": [
-            363,
-            92
+            284,
+            79
         ],
         "neighbors": [
+            48,
             33,
-            44,
-            17,
-            55,
-            24,
-            58,
-            31
+            12
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -797,21 +796,17 @@
     },
     "(37, 0, 0)": {
         "id": 37,
-        "terrain": "coastal_sea",
+        "terrain": "forest",
         "is_coastal": false,
         "center": [
-            261,
-            108
+            391,
+            79
         ],
         "neighbors": [
-            66,
-            67,
-            13,
-            47,
-            48,
-            16,
-            28,
-            30
+            26,
+            45,
+            29,
+            55
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -822,18 +817,19 @@
     },
     "(38, 0, 0)": {
         "id": 38,
-        "terrain": "plains",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            622,
-            93
+            709,
+            95
         ],
         "neighbors": [
-            41,
-            50,
-            22,
-            25,
-            26
+            32,
+            68,
+            70,
+            83,
+            53,
+            27
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -844,19 +840,19 @@
     },
     "(39, 0, 0)": {
         "id": 39,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            817,
-            114
+            334,
+            92
         ],
         "neighbors": [
-            72,
-            10,
-            75,
-            46,
-            19,
-            52
+            33,
+            73,
+            76,
+            45,
+            18,
+            60
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -870,16 +866,16 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            948,
-            112
+            196,
+            110
         ],
         "neighbors": [
-            68,
-            69,
-            42,
-            46,
-            18,
-            20
+            74,
+            14,
+            48,
+            20,
+            85,
+            25
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -890,19 +886,17 @@
     },
     "(41, 0, 0)": {
         "id": 41,
-        "terrain": "plains",
+        "terrain": "desert",
         "is_coastal": false,
         "center": [
-            659,
-            105
+            522,
+            84
         ],
         "neighbors": [
-            32,
-            38,
-            50,
-            22,
+            54,
             56,
-            63
+            28,
+            30
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -913,20 +907,20 @@
     },
     "(42, 0, 0)": {
         "id": 42,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            1063,
-            123
+            1047,
+            83
         ],
         "neighbors": [
-            69,
-            8,
-            40,
-            79,
-            81,
-            20,
-            29
+            65,
+            34,
+            44,
+            15,
+            17,
+            21,
+            59
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -937,18 +931,19 @@
     },
     "(43, 0, 0)": {
         "id": 43,
-        "terrain": "desert",
+        "terrain": "forest",
         "is_coastal": false,
         "center": [
-            546,
-            109
+            444,
+            86
         ],
         "neighbors": [
-            34,
-            45,
-            50,
-            25,
-            61
+            66,
+            10,
+            55,
+            56,
+            26,
+            28
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -959,20 +954,19 @@
     },
     "(44, 0, 0)": {
         "id": 44,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "forest",
+        "is_coastal": false,
         "center": [
-            406,
-            102
+            1095,
+            89
         ],
         "neighbors": [
-            35,
-            36,
+            65,
+            72,
+            42,
+            47,
             21,
-            53,
-            55,
-            59,
-            31
+            22
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -983,20 +977,20 @@
     },
     "(45, 0, 0)": {
         "id": 45,
-        "terrain": "desert",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            482,
-            105
+            363,
+            92
         ],
         "neighbors": [
-            34,
-            35,
-            43,
-            53,
-            23,
-            57,
-            61
+            37,
+            69,
+            39,
+            73,
+            18,
+            55,
+            29
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1007,19 +1001,16 @@
     },
     "(46, 0, 0)": {
         "id": 46,
-        "terrain": "ocean",
+        "terrain": "lakes",
         "is_coastal": false,
         "center": [
-            885,
-            115
+            18,
+            83
         ],
         "neighbors": [
-            68,
-            39,
-            40,
-            72,
-            18,
-            19
+            35,
+            22,
+            47
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1030,19 +1021,21 @@
     },
     "(47, 0, 0)": {
         "id": 47,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            184,
-            131
+            10,
+            101
         ],
         "neighbors": [
-            66,
-            37,
-            15,
-            16,
-            49,
-            90
+            35,
+            72,
+            44,
+            46,
+            79,
+            51,
+            22,
+            63
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1053,19 +1046,21 @@
     },
     "(48, 0, 0)": {
         "id": 48,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            308,
-            112
+            261,
+            108
         ],
         "neighbors": [
-            65,
             33,
-            67,
-            37,
-            60,
-            28
+            36,
+            40,
+            12,
+            20,
+            85,
+            86,
+            60
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1076,19 +1071,18 @@
     },
     "(49, 0, 0)": {
         "id": 49,
-        "terrain": "ocean",
+        "terrain": "plains",
         "is_coastal": false,
         "center": [
-            114,
-            152
+            622,
+            93
         ],
         "neighbors": [
-            96,
-            47,
-            80,
-            15,
-            90,
-            29
+            53,
+            27,
+            61,
+            30,
+            31
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1099,23 +1093,19 @@
     },
     "(50, 0, 0)": {
         "id": 50,
-        "terrain": "mountain",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            593,
-            130
+            817,
+            114
         ],
         "neighbors": [
-            38,
-            41,
-            43,
-            78,
-            82,
-            84,
-            86,
-            25,
-            61,
-            63
+            64,
+            96,
+            8,
+            23,
+            57,
+            91
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1126,18 +1116,19 @@
     },
     "(51, 0, 0)": {
         "id": 51,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            766,
-            123
+            47,
+            101
         ],
         "neighbors": [
-            64,
-            10,
-            52,
-            54,
-            27
+            35,
+            47,
+            16,
+            79,
+            58,
+            63
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1148,18 +1139,19 @@
     },
     "(52, 0, 0)": {
         "id": 52,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            785,
-            130
+            952,
+            118
         ],
         "neighbors": [
-            64,
-            39,
-            10,
-            75,
-            51
+            34,
+            100,
+            78,
+            87,
+            24,
+            57
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1171,19 +1163,18 @@
     "(53, 0, 0)": {
         "id": 53,
         "terrain": "plains",
-        "is_coastal": true,
+        "is_coastal": false,
         "center": [
-            451,
-            123
+            659,
+            105
         ],
         "neighbors": [
-            35,
-            71,
-            44,
-            45,
-            77,
-            57,
-            59
+            38,
+            70,
+            81,
+            49,
+            27,
+            61
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1194,17 +1185,18 @@
     },
     "(54, 0, 0)": {
         "id": 54,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "desert",
+        "is_coastal": false,
         "center": [
-            743,
-            129
+            546,
+            109
         ],
         "neighbors": [
-            32,
-            51,
-            27,
-            64
+            41,
+            77,
+            56,
+            61,
+            30
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1218,15 +1210,17 @@
         "terrain": "plains",
         "is_coastal": true,
         "center": [
-            385,
-            119
+            406,
+            102
         ],
         "neighbors": [
-            36,
-            70,
-            44,
-            58,
-            59
+            66,
+            69,
+            37,
+            43,
+            75,
+            45,
+            26
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1237,18 +1231,20 @@
     },
     "(56, 0, 0)": {
         "id": 56,
-        "terrain": "hills",
+        "terrain": "desert",
         "is_coastal": true,
         "center": [
-            690,
-            129
+            482,
+            105
         ],
         "neighbors": [
-            32,
-            64,
+            66,
+            71,
             41,
-            73,
-            63
+            43,
+            77,
+            54,
+            28
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1259,17 +1255,21 @@
     },
     "(57, 0, 0)": {
         "id": 57,
-        "terrain": "lakes",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            477,
-            134
+            885,
+            114
         ],
         "neighbors": [
-            61,
-            53,
-            77,
-            45
+            50,
+            19,
+            52,
+            87,
+            23,
+            24,
+            91,
+            92
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1280,19 +1280,19 @@
     },
     "(58, 0, 0)": {
         "id": 58,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            362,
-            122
+            62,
+            121
         ],
         "neighbors": [
-            33,
-            36,
-            70,
-            55,
-            60,
-            62
+            67,
+            79,
+            16,
+            51,
+            88,
+            25
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1303,19 +1303,19 @@
     },
     "(59, 0, 0)": {
         "id": 59,
-        "terrain": "inland_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            417,
-            128
+            1026,
+            118
         ],
         "neighbors": [
-            70,
-            71,
-            74,
-            44,
-            53,
-            55
+            65,
+            34,
+            42,
+            78,
+            82,
+            95
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1326,19 +1326,19 @@
     },
     "(60, 0, 0)": {
         "id": 60,
-        "terrain": "mountain",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            341,
-            130
+            308,
+            112
         ],
         "neighbors": [
             33,
-            65,
+            39,
             76,
             48,
-            58,
-            62
+            84,
+            86
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1349,19 +1349,23 @@
     },
     "(61, 0, 0)": {
         "id": 61,
-        "terrain": "desert",
-        "is_coastal": true,
+        "terrain": "mountain",
+        "is_coastal": false,
         "center": [
-            524,
-            139
+            593,
+            130
         ],
         "neighbors": [
-            43,
+            99,
+            104,
+            106,
             77,
-            45,
-            78,
-            50,
-            57
+            109,
+            49,
+            81,
+            53,
+            54,
+            30
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1372,17 +1376,18 @@
     },
     "(62, 0, 0)": {
         "id": 62,
-        "terrain": "inland_sea",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            355,
-            132
+            766,
+            123
         ],
         "neighbors": [
-            58,
-            60,
-            70,
-            76
+            32,
+            64,
+            68,
+            8,
+            83
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1393,19 +1398,16 @@
     },
     "(63, 0, 0)": {
         "id": 63,
-        "terrain": "desert",
+        "terrain": "lakes",
         "is_coastal": false,
         "center": [
-            646,
-            147
+            32,
+            98
         ],
         "neighbors": [
-            41,
-            73,
-            50,
-            84,
-            56,
-            88
+            51,
+            35,
+            47
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1416,22 +1418,18 @@
     },
     "(64, 0, 0)": {
         "id": 64,
-        "terrain": "inland_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            748,
-            157
+            785,
+            130
         ],
         "neighbors": [
-            32,
-            73,
-            75,
-            51,
-            52,
-            54,
-            87,
-            56,
-            92
+            96,
+            8,
+            50,
+            83,
+            62
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1442,20 +1440,18 @@
     },
     "(65, 0, 0)": {
         "id": 65,
-        "terrain": "inland_sea",
+        "terrain": "desert",
         "is_coastal": false,
         "center": [
-            322,
-            147
+            1060,
+            112
         ],
         "neighbors": [
-            66,
-            67,
-            76,
-            48,
-            85,
-            89,
-            60
+            72,
+            42,
+            44,
+            82,
+            59
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1466,19 +1462,19 @@
     },
     "(66, 0, 0)": {
         "id": 66,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            240,
-            171
+            451,
+            123
         ],
         "neighbors": [
-            65,
-            67,
-            37,
-            102,
-            47,
-            89,
+            98,
+            71,
+            75,
+            43,
+            55,
+            56,
             90
         ],
         "owner": "Unclaimed",
@@ -1490,17 +1486,18 @@
     },
     "(67, 0, 0)": {
         "id": 67,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            284,
-            144
+            95,
+            143
         ],
         "neighbors": [
-            48,
-            65,
-            66,
-            37
+            74,
+            108,
+            88,
+            25,
+            58
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1511,18 +1508,17 @@
     },
     "(68, 0, 0)": {
         "id": 68,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            900,
-            162
+            743,
+            129
         ],
         "neighbors": [
-            101,
-            69,
-            40,
-            72,
-            46
+            32,
+            62,
+            83,
+            38
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1533,19 +1529,18 @@
     },
     "(69, 0, 0)": {
         "id": 69,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            960,
-            176
+            385,
+            119
         ],
         "neighbors": [
-            68,
-            101,
-            40,
-            42,
-            108,
-            79
+            73,
+            75,
+            45,
+            55,
+            89
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1556,19 +1551,18 @@
     },
     "(70, 0, 0)": {
         "id": 70,
-        "terrain": "mountain",
+        "terrain": "hills",
         "is_coastal": true,
         "center": [
-            380,
-            143
+            690,
+            129
         ],
         "neighbors": [
-            74,
-            76,
-            55,
-            58,
-            59,
-            62
+            38,
+            81,
+            83,
+            53,
+            93
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1579,18 +1573,17 @@
     },
     "(71, 0, 0)": {
         "id": 71,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "lakes",
+        "is_coastal": false,
         "center": [
-            425,
-            149
+            477,
+            134
         ],
         "neighbors": [
-            74,
+            56,
+            66,
             77,
-            83,
-            53,
-            59
+            98
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1601,19 +1594,19 @@
     },
     "(72, 0, 0)": {
         "id": 72,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            851,
-            174
+            1102,
+            130
         ],
         "neighbors": [
-            68,
-            101,
-            39,
-            75,
-            46,
-            93
+            65,
+            102,
+            44,
+            79,
+            47,
+            82
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1624,18 +1617,19 @@
     },
     "(73, 0, 0)": {
         "id": 73,
-        "terrain": "plains",
+        "terrain": "hills",
         "is_coastal": true,
         "center": [
-            707,
-            156
+            362,
+            122
         ],
         "neighbors": [
-            64,
-            87,
-            56,
-            88,
-            63
+            69,
+            39,
+            76,
+            45,
+            80,
+            89
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1646,20 +1640,19 @@
     },
     "(74, 0, 0)": {
         "id": 74,
-        "terrain": "inland_sea",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            401,
-            169
+            170,
+            163
         ],
         "neighbors": [
-            70,
-            71,
-            59,
-            76,
-            83,
-            91,
-            95
+            67,
+            40,
+            108,
+            85,
+            25,
+            124
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1670,19 +1663,19 @@
     },
     "(75, 0, 0)": {
         "id": 75,
-        "terrain": "ocean",
+        "terrain": "inland_sea",
         "is_coastal": false,
         "center": [
-            797,
-            171
+            417,
+            128
         ],
         "neighbors": [
-            64,
-            39,
-            72,
-            52,
-            92,
-            93
+            66,
+            69,
+            55,
+            89,
+            90,
+            94
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1693,20 +1686,19 @@
     },
     "(76, 0, 0)": {
         "id": 76,
-        "terrain": "inland_sea",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            361,
-            169
+            341,
+            130
         ],
         "neighbors": [
-            65,
-            70,
-            74,
-            85,
-            91,
-            60,
-            62
+            97,
+            39,
+            73,
+            80,
+            84,
+            60
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1717,20 +1709,18 @@
     },
     "(77, 0, 0)": {
         "id": 77,
-        "terrain": "mountain",
+        "terrain": "desert",
         "is_coastal": true,
         "center": [
-            499,
-            179
+            524,
+            139
         ],
         "neighbors": [
             98,
+            99,
             71,
-            78,
-            82,
-            83,
-            53,
-            57,
+            54,
+            56,
             61
         ],
         "owner": "Unclaimed",
@@ -1742,17 +1732,19 @@
     },
     "(78, 0, 0)": {
         "id": 78,
-        "terrain": "mountain",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            542,
-            170
+            992,
+            138
         ],
         "neighbors": [
-            50,
-            82,
-            77,
-            61
+            34,
+            100,
+            101,
+            52,
+            59,
+            95
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1763,18 +1755,18 @@
     },
     "(79, 0, 0)": {
         "id": 79,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            1018,
-            182
+            14,
+            136
         ],
         "neighbors": [
-            69,
-            104,
-            42,
-            108,
-            81
+            72,
+            47,
+            51,
+            88,
+            58
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1785,20 +1777,17 @@
     },
     "(80, 0, 0)": {
         "id": 80,
-        "terrain": "ocean",
+        "terrain": "inland_sea",
         "is_coastal": false,
         "center": [
-            38,
-            216
+            355,
+            132
         ],
         "neighbors": [
-            96,
-            140,
-            49,
-            81,
-            119,
-            122,
-            29
+            89,
+            73,
+            76,
+            97
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1809,19 +1798,19 @@
     },
     "(81, 0, 0)": {
         "id": 81,
-        "terrain": "ocean",
+        "terrain": "desert",
         "is_coastal": false,
         "center": [
-            1085,
-            197
+            646,
+            147
         ],
         "neighbors": [
-            104,
-            42,
-            79,
-            80,
-            119,
-            29
+            70,
+            106,
+            111,
+            93,
+            53,
+            61
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1832,19 +1821,19 @@
     },
     "(82, 0, 0)": {
         "id": 82,
-        "terrain": "mountain",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            557,
-            190
+            1069,
+            143
         ],
         "neighbors": [
-            98,
-            77,
-            110,
-            78,
-            50,
-            86
+            65,
+            102,
+            103,
+            72,
+            59,
+            95
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1855,20 +1844,22 @@
     },
     "(83, 0, 0)": {
         "id": 83,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "inland_sea",
+        "is_coastal": false,
         "center": [
-            450,
-            177
+            748,
+            157
         ],
         "neighbors": [
-            98,
-            99,
-            71,
-            74,
-            77,
-            94,
-            95
+            64,
+            96,
+            68,
+            70,
+            38,
+            110,
+            115,
+            93,
+            62
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1879,19 +1870,20 @@
     },
     "(84, 0, 0)": {
         "id": 84,
-        "terrain": "mountain",
+        "terrain": "inland_sea",
         "is_coastal": false,
         "center": [
-            625,
-            181
+            322,
+            147
         ],
         "neighbors": [
             97,
-            100,
-            50,
+            107,
+            76,
+            112,
+            85,
             86,
-            88,
-            63
+            60
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1902,17 +1894,21 @@
     },
     "(85, 0, 0)": {
         "id": 85,
-        "terrain": "mountain",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            314,
-            170
+            240,
+            171
         ],
         "neighbors": [
-            89,
-            65,
-            91,
-            76
+            129,
+            40,
+            74,
+            48,
+            112,
+            84,
+            86,
+            124
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1923,18 +1919,16 @@
     },
     "(86, 0, 0)": {
         "id": 86,
-        "terrain": "plains",
+        "terrain": "hills",
         "is_coastal": true,
         "center": [
-            584,
-            206
+            284,
+            144
         ],
         "neighbors": [
-            100,
-            110,
-            112,
-            82,
-            50,
+            48,
+            60,
+            85,
             84
         ],
         "owner": "Unclaimed",
@@ -1946,18 +1940,18 @@
     },
     "(87, 0, 0)": {
         "id": 87,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            735,
-            187
+            900,
+            163
         ],
         "neighbors": [
-            64,
-            73,
-            105,
-            107,
-            88,
+            128,
+            100,
+            52,
+            57,
+            91,
             92
         ],
         "owner": "Unclaimed",
@@ -1969,19 +1963,20 @@
     },
     "(88, 0, 0)": {
         "id": 88,
-        "terrain": "plains",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            697,
-            186
+            32,
+            169
         ],
         "neighbors": [
-            97,
-            73,
-            107,
-            84,
-            87,
-            63
+            67,
+            102,
+            108,
+            79,
+            117,
+            118,
+            58
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -1992,18 +1987,19 @@
     },
     "(89, 0, 0)": {
         "id": 89,
-        "terrain": "desert",
+        "terrain": "mountain",
         "is_coastal": true,
         "center": [
-            263,
-            200
+            380,
+            143
         ],
         "neighbors": [
-            65,
-            66,
-            102,
-            117,
-            85
+            97,
+            69,
+            73,
+            75,
+            80,
+            94
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2014,19 +2010,18 @@
     },
     "(90, 0, 0)": {
         "id": 90,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            178,
-            227
+            425,
+            149
         ],
         "neighbors": [
-            96,
             66,
-            102,
-            136,
-            47,
-            49
+            98,
+            105,
+            75,
+            94
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2037,17 +2032,19 @@
     },
     "(91, 0, 0)": {
         "id": 91,
-        "terrain": "desert",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            361,
-            190
+            851,
+            174
         ],
         "neighbors": [
-            74,
-            76,
-            85,
-            95
+            96,
+            128,
+            50,
+            116,
+            87,
+            57
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2058,21 +2055,15 @@
     },
     "(92, 0, 0)": {
         "id": 92,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            773,
-            210
+            895,
+            139
         ],
         "neighbors": [
-            64,
-            105,
-            106,
-            75,
-            114,
-            87,
-            120,
-            93
+            57,
+            87
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2083,19 +2074,18 @@
     },
     "(93, 0, 0)": {
         "id": 93,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            834,
-            218
+            707,
+            156
         ],
         "neighbors": [
-            101,
-            72,
-            75,
-            114,
-            118,
-            92
+            70,
+            110,
+            111,
+            81,
+            83
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2106,17 +2096,20 @@
     },
     "(94, 0, 0)": {
         "id": 94,
-        "terrain": "desert",
-        "is_coastal": true,
+        "terrain": "inland_sea",
+        "is_coastal": false,
         "center": [
-            469,
-            223
+            401,
+            169
         ],
         "neighbors": [
-            99,
-            98,
-            83,
-            109
+            97,
+            105,
+            75,
+            114,
+            120,
+            89,
+            90
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2130,15 +2123,16 @@
         "terrain": "desert",
         "is_coastal": true,
         "center": [
-            416,
-            208
+            1037,
+            155
         ],
         "neighbors": [
-            99,
-            74,
-            83,
-            115,
-            91
+            101,
+            103,
+            78,
+            113,
+            82,
+            59
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2152,15 +2146,16 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            115,
-            247
+            797,
+            171
         ],
         "neighbors": [
-            122,
-            136,
-            80,
-            49,
-            90
+            64,
+            50,
+            83,
+            116,
+            115,
+            91
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2171,19 +2166,20 @@
     },
     "(97, 0, 0)": {
         "id": 97,
-        "terrain": "mountain",
+        "terrain": "inland_sea",
         "is_coastal": false,
         "center": [
-            683,
-            207
+            361,
+            169
         ],
         "neighbors": [
-            100,
-            103,
             107,
-            111,
+            76,
+            80,
+            114,
             84,
-            88
+            89,
+            94
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2194,19 +2190,21 @@
     },
     "(98, 0, 0)": {
         "id": 98,
-        "terrain": "inland_sea",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            506,
-            211
+            499,
+            179
         ],
         "neighbors": [
-            109,
+            66,
+            99,
+            71,
+            104,
+            105,
             77,
-            110,
-            82,
-            83,
-            94
+            90,
+            123
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2217,18 +2215,17 @@
     },
     "(99, 0, 0)": {
         "id": 99,
-        "terrain": "inland_sea",
+        "terrain": "mountain",
         "is_coastal": false,
         "center": [
-            446,
-            238
+            542,
+            170
         ],
         "neighbors": [
-            109,
-            115,
-            83,
-            94,
-            95
+            104,
+            98,
+            77,
+            61
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2239,19 +2236,19 @@
     },
     "(100, 0, 0)": {
         "id": 100,
-        "terrain": "forest",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            629,
-            216
+            953,
+            186
         ],
         "neighbors": [
-            97,
-            103,
-            112,
-            113,
-            84,
-            86
+            128,
+            101,
+            133,
+            78,
+            52,
+            87
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2262,20 +2259,19 @@
     },
     "(101, 0, 0)": {
         "id": 101,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            916,
-            240
+            1009,
+            183
         ],
         "neighbors": [
-            129,
-            68,
-            69,
-            72,
-            108,
-            118,
-            93
+            100,
+            133,
+            78,
+            113,
+            126,
+            95
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2289,17 +2285,17 @@
         "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            221,
-            256
+            1098,
+            178
         ],
         "neighbors": [
-            66,
-            135,
+            103,
+            72,
             136,
-            141,
-            117,
-            89,
-            90
+            82,
+            118,
+            88,
+            121
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2310,19 +2306,17 @@
     },
     "(103, 0, 0)": {
         "id": 103,
-        "terrain": "jungle",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            667,
-            228
+            1062,
+            171
         ],
         "neighbors": [
-            97,
-            100,
-            111,
             113,
-            116,
-            123
+            82,
+            102,
+            95
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2333,18 +2327,19 @@
     },
     "(104, 0, 0)": {
         "id": 104,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            1038,
-            241
+            557,
+            190
         ],
         "neighbors": [
-            131,
-            108,
-            79,
-            81,
-            119
+            98,
+            99,
+            138,
+            109,
+            123,
+            61
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2355,21 +2350,20 @@
     },
     "(105, 0, 0)": {
         "id": 105,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            741,
-            249
+            450,
+            177
         ],
         "neighbors": [
-            133,
-            134,
-            106,
-            107,
-            111,
-            87,
+            98,
+            119,
             120,
-            92
+            90,
+            123,
+            125,
+            94
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2380,15 +2374,19 @@
     },
     "(106, 0, 0)": {
         "id": 106,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "mountain",
+        "is_coastal": false,
         "center": [
-            757,
-            212
+            625,
+            181
         ],
         "neighbors": [
-            105,
-            92
+            109,
+            111,
+            81,
+            122,
+            61,
+            127
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2399,18 +2397,17 @@
     },
     "(107, 0, 0)": {
         "id": 107,
-        "terrain": "jungle",
+        "terrain": "mountain",
         "is_coastal": true,
         "center": [
-            721,
-            215
+            314,
+            170
         ],
         "neighbors": [
+            112,
             97,
-            105,
-            111,
-            87,
-            88
+            114,
+            84
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2424,16 +2421,16 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            987,
-            250
+            111,
+            195
         ],
         "neighbors": [
-            129,
-            131,
-            101,
-            69,
-            104,
-            79
+            67,
+            135,
+            74,
+            118,
+            88,
+            124
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2444,18 +2441,19 @@
     },
     "(109, 0, 0)": {
         "id": 109,
-        "terrain": "hills",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            498,
-            247
+            584,
+            206
         ],
         "neighbors": [
-            98,
-            99,
-            110,
-            121,
-            94
+            104,
+            106,
+            138,
+            141,
+            61,
+            127
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2466,20 +2464,19 @@
     },
     "(110, 0, 0)": {
         "id": 110,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            552,
-            242
+            735,
+            187
         ],
         "neighbors": [
-            128,
-            98,
-            109,
-            112,
-            82,
-            86,
-            121
+            131,
+            134,
+            111,
+            115,
+            83,
+            93
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2490,19 +2487,19 @@
     },
     "(111, 0, 0)": {
         "id": 111,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "plains",
+        "is_coastal": false,
         "center": [
-            706,
-            253
+            697,
+            186
         ],
         "neighbors": [
-            97,
-            133,
-            103,
-            105,
-            107,
-            116
+            134,
+            106,
+            110,
+            81,
+            122,
+            93
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2513,19 +2510,18 @@
     },
     "(112, 0, 0)": {
         "id": 112,
-        "terrain": "hills",
+        "terrain": "desert",
         "is_coastal": true,
         "center": [
-            601,
-            257
+            263,
+            200
         ],
         "neighbors": [
-            128,
-            130,
-            100,
-            110,
-            113,
-            86
+            129,
+            107,
+            84,
+            85,
+            148
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2536,18 +2532,18 @@
     },
     "(113, 0, 0)": {
         "id": 113,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            636,
-            252
+            1057,
+            192
         ],
         "neighbors": [
-            130,
-            100,
+            101,
             103,
-            112,
-            123
+            121,
+            126,
+            95
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2558,19 +2554,17 @@
     },
     "(114, 0, 0)": {
         "id": 114,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "desert",
+        "is_coastal": true,
         "center": [
-            798,
-            264
+            361,
+            190
         ],
         "neighbors": [
-            134,
-            138,
-            118,
             120,
-            92,
-            93
+            97,
+            107,
+            94
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2581,20 +2575,21 @@
     },
     "(115, 0, 0)": {
         "id": 115,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            419,
-            275
+            773,
+            210
         ],
         "neighbors": [
-            99,
-            139,
-            150,
-            151,
-            124,
-            95,
-            127
+            96,
+            131,
+            132,
+            110,
+            145,
+            83,
+            116,
+            152
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2605,18 +2600,19 @@
     },
     "(116, 0, 0)": {
         "id": 116,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            693,
-            269
+            834,
+            218
         ],
         "neighbors": [
-            133,
-            103,
-            111,
-            123,
-            156
+            96,
+            128,
+            145,
+            115,
+            149,
+            91
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2627,17 +2623,15 @@
     },
     "(117, 0, 0)": {
         "id": 117,
-        "terrain": "desert",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            251,
-            258
+            30,
+            191
         ],
         "neighbors": [
-            89,
-            126,
-            102,
-            135
+            88,
+            118
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2648,19 +2642,21 @@
     },
     "(118, 0, 0)": {
         "id": 118,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            850,
-            268
+            33,
+            212
         ],
         "neighbors": [
-            129,
-            101,
-            138,
+            102,
+            135,
+            136,
+            108,
             142,
-            114,
-            93
+            143,
+            117,
+            88
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2671,19 +2667,17 @@
     },
     "(119, 0, 0)": {
         "id": 119,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "desert",
+        "is_coastal": true,
         "center": [
-            1084,
-            286
+            469,
+            223
         ],
         "neighbors": [
-            131,
-            104,
-            140,
-            80,
-            81,
-            154
+            105,
+            137,
+            123,
+            125
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2694,17 +2688,18 @@
     },
     "(120, 0, 0)": {
         "id": 120,
-        "terrain": "jungle",
+        "terrain": "desert",
         "is_coastal": true,
         "center": [
-            779,
-            274
+            416,
+            208
         ],
         "neighbors": [
             105,
             114,
-            92,
-            134
+            146,
+            125,
+            94
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2715,18 +2710,18 @@
     },
     "(121, 0, 0)": {
         "id": 121,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            522,
-            275
+            1094,
+            204
         ],
         "neighbors": [
-            128,
-            137,
-            109,
-            110,
-            127
+            102,
+            136,
+            139,
+            113,
+            126
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2737,19 +2732,19 @@
     },
     "(122, 0, 0)": {
         "id": 122,
-        "terrain": "ocean",
+        "terrain": "mountain",
         "is_coastal": false,
         "center": [
-            87,
-            324
+            683,
+            207
         ],
         "neighbors": [
-            96,
-            162,
-            136,
-            168,
+            130,
+            134,
+            106,
             140,
-            80
+            111,
+            127
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2760,20 +2755,19 @@
     },
     "(123, 0, 0)": {
         "id": 123,
-        "terrain": "coastal_sea",
+        "terrain": "inland_sea",
         "is_coastal": false,
         "center": [
-            670,
-            282
+            506,
+            211
         ],
         "neighbors": [
-            130,
-            103,
-            143,
-            113,
-            116,
-            149,
-            156
+            98,
+            104,
+            105,
+            137,
+            138,
+            119
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2784,17 +2778,19 @@
     },
     "(124, 0, 0)": {
         "id": 124,
-        "terrain": "plains",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            373,
-            277
+            174,
+            239
         ],
         "neighbors": [
-            132,
-            115,
-            139,
-            125
+            129,
+            135,
+            170,
+            74,
+            108,
+            85
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2805,16 +2801,18 @@
     },
     "(125, 0, 0)": {
         "id": 125,
-        "terrain": "desert",
+        "terrain": "inland_sea",
         "is_coastal": false,
         "center": [
-            329,
-            268
+            446,
+            238
         ],
         "neighbors": [
-            132,
-            124,
-            126
+            105,
+            137,
+            146,
+            119,
+            120
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2825,17 +2823,20 @@
     },
     "(126, 0, 0)": {
         "id": 126,
-        "terrain": "desert",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            285,
-            278
+            1050,
+            228
         ],
         "neighbors": [
-            125,
-            132,
-            117,
-            135
+            160,
+            163,
+            101,
+            133,
+            139,
+            113,
+            121
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2846,17 +2847,19 @@
     },
     "(127, 0, 0)": {
         "id": 127,
-        "terrain": "mountain",
+        "terrain": "forest",
         "is_coastal": true,
         "center": [
-            464,
-            301
+            629,
+            216
         ],
         "neighbors": [
-            121,
-            137,
-            115,
-            150
+            130,
+            106,
+            109,
+            141,
+            144,
+            122
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2867,20 +2870,20 @@
     },
     "(128, 0, 0)": {
         "id": 128,
-        "terrain": "coastal_sea",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            574,
-            297
+            916,
+            240
         ],
         "neighbors": [
-            130,
-            137,
-            110,
-            112,
-            145,
-            152,
-            121
+            162,
+            100,
+            133,
+            116,
+            149,
+            87,
+            91
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2891,20 +2894,20 @@
     },
     "(129, 0, 0)": {
         "id": 129,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            940,
-            306
+            221,
+            256
         ],
         "neighbors": [
-            131,
-            101,
-            108,
-            142,
-            118,
-            153,
-            157
+            169,
+            170,
+            175,
+            112,
+            148,
+            85,
+            124
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2915,19 +2918,19 @@
     },
     "(130, 0, 0)": {
         "id": 130,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            630,
-            294
+            667,
+            228
         ],
         "neighbors": [
-            128,
-            143,
-            112,
-            113,
-            145,
-            123
+            154,
+            140,
+            144,
+            147,
+            122,
+            127
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2938,19 +2941,21 @@
     },
     "(131, 0, 0)": {
         "id": 131,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            1014,
-            302
+            741,
+            249
         ],
         "neighbors": [
-            129,
-            104,
-            108,
-            119,
-            153,
-            154
+            132,
+            134,
+            167,
+            168,
+            140,
+            110,
+            115,
+            152
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2961,19 +2966,15 @@
     },
     "(132, 0, 0)": {
         "id": 132,
-        "terrain": "forest",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            332,
-            294
+            757,
+            212
         ],
         "neighbors": [
-            135,
-            139,
-            147,
-            124,
-            125,
-            126
+            115,
+            131
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -2984,19 +2985,19 @@
     },
     "(133, 0, 0)": {
         "id": 133,
-        "terrain": "coastal_sea",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            723,
-            303
+            996,
+            246
         ],
         "neighbors": [
-            134,
-            105,
-            111,
-            144,
-            116,
-            156
+            128,
+            160,
+            162,
+            100,
+            101,
+            126
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3007,22 +3008,18 @@
     },
     "(134, 0, 0)": {
         "id": 134,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            778,
-            307
+            721,
+            215
         ],
         "neighbors": [
-            133,
-            105,
-            138,
-            144,
-            114,
-            146,
-            120,
-            155,
-            156
+            131,
+            140,
+            110,
+            111,
+            122
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3033,19 +3030,20 @@
     },
     "(135, 0, 0)": {
         "id": 135,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            270,
-            298
+            118,
+            254
         ],
         "neighbors": [
-            132,
-            102,
-            141,
-            147,
-            117,
-            126
+            170,
+            171,
+            108,
+            150,
+            118,
+            124,
+            159
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3056,20 +3054,18 @@
     },
     "(136, 0, 0)": {
         "id": 136,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            178,
-            322
+            1112,
+            224
         ],
         "neighbors": [
-            96,
-            160,
             102,
-            122,
-            168,
-            141,
-            90
+            139,
+            143,
+            118,
+            121
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3080,19 +3076,18 @@
     },
     "(137, 0, 0)": {
         "id": 137,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            507,
-            328
+            498,
+            247
         ],
         "neighbors": [
-            128,
-            163,
-            150,
-            152,
-            121,
-            127
+            138,
+            119,
+            153,
+            123,
+            125
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3106,16 +3101,17 @@
         "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            840,
-            304
+            552,
+            242
         ],
         "neighbors": [
-            134,
-            142,
-            114,
-            146,
-            148,
-            118
+            161,
+            104,
+            137,
+            109,
+            141,
+            153,
+            123
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3126,19 +3122,18 @@
     },
     "(139, 0, 0)": {
         "id": 139,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            367,
-            324
+            1094,
+            250
         ],
         "neighbors": [
-            132,
-            115,
-            147,
+            163,
+            136,
             151,
-            124,
-            158
+            121,
+            126
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3149,19 +3144,18 @@
     },
     "(140, 0, 0)": {
         "id": 140,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            22,
-            384
+            706,
+            253
         ],
         "neighbors": [
-            162,
-            197,
-            154,
-            80,
-            180,
-            119,
+            130,
+            131,
+            134,
+            167,
+            147,
             122
         ],
         "owner": "Unclaimed",
@@ -3173,19 +3167,19 @@
     },
     "(141, 0, 0)": {
         "id": 141,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            245,
-            330
+            601,
+            257
         ],
         "neighbors": [
-            160,
             161,
-            102,
-            135,
-            136,
-            147
+            164,
+            138,
+            109,
+            144,
+            127
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3196,19 +3190,16 @@
     },
     "(142, 0, 0)": {
         "id": 142,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            891,
-            326
+            52,
+            244
         ],
         "neighbors": [
-            129,
-            138,
-            148,
+            150,
             118,
-            157,
-            159
+            143
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3219,22 +3210,18 @@
     },
     "(143, 0, 0)": {
         "id": 143,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            681,
-            349
+            26,
+            256
         ],
         "neighbors": [
-            130,
-            169,
-            171,
-            172,
-            176,
-            145,
-            149,
-            123,
-            156
+            165,
+            136,
+            142,
+            118,
+            151
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3245,16 +3232,18 @@
     },
     "(144, 0, 0)": {
         "id": 144,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            750,
-            334
+            636,
+            252
         ],
         "neighbors": [
-            156,
-            133,
-            134
+            130,
+            164,
+            141,
+            154,
+            127
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3265,18 +3254,18 @@
     },
     "(145, 0, 0)": {
         "id": 145,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            630,
-            340
+            798,
+            264
         ],
         "neighbors": [
-            128,
-            130,
-            164,
-            169,
-            143,
+            168,
+            173,
+            115,
+            116,
+            149,
             152
         ],
         "owner": "Unclaimed",
@@ -3288,21 +3277,20 @@
     },
     "(146, 0, 0)": {
         "id": 146,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "plains",
+        "is_coastal": true,
         "center": [
-            807,
-            350
+            419,
+            275
         ],
         "neighbors": [
-            134,
-            167,
-            138,
-            172,
-            148,
+            187,
+            174,
+            120,
+            186,
             155,
-            156,
-            159
+            125,
+            158
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3313,19 +3301,18 @@
     },
     "(147, 0, 0)": {
         "id": 147,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            303,
-            333
+            693,
+            269
         ],
         "neighbors": [
-            161,
-            132,
-            135,
-            139,
-            141,
-            158
+            192,
+            130,
+            167,
+            140,
+            154
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3336,17 +3323,17 @@
     },
     "(148, 0, 0)": {
         "id": 148,
-        "terrain": "jungle",
+        "terrain": "desert",
         "is_coastal": true,
         "center": [
-            855,
-            336
+            251,
+            258
         ],
         "neighbors": [
-            159,
-            138,
-            142,
-            146
+            112,
+            129,
+            169,
+            157
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3357,16 +3344,19 @@
     },
     "(149, 0, 0)": {
         "id": 149,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            700,
-            342
+            850,
+            268
         ],
         "neighbors": [
-            123,
-            156,
-            143
+            128,
+            162,
+            173,
+            176,
+            145,
+            116
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3377,20 +3367,16 @@
     },
     "(150, 0, 0)": {
         "id": 150,
-        "terrain": "hills",
+        "terrain": "jungle",
         "is_coastal": true,
         "center": [
-            438,
-            354
+            85,
+            255
         ],
         "neighbors": [
-            163,
-            165,
-            137,
-            177,
-            115,
-            151,
-            127
+            159,
+            142,
+            135
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3401,19 +3387,20 @@
     },
     "(151, 0, 0)": {
         "id": 151,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            388,
-            352
+            11,
+            325
         ],
         "neighbors": [
+            163,
             165,
-            170,
+            201,
             139,
-            115,
-            150,
-            158
+            143,
+            183,
+            190
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3424,20 +3411,17 @@
     },
     "(152, 0, 0)": {
         "id": 152,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            555,
-            357
+            779,
+            274
         ],
         "neighbors": [
-            128,
-            163,
-            164,
-            137,
-            173,
-            175,
-            145
+            168,
+            145,
+            115,
+            131
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3448,18 +3432,18 @@
     },
     "(153, 0, 0)": {
         "id": 153,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            1005,
-            353
+            522,
+            275
         ],
         "neighbors": [
-            129,
-            131,
-            174,
-            154,
-            157
+            161,
+            137,
+            138,
+            172,
+            158
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3470,19 +3454,20 @@
     },
     "(154, 0, 0)": {
         "id": 154,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            1077,
-            369
+            670,
+            282
         ],
         "neighbors": [
-            131,
-            140,
-            174,
-            180,
-            119,
-            153
+            192,
+            130,
+            164,
+            144,
+            177,
+            147,
+            185
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3493,16 +3478,17 @@
     },
     "(155, 0, 0)": {
         "id": 155,
-        "terrain": "jungle",
-        "is_coastal": true,
+        "terrain": "plains",
+        "is_coastal": false,
         "center": [
-            778,
-            348
+            373,
+            277
         ],
         "neighbors": [
             146,
             156,
-            134
+            166,
+            174
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3513,24 +3499,16 @@
     },
     "(156, 0, 0)": {
         "id": 156,
-        "terrain": "coastal_sea",
+        "terrain": "desert",
         "is_coastal": false,
         "center": [
-            740,
-            359
+            329,
+            268
         ],
         "neighbors": [
-            133,
-            134,
-            171,
             155,
-            172,
-            143,
-            144,
-            146,
-            116,
-            149,
-            123
+            157,
+            166
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3541,19 +3519,17 @@
     },
     "(157, 0, 0)": {
         "id": 157,
-        "terrain": "ocean",
+        "terrain": "desert",
         "is_coastal": false,
         "center": [
-            942,
-            380
+            285,
+            278
         ],
         "neighbors": [
-            129,
-            142,
-            174,
-            182,
-            153,
-            159
+            169,
+            148,
+            166,
+            156
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3564,19 +3540,17 @@
     },
     "(158, 0, 0)": {
         "id": 158,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            326,
-            380
+            464,
+            301
         ],
         "neighbors": [
-            161,
-            170,
-            139,
-            147,
-            181,
-            151
+            186,
+            153,
+            146,
+            172
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3587,21 +3561,16 @@
     },
     "(159, 0, 0)": {
         "id": 159,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            875,
-            391
+            110,
+            280
         ],
         "neighbors": [
-            166,
-            167,
-            142,
-            146,
-            148,
-            182,
-            187,
-            157
+            171,
+            150,
+            135
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3615,15 +3584,16 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            218,
-            387
+            1020,
+            298
         ],
         "neighbors": [
-            161,
-            136,
-            168,
-            141,
-            185
+            162,
+            163,
+            133,
+            126,
+            189,
+            190
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3634,20 +3604,20 @@
     },
     "(161, 0, 0)": {
         "id": 161,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            281,
-            400
+            574,
+            297
         ],
         "neighbors": [
-            160,
+            164,
+            138,
+            172,
             141,
-            147,
-            181,
-            185,
-            189,
-            158
+            179,
+            153,
+            188
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3661,14 +3631,17 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            82,
-            419
+            940,
+            306
         ],
         "neighbors": [
-            168,
-            122,
-            140,
-            197
+            128,
+            160,
+            193,
+            133,
+            176,
+            149,
+            189
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3679,20 +3652,18 @@
     },
     "(163, 0, 0)": {
         "id": 163,
-        "terrain": "coastal_sea",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            475,
-            386
+            1088,
+            296
         ],
         "neighbors": [
-            137,
-            173,
-            177,
-            179,
-            150,
-            152,
-            186
+            160,
+            139,
+            151,
+            126,
+            190
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3703,17 +3674,19 @@
     },
     "(164, 0, 0)": {
         "id": 164,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            612,
-            388
+            630,
+            294
         ],
         "neighbors": [
-            152,
-            145,
-            169,
-            175
+            161,
+            141,
+            144,
+            177,
+            179,
+            154
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3724,19 +3697,16 @@
     },
     "(165, 0, 0)": {
         "id": 165,
-        "terrain": "forest",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            406,
-            396
+            23,
+            305
         ],
         "neighbors": [
-            170,
-            177,
-            150,
+            143,
             183,
-            151,
-            184
+            151
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3750,13 +3720,16 @@
         "terrain": "forest",
         "is_coastal": true,
         "center": [
-            851,
-            409
+            332,
+            294
         ],
         "neighbors": [
-            167,
-            187,
-            159
+            169,
+            174,
+            181,
+            155,
+            156,
+            157
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3767,17 +3740,19 @@
     },
     "(167, 0, 0)": {
         "id": 167,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            810,
-            390
+            723,
+            303
         ],
         "neighbors": [
+            192,
+            131,
+            168,
+            140,
             178,
-            146,
-            166,
-            159
+            147
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3788,20 +3763,22 @@
     },
     "(168, 0, 0)": {
         "id": 168,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            153,
-            427
+            778,
+            307
         ],
         "neighbors": [
-            160,
-            162,
-            194,
-            197,
-            136,
-            185,
-            122
+            192,
+            131,
+            167,
+            173,
+            145,
+            178,
+            180,
+            152,
+            191
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3812,20 +3789,19 @@
     },
     "(169, 0, 0)": {
         "id": 169,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            654,
-            420
+            270,
+            298
         ],
         "neighbors": [
-            192,
-            164,
-            196,
-            143,
-            176,
-            145,
-            175
+            129,
+            166,
+            175,
+            148,
+            181,
+            157
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3836,18 +3812,21 @@
     },
     "(170, 0, 0)": {
         "id": 170,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            369,
-            400
+            184,
+            326
         ],
         "neighbors": [
-            165,
-            181,
-            151,
+            129,
+            198,
+            135,
+            171,
+            203,
+            175,
             184,
-            158
+            124
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3858,16 +3837,17 @@
     },
     "(171, 0, 0)": {
         "id": 171,
-        "terrain": "jungle",
+        "terrain": "plains",
         "is_coastal": true,
         "center": [
-            733,
-            378
+            141,
+            304
         ],
         "neighbors": [
-            172,
-            156,
-            143
+            159,
+            170,
+            184,
+            135
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3881,16 +3861,16 @@
         "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            748,
-            396
+            507,
+            328
         ],
         "neighbors": [
-            171,
-            143,
-            176,
-            178,
-            146,
-            156
+            161,
+            200,
+            153,
+            186,
+            188,
+            158
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3901,20 +3881,19 @@
     },
     "(173, 0, 0)": {
         "id": 173,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            506,
-            427
+            840,
+            304
         ],
         "neighbors": [
-            163,
-            200,
-            175,
-            179,
-            152,
-            186,
-            188
+            168,
+            176,
+            145,
+            180,
+            149,
+            182
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3925,20 +3904,19 @@
     },
     "(174, 0, 0)": {
         "id": 174,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            1000,
-            441
+            367,
+            324
         ],
         "neighbors": [
             195,
-            203,
-            180,
-            182,
-            153,
-            154,
-            157
+            166,
+            187,
+            146,
+            181,
+            155
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3949,19 +3927,19 @@
     },
     "(175, 0, 0)": {
         "id": 175,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            571,
-            428
+            245,
+            330
         ],
         "neighbors": [
-            164,
-            196,
+            129,
+            198,
+            199,
             169,
-            173,
-            152,
-            188
+            170,
+            181
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3972,19 +3950,19 @@
     },
     "(176, 0, 0)": {
         "id": 176,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            708,
-            428
+            891,
+            326
         ],
         "neighbors": [
-            192,
-            169,
-            172,
-            143,
-            178,
-            190
+            193,
+            162,
+            197,
+            173,
+            149,
+            182
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -3995,19 +3973,22 @@
     },
     "(177, 0, 0)": {
         "id": 177,
-        "terrain": "forest",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            437,
-            418
+            681,
+            349
         ],
         "neighbors": [
-            163,
-            165,
-            150,
-            183,
-            186,
-            191
+            192,
+            164,
+            217,
+            208,
+            210,
+            179,
+            212,
+            185,
+            154
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4018,16 +3999,15 @@
     },
     "(178, 0, 0)": {
         "id": 178,
-        "terrain": "desert",
+        "terrain": "jungle",
         "is_coastal": true,
         "center": [
-            752,
-            424
+            750,
+            334
         ],
         "neighbors": [
-            176,
-            172,
-            190,
+            168,
+            192,
             167
         ],
         "owner": "Unclaimed",
@@ -4039,16 +4019,19 @@
     },
     "(179, 0, 0)": {
         "id": 179,
-        "terrain": "hills",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            479,
-            434
+            630,
+            340
         ],
         "neighbors": [
-            186,
-            163,
-            173
+            161,
+            164,
+            202,
+            208,
+            177,
+            188
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4059,18 +4042,21 @@
     },
     "(180, 0, 0)": {
         "id": 180,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            1080,
-            467
+            807,
+            350
         ],
         "neighbors": [
+            192,
             197,
-            203,
-            140,
-            174,
-            154
+            168,
+            173,
+            207,
+            212,
+            182,
+            191
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4084,16 +4070,16 @@
         "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            328,
-            442
+            303,
+            333
         ],
         "neighbors": [
-            161,
-            198,
-            170,
-            184,
-            189,
-            158
+            195,
+            166,
+            199,
+            169,
+            174,
+            175
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4104,19 +4090,17 @@
     },
     "(182, 0, 0)": {
         "id": 182,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            902,
-            463
+            855,
+            336
         ],
         "neighbors": [
-            195,
-            204,
-            174,
-            187,
-            157,
-            159
+            197,
+            180,
+            173,
+            176
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4127,17 +4111,19 @@
     },
     "(183, 0, 0)": {
         "id": 183,
-        "terrain": "plains",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            401,
-            440
+            57,
+            340
         ],
         "neighbors": [
-            184,
-            177,
+            194,
+            196,
             165,
-            191
+            201,
+            204,
+            151
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4148,19 +4134,17 @@
     },
     "(184, 0, 0)": {
         "id": 184,
-        "terrain": "desert",
+        "terrain": "forest",
         "is_coastal": true,
         "center": [
-            366,
-            445
+            129,
+            337
         ],
         "neighbors": [
-            165,
-            198,
             170,
-            181,
-            183,
-            191
+            194,
+            171,
+            203
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4171,19 +4155,16 @@
     },
     "(185, 0, 0)": {
         "id": 185,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "jungle",
+        "is_coastal": true,
         "center": [
-            230,
-            444
+            700,
+            342
         ],
         "neighbors": [
-            160,
-            161,
-            194,
-            199,
-            168,
-            189
+            192,
+            177,
+            154
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4194,20 +4175,20 @@
     },
     "(186, 0, 0)": {
         "id": 186,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "hills",
+        "is_coastal": true,
         "center": [
-            446,
-            469
+            438,
+            354
         ],
         "neighbors": [
-            163,
             200,
-            173,
+            172,
             205,
-            177,
-            179,
-            191
+            219,
+            146,
+            187,
+            158
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4218,18 +4199,19 @@
     },
     "(187, 0, 0)": {
         "id": 187,
-        "terrain": "plains",
+        "terrain": "jungle",
         "is_coastal": true,
         "center": [
-            845,
-            454
+            388,
+            352
         ],
         "neighbors": [
-            193,
-            166,
-            201,
-            182,
-            159
+            195,
+            205,
+            174,
+            209,
+            146,
+            186
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4243,14 +4225,17 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            541,
-            471
+            555,
+            357
         ],
         "neighbors": [
+            161,
             200,
-            196,
-            173,
-            175
+            202,
+            172,
+            179,
+            213,
+            216
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4264,15 +4249,15 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            279,
-            469
+            1005,
+            353
         ],
         "neighbors": [
-            161,
-            198,
-            199,
-            181,
-            185
+            160,
+            193,
+            162,
+            215,
+            190
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4283,18 +4268,20 @@
     },
     "(190, 0, 0)": {
         "id": 190,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            742,
-            466
+            1077,
+            369
         ],
         "neighbors": [
-            192,
-            193,
-            202,
-            176,
-            178
+            160,
+            163,
+            201,
+            151,
+            215,
+            189,
+            222
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4305,19 +4292,16 @@
     },
     "(191, 0, 0)": {
         "id": 191,
-        "terrain": "hills",
+        "terrain": "jungle",
         "is_coastal": true,
         "center": [
-            394,
-            478
+            778,
+            348
         ],
         "neighbors": [
-            198,
-            205,
-            177,
-            183,
-            184,
-            186
+            168,
+            180,
+            192
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4328,18 +4312,24 @@
     },
     "(192, 0, 0)": {
         "id": 192,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            679,
-            487
+            740,
+            359
         ],
         "neighbors": [
-            196,
-            169,
-            202,
-            176,
-            190
+            167,
+            168,
+            177,
+            178,
+            147,
+            210,
+            212,
+            180,
+            185,
+            154,
+            191
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4350,17 +4340,19 @@
     },
     "(193, 0, 0)": {
         "id": 193,
-        "terrain": "desert",
-        "is_coastal": true,
+        "terrain": "ocean",
+        "is_coastal": false,
         "center": [
-            795,
-            470
+            942,
+            380
         ],
         "neighbors": [
-            201,
-            202,
-            187,
-            190
+            225,
+            162,
+            197,
+            176,
+            215,
+            189
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4371,17 +4363,18 @@
     },
     "(194, 0, 0)": {
         "id": 194,
-        "terrain": "ocean",
-        "is_coastal": false,
+        "terrain": "forest",
+        "is_coastal": true,
         "center": [
-            191,
-            492
+            105,
+            357
         ],
         "neighbors": [
-            168,
-            185,
-            197,
-            199
+            196,
+            203,
+            211,
+            183,
+            184
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4392,17 +4385,19 @@
     },
     "(195, 0, 0)": {
         "id": 195,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            926,
-            489
+            326,
+            380
         ],
         "neighbors": [
-            204,
-            203,
-            182,
-            174
+            224,
+            199,
+            174,
+            209,
+            181,
+            187
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4413,18 +4408,18 @@
     },
     "(196, 0, 0)": {
         "id": 196,
-        "terrain": "ocean",
+        "terrain": "forest",
         "is_coastal": false,
         "center": [
-            599,
-            498
+            81,
+            371
         ],
         "neighbors": [
-            192,
-            200,
-            169,
-            175,
-            188
+            194,
+            204,
+            211,
+            214,
+            183
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4435,18 +4430,21 @@
     },
     "(197, 0, 0)": {
         "id": 197,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            73,
-            493
+            875,
+            391
         ],
         "neighbors": [
-            194,
-            162,
-            168,
-            140,
-            180
+            193,
+            225,
+            230,
+            206,
+            207,
+            176,
+            180,
+            182
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4457,19 +4455,19 @@
     },
     "(198, 0, 0)": {
         "id": 198,
-        "terrain": "coastal_sea",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            331,
-            496
+            218,
+            387
         ],
         "neighbors": [
+            228,
             199,
-            205,
-            181,
-            184,
-            189,
-            191
+            170,
+            203,
+            175,
+            218
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4483,14 +4481,17 @@
         "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            252,
-            502
+            281,
+            400
         ],
         "neighbors": [
-            185,
-            194,
-            189,
-            198
+            224,
+            195,
+            228,
+            198,
+            232,
+            175,
+            181
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4501,18 +4502,20 @@
     },
     "(200, 0, 0)": {
         "id": 200,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            493,
-            500
+            475,
+            386
         ],
         "neighbors": [
-            196,
-            205,
-            173,
+            229,
+            172,
+            213,
             186,
-            188
+            219,
+            188,
+            221
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4523,17 +4526,21 @@
     },
     "(201, 0, 0)": {
         "id": 201,
-        "terrain": "plains",
-        "is_coastal": true,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
         "center": [
-            818,
-            493
+            19,
+            415
         ],
         "neighbors": [
-            193,
-            202,
-            187,
-            204
+            233,
+            204,
+            242,
+            183,
+            151,
+            222,
+            190,
+            223
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4544,18 +4551,17 @@
     },
     "(202, 0, 0)": {
         "id": 202,
-        "terrain": "coastal_sea",
+        "terrain": "ocean",
         "is_coastal": false,
         "center": [
-            756,
-            501
+            612,
+            388
         ],
         "neighbors": [
-            192,
-            193,
-            201,
-            204,
-            190
+            216,
+            179,
+            188,
+            208
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4566,17 +4572,23 @@
     },
     "(203, 0, 0)": {
         "id": 203,
-        "terrain": "ocean",
+        "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
-            967,
-            503
+            130,
+            406
         ],
         "neighbors": [
-            204,
-            195,
-            180,
-            174
+            194,
+            198,
+            233,
+            170,
+            237,
+            211,
+            214,
+            184,
+            218,
+            223
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4587,18 +4599,18 @@
     },
     "(204, 0, 0)": {
         "id": 204,
-        "terrain": "coastal_sea",
-        "is_coastal": false,
+        "terrain": "mountain",
+        "is_coastal": true,
         "center": [
-            851,
-            510
+            52,
+            383
         ],
         "neighbors": [
-            195,
+            196,
             201,
-            202,
-            203,
-            182
+            214,
+            183,
+            223
         ],
         "owner": "Unclaimed",
         "units": [],
@@ -4609,6 +4621,997 @@
     },
     "(205, 0, 0)": {
         "id": 205,
+        "terrain": "forest",
+        "is_coastal": false,
+        "center": [
+            406,
+            396
+        ],
+        "neighbors": [
+            226,
+            227,
+            219,
+            209,
+            186,
+            187
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(206, 0, 0)": {
+        "id": 206,
+        "terrain": "forest",
+        "is_coastal": true,
+        "center": [
+            851,
+            409
+        ],
+        "neighbors": [
+            197,
+            230,
+            207
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(207, 0, 0)": {
+        "id": 207,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            810,
+            390
+        ],
+        "neighbors": [
+            220,
+            180,
+            197,
+            206
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(208, 0, 0)": {
+        "id": 208,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            654,
+            420
+        ],
+        "neighbors": [
+            202,
+            236,
+            177,
+            241,
+            179,
+            216,
+            217
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(209, 0, 0)": {
+        "id": 209,
+        "terrain": "hills",
+        "is_coastal": true,
+        "center": [
+            369,
+            400
+        ],
+        "neighbors": [
+            224,
+            195,
+            227,
+            205,
+            187
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(210, 0, 0)": {
+        "id": 210,
+        "terrain": "jungle",
+        "is_coastal": true,
+        "center": [
+            733,
+            378
+        ],
+        "neighbors": [
+            192,
+            177,
+            212
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(211, 0, 0)": {
+        "id": 211,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            99,
+            396
+        ],
+        "neighbors": [
+            194,
+            203,
+            196,
+            214
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(212, 0, 0)": {
+        "id": 212,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            748,
+            396
+        ],
+        "neighbors": [
+            192,
+            177,
+            210,
+            180,
+            217,
+            220
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(213, 0, 0)": {
+        "id": 213,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            506,
+            427
+        ],
+        "neighbors": [
+            229,
+            231,
+            200,
+            245,
+            216,
+            188,
+            221
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(214, 0, 0)": {
+        "id": 214,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            74,
+            408
+        ],
+        "neighbors": [
+            196,
+            203,
+            204,
+            211,
+            223
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(215, 0, 0)": {
+        "id": 215,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            1000,
+            441
+        ],
+        "neighbors": [
+            193,
+            225,
+            240,
+            248,
+            190,
+            189,
+            222
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(216, 0, 0)": {
+        "id": 216,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            571,
+            428
+        ],
+        "neighbors": [
+            231,
+            202,
+            208,
+            241,
+            213,
+            188
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(217, 0, 0)": {
+        "id": 217,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            708,
+            428
+        ],
+        "neighbors": [
+            234,
+            236,
+            208,
+            177,
+            212,
+            220
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(218, 0, 0)": {
+        "id": 218,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            154,
+            443
+        ],
+        "neighbors": [
+            228,
+            198,
+            203,
+            237,
+            239
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(219, 0, 0)": {
+        "id": 219,
+        "terrain": "forest",
+        "is_coastal": true,
+        "center": [
+            437,
+            418
+        ],
+        "neighbors": [
+            226,
+            229,
+            200,
+            235,
+            205,
+            186
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(220, 0, 0)": {
+        "id": 220,
+        "terrain": "desert",
+        "is_coastal": true,
+        "center": [
+            752,
+            424
+        ],
+        "neighbors": [
+            217,
+            234,
+            212,
+            207
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(221, 0, 0)": {
+        "id": 221,
+        "terrain": "hills",
+        "is_coastal": true,
+        "center": [
+            479,
+            434
+        ],
+        "neighbors": [
+            200,
+            229,
+            213
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(222, 0, 0)": {
+        "id": 222,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            1080,
+            467
+        ],
+        "neighbors": [
+            201,
+            242,
+            215,
+            248,
+            190
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(223, 0, 0)": {
+        "id": 223,
+        "terrain": "mountain",
+        "is_coastal": true,
+        "center": [
+            55,
+            429
+        ],
+        "neighbors": [
+            201,
+            233,
+            203,
+            204,
+            214
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(224, 0, 0)": {
+        "id": 224,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            328,
+            442
+        ],
+        "neighbors": [
+            195,
+            227,
+            199,
+            232,
+            209,
+            243
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(225, 0, 0)": {
+        "id": 225,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            902,
+            463
+        ],
+        "neighbors": [
+            193,
+            197,
+            230,
+            240,
+            215,
+            249
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(226, 0, 0)": {
+        "id": 226,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            401,
+            440
+        ],
+        "neighbors": [
+            219,
+            227,
+            205,
+            235
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(227, 0, 0)": {
+        "id": 227,
+        "terrain": "desert",
+        "is_coastal": true,
+        "center": [
+            366,
+            445
+        ],
+        "neighbors": [
+            224,
+            226,
+            235,
+            205,
+            209,
+            243
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(228, 0, 0)": {
+        "id": 228,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            230,
+            444
+        ],
+        "neighbors": [
+            198,
+            199,
+            232,
+            239,
+            244,
+            218
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(229, 0, 0)": {
+        "id": 229,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            446,
+            469
+        ],
+        "neighbors": [
+            200,
+            235,
+            213,
+            245,
+            250,
+            219,
+            221
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(230, 0, 0)": {
+        "id": 230,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            845,
+            454
+        ],
+        "neighbors": [
+            225,
+            197,
+            206,
+            238,
+            246
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(231, 0, 0)": {
+        "id": 231,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            541,
+            471
+        ],
+        "neighbors": [
+            216,
+            245,
+            241,
+            213
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(232, 0, 0)": {
+        "id": 232,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            279,
+            469
+        ],
+        "neighbors": [
+            224,
+            228,
+            199,
+            243,
+            244
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(233, 0, 0)": {
+        "id": 233,
+        "terrain": "mountain",
+        "is_coastal": true,
+        "center": [
+            62,
+            472
+        ],
+        "neighbors": [
+            201,
+            203,
+            237,
+            242,
+            223
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(234, 0, 0)": {
+        "id": 234,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            742,
+            466
+        ],
+        "neighbors": [
+            236,
+            238,
+            247,
+            217,
+            220
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(235, 0, 0)": {
+        "id": 235,
+        "terrain": "hills",
+        "is_coastal": true,
+        "center": [
+            394,
+            478
+        ],
+        "neighbors": [
+            226,
+            227,
+            229,
+            243,
+            250,
+            219
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(236, 0, 0)": {
+        "id": 236,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            679,
+            487
+        ],
+        "neighbors": [
+            234,
+            208,
+            241,
+            247,
+            217
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(237, 0, 0)": {
+        "id": 237,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            99,
+            490
+        ],
+        "neighbors": [
+            233,
+            203,
+            239,
+            242,
+            218
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(238, 0, 0)": {
+        "id": 238,
+        "terrain": "desert",
+        "is_coastal": true,
+        "center": [
+            795,
+            470
+        ],
+        "neighbors": [
+            234,
+            247,
+            230,
+            246
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(239, 0, 0)": {
+        "id": 239,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            179,
+            491
+        ],
+        "neighbors": [
+            237,
+            218,
+            228,
+            244
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(240, 0, 0)": {
+        "id": 240,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            926,
+            489
+        ],
+        "neighbors": [
+            248,
+            225,
+            249,
+            215
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(241, 0, 0)": {
+        "id": 241,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            599,
+            498
+        ],
+        "neighbors": [
+            231,
+            236,
+            208,
+            245,
+            216
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(242, 0, 0)": {
+        "id": 242,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            30,
+            495
+        ],
+        "neighbors": [
+            201,
+            233,
+            222,
+            237
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(243, 0, 0)": {
+        "id": 243,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            331,
+            496
+        ],
+        "neighbors": [
+            224,
+            227,
+            232,
+            235,
+            244,
+            250
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(244, 0, 0)": {
+        "id": 244,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            252,
+            502
+        ],
+        "neighbors": [
+            232,
+            243,
+            228,
+            239
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(245, 0, 0)": {
+        "id": 245,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            493,
+            500
+        ],
+        "neighbors": [
+            229,
+            231,
+            241,
+            213,
+            250
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(246, 0, 0)": {
+        "id": 246,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            818,
+            493
+        ],
+        "neighbors": [
+            249,
+            247,
+            230,
+            238
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(247, 0, 0)": {
+        "id": 247,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            756,
+            501
+        ],
+        "neighbors": [
+            234,
+            236,
+            238,
+            246,
+            249
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(248, 0, 0)": {
+        "id": 248,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            967,
+            503
+        ],
+        "neighbors": [
+            240,
+            249,
+            222,
+            215
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(249, 0, 0)": {
+        "id": 249,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            851,
+            510
+        ],
+        "neighbors": [
+            225,
+            240,
+            246,
+            247,
+            248
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "deployment_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(250, 0, 0)": {
+        "id": 250,
         "terrain": "coastal_sea",
         "is_coastal": false,
         "center": [
@@ -4616,10 +5619,10 @@
             510
         ],
         "neighbors": [
-            200,
-            186,
-            198,
-            191
+            245,
+            235,
+            229,
+            243
         ],
         "owner": "Unclaimed",
         "units": [],

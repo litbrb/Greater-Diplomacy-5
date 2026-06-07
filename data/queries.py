@@ -47,7 +47,7 @@ _JSON_CACHE = {
     "building_library": {"path": c.BUILDING_DATA_PATH, "data": None},
     "tech_tree": {"path": c.RESEARCH_TEMPLATE_PATH, "data": None},
     "country_data": {"path": c.COUNTRIES_DATA_PATH, "data": None},
-    "active_albums": {"path": getattr(c, 'ACTIVE_ALBUMS_PATH', "data/json/active_albums.json"), "data": None}
+    "active_albums": {"path": c.ACTIVE_ALBUMS_PATH, "data": None}
 }
 
 def get_scenario_settings(): 
@@ -111,16 +111,16 @@ def save_global_settings(controller):
         getattr(controller, 'claude_model', ''),
         getattr(controller, 'ollama_model', ''),
         getattr(controller, 'ai_immersion_level', 'LITE'),
-        getattr(controller, 'music_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
-        getattr(controller, 'sfx_pitch', getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)),
-        getattr(controller, 'target_fps', getattr(c, 'TARGET_FPS', 60)),
-        getattr(controller, 'ai_threads', getattr(c, 'DEFAULT_AI_THREADS', 1)),
-        getattr(controller, 'show_fps', getattr(c, 'SHOW_FPS', True)),
+        getattr(controller, 'music_pitch', c.DEFAULT_AUDIO_PITCH),
+        getattr(controller, 'sfx_pitch', c.DEFAULT_AUDIO_PITCH),
+        getattr(controller, 'target_fps', c.TARGET_FPS),
+        getattr(controller, 'ai_threads', c.DEFAULT_AI_THREADS),
+        getattr(controller, 'show_fps', c.SHOW_FPS),
         getattr(controller, 'drag_mouse_button_toggle', 'RIGHT')
     )
 
 def get_ai_threads():
-    return get_settings().get("ai_threads", getattr(c, 'DEFAULT_AI_THREADS', 1))
+    return get_settings().get("ai_threads", c.DEFAULT_AI_THREADS)
 
 # --- REFACTORED GETTERS (No paths needed here anymore!) ---
 def get_settings(): return _load_cached_json("settings")

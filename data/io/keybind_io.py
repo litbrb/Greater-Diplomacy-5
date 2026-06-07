@@ -41,18 +41,18 @@ def save_settings(keybind_dict, sfx_volume, music_volume, num_players=1, ai_mode
 
 def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
     """Loads all settings variables, safely falling back to defaults if missing."""
-    default_pitch = getattr(c, 'DEFAULT_AUDIO_PITCH', 0.5)
+    default_pitch = c.DEFAULT_AUDIO_PITCH
     
     # --- OPTIMIZATION: Pulled AI defaults from constants ---
     if not os.path.exists(CONFIG_PATH):
         return (default_binds, default_volume, default_music_volume, 1, c.DEFAULT_AI_MODE, 
                 "", "", "", "", 
-                getattr(c, 'DEFAULT_GEMINI_MODEL', "gemini-2.5-flash"), 
-                getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini"), 
-                getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307"), 
-                getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3"), 
-                "LITE", default_pitch, default_pitch, getattr(c, 'TARGET_FPS', 60), getattr(c, 'DEFAULT_AI_THREADS', 1), True,
-                getattr(c, 'DRAG_MOUSE_BUTTON_TOGGLE', 'RIGHT'))
+                c.DEFAULT_GEMINI_MODEL, 
+                c.DEFAULT_CHATGPT_MODEL, 
+                c.DEFAULT_CLAUDE_MODEL, 
+                c.DEFAULT_OLLAMA_MODEL, 
+                "LITE", default_pitch, default_pitch, c.TARGET_FPS, c.DEFAULT_AI_THREADS, True,
+                c.DRAG_MOUSE_BUTTON_TOGGLE)
     
     try:
         # Utilize the caching manager
@@ -94,25 +94,25 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
             s.get("chatgpt_api_key", ""),
             s.get("claude_api_key", ""),
             s.get("ollama_api_key", ""),
-            s.get("gemini_model", getattr(c, 'DEFAULT_GEMINI_MODEL', "gemini-2.5-flash")),
-            s.get("chatgpt_model", getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini")),
-            s.get("claude_model", getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307")),
-            s.get("ollama_model", getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3")),
+            s.get("gemini_model", c.DEFAULT_GEMINI_MODEL),
+            s.get("chatgpt_model", c.DEFAULT_CHATGPT_MODEL),
+            s.get("claude_model", c.DEFAULT_CLAUDE_MODEL),
+            s.get("ollama_model", c.DEFAULT_OLLAMA_MODEL),
             s.get("ai_immersion_level", "LITE"),
             s.get("music_pitch", s.get("music_speed", default_pitch)), 
             s.get("sfx_pitch", s.get("sfx_speed", default_pitch)),
-            s.get("target_fps", getattr(c, 'TARGET_FPS', 60)),
-            s.get("ai_threads", getattr(c, 'DEFAULT_AI_THREADS', 1)),
-            s.get("show_fps", getattr(c, 'SHOW_FPS', True)),
-            s.get("drag_mouse_toggle", getattr(c, 'DRAG_MOUSE_BUTTON_TOGGLE', 'RIGHT'))
+            s.get("target_fps", c.TARGET_FPS),
+            s.get("ai_threads", c.DEFAULT_AI_THREADS),
+            s.get("show_fps", c.SHOW_FPS),
+            s.get("drag_mouse_toggle", c.DRAG_MOUSE_BUTTON_TOGGLE)
         )
     except Exception as e:
         print(f"Error loading settings: {e}")
         return (default_binds, default_volume, default_music_volume, 1, "GEMINI", 
                 "", "", "", "", 
-                getattr(c, 'DEFAULT_GEMINI_MODEL', "gemini-2.5-flash"), 
-                getattr(c, 'DEFAULT_CHATGPT_MODEL', "gpt-4o-mini"), 
-                getattr(c, 'DEFAULT_CLAUDE_MODEL', "claude-3-haiku-20240307"), 
-                getattr(c, 'DEFAULT_OLLAMA_MODEL', "llama3"), 
-                "LITE", default_pitch, default_pitch, getattr(c, 'TARGET_FPS', 60), getattr(c, 'DEFAULT_AI_THREADS', 1), True,
-                getattr(c, 'DRAG_MOUSE_BUTTON_TOGGLE', 'RIGHT'))
+                c.DEFAULT_GEMINI_MODEL, 
+                c.DEFAULT_CHATGPT_MODEL, 
+                c.DEFAULT_CLAUDE_MODEL, 
+                c.DEFAULT_OLLAMA_MODEL, 
+                "LITE", default_pitch, default_pitch, c.TARGET_FPS, c.DEFAULT_AI_THREADS, True,
+                c.DRAG_MOUSE_BUTTON_TOGGLE)

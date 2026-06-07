@@ -14,8 +14,8 @@ class Scenario_Settings(GameState):
         self.settings = queries.get_scenario_settings()
         if not self.settings:
             self.settings = {
-                "fog_of_war": getattr(c, 'DEFAULT_FOG_OF_WAR', True),
-                "casus_belli_required": getattr(c, 'CASUS_BELLI_REQUIRED', False)
+                "fog_of_war": c.DEFAULT_FOG_OF_WAR,
+                "casus_belli_required": c.DEFAULT_CASUS_BELLI
             }
         self.refresh_ui()
 
@@ -25,7 +25,7 @@ class Scenario_Settings(GameState):
         ]
         
         # Toggle Button - Fog of War
-        fog_val = self.settings.get("fog_of_war", getattr(c, 'DEFAULT_FOG_OF_WAR', True))
+        fog_val = self.settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)
         fog_color = "green" if fog_val else "red"
         fog_text = "Fog of War: ON" if fog_val else "Fog of War: OFF"
         
@@ -34,7 +34,7 @@ class Scenario_Settings(GameState):
         )
 
         # Toggle Button - Casus Belli Required
-        cb_val = self.settings.get("casus_belli_required", getattr(c, 'CASUS_BELLI_REQUIRED', False))
+        cb_val = self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)
         cb_color = "green" if cb_val else "red"
         cb_text = "Casus Belli Required: ON" if cb_val else "Casus Belli Required: OFF"
 
@@ -48,20 +48,20 @@ class Scenario_Settings(GameState):
         )
 
     def toggle_fog(self):
-        self.settings["fog_of_war"] = not self.settings.get("fog_of_war", getattr(c, 'DEFAULT_FOG_OF_WAR', True))
+        self.settings["fog_of_war"] = not self.settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)
         # Save immediately to the cache/file
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
     def toggle_casus_belli(self):
-        self.settings["casus_belli_required"] = not self.settings.get("casus_belli_required", getattr(c, 'CASUS_BELLI_REQUIRED', False))
+        self.settings["casus_belli_required"] = not self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
     def reset_defaults(self):
         self.settings = {
-            "fog_of_war": getattr(c, 'DEFAULT_FOG_OF_WAR', True),
-            "casus_belli_required": getattr(c, 'CASUS_BELLI_REQUIRED', True)
+            "fog_of_war": c.DEFAULT_FOG_OF_WAR,
+            "casus_belli_required": c.DEFAULT_CASUS_BELLI
         }
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()

@@ -41,8 +41,8 @@ def save_map_data(self, save_name=None):
         "nation_data": self.nation_data,
         "provinces": {},
         "scenario_settings": getattr(self, "scenario_settings", {
-            "fog_of_war": getattr(c, 'DEFAULT_FOG_OF_WAR', True),
-            "casus_belli_required": getattr(c, 'DEFAULT_CASUS_BELLI', True)
+            "fog_of_war": c.DEFAULT_FOG_OF_WAR,
+            "casus_belli_required": c.DEFAULT_CASUS_BELLI
         })
     }
     
@@ -61,16 +61,16 @@ def save_map_data(self, save_name=None):
 
     # Actual map data
     with open(os.path.join(save_path, "meta.json"), "w") as f:
-        json.dump(save_dict, f, indent=getattr(c, 'SAVE_INDENT', None))
+        json.dump(save_dict, f, indent=c.SAVE_INDENT)
         
     # Raw structural geometry (so this save is completely self-contained)
     with open(os.path.join(save_path, "map_data.json"), "w") as f:
-        json.dump(self.raw_json_data, f, indent=getattr(c, 'SAVE_INDENT', None))
+        json.dump(self.raw_json_data, f, indent=c.SAVE_INDENT)
     
     # History
     if hasattr(self, 'history'):
         with open(os.path.join(save_path, "history.json"), "w") as f:
-            json.dump(self.history, f, indent=getattr(c, 'HISTORY_INDENT', None))
+            json.dump(self.history, f, indent=c.HISTORY_INDENT)
             
     # Visual states
     pygame.image.save(self.political_map, os.path.join(save_path, "political.png"))

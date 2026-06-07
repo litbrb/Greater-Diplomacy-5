@@ -1,10 +1,10 @@
 # screens/map_related_screens/edit_country.py
 import pygame
-import base64
 import os
 from pathlib import Path
 import tkinter as tk 
 from tkinter import colorchooser, filedialog
+import unicodedata
 from gameState import GameState
 from ui_elements import Button, process_text_input
 import ui_elements
@@ -319,7 +319,7 @@ class Edit_Country_Screen(GameState):
         scrollbar = tk.Scrollbar(frame)
         scrollbar.pack(side="right", fill="y")
         
-        countries = sorted(list(self.map_screen.nation_data.keys()))
+        countries = sorted(list(self.map_screen.nation_data.keys()), key=lambda k: unicodedata.normalize('NFKD', k).encode('ascii', 'ignore').decode('utf-8').lower()) # <-- Modified line
         lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
         for country in countries:
             if country not in c.UNPLAYABLE_NATIONS:

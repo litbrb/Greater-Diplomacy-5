@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import json
 import os
+import unicodedata #
 import data.constants as c
 from data.map import load_map
 from data import queries
@@ -64,7 +65,7 @@ def select_brush_nation(self):
     scrollbar.pack(side="right", fill="y")
     
     # Sort and filter out utility 'countries'
-    nations = sorted(list(self.nation_data.keys()))
+    nations = sorted(list(self.nation_data.keys()), key=lambda k: unicodedata.normalize('NFKD', k).encode('ascii', 'ignore').decode('utf-8').lower())
     lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
     for n in nations:
         if n not in c.UNPLAYABLE_NATIONS or n in ["Unclaimed", "None"]:
@@ -103,7 +104,7 @@ def select_core_brush(self):
     scrollbar = tk.Scrollbar(frame)
     scrollbar.pack(side="right", fill="y")
     
-    nations = sorted(list(self.nation_data.keys()))
+    nations = sorted(list(self.nation_data.keys()), key=lambda k: unicodedata.normalize('NFKD', k).encode('ascii', 'ignore').decode('utf-8').lower())
     lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
     for n in nations:
         if n not in c.UNPLAYABLE_NATIONS or n in ["Unclaimed", "None"]:

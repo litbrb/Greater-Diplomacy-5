@@ -89,7 +89,7 @@ def draw_tooltip(self, surface):
         
         # Calculate dynamic bonuses based on tech
         gen_rec_lvl = research_data.get("general_recruitment", 0)
-        manpower_bonus = gen_rec_lvl * getattr(c, 'GENERAL_RECRUITMENT_BONUS', 5)
+        manpower_bonus = gen_rec_lvl * c.GENERAL_RECRUITMENT_BONUS
         
         # Base yields including tech bonuses
         base_man = c.BASE_YIELDS['manpower'] + manpower_bonus

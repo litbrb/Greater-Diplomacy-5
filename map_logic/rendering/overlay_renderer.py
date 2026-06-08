@@ -92,10 +92,10 @@ def draw_combat_bubbles(self_map, surface):
             
             if -50 < sx < surface.get_width() + 50 and 0 < sy < surface.get_height():
                 radius_x = int(12 * cam.zoom) # Bubble size
-                radius_y = int(radius_x * getattr(cam, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else radius_x
+                radius_y = int(radius_x * getattr(cam, 'tilt_factor', 1.0)) if c.APPLY_TILT_TO_OVERLAYS else radius_x
                 
                 # Draw visual effect
-                if getattr(cam, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', False):
+                if getattr(cam, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_OVERLAYS:
                     rect = pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x * 2, radius_y * 2)
                     pygame.draw.ellipse(surface, color, rect, max(1, int(3 * cam.zoom)))
                 else:
@@ -105,7 +105,7 @@ def draw_combat_bubbles(self_map, surface):
                 inner = pygame.Surface((radius_x*2, radius_x*2), pygame.SRCALPHA)
                 pygame.draw.circle(inner, color + (80,), (radius_x, radius_x), radius_x)
                 
-                if getattr(cam, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', False):
+                if getattr(cam, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_OVERLAYS:
                     inner = pygame.transform.scale(inner, (radius_x * 2, radius_y * 2))
                     
                 surface.blit(inner, (int(sx) - radius_x, int(sy) - radius_y))
@@ -252,7 +252,7 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
                     rotated_tri = pygame.transform.rotate(triangle_img, angle)
                     if alpha < 255:
                         rotated_tri.set_alpha(alpha)
-                    if getattr(cam, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_ARROWS', False):
+                    if getattr(cam, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_ARROWS:
                         rotated_tri = pygame.transform.scale(rotated_tri, (rotated_tri.get_width(), int(rotated_tri.get_height() * cam.tilt_factor)))
                     rect = rotated_tri.get_rect(center=end_pos)
                     surface.blit(rotated_tri, rect)
@@ -269,13 +269,13 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
                     draw_circle = circle_img.copy() if alpha < 255 else circle_img
                     if alpha < 255:
                         draw_circle.set_alpha(alpha)
-                    if getattr(cam, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_ARROWS', False):
+                    if getattr(cam, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_ARROWS:
                         draw_circle = pygame.transform.scale(draw_circle, (draw_circle.get_width(), int(draw_circle.get_height() * cam.tilt_factor)))
                     rect = draw_circle.get_rect(center=end_pos)
                     surface.blit(draw_circle, rect)
                 else:
                     radius_x = max(3, int(4 * cam.zoom))
-                    radius_y = int(radius_x * getattr(cam, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_ARROWS', False) else radius_x
+                    radius_y = int(radius_x * getattr(cam, 'tilt_factor', 1.0)) if c.APPLY_TILT_TO_ARROWS else radius_x
                     pygame.draw.ellipse(surface, color, pygame.Rect(int(end_pos[0]) - radius_x, int(end_pos[1]) - radius_y, radius_x*2, radius_y*2))
 
 def draw_overlay_content(self, surface):
@@ -314,7 +314,7 @@ def draw_overlay_content(self, surface):
                     if queries.is_training_troops(province):
                         training_sym = symbol_loader.get_symbol(c.ICON_TRAINING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if training_sym:
-                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_STATUS_ICONS', False):
+                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
                                 training_sym = pygame.transform.scale(training_sym, (training_sym.get_width(), int(training_sym.get_height() * self.camera.tilt_factor)))
                             training_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
                             rect = training_sym.get_rect(center=(sx, sy))
@@ -324,7 +324,7 @@ def draw_overlay_content(self, surface):
                     if any(u.get("order", {}).get("type") == "DISBAND" for u in province.get("units", [])):
                         disband_sym = symbol_loader.get_symbol(c.ICON_DISBANDING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if disband_sym:
-                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_STATUS_ICONS', False):
+                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
                                 disband_sym = pygame.transform.scale(disband_sym, (disband_sym.get_width(), int(disband_sym.get_height() * self.camera.tilt_factor)))
                             disband_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
                             # Shifted slightly right to avoid overlapping completely with training
@@ -351,7 +351,7 @@ def draw_overlay_content(self, surface):
                         symbol = symbol_loader.get_symbol(sym_name, self.camera.zoom * c.BUILDING_ICON_SCALE)
                         
                         if symbol:
-                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', False):
+                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_OVERLAYS:
                                 symbol = pygame.transform.scale(symbol, (symbol.get_width(), int(symbol.get_height() * self.camera.tilt_factor)))
                             
                             # Center the symbol based on the calculated sx/sy
@@ -365,7 +365,7 @@ def draw_overlay_content(self, surface):
                             if "Refinery" in b_name: color = (200, 100, 100) # Red-ish for refinery
                             
                             w_scaled = int(12 * self.camera.zoom)
-                            h_scaled = int(12 * self.camera.zoom * (getattr(self.camera, 'tilt_factor', 1.0) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else 1.0))
+                            h_scaled = int(12 * self.camera.zoom * (getattr(self.camera, 'tilt_factor', 1.0) if c.APPLY_TILT_TO_OVERLAYS else 1.0))
                             
                             # Center the rect using the same logic
                             rect = pygame.Rect(
@@ -381,7 +381,7 @@ def draw_overlay_content(self, surface):
                     if queries.is_constructing_building(province):
                         hammer_sym = symbol_loader.get_symbol(c.ICON_CONSTRUCTION, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if hammer_sym:
-                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_STATUS_ICONS', False):
+                            if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
                                 hammer_sym = pygame.transform.scale(hammer_sym, (hammer_sym.get_width(), int(hammer_sym.get_height() * self.camera.tilt_factor)))
                             hammer_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
                             rect = hammer_sym.get_rect(center=(sx, sy))
@@ -396,7 +396,7 @@ def draw_overlay_content(self, surface):
                             if amount > 0:
                                 sym = symbol_loader.get_symbol(res_type, self.camera.zoom * 0.8)
                                 if sym:
-                                    if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', False):
+                                    if getattr(self.camera, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_OVERLAYS:
                                         sym = pygame.transform.scale(sym, (sym.get_width(), int(sym.get_height() * self.camera.tilt_factor)))
                                     surface.blit(sym, (sx + offset_x, sy))
                                 else:
@@ -405,7 +405,7 @@ def draw_overlay_content(self, surface):
                                     if res_type == "Iron": c_col = (180, 180, 180)
                                     if res_type == "Coal": c_col = (50, 50, 50)
                                     if res_type == "Oil": c_col = (30, 30, 30)
-                                    h_scaled = int(15 * self.camera.zoom * (getattr(self.camera, 'tilt_factor', 1.0) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else 1.0))
+                                    h_scaled = int(15 * self.camera.zoom * (getattr(self.camera, 'tilt_factor', 1.0) if c.APPLY_TILT_TO_OVERLAYS else 1.0))
                                     pygame.draw.rect(surface, c_col, (sx + offset_x, sy, int(15 * self.camera.zoom), h_scaled))
                                 
                                 # Shift right so multiple icons stack side-by-side
@@ -492,7 +492,7 @@ def draw_unit_icon(self, surface, sx, sy, province):
         # Draw Unit Count Text
         font = fonts.get("button")
         count_str = str(unit_count)
-        count_txt = font.render(count_str, True, getattr(c, 'UNIT_BOX_TEXT_COLOR', (255, 255, 255)))
+        count_txt = font.render(count_str, True, c.UNIT_BOX_TEXT_COLOR)
         shadow_txt = font.render(count_str, True, (0, 0, 0))
 
         # --- TEXT COMPRESSION FIX (UNIFORM SCALE) ---

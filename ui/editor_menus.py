@@ -237,7 +237,7 @@ def open_editor_date(self):
 
     tk.Label(root, text="Base Days Per Turn:", font=("Arial", 10)).pack(pady=(10, 2))
     dpt_ent = tk.Entry(root, justify="center")
-    dpt_ent.insert(0, str(self.scenario_settings.get("base_days_per_turn", getattr(c, 'DEFAULT_DAYS_PER_TURN', 15))))
+    dpt_ent.insert(0, str(self.scenario_settings.get("base_days_per_turn", c.DEFAULT_DAYS_PER_TURN)))
     dpt_ent.pack()
 
     def apply_date():

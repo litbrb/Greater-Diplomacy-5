@@ -6,9 +6,9 @@ from data import queries
 def randomize_all_provinces(map_screen, settings):
     target_country_count = settings["countries"]
     start_year = settings["year"]
-    island_filter_size = settings.get("island_filter_size", getattr(c, 'RANDOM_SCENARIO_DEFAULT_ISLAND_FILTER', 4))
-    single_tile_start = settings.get("single_tile_start", getattr(c, 'RANDOM_SCENARIO_SINGLE_TILE_START', False))
-    resource_chance = settings.get("resource_chance", getattr(c, 'RANDOM_SCENARIO_DEFAULT_RESOURCE_CHANCE', 0.15))
+    island_filter_size = settings.get("island_filter_size", c.RANDOM_SCENARIO_DEFAULT_ISLAND_FILTER)
+    single_tile_start = settings.get("single_tile_start", c.RANDOM_SCENARIO_SINGLE_TILE_START)
+    resource_chance = settings.get("resource_chance", c.RANDOM_SCENARIO_DEFAULT_RESOURCE_CHANCE)
 
     playable_nations = [
         name for name, stats in map_screen.nation_data.items()
@@ -217,7 +217,7 @@ def randomize_all_provinces(map_screen, settings):
             prov["buildings"].append(random.choice(allowed_recruitment))
 
     # --- Step D: Guarantee Minimum Buildings (Balanced by Tech) ---
-    best_factory = allowed_factories[-1] if allowed_factories else getattr(c, 'DEFAULT_STARTING_FACTORY', "Basic Factory")
+    best_factory = allowed_factories[-1] if allowed_factories else c.DEFAULT_STARTING_FACTORY
     best_recruitment = allowed_recruitment[-1] if allowed_recruitment else None
     min_factories_required = c.RANDOM_SCENARIO_MIN_FACTORIES
 
@@ -320,9 +320,9 @@ def randomize_all_provinces(map_screen, settings):
             inc_mat = econ["total_inc"]["materials"]
             inc_fuel = econ["total_inc"]["fuel"]
 
-            target_man = inc_man * getattr(c, 'AI_UPKEEP_TARGETS', {"manpower": 0.60}).get("manpower", 0.60)
-            target_mat = inc_mat * getattr(c, 'AI_UPKEEP_TARGETS', {"materials": 0.40}).get("materials", 0.40)
-            target_fuel = inc_fuel * getattr(c, 'AI_UPKEEP_TARGETS', {"fuel": 0.50}).get("fuel", 0.50)
+            target_man = inc_man * c.AI_UPKEEP_TARGETS
+            target_mat = inc_mat * c.AI_UPKEEP_TARGETS
+            target_fuel = inc_fuel * c.AI_UPKEEP_TARGETS
 
             # 2. Get highest unlocked tech
             res_levels = data.get("research", {})
@@ -354,16 +354,16 @@ def randomize_all_provinces(map_screen, settings):
             upk_man, upk_mat, upk_fuel = 0, 0, 0
 
             mat_to_man_ratio = inc_man / max(1.0, inc_mat)
-            dynamic_tank_ratio = max(1, int(mat_to_man_ratio * getattr(c, 'AI_INFANTRY_TO_TANK_RATIO', 4)))
+            dynamic_tank_ratio = max(1, int(mat_to_man_ratio * c.AI_INFANTRY_TO_TANK_RATIO))
 
             total_borders = len(border_provs) + len(coastal_provs)
             target_navy_ratio = 0.0
             
             if total_borders > 0:
-                if len(coastal_provs) < getattr(c, 'AI_MIN_COAST_FOR_NAVY', 8) and len(border_provs) > 0:
+                if len(coastal_provs) < c.AI_MIN_COAST_FOR_NAVY and len(border_provs) > 0:
                     target_navy_ratio = 0.0
                 else:
-                    target_navy_ratio = min(getattr(c, 'AI_MAX_NAVY_RATIO', 0.2), len(coastal_provs) / total_borders)
+                    target_navy_ratio = min(c.AI_MAX_NAVY_RATIO), len(coastal_provs) / total_borders
 
             inf_count, tank_count, navy_count = 0, 0, 0
             failsafe = 0
@@ -436,7 +436,7 @@ def randomize_all_provinces(map_screen, settings):
                     
                 if not has_coastal_factory:
                     # Inject a factory into the first coastal province to validate the ships
-                    fac_to_place = random.choice(allowed_factories) if allowed_factories else getattr(c, 'DEFAULT_STARTING_FACTORY', "Basic Factory")
+                    fac_to_place = random.choice(allowed_factories) if allowed_factories else c.DEFAULT_STARTING_FACTORY
                     coastal_provs[0].setdefault("buildings", []).append(fac_to_place)
                     
                     # Also spawn a random level recruitment center

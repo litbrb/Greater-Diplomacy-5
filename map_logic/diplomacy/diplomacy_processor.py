@@ -422,7 +422,7 @@ def process_diplomacy_turn(self):
                 ai_queue = self.nation_data[country_name].setdefault("queued_ai_actions", [])
                 ai_queue.append({"target": act_target, "action": "WAR_DECLARATION"})
             else:
-                delayed_responses.append((country_name, act_target, "WAR_DECLARATION", 0, getattr(c, 'WARGOAL_NO_CB', "No Casus Belli")))
+                delayed_responses.append((country_name, act_target, "WAR_DECLARATION", 0, c.WARGOAL_NO_CB))
         elif ai_action == "JOIN_WARS":
             if queries.are_in_same_faction(country_name, act_target, self.nation_data):
                 delayed_responses.append((country_name, act_target, "JOIN_WARS", 0, ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_JOIN_WAR", "We stand with you.")))
@@ -495,7 +495,7 @@ def process_diplomacy_turn(self):
                     new_claims.extend(prov_ids)
                     self.nation_data[country_name]["claims"] = list(set(new_claims))
                     
-                    self.nation_data[country_name].setdefault("wargoals", {})[target] = {"type": getattr(c, 'WARGOAL_TAKE_CLAIMS', "Take Claims")}
+                    self.nation_data[country_name].setdefault("wargoals", {})[target] = {"type": c.WARGOAL_TAKE_CLAIMS}
                     log_global_event(self.nation_data, f"{country_name} has justified a wargoal against {target}.")
                     if country_name == self.player_country:
                         self.show_feedback(f"Wargoal Justification Complete against {target}!")
@@ -561,7 +561,7 @@ def process_diplomacy_turn(self):
                         elif orig_action == "CEASEFIRE":
                             finalize_neutral(self.nation_data, country_name, target)
                         elif orig_action == "PEACE_TREATY":
-                            treaty_type = other_pending.get("parameters", other_pending.get("message", getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)")))
+                            treaty_type = other_pending.get("parameters", other_pending.get("message", c.PEACE_WHITE_PEACE))
                             execute_peace_treaty(self.map_data, self.nation_data, target, country_name, treaty_type, self)
                             msg_text = f"We accepted your peace terms."
                         elif orig_action == "CALL_TO_ARMS":
@@ -747,7 +747,7 @@ def process_diplomacy_turn(self):
                             elif action == "CEASEFIRE":
                                 finalize_neutral(self.nation_data, country_name, target)
                             elif action == "PEACE_TREATY":
-                                treaty_type = info.get("parameters", info.get("message", getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)")))
+                                treaty_type = info.get("parameters", info.get("message", c.PEACE_WHITE_PEACE))
                                 execute_peace_treaty(self.map_data, self.nation_data, country_name, target, treaty_type, self)
                             elif action == "CALL_TO_ARMS":
                                 join_faction_wars(self.map_data, self.nation_data, target, country_name)

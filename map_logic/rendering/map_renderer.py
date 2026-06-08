@@ -47,7 +47,7 @@ def draw_map_screen(self, surface):
     # Draw Skybox
     if render_y_offset > 0:
         sky_rect = pygame.Rect(0, self.top_ui_height, c.SCREEN_WIDTH, int(render_y_offset) + 2) # +2 overlap to prevent seam tearing
-        pygame.draw.rect(surface, getattr(c, 'COLOR_SKYBOX', (135, 206, 235)), sky_rect)
+        pygame.draw.rect(surface, c.COLOR_SKYBOX, sky_rect)
 
     if self.loop_map:
         w1 = int(min(vw, self.map_w - x1))

@@ -281,7 +281,7 @@ def process_ai_economy_decisions(map_screen):
             
             # --- Dynamic Army Composition Ratio ---
             mat_to_man_ratio = inc_man / max(1.0, inc_mat)
-            dynamic_tank_ratio = max(1, int(mat_to_man_ratio * getattr(c, 'AI_INFANTRY_TO_TANK_RATIO', 1)))
+            dynamic_tank_ratio = max(1, int(mat_to_man_ratio * c.AI_INFANTRY_TO_TANK_RATIO))
             
             unit_name_to_build = None
 

@@ -43,7 +43,7 @@ def finalize_neutral(nation_data, a, b):
         queries.add_temporary_modifier(country, other, "recent_war", c.REL_MOD_RECENT_WAR, nation_data)
 
         # Apply Non-Aggression Pact
-        nation_data[country].setdefault("truces", {})[other] = getattr(c, 'TRUCE_TURNS', 12)
+        nation_data[country].setdefault("truces", {})[other] = c.TRUCE_TURNS
 
     fac_a = nation_data.get(a, {}).get("faction", "")
     fac_b = nation_data.get(b, {}).get("faction", "")
@@ -74,11 +74,11 @@ def execute_peace_treaty(map_data, nation_data, proposer, target, peace_type, ma
     if match:
         frozen_ids = [int(x.strip()) for x in match.group(1).split(",") if x.strip().isdigit()]
 
-    if peace_type.startswith(getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)")):
+    if peace_type.startswith(c.PEACE_WHITE_PEACE):
         # Status Quo: Nothing changes
         pass
 
-    elif peace_type.startswith(getattr(c, 'PEACE_DEMAND_CLAIMS', "Demand Claims")):
+    elif peace_type.startswith(c.PEACE_DEMAND_CLAIMS):
         # Proposer wins. Target is Loser.
         for prov in map_data.values():
             # 1. Proposer gets the explicitly frozen claims
@@ -89,7 +89,7 @@ def execute_peace_treaty(map_data, nation_data, proposer, target, peace_type, ma
                 edit_province_ownership.conquer_province(map_screen, prov, proposer)
             # Proposer keeps anything they currently occupy, so no action needed.
 
-    elif peace_type.startswith(getattr(c, 'PEACE_SURRENDER', "Surrender")):
+    elif peace_type.startswith(c.PEACE_SURRENDER):
         # Target wins. Proposer is Loser.
         for prov in map_data.values():
             # 1. Target gets the explicitly frozen claims

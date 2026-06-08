@@ -22,7 +22,7 @@ class MapCamera:
         mouse_buttons = pygame.mouse.get_pressed()
         
         # Determine which button(s) are valid for dragging based on constants
-        drag_toggle = getattr(c, 'DRAG_MOUSE_BUTTON_TOGGLE', 'RIGHT')
+        drag_toggle = c.DRAG_MOUSE_BUTTON_TOGGLE
         drag_active = False
         
         # Pygame mouse_buttons indices: 0=Left, 1=Middle, 2=Right

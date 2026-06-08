@@ -78,7 +78,7 @@ class Production_Screen(GameState):
         player_research = self.map_screen.nation_data.get(owner_nation, {}).get("research", {})
         
         is_spectator = self.map_screen.player_country == "Spectator"
-        can_spectator_edit = getattr(c, 'SPECTATOR_CAN_EDIT_PRODUCTION', True)
+        can_spectator_edit = c.SPECTATOR_CAN_EDIT_PRODUCTION
 
         self.active_bars = []
         y_offset = 120
@@ -318,7 +318,7 @@ class Production_Screen(GameState):
             self.enforce_scroll_bounds()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.map_screen.player_country == "Spectator" and not getattr(c, 'SPECTATOR_CAN_EDIT_PRODUCTION', True):
+            if self.map_screen.player_country == "Spectator" and not c.SPECTATOR_CAN_EDIT_PRODUCTION:
                 return
                 
             for rect, index in self.cancel_hitboxes:

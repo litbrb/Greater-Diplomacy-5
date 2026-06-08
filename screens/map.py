@@ -185,7 +185,7 @@ class Map(GameState):
         
         # Grab the old tilt before we update it to calculate the difference
         old_tilt = getattr(self.camera, 'manual_tilt_factor', 1.0)
-        new_tilt = 1.0 - (val * (1.0 - getattr(c, 'MAX_Y_TILT_FACTOR', 0.6)))
+        new_tilt = 1.0 - (val * (1.0 - c.MAX_Y_TILT_FACTOR))
         
         # Failsafe to prevent division by zero
         if old_tilt == 0: old_tilt = 0.001

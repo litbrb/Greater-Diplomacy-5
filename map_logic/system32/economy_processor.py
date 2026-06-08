@@ -46,7 +46,7 @@ def process_queues(self):
         
         # Backwards compatibility check and dynamic day-to-turn scaling
         if "days_remaining" in item:
-            item["turns_remaining"] = max(1, item.pop("days_remaining") // getattr(c, 'DEFAULT_DAYS_PER_TURN', 15))
+            item["turns_remaining"] = max(1, item.pop("days_remaining") // c.DEFAULT_DAYS_PER_TURN)
             
         item["turns_remaining"] -= 1
         

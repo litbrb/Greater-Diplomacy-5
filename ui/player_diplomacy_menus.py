@@ -518,7 +518,7 @@ class Claims_Screen(GameState):
                 if inset > 0:
                     radius_x = max(1, radius_x - (inset * max(1, int(1.5 * self.map_screen.camera.zoom))))
                     
-                radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if getattr(c, 'APPLY_TILT_TO_OVERLAYS', False) else radius_x
+                radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if c.APPLY_TILT_TO_OVERLAYS else radius_x
                 pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
 
 # ==========================================
@@ -791,7 +791,7 @@ class View_Peace_Treaty_Screen(GameState):
         
         # Read the parameters directly from the proposed diplomacy message
         pending = map_screen.nation_data.get(self.proposer, {}).get("pending_diplomacy", {}).get(self.target, {})
-        self.peace_type = pending.get("parameters", pending.get("message", getattr(c, 'PEACE_WHITE_PEACE', "Ceasefire (White Peace)")))
+        self.peace_type = pending.get("parameters", pending.get("message", c.PEACE_WHITE_PEACE))
         
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
         

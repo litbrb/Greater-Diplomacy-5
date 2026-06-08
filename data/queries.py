@@ -623,7 +623,7 @@ def calculate_all_economies(map_data, nation_data):
 
         # Fetch General Recruitment bonus
         gen_rec_lvl = research_data.get("general_recruitment", 0)
-        manpower_bonus = gen_rec_lvl * getattr(c, 'GENERAL_RECRUITMENT_BONUS', 5)
+        manpower_bonus = gen_rec_lvl * c.GENERAL_RECRUITMENT_BONUS
 
         econ_data[name] = {
             "dynamic_yields": {
@@ -696,7 +696,7 @@ def calculate_all_economies(map_data, nation_data):
         raw_inc_man = sum(data["breakdown"]["manpower"].values())
 
         # Conscription is based on Gross Manpower Income (1.0 = keep all, 0.0 = convert all)
-        man_ratio = getattr(c, 'CONSCRIPTION_RATIO', 0.5)
+        man_ratio = c.CONSCRIPTION_RATIO
         man_divisor = max(1, int(1 / man_ratio) if man_ratio > 0 else 1)
         
         if conscript_rate < 1.0 and raw_inc_man >= man_divisor:
@@ -708,7 +708,7 @@ def calculate_all_economies(map_data, nation_data):
             data["breakdown"]["materials"]["conscription"] = mat_gained
             
         # Conversion is based on Gross Income, not Net Income (Expenses are ignored)
-        fuel_ratio = getattr(c, 'FUEL_CONVERSION_RATIO', 0.1)
+        fuel_ratio = c.FUEL_CONVERSION_RATIO
         fuel_divisor = max(1, int(1 / fuel_ratio) if fuel_ratio > 0 else 1)
         
         if conv_rate > 0 and raw_inc_mat >= fuel_divisor:
@@ -957,8 +957,8 @@ def get_relation_score(nation_a, nation_b, nation_data, id_to_province=None):
                 if nation_b in prov.get("cores", []) or prov["id"] in claims_b:
                     b_claims_a += 1
         
-        penalty_per_claim = abs(getattr(c, 'REL_MOD_PER_CLAIM', -5))
-        max_penalty = abs(getattr(c, 'REL_MOD_MAX_CLAIM_PENALTY', -50))
+        penalty_per_claim = abs(c.REL_MOD_PER_CLAIM)
+        max_penalty = abs(c.REL_MOD_MAX_CLAIM_PENALTY)
         
         claim_penalty = min(max_penalty, (a_claims_b + b_claims_a) * penalty_per_claim)
         score -= claim_penalty

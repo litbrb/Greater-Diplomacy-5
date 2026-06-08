@@ -349,7 +349,7 @@ def process_basic_proactive_ai(map_screen):
         # --- 4. Declare War for Cores Logic ---
         if not is_already_at_war:
             current_turn = queries.get_total_turns(map_screen.time_manager)
-            if current_turn >= getattr(c, 'TURNS_TO_WAIT_BEFORE_WAR', 12):
+            if current_turn >= c.TURNS_TO_WAIT_BEFORE_WAR:
                 targets_holding_cores = queries.get_nations_holding_our_cores(ai_name, map_screen.map_data)
                 
                 if targets_holding_cores:
@@ -377,7 +377,7 @@ def process_basic_proactive_ai(map_screen):
                         target_econ_power = queries.get_economic_power(target, map_screen.nation_data) / 100.0
 
                         # Factor in how distracted the target is by their existing wars
-                        target_distraction_str = queries.get_combined_enemy_strength(target, map_screen.map_data, map_screen.nation_data) * getattr(c, 'AI_ENEMY_DISTRACTION_WEIGHT', 0.8)
+                        target_distraction_str = queries.get_combined_enemy_strength(target, map_screen.map_data, map_screen.nation_data) * c.AI_ENEMY_DISTRACTION_WEIGHT
 
                         # Add the target's distraction to our perceived power
                         my_total_power = my_alliance_str + my_econ_power + target_distraction_str
@@ -387,7 +387,7 @@ def process_basic_proactive_ai(map_screen):
                         if queries.ai_thinks_it_can_win(ai_name, target, map_screen.map_data, map_screen.nation_data, map_screen.id_to_province):
                             
                             # Random chance to actually declare war
-                            if random.random() <= getattr(c, 'AI_WAR_DECLARATION_CHANCE', 0.50):
+                            if random.random() <= c.AI_WAR_DECLARATION_CHANCE:
                                 has_wargoal = queries.has_wargoal(ai_name, target, map_screen.nation_data, map_screen.map_data)
                                 if has_wargoal:
                                     if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
@@ -425,7 +425,7 @@ def process_basic_proactive_ai(map_screen):
                                             claims = map_screen.nation_data[ai_name].setdefault("claims", [])
                                             for cid in core_ids:
                                                 if cid not in claims and not any(q["prov_id"] == cid for q in queue):
-                                                    queue.append({"prov_id": cid, "turns_left": getattr(c, 'CLAIM_TURN_CORE', 1)})
+                                                    queue.append({"prov_id": cid, "turns_left": c.CLAIM_TURN_CORE})
                                             
                                             queries.set_ai_diplo_cooldown(ai_name, target, "MAKE_CLAIM", map_screen.nation_data, duration=5)
                                             break

@@ -7,9 +7,9 @@ def generate_new_world(map_screen):
     """Generates the geometric map surfaces and data structures from scratch."""
     
     # 1. Gather variables from settings or constants
-    width = getattr(c, 'PROCEDURAL_MAP_WIDTH', 600)
-    height = getattr(c, 'PROCEDURAL_MAP_HEIGHT', 200)
-    num_provinces = getattr(c, 'PROCEDURAL_PROVINCE_COUNT', 300)
+    width = c.PROCEDURAL_MAP_WIDTH
+    height = c.PROCEDURAL_MAP_HEIGHT
+    num_provinces = c.PROCEDURAL_PROVINCE_COUNT
     
     proc_type = getattr(map_screen, 'random_settings', {}).get("procedural_type", "Grid")
 

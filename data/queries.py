@@ -857,10 +857,13 @@ def get_incoming_justifications_count(nation, nation_data, id_to_province):
     count = 0
     for other_nation, data in nation_data.items():
         if other_nation == nation: continue
-        for q in data.get("claim_queue", []):
-            prov = id_to_province.get(q["prov_id"])
-            if prov and prov.get("owner") == nation:
-                count += 1
+        queue = data.get("claim_queue", [])
+        if queue:
+            q = queue[0]  # Only check the active justification
+            if q.get("turns_left", 0) < c.CLAIM_TURN_NON_CORE: # Hide if made this turn
+                prov = id_to_province.get(q["prov_id"])
+                if prov and prov.get("owner") == nation:
+                    count += 1
     return count
 
 def get_unread_message_count(nation, nation_data):
@@ -942,10 +945,22 @@ def get_relation_score(nation_a, nation_b, nation_data, id_to_province=None):
         claims_a = nation_data.get(nation_a, {}).get("claims", [])
         claims_b = nation_data.get(nation_b, {}).get("claims", [])
         
-        a_claims_b = sum(1 for pid in claims_a if id_to_province.get(pid, {}).get("owner") == nation_b)
-        b_claims_a = sum(1 for pid in claims_b if id_to_province.get(pid, {}).get("owner") == nation_a)
+        a_claims_b = 0
+        b_claims_a = 0
         
-        claim_penalty = min(50, (a_claims_b + b_claims_a) * 5)
+        for prov in id_to_province.values():
+            owner = prov.get("owner")
+            if owner == nation_b:
+                if nation_a in prov.get("cores", []) or prov["id"] in claims_a:
+                    a_claims_b += 1
+            elif owner == nation_a:
+                if nation_b in prov.get("cores", []) or prov["id"] in claims_b:
+                    b_claims_a += 1
+        
+        penalty_per_claim = abs(getattr(c, 'REL_MOD_PER_CLAIM', -5))
+        max_penalty = abs(getattr(c, 'REL_MOD_MAX_CLAIM_PENALTY', -50))
+        
+        claim_penalty = min(max_penalty, (a_claims_b + b_claims_a) * penalty_per_claim)
         score -= claim_penalty
         
     return score

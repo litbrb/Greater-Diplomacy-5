@@ -354,12 +354,13 @@ class Claims_Screen(GameState):
                     foreign_claims_map.setdefault(prov["id"], []).append(info)
                     
             for q in d.get("claim_queue", []):
-                pid = q["prov_id"]
-                prov = self.map_screen.id_to_province.get(pid)
-                if prov and prov.get("owner") == self.player:
-                    info = {"nation": n, "type": "QUEUE", "turns": q["turns_left"], "prov_id": pid}
-                    foreign_claims_list.append(info)
-                    foreign_claims_map.setdefault(pid, []).append(info)
+                if q.get("turns_left", 0) < c.CLAIM_TURN_NON_CORE: # Don't show if made this turn
+                    pid = q["prov_id"]
+                    prov = self.map_screen.id_to_province.get(pid)
+                    if prov and prov.get("owner") == self.player:
+                        info = {"nation": n, "type": "QUEUE", "turns": q["turns_left"], "prov_id": pid}
+                        foreign_claims_list.append(info)
+                        foreign_claims_map.setdefault(pid, []).append(info)
         
         foreign_claims_list.sort(key=lambda x: (x["prov_id"], x["nation"]))
         

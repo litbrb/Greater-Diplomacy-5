@@ -572,7 +572,7 @@ class Research_Screen(GameState):
             elif entity in self.building_library:
                 s = self.building_library[entity]
                 
-                txt1 = f"Construction Time: {max(1, s.get('time',0) // c.DAYS_PER_TURN)} turns"
+                txt1 = f"Construction Time: {max(1, s.get('time',0) // 1)} turns"
                 surface.blit(font_small.render(txt1, True, (200, 200, 200)), (panel_rect.x + 200, y_off))
                 y_off += 30
                 

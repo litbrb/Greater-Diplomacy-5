@@ -655,6 +655,10 @@ def process_diplomacy_turn(self):
                     msg_text = custom_msg if custom_msg else "We propose establishing a new faction together."
                     send_message(self, country_name, target, msg_text, "DIPLOMACY")
                     
+                elif action == "TRADE":
+                    msg_text = custom_msg if custom_msg else "We propose a trade agreement."
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
+                    
                 elif action == "DISBAND_FACTION":
                     fac = self.nation_data[country_name].get("faction", "")
                     info["cached_members"] = info.get("cached_members", queries.get_faction_members(fac, self.nation_data) if fac else [])
@@ -805,7 +809,36 @@ def process_diplomacy_turn(self):
                             elif action == "JOIN_WARS":
                                 join_faction_wars(self.map_data, self.nation_data, country_name, target)
                                 log_global_event(self.nation_data, f"ESCALATION: {country_name} has joined the wars of {target}!")
-                        
+                            elif action == "TRADE":
+                                params = info.get("parameters", {})
+                                p_mats = params.get("give_materials", 0)
+                                p_fuel = params.get("give_fuel", 0)
+                                t_mats = params.get("take_materials", 0)
+                                t_fuel = params.get("take_fuel", 0)
+
+                                c_data = self.nation_data[country_name] # Proposer
+                                t_data = self.nation_data[target]       # Target (AI)
+
+                                # Target gains proposer's escrow
+                                t_data["materials"] = t_data.get("materials", 0) + p_mats
+                                t_data["fuel"] = t_data.get("fuel", 0) + p_fuel
+
+                                # Target pays their side
+                                actual_t_mats = min(t_mats, t_data.get("materials", 0))
+                                t_data["materials"] -= actual_t_mats
+                                actual_t_fuel = min(t_fuel, t_data.get("fuel", 0))
+                                t_data["fuel"] -= actual_t_fuel
+
+                                # Proposer receives their side
+                                c_data["materials"] = c_data.get("materials", 0) + actual_t_mats
+                                c_data["fuel"] = c_data.get("fuel", 0) + actual_t_fuel
+                        else:
+                            if action == "TRADE":
+                                params = info.get("parameters", {})
+                                p_data = self.nation_data[country_name]
+                                p_data["materials"] = p_data.get("materials", 0) + params.get("give_materials", 0)
+                                p_data["fuel"] = p_data.get("fuel", 0) + params.get("give_fuel", 0)
+
                         send_message(self, target, country_name, message, "DIPLOMACY")
                         actions_to_clear.append(target)
 

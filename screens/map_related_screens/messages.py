@@ -74,12 +74,16 @@ class Messages_Screen(GameState):
             existing = pending_dict.get(self.selected_recipient, {})
             action_str = ""
             turns_val = 0
+            existing_msg = ""
+            existing_params = None
             
             # Preserve existing formal diplomatic actions if they exist
             if isinstance(existing, dict):
                 if existing.get("action") and not existing.get("action").startswith("MSG:"):
                     action_str = existing.get("action")
                     turns_val = existing.get("turns", 0)
+                    existing_msg = existing.get("message", "")
+                    existing_params = existing.get("parameters", None)
             
             if self.drafts:
                 # Use a newline character so the renderer knows to split them back into multiple bubbles later
@@ -92,15 +96,19 @@ class Messages_Screen(GameState):
                     "turns": turns_val,
                     "message": combined_text
                 }
+                if existing_params is not None:
+                    pending_dict[self.selected_recipient]["parameters"] = existing_params
                 draft_lists[self.selected_recipient] = self.drafts.copy()
             else:
-                # No drafts. If there's a formal action, just clear the message part.
+                # No drafts. Preserve formal actions.
                 if action_str:
                     pending_dict[self.selected_recipient] = {
                         "action": action_str,
                         "turns": turns_val,
-                        "message": ""
+                        "message": existing_msg
                     }
+                    if existing_params is not None:
+                        pending_dict[self.selected_recipient]["parameters"] = existing_params
                 else:
                     diplomacy_logic.cancel_text_message(self.map_screen.nation_data, self.map_screen.player_country, self.selected_recipient)
                 

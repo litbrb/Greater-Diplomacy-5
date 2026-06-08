@@ -943,8 +943,8 @@ class Trade_Screen(GameState):
         except ValueError:
             val = 0
 
-        p_data["materials"] += self.escrow_mats
-        taken = min(val, p_data.get("materials", 0))
+        p_data["materials"] = p_data.get("materials", 0) + self.escrow_mats
+        taken = min(val, p_data["materials"])
         p_data["materials"] -= taken
         self.escrow_mats = taken
         self.give_mats_str = str(taken)
@@ -956,8 +956,8 @@ class Trade_Screen(GameState):
         except ValueError:
             val = 0
 
-        p_data["fuel"] += self.escrow_fuel
-        taken = min(val, p_data.get("fuel", 0))
+        p_data["fuel"] = p_data.get("fuel", 0) + self.escrow_fuel
+        taken = min(val, p_data["fuel"])
         p_data["fuel"] -= taken
         self.escrow_fuel = taken
         self.give_fuel_str = str(taken)
@@ -1006,8 +1006,8 @@ class Trade_Screen(GameState):
     def cancel_trade(self):
         # Refund any held resources
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
-        p_data["materials"] += self.escrow_mats
-        p_data["fuel"] += self.escrow_fuel
+        p_data["materials"] = p_data.get("materials", 0) + self.escrow_mats
+        p_data["fuel"] = p_data.get("fuel", 0) + self.escrow_fuel
         self.done = True
 
     def handle_events(self, events):

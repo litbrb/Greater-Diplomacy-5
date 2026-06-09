@@ -634,6 +634,7 @@ SAVES_DIR = "saves"
 SCENARIOS_DIR = "scenarios"
 SCENARIOS_HISTORICAL_DIR = "scenarios/historical"
 SCENARIOS_ALTERNATE_DIR = "scenarios/alternate"
+SCENARIOS_CUSTOM_DIR = "scenarios/custom"
 BASE_MAPS_DIR = "base_maps"
 
 # Default Map Assets

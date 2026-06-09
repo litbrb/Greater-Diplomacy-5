@@ -25,7 +25,8 @@ class New_Game(GameState):
                 Button(20, 20, "small", "red", "Back", self.exit_to_menu),
                 Button("centered", 200, "large", "blue", "Historical Scenarios", lambda: self.set_sub_state("HISTORICAL")),
                 Button("centered", 300, "large", "purple", "Alternate Scenarios", lambda: self.set_sub_state("ALTERNATE")),
-                Button("centered", 400, "large", "orange", "Random Scenario", self.start_random_scenario),
+                Button("centered", 400, "large", "purple", "Custom Scenarios", lambda: self.set_sub_state("CUSTOM")),
+                Button("centered", 500, "large", "orange", "Random Scenario", self.start_random_scenario),
                 Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 160, "medium", "purple", "Data Refresh", self.trigger_global_data_refresh),
                 Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 80, "medium", "pink", "Scenario Settings", self.scenario_settings),
             ]
@@ -35,7 +36,12 @@ class New_Game(GameState):
                 Button(c.SCREEN_WIDTH - 220, c.SCREEN_HEIGHT - 80, "medium", "pink", "Scenario Settings", self.scenario_settings),
             ]
             
-            scenario_dir = c.SCENARIOS_HISTORICAL_DIR if self.sub_state == "HISTORICAL" else c.SCENARIOS_ALTERNATE_DIR
+            if self.sub_state == "HISTORICAL":
+                scenario_dir = c.SCENARIOS_HISTORICAL_DIR  
+            elif self.sub_state ==  "ALTERNATE":
+                scenario_dir = c.SCENARIOS_ALTERNATE_DIR
+            else:
+                scenario_dir = c.SCENARIOS_CUSTOM_DIR
             if not os.path.exists(scenario_dir):
                 os.makedirs(scenario_dir)
                 
@@ -53,8 +59,10 @@ class New_Game(GameState):
             title_text = "NEW GAME"
         elif self.sub_state == "HISTORICAL":
             title_text = "HISTORICAL SCENARIOS"
-        else:
+        elif self.sub_state == "ALTERNATE":
             title_text = "ALTERNATE SCENARIOS"
+        else:
+            title_text = "CUSTOM SCENARIOS"
             
         title = fonts.get("heading1").render(title_text, True, (255, 255, 255))
         surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
@@ -82,7 +90,7 @@ class New_Game(GameState):
         from screens.map import Map
         
         scenarios_processed = 0
-        dirs_to_check = [c.SCENARIOS_HISTORICAL_DIR, c.SCENARIOS_ALTERNATE_DIR]
+        dirs_to_check = [c.SCENARIOS_HISTORICAL_DIR, c.SCENARIOS_ALTERNATE_DIR, c.SCENARIOS_CUSTOM_DIR]
 
         for scenario_dir in dirs_to_check:
             if not os.path.exists(scenario_dir):

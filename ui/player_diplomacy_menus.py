@@ -999,13 +999,13 @@ class Trade_Screen(GameState):
         # Puppet Options
         y_pos = self.panel_rect.y + 220
         
-        btn_sender = Button(self.panel_rect.x + 30, y_pos, "medium", "blue" if self.puppet_state != "SENDER" else "green", "Become Puppet", lambda: self.set_puppet_state("SENDER"))
+        btn_sender = Button(self.panel_rect.x + 30, y_pos, "medium", "blue" if self.puppet_state != "SENDER" else "green", "Make Them Puppet", lambda: self.set_puppet_state("SENDER"))
         if self.puppet_state == "SENDER": btn_sender.is_selected = True
         
         btn_none = Button(self.panel_rect.centerx - 100, y_pos, "medium", "blue" if self.puppet_state != "NONE" else "green", "No Puppeting", lambda: self.set_puppet_state("NONE"))
         if self.puppet_state == "NONE": btn_none.is_selected = True
         
-        btn_recv = Button(self.panel_rect.right - 230, y_pos, "medium", "blue" if self.puppet_state != "RECEIVER" else "green", "Make Them Puppet", lambda: self.set_puppet_state("RECEIVER"))
+        btn_recv = Button(self.panel_rect.right - 230, y_pos, "medium", "blue" if self.puppet_state != "RECEIVER" else "green", "Become Their Puppet", lambda: self.set_puppet_state("RECEIVER"))
         if self.puppet_state == "RECEIVER": btn_recv.is_selected = True
         
         self.elements.extend([btn_sender, btn_none, btn_recv])

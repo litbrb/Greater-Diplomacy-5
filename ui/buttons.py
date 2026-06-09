@@ -81,9 +81,10 @@ def render_buttons(self):
     self.btn_gp_music = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 7, "left_ui_button", "pink", "Music", lambda: self.change_state("MUSIC_PLAYER"), image=icons.get("music"), show_text=True)
     self.btn_gp_faction = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 8, "left_ui_button", "pink", "Faction", lambda: self.change_state("FACTION"), image=icons.get("faction"), show_text=True)
     self.btn_gp_claims = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 9, "left_ui_button", "pink", "Claims", lambda: player_diplomacy_actions.open_claims_menu(self), image=icons.get("paper"), show_text=True)
+    self.btn_gp_puppets = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 10, "left_ui_button", "pink", "Puppets", lambda: player_diplomacy_actions.open_claims_menu(self), image=icons.get("faction"), show_text=True) # placeholder, please fix
 
     # NEW: Register the Slider below the Faction button
-    slider_y = int(start_y_val + c.LEFT_UI_BAR_STEP_Y * 11)
+    slider_y = int(start_y_val + c.LEFT_UI_BAR_STEP_Y * 12)
     self.slider_camera_tilt = Slider(c.LEFT_UI_BAR_X, slider_y, 120, "Camera Tilt", getattr(self, 'camera_tilt_slider_val', 0.0), self.set_camera_tilt)
 
     # ======================================================================== #
@@ -134,7 +135,7 @@ def render_buttons(self):
         self.btn_ed_core, self.btn_ed_autocore, self.btn_ed_resource, self.btn_ed_building,
         self.btn_ed_unit, self.btn_ed_refresh, self.btn_ed_date, self.btn_ed_diplo,
         self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
-        self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_gp_claims, self.btn_go_orders, self.btn_go_production,
+        self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_gp_claims, self.btn_gp_puppets, self.btn_go_orders, self.btn_go_production,
         self.btn_declare_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
         self.btn_fac_join_req, self.btn_fac_kick, self.btn_fac_create,
         self.btn_accept_req, self.btn_reject_req, self.btn_force_war, self.btn_force_peace,
@@ -241,7 +242,8 @@ def update_button_states(map_screen):
         gp_btns = [
             map_screen.btn_gp_edit, map_screen.btn_gp_econ, map_screen.btn_gp_rd,
             map_screen.btn_gp_msgs, map_screen.btn_gp_save, map_screen.btn_gp_settings,
-            map_screen.btn_gp_music, map_screen.btn_gp_faction, map_screen.btn_gp_claims, map_screen.slider_camera_tilt
+            map_screen.btn_gp_music, map_screen.btn_gp_faction, map_screen.btn_gp_claims,
+            map_screen.btn_gp_puppets, map_screen.slider_camera_tilt
         ]
         
         always_visible_btns = [map_screen.btn_gp_settings, map_screen.btn_gp_music, map_screen.slider_camera_tilt]

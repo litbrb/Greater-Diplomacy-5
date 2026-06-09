@@ -42,7 +42,7 @@ class Select_Base_Map(GameState):
         if self.sub_state == "CUSTOM_MAPS":
             self.elements.append(Button(20, 20, "small", "red", "Back", self.exit_to_menu))
             self.elements.append(Button(160, 20, "medium", "green", "Import .zip", self.import_scenario_zip))
-            self.elements.append(Button("centered", c.SCREEN_HEIGHT - 80, "large", "purple", "New Map", lambda: self.set_sub_state("BASE_MAPS")))
+            self.elements.append(Button("centered", c.SCREEN_HEIGHT - 100, "large", "purple", "New Map", lambda: self.set_sub_state("BASE_MAPS")))
 
             scenario_dir = c.SCENARIOS_CUSTOM_DIR
             if not os.path.exists(scenario_dir):

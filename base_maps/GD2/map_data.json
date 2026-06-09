@@ -139,7 +139,7 @@
     },
     "(7, 0, 0)": {
         "id": 7,
-        "terrain": "forest",
+        "terrain": "mountain",
         "is_coastal": true,
         "center": [
             618,

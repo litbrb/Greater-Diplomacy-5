@@ -792,7 +792,7 @@ def open_diplomacy_editor(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = _create_editor_window("Global Diplomacy & Factions Editor", "550x550")
+    root = _create_editor_window("Global Diplomacy & Factions Editor", "550x700")
     self.menu_active = True
 
     def close_menu():
@@ -813,8 +813,8 @@ def open_diplomacy_editor(self):
     nation_list.pack(fill="both", expand=True)
     scrollbar.config(command=nation_list.yview)
 
-    for c in sorted(active_countries):
-        nation_list.insert(tk.END, c)
+    for i in sorted(active_countries):
+        nation_list.insert(tk.END, i)
 
     title_lbl = tk.Label(right_frame, text="Select a nation...", font=("Arial", 14, "bold"))
     title_lbl.pack(pady=5)
@@ -848,6 +848,19 @@ def open_diplomacy_editor(self):
     member_list.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5)
     mem_scroll.config(command=member_list.yview)
 
+    pup_frame = tk.LabelFrame(right_frame, text="Puppet Info:")
+    pup_frame.pack(fill="both", expand=True, pady=5)
+
+    tk.Label(pup_frame, text="Master Nation:").grid(row=0, column=0, sticky="w", padx=5)
+    master_var = tk.StringVar()
+    master_menu = ttk.Combobox(pup_frame, textvariable=master_var, values=["None"] + sorted(active_countries))
+    master_menu.grid(row=0, column=1, sticky="ew", padx=5)
+
+    tk.Label(pup_frame, text="Puppet Type:").grid(row=1, column=0, sticky="w", padx=5)
+    ptype_var = tk.StringVar()
+    ptype_menu = ttk.Combobox(pup_frame, textvariable=ptype_var, values=[c.PUPPET_TYPE_AUTONOMOUS, c.PUPPET_TYPE_INTEGRATED])
+    ptype_menu.grid(row=1, column=1, sticky="ew", padx=5)
+
     current_target = [None]
 
     def load_nation_data(event):
@@ -861,21 +874,25 @@ def open_diplomacy_editor(self):
 
         war_list.delete(0, tk.END)
         enemies = data.get("at_war_with", [])
-        for i, c in enumerate(sorted(active_countries)):
-            if c == target: continue
-            war_list.insert(tk.END, c)
-            if c in enemies:
+        for i, c_name in enumerate(sorted(active_countries)):
+            if c_name == target: continue
+            war_list.insert(tk.END, c_name)
+            if c_name in enemies:
                 war_list.selection_set(tk.END)
 
         fac_name_var.set(data.get("faction", ""))
         is_leader_var.set(data.get("is_faction_leader", False))
 
         member_list.delete(0, tk.END)
-        for i, c in enumerate(sorted(active_countries)):
-            if c == target: continue
-            member_list.insert(tk.END, c)
-            if data.get("faction", "") and self.nation_data.get(c, {}).get("faction", "") == data.get("faction", ""):
+        for i, c_name in enumerate(sorted(active_countries)):
+            if c_name == target: continue
+            member_list.insert(tk.END, c_name)
+            if data.get("faction", "") and self.nation_data.get(c_name, {}).get("faction", "") == data.get("faction", ""):
                 member_list.selection_set(tk.END)
+                
+        master_val = data.get("master", "None")
+        master_var.set(master_val if master_val else "None")
+        ptype_var.set(data.get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS))
 
     nation_list.bind("<<ListboxSelect>>", load_nation_data)
 
@@ -886,9 +903,9 @@ def open_diplomacy_editor(self):
         data = self.nation_data.get(target, {})
 
         # 1. Update Wars (Bidirectional)
-        for c in active_countries:
-            if target in self.nation_data[c].get("at_war_with", []):
-                self.nation_data[c]["at_war_with"].remove(target)
+        for c_name in active_countries:
+            if target in self.nation_data[c_name].get("at_war_with", []):
+                self.nation_data[c_name]["at_war_with"].remove(target)
 
         selected_wars = [war_list.get(i) for i in war_list.curselection()]
         data["at_war_with"] = selected_wars
@@ -902,15 +919,37 @@ def open_diplomacy_editor(self):
         data["is_faction_leader"] = is_leader_var.get()
 
         selected_members = [member_list.get(i) for i in member_list.curselection()]
-        for c in active_countries:
-            if c == target: continue
-            if c in selected_members:
-                self.nation_data[c]["faction"] = new_faction
+        for c_name in active_countries:
+            if c_name == target: continue
+            if c_name in selected_members:
+                self.nation_data[c_name]["faction"] = new_faction
                 if new_faction:
-                    self.nation_data[c]["is_faction_leader"] = False
-            elif self.nation_data[c].get("faction", "") == new_faction and new_faction != "":
-                self.nation_data[c]["faction"] = ""
-                self.nation_data[c]["is_faction_leader"] = False
+                    self.nation_data[c_name]["is_faction_leader"] = False
+            elif self.nation_data[c_name].get("faction", "") == new_faction and new_faction != "":
+                self.nation_data[c_name]["faction"] = ""
+                self.nation_data[c_name]["is_faction_leader"] = False
+
+        # 3. Update Puppet State
+        old_master = data.get("master", "")
+        if old_master and old_master != "None" and old_master in self.nation_data:
+            if target in self.nation_data[old_master].get("puppets", []):
+                self.nation_data[old_master]["puppets"].remove(target)
+        
+        new_master = master_var.get()
+        if new_master and new_master != "None" and new_master != target:
+            data["master"] = new_master
+            data["puppet_type"] = ptype_var.get()
+            self.nation_data[new_master].setdefault("puppets", []).append(target)
+            self.nation_data[new_master]["puppets"] = list(set(self.nation_data[new_master]["puppets"]))
+            
+            # Auto-pull puppet into master's faction
+            master_fac = self.nation_data[new_master].get("faction", "")
+            if master_fac:
+                data["faction"] = master_fac
+                data["is_faction_leader"] = False
+        else:
+            data["master"] = ""
+            data["puppet_type"] = ""
 
         self.refresh_relations_map()
         self.refresh_factions_map()

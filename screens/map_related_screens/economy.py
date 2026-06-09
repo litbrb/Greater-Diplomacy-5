@@ -106,6 +106,11 @@ class Economy_Screen(GameState):
                 sign = "+" if conv_val > 0 else ""
                 label = "Conversion Income" if conv_val > 0 else "Conversion Cost"
                 detail_breakdown += f"  |  {label}: {sign}{conv_val}"
+                
+            if bd.get('siphon', 0) != 0:
+                detail_breakdown += f"  |  Siphoned to Master: {int(bd.get('siphon', 0))}"
+            if bd.get('siphon_income', 0) != 0:
+                detail_breakdown += f"  |  Siphon Income: +{int(bd.get('siphon_income', 0))}"
 
             surface.blit(font_small.render(detail_breakdown, True, (150, 150, 150)), (row_rect.x + 0, row_rect.y + 60))
             

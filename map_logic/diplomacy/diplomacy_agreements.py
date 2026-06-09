@@ -3,6 +3,38 @@ from map_logic.system32 import edit_province_ownership
 from data import queries
 import data.constants as c
 
+# --- RECURSIVE PUPPET HELPERS ---
+def pull_puppets_into_war(master, target, map_data, nation_data):
+    for puppet in nation_data.get(master, {}).get("puppets", []):
+        if target not in nation_data.get(puppet, {}).get("at_war_with", []):
+            nation_data.setdefault(puppet, {}).setdefault("at_war_with", []).append(target)
+        if puppet not in nation_data.get(target, {}).get("at_war_with", []):
+            nation_data.setdefault(target, {}).setdefault("at_war_with", []).append(puppet)
+        pull_puppets_into_war(puppet, target, map_data, nation_data)
+
+def pull_puppets_into_peace(master, target, nation_data):
+    for puppet in nation_data.get(master, {}).get("puppets", []):
+        if target in nation_data.get(puppet, {}).get("at_war_with", []):
+            nation_data[puppet]["at_war_with"].remove(target)
+        if puppet in nation_data.get(target, {}).get("at_war_with", []):
+            nation_data[target]["at_war_with"].remove(puppet)
+        nation_data[puppet].setdefault("relations", {})[target] = 0
+        nation_data[puppet].setdefault("truces", {})[target] = c.TRUCE_TURNS
+        pull_puppets_into_peace(puppet, target, nation_data)
+
+def pull_puppets_into_faction(master, fac, map_data, nation_data):
+    for puppet in nation_data.get(master, {}).get("puppets", []):
+        nation_data[puppet]["faction"] = fac
+        nation_data[puppet]["is_faction_leader"] = False
+        pull_puppets_into_faction(puppet, fac, map_data, nation_data)
+
+def pull_puppets_out_of_faction(master, nation_data):
+    for puppet in nation_data.get(master, {}).get("puppets", []):
+        nation_data[puppet]["faction"] = ""
+        nation_data[puppet]["is_faction_leader"] = False
+        pull_puppets_out_of_faction(puppet, nation_data)
+# ---------------------------------
+
 def finalize_war(map_data, nation_data, a, b):
     # GUARDRAIL: If they are in the same faction, the aggressor (a) leaves automatically
     if queries.are_in_same_faction(a, b, nation_data):
@@ -29,6 +61,10 @@ def finalize_war(map_data, nation_data, a, b):
                     nation_data[country]["diplo_cooldowns"][member].pop("CALL_TO_ARMS", None)
                     nation_data[country]["diplo_cooldowns"][member].pop("JOIN_WARS", None)
 
+    # Pull subjects into the fray
+    pull_puppets_into_war(a, b, map_data, nation_data)
+    pull_puppets_into_war(b, a, map_data, nation_data)
+
 def finalize_neutral(nation_data, a, b):
     for country, other in [(a, b), (b, a)]:
         if other in nation_data[country]["at_war_with"]:
@@ -44,6 +80,10 @@ def finalize_neutral(nation_data, a, b):
 
         # Apply Non-Aggression Pact
         nation_data[country].setdefault("truces", {})[other] = c.TRUCE_TURNS
+
+    # Subdue puppets 
+    pull_puppets_into_peace(a, b, nation_data)
+    pull_puppets_into_peace(b, a, nation_data)
 
     fac_a = nation_data.get(a, {}).get("faction", "")
     fac_b = nation_data.get(b, {}).get("faction", "")
@@ -115,6 +155,8 @@ def finalize_create_faction(map_data, nation_data, creator):
 
     if queries.is_faction_at_war(fac, nation_data):
         queries.save_faction_pre_war_map(fac, map_data, nation_data)
+        
+    pull_puppets_into_faction(creator, fac, map_data, nation_data)
 
 def finalize_disband_faction(nation_data, leader):
     fac = nation_data[leader].get("faction", "")
@@ -127,6 +169,8 @@ def finalize_disband_faction(nation_data, leader):
         if d.get("faction") == fac:
             d["faction"] = ""
             d["is_faction_leader"] = False
+            
+    pull_puppets_out_of_faction(leader, nation_data)
 
 def finalize_faction_join(map_data, nation_data, host, joiner):
     fac = nation_data[host].get("faction", "")
@@ -143,6 +187,8 @@ def finalize_faction_join(map_data, nation_data, host, joiner):
 
         if queries.is_faction_at_war(fac, nation_data):
             queries.add_member_to_pre_war_map(joiner, fac, map_data, nation_data)
+            
+        pull_puppets_into_faction(joiner, fac, map_data, nation_data)
 
 def finalize_faction_leave(nation_data, leaver):
     fac = nation_data[leaver].get("faction", "")
@@ -153,6 +199,8 @@ def finalize_faction_leave(nation_data, leaver):
         
     nation_data[leaver]["faction"] = ""
     nation_data[leaver]["is_faction_leader"] = False
+    
+    pull_puppets_out_of_faction(leaver, nation_data)
     
     # Apply Temporary Faction Desertion Modifier
     for m in members:
@@ -175,6 +223,9 @@ def join_faction_wars(map_data, nation_data, joiner, faction_member):
             nation_data[joiner]["at_war_with"].append(enemy)
         if joiner not in nation_data[enemy]["at_war_with"]:
             nation_data[enemy]["at_war_with"].append(joiner)
+            
+        # Recursive puppet pull logic for new wars joined
+        pull_puppets_into_war(joiner, enemy, map_data, nation_data)
 
     # Clear the cooldowns between these two so they can interact in future wars
     for a, b in [(joiner, faction_member), (faction_member, joiner)]:

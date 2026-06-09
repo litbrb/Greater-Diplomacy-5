@@ -3,6 +3,10 @@ from map_logic.diplomacy import diplomacy_logic
 import data.constants as c
 
 def handle_declare_war(map_screen):
+    if map_screen.nation_data.get(map_screen.player_country, {}).get("master"):
+        map_screen.show_feedback("Puppets cannot declare wars independently!")
+        return
+
     target = map_screen.selected_province.get("owner")
     at_war = queries.are_at_war(map_screen.player_country, target, map_screen.nation_data)
     
@@ -41,11 +45,21 @@ def handle_ceasefire(map_screen):
     from ui.player_diplomacy_menus import open_peace_menu
     open_peace_menu(map_screen, target)
 
+def open_puppets_menu(map_screen):
+    from ui.player_diplomacy_menus import open_puppets_menu
+    open_puppets_menu(map_screen)
+
 def handle_specific_action(map_screen, action_type):
     """A clean, generic handler replacing the overloaded faction button logic."""
     target = map_screen.selected_province.get("owner")
         
     custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
+    
+    # Block puppets from creating/joining factions independently
+    if action_type in ["CREATE_FACTION", "JOIN_FACTION_REQ", "FACTION_INVITE", "LEAVE_FACTION", "DISBAND_FACTION", "KICK_FACTION_MEMBER"]:
+        if map_screen.nation_data.get(map_screen.player_country, {}).get("master"):
+            map_screen.show_feedback("Puppets cannot handle faction diplomacy independently!")
+            return
 
     # Pre-flight Check: Ensure we don't accidentally leave/disband while an invite is pending
     if action_type in ["LEAVE_FACTION", "DISBAND_FACTION"]:

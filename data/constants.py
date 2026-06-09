@@ -307,6 +307,14 @@ PEACE_DEMAND_CLAIMS = "Demand Claims"
 TRUCE_TURNS = 12
 
 # ==========================================
+# PUPPET SETTINGS
+# ==========================================
+
+PUPPET_TYPE_AUTONOMOUS = "Autonomous"
+PUPPET_TYPE_INTEGRATED = "Integrated"
+MAX_PUPPET_SIPHON = 0.50
+
+# ==========================================
 # INPUT SETTINGS
 # ==========================================
 

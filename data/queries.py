@@ -6,12 +6,23 @@ import itertools
 import pygame
 import data.constants as c
 
+def get_imperial_family(nation, nation_data):
+    """Returns a set containing the nation, its master (if any), and all related puppets."""
+    family = set([nation])
+    master = nation_data.get(nation, {}).get("master", "")
+    top_dog = master if master else nation
+    family.add(top_dog)
+    family.update(nation_data.get(top_dog, {}).get("puppets", []))
+    return family
+
 def get_visible_provinces(player_country, map_data, nation_data):
     """Calculates and returns a set of province IDs currently visible to the player."""
     if player_country in ["Spectator", "Editor", "None"] or player_country not in nation_data:
         return None # Returns None to signify "Full Visibility / Ignore Fog"
         
-    friendly_nations = {player_country}
+    friendly_nations = set()
+    friendly_nations.update(get_imperial_family(player_country, nation_data))
+    
     player_faction = nation_data[player_country].get("faction", "")
     if player_faction:
         friendly_nations.update(get_faction_members(player_faction, nation_data))
@@ -169,21 +180,31 @@ def get_economic_power(nation, nation_data):
     return manpower_val + materials_val + fuel_val
 
 def get_alliance_military_strength(nation, map_data, nation_data):
-    """Calculates the combined military strength of a nation and its faction members/allies."""
-    strength = get_military_strength(nation, map_data)
+    """Calculates the combined military strength of a nation and its faction members/allies/subjects."""
+    strength = 0
+    counted = set()
     
     # Add faction members
     faction = nation_data.get(nation, {}).get("faction", "")
     if faction:
         for member in get_faction_members(faction, nation_data):
-            if member != nation:
+            if member not in counted:
                 strength += get_military_strength(member, map_data)
+                counted.add(member)
                 
-    # Add direct allies if they aren't in the faction
+    # Add Imperial Family (Master & Puppets)
+    family = get_imperial_family(nation, nation_data)
+    for fam_member in family:
+        if fam_member not in counted:
+            strength += get_military_strength(fam_member, map_data)
+            counted.add(fam_member)
+                
+    # Add direct allies if they aren't already counted
     allies = nation_data.get(nation, {}).get("allied_with", [])
     for ally in allies:
-        if not faction or nation_data.get(ally, {}).get("faction", "") != faction:
+        if ally not in counted:
             strength += get_military_strength(ally, map_data)
+            counted.add(ally)
             
     return strength
 
@@ -394,8 +415,9 @@ def can_ships_enter(moving_nation, target_province, nation_data):
     # Ships can only enter friendly or unowned ports
     is_faction = are_in_same_faction(moving_nation, target_owner, nation_data)
     is_ally = target_owner in nation_data.get(moving_nation, {}).get("allied_with", [])
+    is_family = target_owner in get_imperial_family(moving_nation, nation_data)
     
-    return target_owner == moving_nation or is_faction or is_ally or target_owner == "Unclaimed"
+    return target_owner == moving_nation or is_faction or is_ally or is_family or target_owner == "Unclaimed"
 
 def can_land_units_enter(moving_nation, target_province, nation_data):
     """Centralized rules for land movement."""
@@ -411,12 +433,12 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
         is_enemy = are_at_war(moving_nation, target_owner, nation_data)
         is_faction = are_in_same_faction(moving_nation, target_owner, nation_data)
         is_ally = target_owner in nation_data.get(moving_nation, {}).get("allied_with", [])
+        is_family = target_owner in get_imperial_family(moving_nation, nation_data)
         
-        if not (is_enemy or is_faction or is_ally):
+        if not (is_enemy or is_faction or is_ally or is_family):
             return False
 
     return True
-
 
 # ==========================================
 # PROVINCE & TECH QUERIES
@@ -632,9 +654,9 @@ def calculate_all_economies(map_data, nation_data):
                 "fuel": c.BASE_YIELDS["fuel"] 
             },
             "breakdown": {
-                "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0},
-                "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0},
-                "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0}
+                "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0, "siphon": 0, "siphon_income": 0},
+                "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0, "siphon": 0, "siphon_income": 0},
+                "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0, "siphon": 0, "siphon_income": 0}
             },
             "upkeep": {"manpower": 0, "materials": 0, "fuel": 0},
             "total_inc": {"manpower": 0, "materials": 0, "fuel": 0}
@@ -723,6 +745,26 @@ def calculate_all_economies(map_data, nation_data):
         data["total_inc"]["manpower"] = sum(data["breakdown"]["manpower"].values())
         data["total_inc"]["materials"] = sum(data["breakdown"]["materials"].values())
         data["total_inc"]["fuel"] = sum(data["breakdown"]["fuel"].values())
+
+    # --- PUPPET SIPHONING LOGIC ---
+    for name, data in econ_data.items():
+        n_data = nation_data.get(name, {})
+        master = n_data.get("master", "")
+        
+        if master and master in econ_data and n_data.get("puppet_type") == c.PUPPET_TYPE_INTEGRATED:
+            siphon_rates = n_data.setdefault("siphon_rates", {"manpower": 0.0, "materials": 0.0, "fuel": 0.0})
+            
+            for res in ["manpower", "materials", "fuel"]:
+                rate = min(c.MAX_PUPPET_SIPHON, siphon_rates.get(res, 0.0))
+                siphon_amt = int(max(0, data["total_inc"][res]) * rate)
+                
+                # Apply transfers
+                data["total_inc"][res] -= siphon_amt
+                econ_data[master]["total_inc"][res] += siphon_amt
+                
+                # Tag it in breakdowns for the UI
+                data["breakdown"][res]["siphon"] = -siphon_amt
+                econ_data[master]["breakdown"][res]["siphon_income"] = econ_data[master]["breakdown"][res].get("siphon_income", 0) + siphon_amt
 
     return econ_data
 

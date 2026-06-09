@@ -3,7 +3,7 @@ import data.constants as c
 from data import queries
 from map_logic.diplomacy import diplomacy_logic
 from gameState import GameState
-from ui_elements import Button
+from ui_elements import Button, Slider
 from map_logic.rendering.font_manager import fonts
 
 def _run_pygame_sub_screen(map_screen, screen_obj):
@@ -907,6 +907,10 @@ class View_Peace_Treaty_Screen(GameState):
 # TRADE SCREEN
 # ==========================================
 
+# ==========================================
+# TRADE SCREEN
+# ==========================================
+
 class Trade_Screen(GameState):
     def __init__(self, map_screen, target_nation):
         super().__init__()
@@ -978,6 +982,10 @@ class Trade_Screen(GameState):
             self.take_fuel_str = "0"
 
     def confirm_trade(self):
+        if self.map_screen.nation_data.get(self.map_screen.player_country, {}).get("master"):
+            self.map_screen.show_feedback("Puppets cannot initiate trades!")
+            return
+            
         self.evaluate_input()
         
         # Don't allow empty trades
@@ -1133,6 +1141,117 @@ class Trade_Screen(GameState):
             surface.blit(res_font.render(text, True, color), (50 + (i * 300), hud_rect.y + 15))
 
 # ==========================================
+# PUPPETS SCREEN
+# ==========================================
+
+class Puppets_Screen(GameState):
+    def __init__(self, map_screen):
+        super().__init__()
+        self.map_screen = map_screen
+        self.player = map_screen.player_country
+        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 400, 100, 800, c.SCREEN_HEIGHT - 200)
+        self.scroll_y = 0
+        self.max_scroll = 0
+        self.refresh_ui()
+
+    def refresh_ui(self):
+        self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
+        puppets = self.map_screen.nation_data.get(self.player, {}).get("puppets", [])
+        
+        y_pos = self.panel_rect.y + 70 + self.scroll_y
+        for p in puppets:
+            p_data = self.map_screen.nation_data.get(p, {})
+            p_type = p_data.get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
+            siphon = p_data.setdefault("siphon_rates", {"manpower": 0.0, "materials": 0.0, "fuel": 0.0})
+            
+            if p_type == c.PUPPET_TYPE_INTEGRATED:
+                btn_edit = Button(self.panel_rect.x + 600, y_pos, "small", "blue", "Edit Appearance", lambda nation=p: self.edit_puppet(nation))
+                self.elements.append(btn_edit)
+                
+                s_man = Slider(self.panel_rect.x + 200, y_pos, 100, "Siphon Man", siphon["manpower"] / c.MAX_PUPPET_SIPHON, lambda val, n=p: self.set_siphon(n, "manpower", val))
+                s_mat = Slider(self.panel_rect.x + 320, y_pos, 100, "Siphon Mat", siphon["materials"] / c.MAX_PUPPET_SIPHON, lambda val, n=p: self.set_siphon(n, "materials", val))
+                s_fuel = Slider(self.panel_rect.x + 440, y_pos, 100, "Siphon Fuel", siphon["fuel"] / c.MAX_PUPPET_SIPHON, lambda val, n=p: self.set_siphon(n, "fuel", val))
+                self.elements.extend([s_man, s_mat, s_fuel])
+                
+            y_pos += 80
+            
+        self.max_scroll = min(0, self.panel_rect.height - (y_pos - self.scroll_y - self.panel_rect.y) - 20)
+
+    def set_siphon(self, puppet, res, slider_val):
+        actual_val = slider_val * c.MAX_PUPPET_SIPHON
+        self.map_screen.nation_data[puppet]["siphon_rates"][res] = actual_val
+
+    def edit_puppet(self, puppet):
+        self.map_screen.editing_country = puppet
+        self.next_state, self.done = "EDIT_COUNTRY", True
+
+    def exit_screen(self):
+        self.next_state, self.done = "MAP", True
+
+    def update(self):
+        super().update()
+        self.map_screen.camera.update(self.map_screen, c.SCREEN_HEIGHT)
+
+    def handle_events(self, events):
+        for event in events:
+            for el in self.elements:
+                el.handle_event(event)
+            if event.type == pygame.MOUSEWHEEL:
+                self.scroll_y += event.y * 30
+                self.scroll_y = max(self.max_scroll, min(0, self.scroll_y))
+                self.refresh_ui()
+
+    def draw(self, surface):
+        surface.fill(self.map_screen.bg_color)
+        
+        self.map_screen.hide_raised_rect = True
+        self.map_screen.hide_tooltip = True
+        self.map_screen.hide_resource_hud = True
+        self.map_screen.hide_minimap = True
+        self.map_screen.additional_draw(surface)
+        self.map_screen.hide_raised_rect = False
+        self.map_screen.hide_tooltip = False
+        self.map_screen.hide_resource_hud = False
+        self.map_screen.hide_minimap = False
+        
+        overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 180))
+        surface.blit(overlay, (0, 0))
+
+        pygame.draw.rect(surface, (40, 40, 50), self.panel_rect)
+        pygame.draw.rect(surface, (100, 150, 255), self.panel_rect, 2)
+        
+        font_title = fonts.get("heading1")
+        font_body = fonts.get("heading2")
+        title = font_title.render("Your Subjects", True, (255, 255, 255))
+        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
+
+        clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 60, self.panel_rect.width - 10, self.panel_rect.height - 70)
+        old_clip = surface.get_clip()
+        surface.set_clip(clip_rect)
+        
+        puppets = self.map_screen.nation_data.get(self.player, {}).get("puppets", [])
+        if not puppets:
+            txt = font_body.render("You currently control no subjects.", True, (150, 150, 150))
+            surface.blit(txt, (self.panel_rect.centerx - txt.get_width()//2, self.panel_rect.y + 100))
+        else:
+            y_pos = self.panel_rect.y + 70 + self.scroll_y
+            for p in puppets:
+                p_data = self.map_screen.nation_data.get(p, {})
+                p_name = p_data.get("name", p)
+                p_type = p_data.get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
+                
+                txt = font_body.render(f"{p_name} ({p_type})", True, (255, 215, 0) if p_type == c.PUPPET_TYPE_INTEGRATED else (200, 200, 200))
+                surface.blit(txt, (self.panel_rect.x + 20, y_pos))
+                y_pos += 80
+
+        surface.set_clip(old_clip)
+        
+        for el in self.elements:
+            if getattr(el, 'visible', True):
+                el.draw(surface)
+
+# ==========================================
 # PUBLIC INTERCEPT LAUNCHERS
 # ==========================================
 
@@ -1154,4 +1273,8 @@ def open_view_peace_treaty_menu(map_screen, proposer):
 
 def open_trade_menu(map_screen, target_nation):
     screen = Trade_Screen(map_screen, target_nation)
+    _run_pygame_sub_screen(map_screen, screen)
+
+def open_puppets_menu(map_screen):
+    screen = Puppets_Screen(map_screen)
     _run_pygame_sub_screen(map_screen, screen)

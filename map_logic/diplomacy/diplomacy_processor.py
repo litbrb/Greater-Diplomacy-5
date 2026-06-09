@@ -909,3 +909,24 @@ def process_diplomacy_turn(self):
                     
                     if country_name == self.player_country:
                         self.show_feedback(f"Claim on Province {prov_id} revoked!")
+        # --- PROCESS RETURN QUEUE (Simultaneous) ---
+        return_queue = data.get("return_queue", [])
+        if return_queue:
+            for i in range(len(return_queue) - 1, -1, -1):
+                rq = return_queue[i]
+                rq["turns_left"] -= 1
+                
+                if rq["turns_left"] <= 0:
+                    prov_id = rq["prov_id"]
+                    recipient = rq["recipient"]
+                    
+                    prov = self.id_to_province.get(prov_id)
+                    if prov and prov.get("owner") == country_name:
+                        from map_logic.system32 import edit_province_ownership
+                        # Return the province to the intended recipient!
+                        edit_province_ownership.conquer_province(self, prov, recipient)
+                        
+                        if country_name == self.player_country:
+                            self.show_feedback(f"Returned Province {prov_id} to {recipient}!")
+                            
+                    return_queue.pop(i)

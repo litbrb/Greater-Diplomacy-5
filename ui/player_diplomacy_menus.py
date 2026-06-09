@@ -233,12 +233,16 @@ class Claims_Screen(GameState):
             
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if not on_ui:
-                    if self.view_mode == "YOURS":
-                        dest = self.get_clicked_province(event.pos)
-                        if dest and dest.get("owner") != self.player and dest.get("owner") not in c.UNPLAYABLE_NATIONS:
-                            self.toggle_claim(dest)
+                    dest = self.get_clicked_province(event.pos)
+                    if dest and dest.get("owner") not in c.UNPLAYABLE_NATIONS:
+                        if self.view_mode == "YOURS":
+                            if dest.get("owner") != self.player:
+                                self.toggle_claim(dest)
+                        elif self.view_mode == "THEIRS":
+                            if dest.get("owner") == self.player:
+                                self.return_foreign_claim(dest)
                     else:
-                        self.map_screen.show_feedback("Can only edit claims in 'Your Claims' view.")
+                        self.map_screen.show_feedback("Can only edit claims on valid nations.")
                         
             elif event.type == pygame.MOUSEWHEEL:
                 if on_ui:
@@ -300,6 +304,50 @@ class Claims_Screen(GameState):
         self.map_screen.show_feedback(f"Claim queued ({turns} turns).")
         self.refresh_ui()
 
+    def return_foreign_claim(self, dest):
+        """Allows returning territory to foreign nations that hold a core or claim on it."""
+        pid = dest["id"]
+        data = self.map_screen.nation_data.get(self.player)
+        if not data: return
+
+        # Find valid recipients who have a claim or core on this tile
+        valid_recipients = []
+        for n_name, n_data in self.map_screen.nation_data.items():
+            if n_name == self.player or n_name in c.UNPLAYABLE_NATIONS: 
+                continue
+            
+            is_core = n_name in dest.get("cores", [])
+            has_claim = pid in n_data.get("claims", [])
+            
+            if is_core or has_claim:
+                # Prioritize cores by placing them at the front of the list
+                if is_core:
+                    valid_recipients.insert(0, n_name)
+                else:
+                    valid_recipients.append(n_name)
+
+        if not valid_recipients:
+            self.map_screen.show_feedback("No foreign nation has a valid claim on this territory.")
+            return
+
+        # Give it to the most valid claimant (Prioritizes Cores, then Claims)
+        recipient = valid_recipients[0]
+
+        # Start the return process taking 1 turn. (Stored under the player's data to process)
+        return_queue = data.setdefault("return_queue", [])
+        
+        # Check if it's currently being returned, if so, cancel it
+        for i, rq in enumerate(return_queue):
+            if rq["prov_id"] == pid:
+                return_queue.pop(i)
+                self.map_screen.show_feedback("Return cancelled. Territory retained.")
+                self.refresh_ui()
+                return
+                
+        return_queue.append({"prov_id": pid, "recipient": recipient, "turns_left": 1})
+        self.map_screen.show_feedback(f"Returning territory to {recipient} (1 turn).")
+        self.refresh_ui()
+
     def update(self):
         super().update()
         self.map_screen.camera.update(self.map_screen, c.SCREEN_HEIGHT)
@@ -326,8 +374,10 @@ class Claims_Screen(GameState):
         claims = data.get("claims", [])
         queue = data.get("claim_queue", [])
         revoke_queue = data.get("revoke_queue", [])
+        return_queue = data.get("return_queue", [])
         
         revoke_ids = [rq["prov_id"] for rq in revoke_queue]
+        return_ids = [rq["prov_id"] for rq in return_queue]
         
         # Identify foreign cores for the distinct pink rendering
         core_ids = [prov["id"] for prov in self.map_screen.map_data.values() 
@@ -384,6 +434,10 @@ class Claims_Screen(GameState):
                 for i, claim_info in enumerate(claims_on_tile):
                     color = self.map_screen.nation_colors.get(claim_info["nation"], (255, 255, 255))
                     is_just = (claim_info["type"] == "QUEUE")
+                    
+                    if pid in return_ids:
+                        color = (100, 255, 100) # Green highlight for returning tiles
+                        
                     self.draw_highlight(surface, pid, color, inset=i, is_justifying=is_just)
         
         # Draw Information Panel
@@ -480,6 +534,10 @@ class Claims_Screen(GameState):
                         txt_str = f"- Prov {item['prov_id']} ({nation_name}): Auto-Claimed Core"
                     else:
                         txt_str = f"- Prov {item['prov_id']} ({nation_name}): Active Claim"
+                        
+                    if item["prov_id"] in return_ids:
+                        txt_str += f" (Returning in 1 turn)"
+                        color = (100, 255, 100)
                         
                     txt = tiny_font.render(txt_str, True, color)
                     surface.blit(txt, (self.panel_rect.x + 30, y_off))
@@ -907,10 +965,6 @@ class View_Peace_Treaty_Screen(GameState):
 # TRADE SCREEN
 # ==========================================
 
-# ==========================================
-# TRADE SCREEN
-# ==========================================
-
 class Trade_Screen(GameState):
     def __init__(self, map_screen, target_nation):
         super().__init__()
@@ -942,42 +996,42 @@ class Trade_Screen(GameState):
 
         # Give Materials
         try:
-            val = int(self.give_mats_str)
-            if val < 0: val = 0
+            val_mats = int(self.give_mats_str)
+            if val_mats < 0: val_mats = 0
         except ValueError:
-            val = 0
+            val_mats = 0
 
         p_data["materials"] = p_data.get("materials", 0) + self.escrow_mats
-        taken = min(val, p_data["materials"])
-        p_data["materials"] -= taken
-        self.escrow_mats = taken
-        self.give_mats_str = str(taken)
+        taken_mats = min(val_mats, p_data["materials"])
+        p_data["materials"] -= taken_mats
+        self.escrow_mats = taken_mats
+        self.give_mats_str = str(taken_mats)
 
         # Give Fuel
         try:
-            val = int(self.give_fuel_str)
-            if val < 0: val = 0
+            val_fuel = int(self.give_fuel_str)
+            if val_fuel < 0: val_fuel = 0
         except ValueError:
-            val = 0
+            val_fuel = 0
 
         p_data["fuel"] = p_data.get("fuel", 0) + self.escrow_fuel
-        taken = min(val, p_data["fuel"])
-        p_data["fuel"] -= taken
-        self.escrow_fuel = taken
-        self.give_fuel_str = str(taken)
+        taken_fuel = min(val_fuel, p_data["fuel"])
+        p_data["fuel"] -= taken_fuel
+        self.escrow_fuel = taken_fuel
+        self.give_fuel_str = str(taken_fuel)
 
         # Take Inputs (No limits, they can ask for a billion if they want)
         try:
-            val = int(self.take_mats_str)
-            if val < 0: val = 0
-            self.take_mats_str = str(val)
+            val_take_mats = int(self.take_mats_str)
+            if val_take_mats < 0: val_take_mats = 0
+            self.take_mats_str = str(val_take_mats)
         except ValueError:
             self.take_mats_str = "0"
 
         try:
-            val = int(self.take_fuel_str)
-            if val < 0: val = 0
-            self.take_fuel_str = str(val)
+            val_take_fuel = int(self.take_fuel_str)
+            if val_take_fuel < 0: val_take_fuel = 0
+            self.take_fuel_str = str(val_take_fuel)
         except ValueError:
             self.take_fuel_str = "0"
 

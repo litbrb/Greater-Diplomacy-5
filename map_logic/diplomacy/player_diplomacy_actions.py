@@ -8,6 +8,11 @@ def handle_declare_war(map_screen):
         return
 
     target = map_screen.selected_province.get("owner")
+    
+    if target in map_screen.nation_data.get(map_screen.player_country, {}).get("puppets", []):
+        map_screen.show_feedback("Cannot declare war on your own puppet!")
+        return
+        
     at_war = queries.are_at_war(map_screen.player_country, target, map_screen.nation_data)
     
     if at_war:

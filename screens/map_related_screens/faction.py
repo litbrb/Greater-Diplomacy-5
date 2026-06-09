@@ -41,7 +41,17 @@ class Faction_Screen(GameState):
         leave_text = "Undo Leave" if pending_action == "LEAVE_FACTION" else "Leave Faction"
         leave_color = "red" if pending_action == "LEAVE_FACTION" else "orange"
         btn_leave = Button(c.SCREEN_WIDTH // 2 - 250, c.SCREEN_HEIGHT - 100, "medium", leave_color, leave_text, self.leave_faction)
-        btn_leave.disabled = is_leader  # Leaders cannot 'leave', they must disband or transfer
+        
+        is_puppet = bool(nation_data.get(player_country, {}).get("master", ""))
+        
+        if is_leader:
+            btn_leave.disabled = True
+            btn_leave.text = "Leaders Cannot Leave"
+        elif is_puppet:
+            btn_leave.disabled = True
+            btn_leave.text = "Puppets Cannot Leave"
+            btn_leave.color, btn_leave.hover_color = c.UI_COLORS["grey"]
+            
         self.elements.append(btn_leave)
 
         # 2. Disband Faction Button

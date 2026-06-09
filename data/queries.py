@@ -978,6 +978,14 @@ def get_relation_score(nation_a, nation_b, nation_data, id_to_province=None):
     if enemies_a & enemies_b:
         score += c.REL_MOD_COMMON_ENEMY
         
+    # master and puppet mechanics
+    master_a = nation_data.get(nation_a, {}).get("master", "")
+    master_b = nation_data.get(nation_b, {}).get("master", "")
+    if master_b == nation_a:
+        score += 50
+    elif master_a == nation_b:
+        score += 20
+                
     # Apply all decaying temporary modifiers
     temp_mods = nation_data.get(nation_a, {}).get("temp_modifiers", {}).get(nation_b, {})
     for mod_val in temp_mods.values():

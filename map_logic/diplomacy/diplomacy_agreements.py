@@ -4,6 +4,33 @@ from data import queries
 import data.constants as c
 
 # --- RECURSIVE PUPPET HELPERS ---
+def assign_puppet(map_data, nation_data, master, puppet, puppet_type=c.PUPPET_TYPE_AUTONOMOUS):
+    p_data = nation_data.get(puppet, {})
+    m_data = nation_data.get(master, {})
+
+    p_data["master"] = master
+    p_data["puppet_type"] = puppet_type
+    
+    if puppet not in m_data.get("puppets", []):
+        m_data.setdefault("puppets", []).append(puppet)
+
+    # Transfer leadership if puppet was a leader
+    if p_data.get("is_faction_leader", False):
+        fac = p_data.get("faction", "")
+        p_data["is_faction_leader"] = False
+        if fac:
+            m_data["faction"] = fac
+            m_data["is_faction_leader"] = True
+    
+    # Auto-pull puppet into master's faction
+    master_fac = m_data.get("faction", "")
+    if master_fac:
+        pull_puppets_into_faction(master, master_fac, map_data, nation_data)
+        
+    # Force peace between them if they were at war
+    if puppet in m_data.get("at_war_with", []):
+        finalize_neutral(nation_data, master, puppet)
+
 def pull_puppets_into_war(master, target, map_data, nation_data):
     for puppet in nation_data.get(master, {}).get("puppets", []):
         if target not in nation_data.get(puppet, {}).get("at_war_with", []):
@@ -240,6 +267,8 @@ def finalize_faction_kick(nation_data, leader, member):
         
     nation_data[member]["faction"] = ""
     nation_data[member]["is_faction_leader"] = False
+    
+    pull_puppets_out_of_faction(member, nation_data)
     
     # Temporary Faction Desertion Modifier
     queries.add_temporary_modifier(leader, member, "recent_faction", c.REL_MOD_RECENT_FACTION, nation_data)

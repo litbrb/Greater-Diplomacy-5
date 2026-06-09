@@ -971,13 +971,15 @@ class Trade_Screen(GameState):
         self.map_screen = map_screen
         self.target_nation = target_nation
         
-        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 300, c.SCREEN_HEIGHT//2 - 200, 600, 320)
+        self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 300, c.SCREEN_HEIGHT//2 - 220, 600, 420)
         
         # State tracking for inputs
         self.give_mats_str = "0"
         self.give_fuel_str = "0"
         self.take_mats_str = "0"
         self.take_fuel_str = "0"
+        
+        self.puppet_state = "NONE" # "SENDER", "NONE", "RECEIVER"
         
         # Escrow trackers (resources removed from the player while the offer is pending)
         self.escrow_mats = 0
@@ -986,9 +988,27 @@ class Trade_Screen(GameState):
         self.active_input = None
         self.refresh_ui()
 
+    def set_puppet_state(self, state):
+        self.puppet_state = state
+        self.refresh_ui()
+
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Cancel", self.cancel_trade)]
         self.elements.append(Button(self.panel_rect.centerx - 100, self.panel_rect.bottom - 60, "medium", "green", "Confirm Trade", self.confirm_trade))
+        
+        # Puppet Options
+        y_pos = self.panel_rect.y + 220
+        
+        btn_sender = Button(self.panel_rect.x + 30, y_pos, "medium", "blue" if self.puppet_state != "SENDER" else "green", "Become Puppet", lambda: self.set_puppet_state("SENDER"))
+        if self.puppet_state == "SENDER": btn_sender.is_selected = True
+        
+        btn_none = Button(self.panel_rect.centerx - 100, y_pos, "medium", "blue" if self.puppet_state != "NONE" else "green", "No Puppeting", lambda: self.set_puppet_state("NONE"))
+        if self.puppet_state == "NONE": btn_none.is_selected = True
+        
+        btn_recv = Button(self.panel_rect.right - 230, y_pos, "medium", "blue" if self.puppet_state != "RECEIVER" else "green", "Make Them Puppet", lambda: self.set_puppet_state("RECEIVER"))
+        if self.puppet_state == "RECEIVER": btn_recv.is_selected = True
+        
+        self.elements.extend([btn_sender, btn_none, btn_recv])
 
     def evaluate_input(self):
         """Processes typed text, applies clamps, and secures/refunds the escrow safely."""
@@ -1058,9 +1078,10 @@ class Trade_Screen(GameState):
                 "give_materials": self.escrow_mats,
                 "give_fuel": self.escrow_fuel,
                 "take_materials": int(self.take_mats_str),
-                "take_fuel": int(self.take_fuel_str)
+                "take_fuel": int(self.take_fuel_str),
+                "puppet_state": self.puppet_state
             },
-            "message": f"TRADE PROPOSAL:\nGive: {self.escrow_mats} Mat, {self.escrow_fuel} Fuel\nTake: {self.take_mats_str} Mat, {self.take_fuel_str} Fuel"
+            "message": f"TRADE PROPOSAL:\nGive: {self.escrow_mats} Mat, {self.escrow_fuel} Fuel\nTake: {self.take_mats_str} Mat, {self.take_fuel_str} Fuel\nPuppet Terms: {self.puppet_state}"
         }
         
         self.map_screen.show_feedback("Trade Offer Sent!")
@@ -1163,6 +1184,9 @@ class Trade_Screen(GameState):
         surface.blit(font_small.render("Materials:", True, (200, 200, 200)), (self.panel_rect.centerx + 30, self.panel_rect.y + 105))
         surface.blit(font_small.render("Fuel:", True, (200, 200, 200)), (self.panel_rect.centerx + 30, self.panel_rect.y + 155))
 
+        # Puppet Header
+        surface.blit(font_med.render("Puppeting Terms:", True, (255, 215, 0)), (self.panel_rect.centerx - 80, self.panel_rect.y + 190))
+
         # Draw Input Boxes
         def draw_box(x, y, text, is_active):
             rect = pygame.Rect(x, y, 120, 30)
@@ -1213,7 +1237,7 @@ class Puppets_Screen(GameState):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
         puppets = self.map_screen.nation_data.get(self.player, {}).get("puppets", [])
         
-        y_pos = self.panel_rect.y + 70 + self.scroll_y
+        y_pos = self.panel_rect.y + 100 + self.scroll_y
         for p in puppets:
             p_data = self.map_screen.nation_data.get(p, {})
             p_type = p_data.get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
@@ -1223,9 +1247,9 @@ class Puppets_Screen(GameState):
                 btn_edit = Button(self.panel_rect.x + 600, y_pos, "small", "blue", "Edit Appearance", lambda nation=p: self.edit_puppet(nation))
                 self.elements.append(btn_edit)
                 
-                s_man = Slider(self.panel_rect.x + 200, y_pos, 100, "Siphon Man", siphon["manpower"] / c.MAX_PUPPET_SIPHON, lambda val, n=p: self.set_siphon(n, "manpower", val))
-                s_mat = Slider(self.panel_rect.x + 320, y_pos, 100, "Siphon Mat", siphon["materials"] / c.MAX_PUPPET_SIPHON, lambda val, n=p: self.set_siphon(n, "materials", val))
-                s_fuel = Slider(self.panel_rect.x + 440, y_pos, 100, "Siphon Fuel", siphon["fuel"] / c.MAX_PUPPET_SIPHON, lambda val, n=p: self.set_siphon(n, "fuel", val))
+                s_man = Slider(self.panel_rect.x + 200, y_pos, 100, "Siphon Man", min(siphon["manpower"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "manpower", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
+                s_mat = Slider(self.panel_rect.x + 320, y_pos, 100, "Siphon Mat", min(siphon["materials"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "materials", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
+                s_fuel = Slider(self.panel_rect.x + 440, y_pos, 100, "Siphon Fuel", min(siphon["fuel"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "fuel", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
                 self.elements.extend([s_man, s_mat, s_fuel])
                 
             y_pos += 80
@@ -1233,12 +1257,12 @@ class Puppets_Screen(GameState):
         self.max_scroll = min(0, self.panel_rect.height - (y_pos - self.scroll_y - self.panel_rect.y) - 20)
 
     def set_siphon(self, puppet, res, slider_val):
-        actual_val = slider_val * c.MAX_PUPPET_SIPHON
-        self.map_screen.nation_data[puppet]["siphon_rates"][res] = actual_val
+        self.map_screen.nation_data[puppet]["siphon_rates"][res] = slider_val
 
     def edit_puppet(self, puppet):
         self.map_screen.editing_country = puppet
-        self.next_state, self.done = "EDIT_COUNTRY", True
+        self.map_screen.change_state("EDIT_COUNTRY")
+        self.done = True
 
     def exit_screen(self):
         self.next_state, self.done = "MAP", True
@@ -1281,16 +1305,22 @@ class Puppets_Screen(GameState):
         title = font_title.render("Your Subjects", True, (255, 255, 255))
         surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
 
-        clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 60, self.panel_rect.width - 10, self.panel_rect.height - 70)
+        master = self.map_screen.nation_data.get(self.player, {}).get("master", "")
+        if master:
+            master_name = self.map_screen.nation_data.get(master, {}).get("name", master)
+            master_txt = fonts.get("normal").render(f"You are a puppet of: {master_name}", True, (255, 150, 150))
+            surface.blit(master_txt, (self.panel_rect.centerx - master_txt.get_width()//2, self.panel_rect.y + 60))
+
+        clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 90, self.panel_rect.width - 10, self.panel_rect.height - 100)
         old_clip = surface.get_clip()
         surface.set_clip(clip_rect)
         
         puppets = self.map_screen.nation_data.get(self.player, {}).get("puppets", [])
         if not puppets:
             txt = font_body.render("You currently control no subjects.", True, (150, 150, 150))
-            surface.blit(txt, (self.panel_rect.centerx - txt.get_width()//2, self.panel_rect.y + 100))
+            surface.blit(txt, (self.panel_rect.centerx - txt.get_width()//2, self.panel_rect.y + 130))
         else:
-            y_pos = self.panel_rect.y + 70 + self.scroll_y
+            y_pos = self.panel_rect.y + 100 + self.scroll_y
             for p in puppets:
                 p_data = self.map_screen.nation_data.get(p, {})
                 p_name = p_data.get("name", p)

@@ -598,6 +598,14 @@ def process_diplomacy_turn(self):
                             t_data["materials"] = t_data.get("materials", 0) + actual_t_mats
                             t_data["fuel"] = t_data.get("fuel", 0) + actual_t_fuel
 
+                            puppet_state = params.get("puppet_state", "NONE")
+                            if puppet_state == "SENDER":
+                                from map_logic.diplomacy.diplomacy_agreements import assign_puppet
+                                assign_puppet(self.map_data, self.nation_data, target, country_name)
+                            elif puppet_state == "RECEIVER":
+                                from map_logic.diplomacy.diplomacy_agreements import assign_puppet
+                                assign_puppet(self.map_data, self.nation_data, country_name, target)
+
                             msg_text = custom_msg if custom_msg else "We accepted your trade."
                         elif orig_action == "CALL_TO_ARMS":
                             join_faction_wars(self.map_data, self.nation_data, country_name, target)

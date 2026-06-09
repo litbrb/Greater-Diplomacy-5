@@ -7,6 +7,7 @@ import unicodedata #
 import data.constants as c
 from data.map import load_map
 from data import queries
+from map_logic.diplomacy.diplomacy_agreements import assign_puppet
 
 # ==========================================
 # TKINTER WINDOW HELPERS
@@ -937,16 +938,7 @@ def open_diplomacy_editor(self):
         
         new_master = master_var.get()
         if new_master and new_master != "None" and new_master != target:
-            data["master"] = new_master
-            data["puppet_type"] = ptype_var.get()
-            self.nation_data[new_master].setdefault("puppets", []).append(target)
-            self.nation_data[new_master]["puppets"] = list(set(self.nation_data[new_master]["puppets"]))
-            
-            # Auto-pull puppet into master's faction
-            master_fac = self.nation_data[new_master].get("faction", "")
-            if master_fac:
-                data["faction"] = master_fac
-                data["is_faction_leader"] = False
+            assign_puppet(self.map_data, self.nation_data, new_master, target, ptype_var.get())
         else:
             data["master"] = ""
             data["puppet_type"] = ""

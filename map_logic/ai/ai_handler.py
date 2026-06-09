@@ -87,10 +87,14 @@ def get_world_context(nation_data, active_nations, ai_nation, target_nation=None
         n_data = nation_data.get(nation, {})
         wars = [w for w in n_data.get("at_war_with", []) if w in active_nations]
         fac = n_data.get("faction", "")
+        master = n_data.get("master", "")
+        puppets = [p for p in n_data.get("puppets", []) if p in active_nations]
         
         rels = []
         if wars: rels.append(f"at war with {', '.join(wars)}")
         if fac: rels.append(f"in the faction '{fac}'")
+        if master: rels.append(f"a puppet state of {master}")
+        if puppets: rels.append(f"puppetmaster of {', '.join(puppets)}")
         
         # --- Inject Relation Score ---
         if nation != ai_nation:
@@ -277,13 +281,17 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         pending = nation_data.get(sender_nation, {}).get("pending_diplomacy", {}).get(ai_nation, {})
         params = pending.get("parameters", {})
         
+        puppet_state = params.get("puppet_state", "NONE")
+        
         # We are the AI (Receiving). Therefore we "Take" what they "Give", and we "Give" what they "Take".
         ai_takes_mats = params.get("give_materials", 0)
         ai_takes_fuel = params.get("give_fuel", 0)
         ai_gives_mats = params.get("take_materials", 0)
         ai_gives_fuel = params.get("take_fuel", 0)
         
-        if ai_gives_mats == 0 and ai_gives_fuel == 0 and (ai_takes_mats > 0 or ai_takes_fuel > 0):
+        if puppet_state != "NONE":
+            accepted = False
+        elif ai_gives_mats == 0 and ai_gives_fuel == 0 and (ai_takes_mats > 0 or ai_takes_fuel > 0):
             accepted = True
         else:
             accepted = False

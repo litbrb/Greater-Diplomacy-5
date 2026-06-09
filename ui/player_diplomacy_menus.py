@@ -1036,9 +1036,10 @@ class Trade_Screen(GameState):
             self.take_fuel_str = "0"
 
     def confirm_trade(self):
-        if self.map_screen.nation_data.get(self.map_screen.player_country, {}).get("master"):
-            self.map_screen.show_feedback("Puppets cannot initiate trades!")
-            return
+        # this prevents puppets from initiating trades
+        # if self.map_screen.nation_data.get(self.map_screen.player_country, {}).get("master"):
+        #     self.map_screen.show_feedback("Puppets cannot initiate trades!")
+        #     return
             
         self.evaluate_input()
         

@@ -20313,16 +20313,7 @@
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
             "pending_diplomacy": {},
-            "relations": {},
-            "faction": "",
-            "is_faction_leader": false,
-            "master": "Afrika Korps",
-            "puppet_type": "Integrated",
-            "siphon_rates": {
-                "manpower": 0.0,
-                "materials": 0.0,
-                "fuel": 0.0
-            }
+            "relations": {}
         },
         "San Francisco": {
             "name": "San Francisco",
@@ -20745,10 +20736,7 @@
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
             "pending_diplomacy": {},
-            "relations": {},
-            "puppets": [
-                "49ers"
-            ]
+            "relations": {}
         },
         "Alberta": {
             "name": "Alberta",
@@ -21361,13 +21349,6 @@
             "pending_diplomacy": {},
             "relations": {}
         },
-        "FACTION_WAR_MAPS": {
-            "at_war_with": [],
-            "allied_with": [],
-            "pending_diplomacy": {},
-            "flag_data": "DEFAULT",
-            "portrait_data": "DEFAULT"
-        },
         "Confederate States of America": {
             "name": "Confederate States of America",
             "color": [
@@ -21383,24 +21364,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21412,8 +21393,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Democratic Republic of the Congo": {
             "name": "Democratic Republic of the Congo",
@@ -21430,24 +21411,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21459,8 +21440,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Republic of the Congo": {
             "name": "Republic of the Congo",
@@ -21477,24 +21458,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21506,8 +21487,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Ayumu Kasuga": {
             "name": "Ayumu Kasuga",
@@ -21524,24 +21505,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21553,8 +21534,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "British America": {
             "name": "British America",
@@ -21571,24 +21552,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21600,8 +21581,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Free France": {
             "name": "Free France",
@@ -21618,24 +21599,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21647,8 +21628,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Croissant Republic": {
             "name": "Croissant Republic",
@@ -21665,24 +21646,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21694,8 +21675,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Mongol Empire": {
             "name": "Mongol Empire",
@@ -21712,24 +21693,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21741,8 +21722,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Republic of South Africa": {
             "name": "Republic of South Africa",
@@ -21759,24 +21740,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21788,8 +21769,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Bosnia and Herzegovina": {
             "name": "Bosnia and Herzegovina",
@@ -21806,24 +21787,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21835,8 +21816,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Amur": {
             "name": "Amur",
@@ -21853,24 +21834,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21882,8 +21863,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Andalusia": {
             "name": "Andalusia",
@@ -21900,24 +21881,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21929,8 +21910,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "United Colonies": {
             "name": "United Colonies",
@@ -21947,24 +21928,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -21976,8 +21957,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Thirteen Colonies": {
             "name": "Thirteen Colonies",
@@ -21994,24 +21975,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22023,8 +22004,15 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "relations": {},
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
+        },
+        "FACTION_WAR_MAPS": {
+            "at_war_with": [],
+            "allied_with": [],
+            "pending_diplomacy": {},
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT"
         },
         "Chad": {
             "name": "Chad",
@@ -22041,24 +22029,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22088,24 +22076,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22135,24 +22123,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22182,24 +22170,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22229,24 +22217,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22276,24 +22264,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22323,24 +22311,24 @@
                 "mechanized_infantry": 0,
                 "civilian_car": 0,
                 "ww1_armored_car": 0,
-                "ww1_tank": 0,
                 "armored_car": 0,
+                "ww1_tank": 0,
                 "light_tank": 0,
                 "medium_tank": 0,
                 "heavy_tank": 0,
                 "main_battle_tank": 0,
-                "destroyer": 0,
                 "dreadnought": 0,
                 "battleship": 0,
+                "destroyer": 0,
                 "aircraft_carrier": 0,
                 "submarine": 0,
                 "basic_factory": 0,
                 "factory": 0,
                 "bergius_process": 0,
                 "fuel_refining": 0,
-                "general_recruitment": 0,
+                "basic_recruitment": 0,
                 "recruitment_buildings": 0,
-                "basic_recruitment": 0
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,
@@ -22925,6 +22913,53 @@
                 255,
                 0,
                 128
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "ww1_tank": 0,
+                "armored_car": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "destroyer": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "general_recruitment": 0,
+                "recruitment_buildings": 0,
+                "basic_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {},
+            "relations": {}
+        },
+        "Bengal": {
+            "name": "Bengal",
+            "color": [
+                0,
+                128,
+                64
             ],
             "research": {
                 "infantry_type": 1,
@@ -24063,16 +24098,18 @@
             "buildings": []
         },
         "(7, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Finland",
             "cores": [
-                "49ers"
+                "Finland"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(8, 0, 0)": {
             "owner": "Ocean",
@@ -24085,19 +24122,23 @@
             "buildings": []
         },
         "(9, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
+            "owner": "Karelia",
+            "cores": [
+                "Karelia"
+            ],
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(10, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Arkhangelsk",
             "cores": [
-                "49ers"
+                "Arkhangelsk"
             ],
             "is_coastal": true,
             "units": [],
@@ -24109,6 +24150,20 @@
             ]
         },
         "(11, 0, 0)": {
+            "owner": "Alaska",
+            "cores": [
+                "Alaska"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(12, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -24118,36 +24173,24 @@
             "resources": {},
             "buildings": []
         },
-        "(12, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
         "(13, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Sweden",
             "cores": [
-                "49ers"
+                "Sweden"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(14, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24155,35 +24198,37 @@
             "buildings": []
         },
         "(15, 0, 0)": {
-            "owner": "49ers",
+            "owner": "British Columbia",
             "cores": [
-                "49ers"
+                "British Columbia"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(16, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Quebec",
             "cores": [
-                "49ers"
+                "Quebec"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(17, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24191,11 +24236,9 @@
             "buildings": []
         },
         "(18, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24203,11 +24246,9 @@
             "buildings": []
         },
         "(19, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24225,35 +24266,37 @@
             "buildings": []
         },
         "(21, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Alberta",
             "cores": [
-                "49ers"
+                "Alberta"
             ],
-            "is_coastal": true,
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(22, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Manitoba",
             "cores": [
-                "49ers"
+                "Manitoba"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(23, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24271,10 +24314,8 @@
             "buildings": []
         },
         "(25, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24283,207 +24324,9 @@
             "buildings": []
         },
         "(26, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Moscow",
             "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(27, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(28, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(29, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(30, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(31, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(32, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(33, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(34, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(35, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(36, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(37, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(38, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(39, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(40, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(41, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(42, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(43, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
+                "Moscow"
             ],
             "is_coastal": false,
             "units": [],
@@ -24494,11 +24337,93 @@
                 "Basic Factory"
             ]
         },
-        "(44, 0, 0)": {
-            "owner": "49ers",
+        "(27, 0, 0)": {
+            "owner": "Zabaykalsky",
             "cores": [
-                "49ers"
+                "Zabaykalsky"
             ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(28, 0, 0)": {
+            "owner": "Tatarstan",
+            "cores": [
+                "Tatarstan"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(29, 0, 0)": {
+            "owner": "United Baltic Dutchy",
+            "cores": [
+                "United Baltic Dutchy"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(30, 0, 0)": {
+            "owner": "Novosibirsk",
+            "cores": [
+                "Novosibirsk"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(31, 0, 0)": {
+            "owner": "Irkutsk",
+            "cores": [
+                "Irkutsk"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(32, 0, 0)": {
+            "owner": "Zakytaishchyna",
+            "cores": [
+                "Zakytaishchyna"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(33, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24506,36 +24431,180 @@
             "resources": {},
             "buildings": []
         },
-        "(45, 0, 0)": {
-            "owner": "49ers",
+        "(34, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(35, 0, 0)": {
+            "owner": "Ontario",
             "cores": [
-                "49ers"
+                "Ontario"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(36, 0, 0)": {
+            "owner": "United Kingdom",
+            "cores": [
+                "United Kingdom"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(37, 0, 0)": {
+            "owner": "Belarus",
+            "cores": [
+                "Belarus"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(38, 0, 0)": {
+            "owner": "Manchukuo",
+            "cores": [
+                "Manchukuo"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(39, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
             "buildings": []
+        },
+        "(40, 0, 0)": {
+            "owner": "German Reich",
+            "cores": [
+                "German Reich"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(41, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(42, 0, 0)": {
+            "owner": "Kazakhstan",
+            "cores": [
+                "Kazakhstan"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(43, 0, 0)": {
+            "owner": "Washington",
+            "cores": [
+                "Washington"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(44, 0, 0)": {
+            "owner": "Volgograd",
+            "cores": [
+                "Volgograd"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(45, 0, 0)": {
+            "owner": "Montana",
+            "cores": [
+                "Montana"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(46, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Poland",
             "cores": [
-                "49ers"
+                "Poland"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(47, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Lakes",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24543,22 +24612,22 @@
             "buildings": []
         },
         "(48, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Ohio",
             "cores": [
-                "49ers"
+                "Ohio"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(49, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24567,16 +24636,18 @@
             "buildings": []
         },
         "(50, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Orkhon",
             "cores": [
-                "49ers"
+                "Orkhon"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(51, 0, 0)": {
             "owner": "Ocean",
@@ -24589,22 +24660,22 @@
             "buildings": []
         },
         "(52, 0, 0)": {
-            "owner": "49ers",
+            "owner": "New England",
             "cores": [
-                "49ers"
+                "New England"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(53, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24613,52 +24684,60 @@
             "buildings": []
         },
         "(54, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Mongolia",
             "cores": [
-                "49ers"
+                "Mongolia"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(55, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Almaty",
             "cores": [
-                "49ers"
+                "Almaty"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(56, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Ukraine",
             "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(57, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
+                "Ukraine"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(57, 0, 0)": {
+            "owner": "Aktobe",
+            "cores": [
+                "Aktobe"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(58, 0, 0)": {
             "owner": "Ocean",
@@ -24681,47 +24760,51 @@
             "buildings": []
         },
         "(60, 0, 0)": {
-            "owner": "49ers",
+            "owner": "California",
             "cores": [
-                "49ers"
+                "California"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(61, 0, 0)": {
-            "owner": "49ers",
+            "owner": "France",
             "cores": [
-                "49ers"
+                "France"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(62, 0, 0)": {
+            "owner": "Xinjiang",
+            "cores": [
+                "Xinjiang"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
-        },
-        "(62, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(63, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24729,10 +24812,8 @@
             "buildings": []
         },
         "(64, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Lakes",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24741,36 +24822,46 @@
             "buildings": []
         },
         "(65, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(66, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(67, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Japanese Empire",
             "cores": [
-                "49ers"
+                "Japanese Empire"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(66, 0, 0)": {
+            "owner": "Deseret",
+            "cores": [
+                "Deseret"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(67, 0, 0)": {
+            "owner": "Caucasus",
+            "cores": [
+                "Caucasus"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(68, 0, 0)": {
             "owner": "Ocean",
@@ -24783,43 +24874,9 @@
             "buildings": []
         },
         "(69, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(70, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Korea",
             "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(71, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(72, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
+                "Korea"
             ],
             "is_coastal": true,
             "units": [],
@@ -24830,35 +24887,75 @@
                 "Basic Factory"
             ]
         },
-        "(73, 0, 0)": {
-            "owner": "49ers",
+        "(70, 0, 0)": {
+            "owner": "Romania",
             "cores": [
-                "49ers"
+                "Romania"
             ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(71, 0, 0)": {
+            "owner": "Beijing",
+            "cores": [
+                "Beijing"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(72, 0, 0)": {
+            "owner": "Lakes",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
             "buildings": []
+        },
+        "(73, 0, 0)": {
+            "owner": "Louisiana",
+            "cores": [
+                "Louisiana"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(74, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Yugoslavia",
             "cores": [
-                "49ers"
+                "Yugoslavia"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(75, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24867,33 +24964,37 @@
             "buildings": []
         },
         "(76, 0, 0)": {
+            "owner": "Italy",
+            "cores": [
+                "Italy"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(77, 0, 0)": {
+            "owner": "Uzbekistan",
+            "cores": [
+                "Uzbekistan"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(78, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(77, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(78, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -24901,42 +25002,20 @@
             "buildings": []
         },
         "(79, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Florida",
             "cores": [
-                "49ers"
+                "Florida"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(80, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(81, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(82, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -24946,11 +25025,37 @@
             "resources": {},
             "buildings": []
         },
-        "(83, 0, 0)": {
-            "owner": "49ers",
+        "(81, 0, 0)": {
+            "owner": "Xibei San Ma",
             "cores": [
-                "49ers"
+                "Xibei San Ma"
             ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(82, 0, 0)": {
+            "owner": "Texas",
+            "cores": [
+                "Texas"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(83, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -24969,9 +25074,19 @@
             "buildings": []
         },
         "(85, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(86, 0, 0)": {
+            "owner": "Spain",
             "cores": [
-                "49ers"
+                "Spain"
             ],
             "is_coastal": true,
             "units": [],
@@ -24982,23 +25097,9 @@
                 "Basic Factory"
             ]
         },
-        "(86, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
         "(87, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25007,10 +25108,8 @@
             "buildings": []
         },
         "(88, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25019,10 +25118,8 @@
             "buildings": []
         },
         "(89, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25031,34 +25128,36 @@
             "buildings": []
         },
         "(90, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Greece",
             "cores": [
-                "49ers"
+                "Greece"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(91, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Turkey",
             "cores": [
-                "49ers"
+                "Turkey"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(92, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25067,34 +25166,36 @@
             "buildings": []
         },
         "(93, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Midway",
             "cores": [
-                "49ers"
+                "Midway"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(94, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Shangdong Clique",
             "cores": [
-                "49ers"
+                "Shangdong Clique"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(95, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25103,16 +25204,18 @@
             "buildings": []
         },
         "(96, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Baja California",
             "cores": [
-                "49ers"
+                "Baja California"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(97, 0, 0)": {
             "owner": "Ocean",
@@ -25125,10 +25228,8 @@
             "buildings": []
         },
         "(98, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25137,34 +25238,36 @@
             "buildings": []
         },
         "(99, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Iran",
             "cores": [
-                "49ers"
+                "Iran"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(100, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Afghanistan",
             "cores": [
-                "49ers"
+                "Afghanistan"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(101, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25173,11 +25276,9 @@
             "buildings": []
         },
         "(102, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -25185,11 +25286,9 @@
             "buildings": []
         },
         "(103, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -25197,71 +25296,79 @@
             "buildings": []
         },
         "(104, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Chihuahua",
             "cores": [
-                "49ers"
+                "Chihuahua"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(105, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Pakistan",
             "cores": [
-                "49ers"
+                "Pakistan"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(106, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Iraq",
             "cores": [
-                "49ers"
+                "Iraq"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(107, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Tibet",
             "cores": [
-                "49ers"
+                "Tibet"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(108, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Algeria",
             "cores": [
-                "49ers"
+                "Algeria"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(109, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -25269,9 +25376,9 @@
             "buildings": []
         },
         "(110, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Delhi",
             "cores": [
-                "49ers"
+                "Delhi"
             ],
             "is_coastal": true,
             "units": [],
@@ -25283,18 +25390,76 @@
             ]
         },
         "(111, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Shanghai",
             "cores": [
-                "49ers"
+                "Shanghai"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(112, 0, 0)": {
+            "owner": "Sichuan Clique",
+            "cores": [
+                "Sichuan Clique"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
-        "(112, 0, 0)": {
+        "(113, 0, 0)": {
+            "owner": "Morocco",
+            "cores": [
+                "Morocco"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(114, 0, 0)": {
+            "owner": "Mexico",
+            "cores": [
+                "Mexico"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(115, 0, 0)": {
+            "owner": "Libya",
+            "cores": [
+                "Libya"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(116, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -25304,60 +25469,10 @@
             "resources": {},
             "buildings": []
         },
-        "(113, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(114, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(115, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(116, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
         "(117, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -25365,23 +25480,23 @@
             "buildings": []
         },
         "(118, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Cuba",
             "cores": [
-                "49ers"
+                "Cuba"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(119, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -25389,58 +25504,64 @@
             "buildings": []
         },
         "(120, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Saudi Arabia",
             "cores": [
-                "49ers"
+                "Saudi Arabia"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(121, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Egypt",
             "cores": [
-                "49ers"
+                "Egypt"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(122, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Yucatan",
             "cores": [
-                "49ers"
+                "Yucatan"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(123, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Yunnan Clique",
             "cores": [
-                "49ers"
+                "Yunnan Clique"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(124, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25449,10 +25570,8 @@
             "buildings": []
         },
         "(125, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25461,10 +25580,8 @@
             "buildings": []
         },
         "(126, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25473,10 +25590,8 @@
             "buildings": []
         },
         "(127, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25485,6 +25600,20 @@
             "buildings": []
         },
         "(128, 0, 0)": {
+            "owner": "West Bengal",
+            "cores": [
+                "West Bengal"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(129, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -25494,23 +25623,9 @@
             "resources": {},
             "buildings": []
         },
-        "(129, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
         "(130, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25519,126 +25634,20 @@
             "buildings": []
         },
         "(131, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Myanmar",
             "cores": [
-                "49ers"
+                "Myanmar"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(132, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(133, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(134, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(135, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(136, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(137, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(138, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(139, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(140, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(141, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -25648,10 +25657,120 @@
             "resources": {},
             "buildings": []
         },
-        "(142, 0, 0)": {
-            "owner": "49ers",
+        "(133, 0, 0)": {
+            "owner": "Taiwan",
             "cores": [
-                "49ers"
+                "Taiwan"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(134, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(135, 0, 0)": {
+            "owner": "Guangxi Clique",
+            "cores": [
+                "Guangxi Clique"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(136, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(137, 0, 0)": {
+            "owner": "Nicaragua",
+            "cores": [
+                "Nicaragua"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(138, 0, 0)": {
+            "owner": "United Arab Emirates",
+            "cores": [
+                "United Arab Emirates"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(139, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(140, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(141, 0, 0)": {
+            "owner": "Vietnam",
+            "cores": [
+                "Vietnam"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(142, 0, 0)": {
+            "owner": "Telangana",
+            "cores": [
+                "Telangana"
             ],
             "is_coastal": true,
             "units": [],
@@ -25663,174 +25782,34 @@
             ]
         },
         "(143, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Venezuela",
             "cores": [
-                "49ers"
+                "Venezuela"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(144, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Colombia",
             "cores": [
-                "49ers"
+                "Colombia"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(145, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(146, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(147, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(148, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(149, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(150, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(151, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(152, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(153, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(154, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(155, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(156, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(157, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -25840,47 +25819,199 @@
             "resources": {},
             "buildings": []
         },
-        "(158, 0, 0)": {
-            "owner": "Afrika Korps",
+        "(146, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(147, 0, 0)": {
+            "owner": "Sudan",
             "cores": [
-                "Afrika Korps"
+                "Sudan"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(148, 0, 0)": {
+            "owner": "Thailand",
+            "cores": [
+                "Thailand"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(149, 0, 0)": {
+            "owner": "Mauritania",
+            "cores": [
+                "Mauritania"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(150, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
             "buildings": []
+        },
+        "(151, 0, 0)": {
+            "owner": "Guyana",
+            "cores": [
+                "Guyana"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(152, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(153, 0, 0)": {
+            "owner": "Philippines",
+            "cores": [
+                "Philippines"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(154, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(155, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(156, 0, 0)": {
+            "owner": "Chad",
+            "cores": [
+                "Chad"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(157, 0, 0)": {
+            "owner": "Niger",
+            "cores": [
+                "Niger"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(158, 0, 0)": {
+            "owner": "Mali",
+            "cores": [
+                "Mali"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(159, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Ethiopia",
             "cores": [
-                "49ers"
+                "Ethiopia"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(160, 0, 0)": {
-            "owner": "49ers",
+            "owner": "Maranh\u00e3o",
             "cores": [
-                "49ers"
+                "Maranh\u00e3o"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(161, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25889,10 +26020,8 @@
             "buildings": []
         },
         "(162, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25901,11 +26030,9 @@
             "buildings": []
         },
         "(163, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -25923,10 +26050,8 @@
             "buildings": []
         },
         "(165, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25935,35 +26060,36 @@
             "buildings": []
         },
         "(166, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Peru",
             "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(167, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
+                "Peru"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(167, 0, 0)": {
+            "owner": "Nigeria",
+            "cores": [
+                "Nigeria"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(168, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "Afrika Korps",
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25972,10 +26098,8 @@
             "buildings": []
         },
         "(169, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -25984,23 +26108,22 @@
             "buildings": []
         },
         "(170, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Ivory Coast",
             "cores": [
-                "Afrika Korps"
+                "Ivory Coast"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(171, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "Afrika Korps",
-                "49ers"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26009,22 +26132,22 @@
             "buildings": []
         },
         "(172, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Bahia",
             "cores": [
-                "Afrika Korps"
+                "Bahia"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(173, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26033,11 +26156,8 @@
             "buildings": []
         },
         "(174, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "49ers",
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26046,23 +26166,23 @@
             "buildings": []
         },
         "(175, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Republic of the Congo",
             "cores": [
-                "Afrika Korps"
+                "Republic of the Congo"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(176, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26080,10 +26200,8 @@
             "buildings": []
         },
         "(178, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26092,23 +26210,23 @@
             "buildings": []
         },
         "(179, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Brunei",
             "cores": [
-                "Afrika Korps"
+                "Brunei"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(180, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26116,10 +26234,8 @@
             "buildings": []
         },
         "(181, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26128,7 +26244,7 @@
             "buildings": []
         },
         "(182, 0, 0)": {
-            "owner": "Lakes",
+            "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
             "units": [],
@@ -26138,80 +26254,92 @@
             "buildings": []
         },
         "(183, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Papua New Guinea",
             "cores": [
-                "Afrika Korps"
+                "Papua New Guinea"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(184, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Bolivia",
             "cores": [
-                "Afrika Korps"
+                "Bolivia"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(185, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
+            "owner": "Rio de Janeiro",
+            "cores": [
+                "Rio de Janeiro"
+            ],
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(186, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Sumatra",
             "cores": [
-                "Afrika Korps"
+                "Sumatra"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(187, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Tanzania",
             "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(188, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
+                "Tanzania"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(188, 0, 0)": {
+            "owner": "Democratic Republic of the Congo",
+            "cores": [
+                "Democratic Republic of the Congo"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(189, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26220,66 +26348,6 @@
             "buildings": []
         },
         "(190, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(191, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(192, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(193, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(194, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(195, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -26289,11 +26357,67 @@
             "resources": {},
             "buildings": []
         },
-        "(196, 0, 0)": {
-            "owner": "Afrika Korps",
+        "(191, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(192, 0, 0)": {
+            "owner": "Sulawesi",
             "cores": [
-                "Afrika Korps"
+                "Sulawesi"
             ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(193, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(194, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(195, 0, 0)": {
+            "owner": "Rio Grande",
+            "cores": [
+                "Rio Grande"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(196, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26302,16 +26426,18 @@
             "buildings": []
         },
         "(197, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Paraguay",
             "cores": [
-                "Afrika Korps"
+                "Paraguay"
             ],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(198, 0, 0)": {
             "owner": "Ocean",
@@ -26324,100 +26450,6 @@
             "buildings": []
         },
         "(199, 0, 0)": {
-            "owner": "49ers",
-            "cores": [
-                "49ers"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(200, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(201, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(202, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(203, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(204, 0, 0)": {
-            "owner": "Lakes",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(205, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(206, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(207, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -26427,10 +26459,102 @@
             "resources": {},
             "buildings": []
         },
-        "(208, 0, 0)": {
-            "owner": "Afrika Korps",
+        "(200, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(201, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(202, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(203, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(204, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(205, 0, 0)": {
+            "owner": "Salta",
             "cores": [
-                "Afrika Korps"
+                "Salta"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(206, 0, 0)": {
+            "owner": "Zambia",
+            "cores": [
+                "Zambia"
+            ],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(207, 0, 0)": {
+            "owner": "Queensland",
+            "cores": [
+                "Queensland"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(208, 0, 0)": {
+            "owner": "Northern Territory",
+            "cores": [
+                "Northern Territory"
             ],
             "is_coastal": true,
             "units": [],
@@ -26452,36 +26576,46 @@
             "buildings": []
         },
         "(210, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
+            "owner": "Angola",
+            "cores": [
+                "Angola"
+            ],
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(211, 0, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
+            "owner": "Java",
+            "cores": [
+                "Java"
+            ],
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(212, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Uruguay",
             "cores": [
-                "Afrika Korps"
+                "Uruguay"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(213, 0, 0)": {
             "owner": "Ocean",
@@ -26494,18 +26628,6 @@
             "buildings": []
         },
         "(214, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(215, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -26515,11 +26637,23 @@
             "resources": {},
             "buildings": []
         },
-        "(216, 0, 0)": {
-            "owner": "Afrika Korps",
+        "(215, 0, 0)": {
+            "owner": "Buenos Aires",
             "cores": [
-                "Afrika Korps"
+                "Buenos Aires"
             ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(216, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26528,11 +26662,9 @@
             "buildings": []
         },
         "(217, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26540,24 +26672,18 @@
             "buildings": []
         },
         "(218, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": [
-                "Basic Factory"
-            ]
+            "buildings": []
         },
         "(219, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26566,22 +26692,50 @@
             "buildings": []
         },
         "(220, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Mozambique",
             "cores": [
-                "Afrika Korps"
+                "Mozambique"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(221, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Pilbara",
             "cores": [
-                "Afrika Korps"
+                "Pilbara"
             ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(222, 0, 0)": {
+            "owner": "Madagascar",
+            "cores": [
+                "Madagascar"
+            ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(223, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26589,48 +26743,24 @@
             "resources": {},
             "buildings": []
         },
-        "(222, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(223, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
         "(224, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Santiago",
             "cores": [
-                "Afrika Korps"
+                "Santiago"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(225, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26638,9 +26768,19 @@
             "buildings": []
         },
         "(226, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(227, 0, 0)": {
+            "owner": "Zimbabwe",
             "cores": [
-                "Afrika Korps"
+                "Zimbabwe"
             ],
             "is_coastal": false,
             "units": [],
@@ -26651,35 +26791,23 @@
                 "Basic Factory"
             ]
         },
-        "(227, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
         "(228, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Namibia",
             "cores": [
-                "Afrika Korps"
+                "Namibia"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(229, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26688,11 +26816,9 @@
             "buildings": []
         },
         "(230, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26700,16 +26826,18 @@
             "buildings": []
         },
         "(231, 0, 0)": {
-            "owner": "49ers",
+            "owner": "New South Wales",
             "cores": [
-                "49ers"
+                "New South Wales"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(232, 0, 0)": {
             "owner": "Ocean",
@@ -26722,9 +26850,19 @@
             "buildings": []
         },
         "(233, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": []
+        },
+        "(234, 0, 0)": {
+            "owner": "Tierra del Fuego",
             "cores": [
-                "Afrika Korps"
+                "Tierra del Fuego"
             ],
             "is_coastal": true,
             "units": [],
@@ -26735,48 +26873,38 @@
                 "Basic Factory"
             ]
         },
-        "(234, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
         "(235, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Perth",
             "cores": [
-                "Afrika Korps"
+                "Perth"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(236, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "Republic of South Africa",
             "cores": [
-                "Afrika Korps"
+                "Republic of South Africa"
             ],
             "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(237, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26784,11 +26912,9 @@
             "buildings": []
         },
         "(238, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26796,16 +26922,18 @@
             "buildings": []
         },
         "(239, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "South Australia",
             "cores": [
-                "Afrika Korps"
+                "South Australia"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(240, 0, 0)": {
             "owner": "Ocean",
@@ -26818,22 +26946,22 @@
             "buildings": []
         },
         "(241, 0, 0)": {
-            "owner": "Afrika Korps",
+            "owner": "New Zealand",
             "cores": [
-                "Afrika Korps"
+                "New Zealand"
             ],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(242, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26842,11 +26970,9 @@
             "buildings": []
         },
         "(243, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26854,10 +26980,8 @@
             "buildings": []
         },
         "(244, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26876,18 +27000,6 @@
             "buildings": []
         },
         "(246, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(247, 0, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
@@ -26897,11 +27009,23 @@
             "resources": {},
             "buildings": []
         },
-        "(248, 0, 0)": {
-            "owner": "Afrika Korps",
+        "(247, 0, 0)": {
+            "owner": "Victoria",
             "cores": [
-                "Afrika Korps"
+                "Victoria"
             ],
+            "is_coastal": true,
+            "units": [],
+            "deployment_queue": [],
+            "orders": [],
+            "resources": {},
+            "buildings": [
+                "Basic Factory"
+            ]
+        },
+        "(248, 0, 0)": {
+            "owner": "Ocean",
+            "cores": [],
             "is_coastal": false,
             "units": [],
             "deployment_queue": [],
@@ -26910,11 +27034,9 @@
             "buildings": []
         },
         "(249, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
+            "owner": "Ocean",
+            "cores": [],
+            "is_coastal": false,
             "units": [],
             "deployment_queue": [],
             "orders": [],
@@ -26932,922 +27054,19 @@
             "buildings": []
         },
         "(251, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(252, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(253, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(254, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(255, 0, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(0, 1, 0)": {
             "owner": "Ocean",
             "cores": [],
             "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(1, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(2, 1, 0)": {
-            "owner": "Lakes",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(3, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(4, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(5, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(6, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(7, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(8, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(9, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(10, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(11, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(12, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(13, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(14, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(15, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(16, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(17, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(18, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(19, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(20, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(21, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(22, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(23, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(24, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(25, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(26, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(27, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(28, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(29, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(30, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(31, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(32, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(33, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(34, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(35, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(36, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(37, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(38, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(39, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(40, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(41, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(42, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(43, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(44, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(45, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(46, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(47, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(48, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(49, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(50, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(51, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(52, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(53, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(54, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(55, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(56, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(57, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(58, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(59, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": [
-                "Basic Factory"
-            ]
-        },
-        "(60, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": [
-                "Basic Factory"
-            ]
-        },
-        "(61, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(62, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(63, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(64, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(65, 1, 0)": {
-            "owner": "Ocean",
-            "cores": [],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(66, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(67, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(68, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": false,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(69, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(70, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(71, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
-            "units": [],
-            "deployment_queue": [],
-            "orders": [],
-            "resources": {},
-            "buildings": []
-        },
-        "(72, 1, 0)": {
-            "owner": "Afrika Korps",
-            "cores": [
-                "Afrika Korps"
-            ],
-            "is_coastal": true,
             "units": [],
             "deployment_queue": [],
             "orders": [],
             "resources": {},
             "buildings": []
         }
+    },
+    "scenario_settings": {
+        "fog_of_war": true,
+        "casus_belli_required": true,
+        "days_per_turn": "Default"
     }
 }

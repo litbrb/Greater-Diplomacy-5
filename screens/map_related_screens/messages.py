@@ -333,7 +333,14 @@ class Messages_Screen(GameState):
                 self.elements.append(Button(btn_x, btn_y, "small", "grey", "Diplomat Busy", lambda: None))
             else:
                 self.elements.append(Button(btn_x, btn_y, "small", "blue", "Queue", self.send_message))
-                self.elements.append(Button(btn_x - 130, btn_y, "small", "green", "Trade", self.open_trade))
+                
+                is_puppet = bool(p_data.get("master", ""))
+                if is_puppet:
+                    btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Puppets Can't Trade", lambda: None)
+                    btn_trade.disabled = True
+                    self.elements.append(btn_trade)
+                else:
+                    self.elements.append(Button(btn_x - 130, btn_y, "small", "green", "Trade", self.open_trade))
 
             # --- Bilateral Accept/Reject Buttons ---
             incoming_action, incoming_turns = queries.get_diplomatic_status(self.selected_recipient, self.map_screen.player_country, self.map_screen.nation_data)

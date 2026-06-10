@@ -4,9 +4,22 @@ from data import queries
 import data.constants as c
 
 # --- RECURSIVE PUPPET HELPERS ---
+def break_puppet_link(nation_data, master, puppet):
+    if puppet in nation_data.get(master, {}).get("puppets", []):
+        nation_data[master]["puppets"].remove(puppet)
+    if puppet in nation_data:
+        nation_data[puppet]["master"] = ""
+        nation_data[puppet]["puppet_type"] = ""
+
 def assign_puppet(map_data, nation_data, master, puppet, puppet_type=c.PUPPET_TYPE_AUTONOMOUS):
     p_data = nation_data.get(puppet, {})
     m_data = nation_data.get(master, {})
+
+    # Remove from old master if exists so they don't have dual loyalties
+    old_master = p_data.get("master", "")
+    if old_master and old_master in nation_data:
+        if puppet in nation_data[old_master].get("puppets", []):
+            nation_data[old_master]["puppets"].remove(puppet)
 
     p_data["master"] = master
     p_data["puppet_type"] = puppet_type
@@ -28,7 +41,7 @@ def assign_puppet(map_data, nation_data, master, puppet, puppet_type=c.PUPPET_TY
         pull_puppets_into_faction(master, master_fac, map_data, nation_data)
         
     # Force peace between them if they were at war
-    if puppet in m_data.get("at_war_with", []):
+    if queries.are_at_war(master, puppet, nation_data) or queries.are_at_war(puppet, master, nation_data):
         finalize_neutral(nation_data, master, puppet)
 
 def pull_puppets_into_war(master, target, map_data, nation_data):
@@ -62,10 +75,12 @@ def pull_puppets_out_of_faction(master, nation_data):
         pull_puppets_out_of_faction(puppet, nation_data)
 
 def finalize_annexation(map_data, nation_data, master, puppet, map_screen):
-    if puppet in nation_data.get(master, {}).get("puppets", []):
-        nation_data[master]["puppets"].remove(puppet)
-    nation_data.get(puppet, {})["master"] = ""
-    nation_data.get(puppet, {})["puppet_type"] = ""
+    puppets_to_transfer = nation_data.get(puppet, {}).get("puppets", []).copy()
+    for child in puppets_to_transfer:
+        p_type = nation_data.get(child, {}).get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
+        assign_puppet(map_data, nation_data, master, child, p_type)
+        
+    break_puppet_link(nation_data, master, puppet)
     
     # Transfer all territory and units
     from map_logic.system32 import edit_province_ownership
@@ -80,19 +95,35 @@ def finalize_annexation(map_data, nation_data, master, puppet, map_screen):
     log_global_event(nation_data, f"{master} has fully annexed {puppet}.")
 
 def finalize_release(map_data, nation_data, master, puppet, map_screen):
-    if puppet in nation_data.get(master, {}).get("puppets", []):
-        nation_data[master]["puppets"].remove(puppet)
-    nation_data.get(puppet, {})["master"] = ""
-    nation_data.get(puppet, {})["puppet_type"] = ""
+    break_puppet_link(nation_data, master, puppet)
     
     from map_logic.diplomacy.diplomacy_events import log_global_event
     log_global_event(nation_data, f"{master} has released {puppet} as an independent nation.")
+
+def finalize_take_puppets(map_data, nation_data, master, target_puppet):
+    puppets_to_take = nation_data.get(target_puppet, {}).get("puppets", []).copy()
+    for p in puppets_to_take:
+        p_type = nation_data.get(p, {}).get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
+        assign_puppet(map_data, nation_data, master, p, p_type)
+
 # ---------------------------------
 
 def finalize_war(map_data, nation_data, a, b):
     # GUARDRAIL: If they are in the same faction, the aggressor (a) leaves automatically
     if queries.are_in_same_faction(a, b, nation_data):
         finalize_faction_leave(nation_data, a)
+        
+    # If they are master and puppet, break the bond and declare independence
+    master_a = nation_data.get(a, {}).get("master", "")
+    master_b = nation_data.get(b, {}).get("master", "")
+    if master_a == b:
+        break_puppet_link(nation_data, b, a)
+        from map_logic.diplomacy.diplomacy_events import log_global_event
+        log_global_event(nation_data, f"{a} has declared a war of independence against {b}!")
+    elif master_b == a:
+        break_puppet_link(nation_data, a, b)
+        from map_logic.diplomacy.diplomacy_events import log_global_event
+        log_global_event(nation_data, f"{b} has achieved independence after being attacked by {a}!")
 
     fac_a = nation_data.get(a, {}).get("faction", "")
     fac_b = nation_data.get(b, {}).get("faction", "")

@@ -28,6 +28,14 @@ def process_dead_nations(self):
             else:
                 # If the nation is alive, only keep living enemies
                 data["at_war_with"] = [enemy for enemy in data["at_war_with"] if enemy in living_nations]
+                
+        # --- NEW: Master Independence on Death ---
+        master = data.get("master", "")
+        if master and master not in living_nations:
+            from map_logic.diplomacy.diplomacy_agreements import break_puppet_link
+            break_puppet_link(self.nation_data, master, nation)
+            from map_logic.diplomacy.diplomacy_events import log_global_event
+            log_global_event(self.nation_data, f"{nation} has achieved independence following the collapse of {master}!")
 
 def process_disbands(self):
     """Processes the 1-turn timer for disbanding units and refunds their cost."""

@@ -573,7 +573,8 @@ UNILATERAL_ACTIONS = [
     "DISBAND_FACTION",
     "JUSTIFY_WARGOAL",
     "ANNEX_PUPPET",
-    "RELEASE_PUPPET"
+    "RELEASE_PUPPET",
+    "TAKE_PUPPETS"
 ]
 
 # Proposals that require the target to explicitly Accept or Reject

@@ -23,7 +23,8 @@ from map_logic.diplomacy.diplomacy_agreements import (
     join_faction_wars, 
     finalize_faction_kick,
     finalize_annexation,
-    finalize_release
+    finalize_release,
+    finalize_take_puppets
 )
 
 from map_logic.diplomacy.diplomacy_processor import (

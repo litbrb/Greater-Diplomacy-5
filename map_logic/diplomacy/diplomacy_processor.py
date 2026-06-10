@@ -9,7 +9,7 @@ from map_logic.diplomacy.diplomacy_messages import get_pending_action, send_mess
 from map_logic.diplomacy.diplomacy_agreements import (
     finalize_war, finalize_neutral, execute_peace_treaty, finalize_create_faction,
     finalize_disband_faction, finalize_faction_join, finalize_faction_leave,
-    join_faction_wars, finalize_faction_kick, finalize_annexation, finalize_release
+    join_faction_wars, finalize_faction_kick, finalize_annexation, finalize_release, finalize_take_puppets
 )
 
 def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, custom_msg="", timer=0):
@@ -543,6 +543,11 @@ def process_diplomacy_turn(self):
                     
                 elif action == "RELEASE_PUPPET":
                     finalize_release(self.map_data, self.nation_data, country_name, target, self)
+                    actions_to_clear.append(target)
+                    
+                elif action == "TAKE_PUPPETS":
+                    finalize_take_puppets(self.map_data, self.nation_data, country_name, target)
+                    self.show_feedback(f"Assumed control of {target}'s puppets.")
                     actions_to_clear.append(target)
                 
                 # DELIVER messages to inbox on Turn 0

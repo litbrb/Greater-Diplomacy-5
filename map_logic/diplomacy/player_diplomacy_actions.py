@@ -3,29 +3,54 @@ from map_logic.diplomacy import diplomacy_logic
 import data.constants as c
 
 def handle_declare_war(map_screen):
-    if map_screen.nation_data.get(map_screen.player_country, {}).get("master"):
-        map_screen.show_feedback("Puppets cannot declare wars independently!")
-        return
-
+    player = map_screen.player_country
     target = map_screen.selected_province.get("owner")
     
-    if target in map_screen.nation_data.get(map_screen.player_country, {}).get("puppets", []):
-        map_screen.show_feedback("Cannot declare war on your own puppet!")
+    p_data = map_screen.nation_data.get(player, {})
+    t_data = map_screen.nation_data.get(target, {})
+    
+    my_master = p_data.get("master", "")
+    my_type = p_data.get("puppet_type", "")
+    
+    t_master = t_data.get("master", "")
+    t_type = t_data.get("puppet_type", "")
+    
+    # 1. Integrated puppets cannot declare war AT ALL
+    if my_master and my_type == c.PUPPET_TYPE_INTEGRATED:
+        map_screen.show_feedback("Integrated puppets cannot declare wars!")
         return
         
-    at_war = queries.are_at_war(map_screen.player_country, target, map_screen.nation_data)
+    # 2. Autonomous puppets cannot declare war, UNLESS it's an independence war against their master
+    if my_master and my_type == c.PUPPET_TYPE_AUTONOMOUS and target != my_master:
+        map_screen.show_feedback("Puppets can only declare war on their master!")
+        return
+        
+    # 3. Cannot declare war ON an integrated puppet
+    if t_master and t_type == c.PUPPET_TYPE_INTEGRATED:
+        if t_master == player:
+            map_screen.show_feedback("Cannot declare war on your own integrated puppet!")
+        else:
+            map_screen.show_feedback(f"Integrated puppets cannot be declared war on! Declare on {t_master} instead.")
+        return
+
+    if target in map_screen.nation_data.get(player, {}).get("puppets", []):
+        if t_type == c.PUPPET_TYPE_INTEGRATED:
+            map_screen.show_feedback("Cannot declare war on your own integrated puppet!")
+            return
+        
+    at_war = queries.are_at_war(player, target, map_screen.nation_data)
     
     if at_war:
         handle_ceasefire(map_screen)
         return
 
     # Prevent declaring war on your own faction
-    if queries.are_in_same_faction(map_screen.player_country, target, map_screen.nation_data):
+    if queries.are_in_same_faction(player, target, map_screen.nation_data):
         map_screen.show_feedback("Cannot declare war on a faction member!")
         return
 
     # Prevent declaring war with active truce
-    if queries.has_active_truce(map_screen.player_country, target, map_screen.nation_data):
+    if queries.has_active_truce(player, target, map_screen.nation_data):
         map_screen.show_feedback("Cannot declare war while a truce is active!")
         return
 

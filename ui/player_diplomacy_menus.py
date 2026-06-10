@@ -1250,20 +1250,41 @@ class Puppets_Screen(GameState):
             btn_release = Button(self.panel_rect.x + 680, y_pos, "small", rel_col, rel_txt, lambda nation=p: self.queue_release(nation))
             self.elements.append(btn_release)
             
+            # --- Make all buttons visible but greyscaled out if requirements aren't met ---
+            
+            # Edit Button
+            btn_edit = Button(self.panel_rect.x + 570, y_pos, "small", "blue", "Edit", lambda nation=p: self.edit_puppet(nation))
+            if p_type != c.PUPPET_TYPE_INTEGRATED:
+                btn_edit.disabled = True
+                btn_edit.text = "Integrated Only"
+                btn_edit.color, btn_edit.hover_color = c.UI_COLORS["grey"]
+            self.elements.append(btn_edit)
+            
+            # Annex Button
+            anx_txt = "Undo Annex" if pending_action == "ANNEX_PUPPET" else "Annex"
+            anx_col = "orange" if pending_action == "ANNEX_PUPPET" else "red"
+            btn_annex = Button(self.panel_rect.x + 570, y_pos + 45, "small", anx_col, anx_txt, lambda nation=p: self.queue_annex(nation))
+            if p_type != c.PUPPET_TYPE_INTEGRATED:
+                btn_annex.disabled = True
+                btn_annex.text = "Integrated Only"
+                btn_annex.color, btn_annex.hover_color = c.UI_COLORS["grey"]
+            self.elements.append(btn_annex)
+            
+            # Take Puppets Button
+            take_txt = "Undo Take" if pending_action == "TAKE_PUPPETS" else "Take Puppets"
+            btn_take = Button(self.panel_rect.x + 680, y_pos + 45, "small", "purple", take_txt, lambda nation=p: self.queue_take_puppets(nation))
+            has_puppets = len(p_data.get("puppets", [])) > 0
+            if p_type != c.PUPPET_TYPE_INTEGRATED or not has_puppets:
+                btn_take.disabled = True
+                btn_take.text = "Integrated Only" if p_type != c.PUPPET_TYPE_INTEGRATED else "No Puppets"
+                btn_take.color, btn_take.hover_color = c.UI_COLORS["grey"]
+            self.elements.append(btn_take)
+            
+            # --- Only generate Siphon bars if integrated! ---
+            s_mat = Slider(self.panel_rect.x + 200, y_pos, 100, "Siphon Mat", min(siphon["materials"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "materials", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
+            s_fuel = Slider(self.panel_rect.x + 320, y_pos, 100, "Siphon Fuel", min(siphon["fuel"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "fuel", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
             if p_type == c.PUPPET_TYPE_INTEGRATED:
-                btn_edit = Button(self.panel_rect.x + 570, y_pos, "small", "blue", "Edit", lambda nation=p: self.edit_puppet(nation))
-                self.elements.append(btn_edit)
-                
-                anx_txt = "Undo Annex" if pending_action == "ANNEX_PUPPET" else "Annex"
-                anx_col = "orange" if pending_action == "ANNEX_PUPPET" else "red"
-                btn_annex = Button(self.panel_rect.x + 570, y_pos + 45, "small", anx_col, anx_txt, lambda nation=p: self.queue_annex(nation))
-                self.elements.append(btn_annex)
-                
-            s_man = Slider(self.panel_rect.x + 200, y_pos, 100, "Siphon Man", min(siphon["manpower"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "manpower", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
-            s_mat = Slider(self.panel_rect.x + 320, y_pos, 100, "Siphon Mat", min(siphon["materials"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "materials", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
-            s_fuel = Slider(self.panel_rect.x + 440, y_pos, 100, "Siphon Fuel", min(siphon["fuel"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "fuel", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
-            # no you're not allowed to siphon manpower off your puppets
-            self.elements.extend([s_mat, s_fuel])
+                self.elements.extend([s_mat, s_fuel])
             
             y_pos += 90
             
@@ -1279,6 +1300,11 @@ class Puppets_Screen(GameState):
         
     def queue_annex(self, puppet):
         msg = diplomacy_logic.toggle_diplomacy_action(self.map_screen.nation_data, self.map_screen.player_country, puppet, "ANNEX_PUPPET", "")
+        self.map_screen.show_feedback(msg)
+        self.refresh_ui()
+
+    def queue_take_puppets(self, puppet):
+        msg = diplomacy_logic.toggle_diplomacy_action(self.map_screen.nation_data, self.map_screen.player_country, puppet, "TAKE_PUPPETS", "")
         self.map_screen.show_feedback(msg)
         self.refresh_ui()
 
@@ -1331,7 +1357,9 @@ class Puppets_Screen(GameState):
         master = self.map_screen.nation_data.get(self.player, {}).get("master", "")
         if master:
             master_name = self.map_screen.nation_data.get(master, {}).get("name", master)
-            master_txt = fonts.get("normal").render(f"You are a puppet of: {master_name}", True, (255, 150, 150))
+            p_type = self.map_screen.nation_data.get(self.player, {}).get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
+            prefix = "an" if p_type.lower().startswith(('a', 'e', 'i', 'o', 'u')) else "a"
+            master_txt = fonts.get("normal").render(f"You are {prefix} {p_type.lower()} puppet of: {master_name}", True, (255, 150, 150))
             surface.blit(master_txt, (self.panel_rect.centerx - master_txt.get_width()//2, self.panel_rect.y + 60))
 
         clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 90, self.panel_rect.width - 10, self.panel_rect.height - 100)

@@ -145,6 +145,8 @@ def process_basic_proactive_ai(map_screen):
         pending = data.setdefault("pending_diplomacy", {})
         my_faction = data.get("faction", "")
         my_enemies = data.get("at_war_with", [])
+        my_master = data.get("master", "")
+        my_type = data.get("puppet_type", "")
         
         # --- 0. Decrement Diplomatic Cooldowns ---
         if "diplo_cooldowns" in data:
@@ -347,7 +349,7 @@ def process_basic_proactive_ai(map_screen):
                             break # Act once per turn to avoid conflicts
 
         # --- 4. Declare War for Cores Logic ---
-        if not is_already_at_war:
+        if not is_already_at_war and not (my_master and my_type == c.PUPPET_TYPE_INTEGRATED):
             current_turn = queries.get_total_turns(map_screen.time_manager)
             if current_turn >= c.TURNS_TO_WAIT_BEFORE_WAR:
                 targets_holding_cores = queries.get_nations_holding_our_cores(ai_name, map_screen.map_data)
@@ -362,6 +364,16 @@ def process_basic_proactive_ai(map_screen):
                         if target in my_enemies: continue
                         if queries.are_in_same_faction(ai_name, target, map_screen.nation_data): continue
                         if queries.has_active_truce(ai_name, target, map_screen.nation_data): continue
+                        
+                        # --- NEW: Skip Integrated Puppets ---
+                        t_master = map_screen.nation_data.get(target, {}).get("master", "")
+                        t_type = map_screen.nation_data.get(target, {}).get("puppet_type", "")
+                        if t_master and t_type == c.PUPPET_TYPE_INTEGRATED:
+                            continue
+                            
+                        # Avoid arbitrary attacks on masters
+                        if my_master and my_type == c.PUPPET_TYPE_AUTONOMOUS and target != my_master:
+                            continue
                         
                         # Check localized border strength instead of global strength
                         my_border_str, target_border_str = queries.get_border_strength(ai_name, target, map_screen.map_data, map_screen.id_to_province)

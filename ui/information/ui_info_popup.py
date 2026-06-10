@@ -34,14 +34,31 @@ def draw_unit_info(self, surface):
             y_offset += 20
             
             members = queries.get_faction_members(faction_name, self.nation_data)
-            # Use the new constant here
             for m in members[:c.MAX_DIPLOMACY_DISPLAY]:
                 m_display = self.nation_data.get(m, {}).get("name", m)
                 surface.blit(self.small_font.render(f" - {m_display}", True, (200, 200, 200)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
                 
             if len(members) > c.MAX_DIPLOMACY_DISPLAY:
-                # Updated the fallback text
+                surface.blit(self.small_font.render("(...and more)", True, (150, 150, 150)), (dip_rect.x + 10, y_offset))
+                y_offset += 20
+
+        # --- MAP PUPPET HIERARCHY ---
+        master = self.nation_data.get(owner, {}).get("master", "")
+        if master:
+            m_disp = self.nation_data.get(master, {}).get("name", master)
+            surface.blit(self.small_font.render(f"Master: {m_disp}", True, (255, 150, 150)), (dip_rect.x + 10, y_offset))
+            y_offset += 20
+            
+        puppets = self.nation_data.get(owner, {}).get("puppets", [])
+        if puppets:
+            surface.blit(self.small_font.render("Puppets:", True, (255, 215, 0)), (dip_rect.x + 10, y_offset))
+            y_offset += 20
+            for p in puppets[:c.MAX_DIPLOMACY_DISPLAY]:
+                p_disp = self.nation_data.get(p, {}).get("name", p)
+                surface.blit(self.small_font.render(f" - {p_disp}", True, (200, 200, 200)), (dip_rect.x + 10, y_offset))
+                y_offset += 20
+            if len(puppets) > c.MAX_DIPLOMACY_DISPLAY:
                 surface.blit(self.small_font.render("(...and more)", True, (150, 150, 150)), (dip_rect.x + 10, y_offset))
                 y_offset += 20
 

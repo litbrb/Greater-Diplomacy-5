@@ -1211,12 +1211,15 @@ class Puppets_Screen(GameState):
         self.panel_rect = pygame.Rect(c.SCREEN_WIDTH//2 - 400, 100, 800, c.SCREEN_HEIGHT - 200)
         self.scroll_y = 0
         self.max_scroll = 0
+        self.y_space_between_puppets = 120
         self.refresh_ui()
 
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
         self.elements.append(Button(c.SCREEN_WIDTH - 300, c.TOP_BAR_UI_CENTER_Y, "large", "blue", "Create Integrated Puppet", self.open_create_puppet))
         
+        
+
         puppets = self.map_screen.nation_data.get(self.player, {}).get("puppets", [])
         
         y_pos = self.panel_rect.y + 100 + self.scroll_y
@@ -1229,47 +1232,47 @@ class Puppets_Screen(GameState):
             
             rel_txt = "Undo Release" if pending_action == "RELEASE_PUPPET" else "Release"
             rel_col = "red" if pending_action == "RELEASE_PUPPET" else "orange"
-            btn_release = Button(self.panel_rect.x + 680, y_pos, "small", rel_col, rel_txt, lambda nation=p: self.queue_release(nation))
+            btn_release = Button(self.panel_rect.x + 720, y_pos, "puppet_option", rel_col, rel_txt, lambda nation=p: self.queue_release(nation), font_preset="normal")
             self.elements.append(btn_release)
             
             # --- Make all buttons visible but greyscaled out if requirements aren't met ---
             
             # Edit Button
-            btn_edit = Button(self.panel_rect.x + 570, y_pos, "small", "blue", "Edit", lambda nation=p: self.edit_puppet(nation))
+            btn_edit = Button(self.panel_rect.x + 570, y_pos, "puppet_option", "blue", "Edit", lambda nation=p: self.edit_puppet(nation), font_preset="normal")
             if p_type != c.PUPPET_TYPE_INTEGRATED:
                 btn_edit.disabled = True
-                btn_edit.text = "Integrated Only"
+                btn_edit.text = "Can't Edit!"
                 btn_edit.color, btn_edit.hover_color = c.UI_COLORS["grey"]
             self.elements.append(btn_edit)
             
             # Annex Button
             anx_txt = "Undo Annex" if pending_action == "ANNEX_PUPPET" else "Annex"
             anx_col = "orange" if pending_action == "ANNEX_PUPPET" else "red"
-            btn_annex = Button(self.panel_rect.x + 570, y_pos + 45, "small", anx_col, anx_txt, lambda nation=p: self.queue_annex(nation))
+            btn_annex = Button(self.panel_rect.x + 570, y_pos + 45, "puppet_option", anx_col, anx_txt, lambda nation=p: self.queue_annex(nation), font_preset="normal")
             if p_type != c.PUPPET_TYPE_INTEGRATED:
                 btn_annex.disabled = True
-                btn_annex.text = "Integrated Only"
+                btn_annex.text = "Can't Annex!"
                 btn_annex.color, btn_annex.hover_color = c.UI_COLORS["grey"]
             self.elements.append(btn_annex)
             
             # Take Puppets Button
             take_txt = "Undo Take" if pending_action == "TAKE_PUPPETS" else "Take Puppets"
-            btn_take = Button(self.panel_rect.x + 680, y_pos + 45, "small", "purple", take_txt, lambda nation=p: self.queue_take_puppets(nation))
+            btn_take = Button(self.panel_rect.x + 720, y_pos + 45, "puppet_option", "purple", take_txt, lambda nation=p: self.queue_take_puppets(nation), font_preset="normal")
             has_puppets = len(p_data.get("puppets", [])) > 0
             if p_type != c.PUPPET_TYPE_INTEGRATED or not has_puppets:
                 btn_take.disabled = True
-                btn_take.text = "Integrated Only" if p_type != c.PUPPET_TYPE_INTEGRATED else "No Puppets"
+                btn_take.text = "Can't Take Puppets!" if p_type != c.PUPPET_TYPE_INTEGRATED else "They've 0 Puppets!"
                 btn_take.color, btn_take.hover_color = c.UI_COLORS["grey"]
             self.elements.append(btn_take)
             
-            # if you ever want to readd this
-            # s_man = Slider(self.panel_rect.x + 200, y_pos, 100, "Siphon Man", min(siphon["manpower"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "manpower", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
-            s_mat = Slider(self.panel_rect.x + 320, y_pos, 100, "Siphon Mat", min(siphon["materials"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "materials", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
-            s_fuel = Slider(self.panel_rect.x + 440, y_pos, 100, "Siphon Fuel", min(siphon["fuel"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "fuel", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
+            # if you ever want to add this
+            # s_man = Slider(self.panel_rect.x + 200, y_pos + 50, 100, "Siphon Man", min(siphon["manpower"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "manpower", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
+            s_mat = Slider(self.panel_rect.x + 320, y_pos + 50, 100, "Siphon Mat", min(siphon["materials"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "materials", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
+            s_fuel = Slider(self.panel_rect.x + 440, y_pos + 50, 100, "Siphon Fuel", min(siphon["fuel"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "fuel", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
             if p_type == c.PUPPET_TYPE_INTEGRATED:
                 self.elements.extend([s_mat, s_fuel])
             
-            y_pos += 90
+            y_pos += self.y_space_between_puppets
             
         self.max_scroll = min(0, self.panel_rect.height - (y_pos - self.scroll_y - self.panel_rect.y) - 20)
 
@@ -1367,7 +1370,7 @@ class Puppets_Screen(GameState):
                 
                 txt = font_body.render(f"{p_name} ({p_type})", True, (255, 215, 0) if p_type == c.PUPPET_TYPE_INTEGRATED else (200, 200, 200))
                 surface.blit(txt, (self.panel_rect.x + 20, y_pos))
-                y_pos += 80
+                y_pos += self.y_space_between_puppets
 
         surface.set_clip(old_clip)
         

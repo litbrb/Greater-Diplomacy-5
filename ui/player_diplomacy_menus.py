@@ -155,14 +155,35 @@ class Declare_War_Screen(GameState):
                 el.handle_event(event)
 
     def additional_draw(self, surface):
-        # We don't draw the map screen, just the UI for the puppets. GameState takes care of the solid background
-        pygame.draw.rect(surface, (40, 40, 50), self.panel_rect)
-        pygame.draw.rect(surface, (100, 150, 255), self.panel_rect, 2)
+        # Wipe the frame clean to prevent the "Solitaire Effect" smearing through the transparent oceans
+        surface.fill(self.map_screen.bg_color)
         
-        font_title = fonts.get("heading1")
-        font_body = fonts.get("heading2")
-        title = font_title.render("Your Subjects", True, (255, 255, 255))
-        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
+        temp_prov = self.map_screen.selected_province
+        self.map_screen.selected_province = None
+        self.map_screen.hide_raised_rect = True
+
+        self.map_screen.hide_tooltip = True
+        self.map_screen.hide_resource_hud = True
+        self.map_screen.hide_minimap = True
+        
+        self.map_screen.additional_draw(surface)
+        
+        self.map_screen.hide_raised_rect = False
+        self.map_screen.hide_tooltip = False
+        self.map_screen.hide_resource_hud = False
+        self.map_screen.hide_minimap = False
+        self.map_screen.selected_province = temp_prov
+
+        overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 180))
+        surface.blit(overlay, (0, 0))
+
+        pygame.draw.rect(surface, (40, 30, 30), self.panel_rect)
+        pygame.draw.rect(surface, (255, 50, 50), self.panel_rect, 3)
+
+        font = fonts.get("heading1")
+        title = font.render(f"Declare War: {self.target_nation}", True, (255, 255, 255))
+        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 20))
 
         # Draw UI elements manually to prevent super().draw() from filling the screen with a solid background color
         for el in self.elements:
@@ -1368,8 +1389,13 @@ class Puppets_Screen(GameState):
                 p_name = p_data.get("name", p)
                 p_type = p_data.get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
                 
-                txt = font_body.render(f"{p_name} ({p_type})", True, (255, 215, 0) if p_type == c.PUPPET_TYPE_INTEGRATED else (200, 200, 200))
-                surface.blit(txt, (self.panel_rect.x + 20, y_pos))
+                # --- NEW: Formatted Puppet Sub-text ---
+                name_txt = font_body.render(p_name, True, (255, 255, 255))
+                type_txt = fonts.get("normal").render(f"({p_type})", True, (255, 215, 0) if p_type == c.PUPPET_TYPE_INTEGRATED else (200, 200, 200))
+                
+                surface.blit(name_txt, (self.panel_rect.x + 20, y_pos))
+                surface.blit(type_txt, (self.panel_rect.x + 20, y_pos + 30))
+                
                 y_pos += self.y_space_between_puppets
 
         surface.set_clip(old_clip)
@@ -1387,6 +1413,7 @@ class Create_Integrated_Puppet_Screen(GameState):
         self.panel_rect = pygame.Rect(80, 120, 450, c.SCREEN_HEIGHT - 240)
         self.scroll_y = 0
         self.max_scroll = 0
+        self.keep_cores = False
         
         self.valid_subjects = set()
         for prov in self.map_screen.map_data.values():
@@ -1397,19 +1424,42 @@ class Create_Integrated_Puppet_Screen(GameState):
         self.valid_subjects = sorted(list(self.valid_subjects))
         self.refresh_ui()
 
+    def toggle_keep_cores(self):
+        self.keep_cores = not self.keep_cores
+        self.refresh_ui()
+
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
-        y_pos = self.panel_rect.y + 60 + self.scroll_y
+        
+        btn_keep_cores_color = "green" if self.keep_cores else "red"
+        btn_keep_cores_text = f"Keep Cores: {'ON' if self.keep_cores else 'OFF'}"
+        self.elements.append(Button(self.panel_rect.centerx - 100, self.panel_rect.y + 60, "medium", btn_keep_cores_color, btn_keep_cores_text, self.toggle_keep_cores))
+        
+        y_pos = self.panel_rect.y + 120 + self.scroll_y
         
         queue = self.map_screen.nation_data.get(self.player, {}).get("release_puppet_queue", [])
         queued_cores = [q["core_nation"] for q in queue]
 
         for subject in self.valid_subjects:
-            if y_pos > self.panel_rect.y and y_pos < self.panel_rect.bottom - 40:
+            if y_pos > self.panel_rect.y + 100 and y_pos < self.panel_rect.bottom - 40:
+                
+                # --- NEW: Calculate if creating this puppet would leave it with 0 territories ---
+                territory_count = 0
+                for prov in self.map_screen.map_data.values():
+                    if prov.get("owner") == self.player and subject in prov.get("cores", []):
+                        if getattr(self, 'keep_cores', False) and self.player in prov.get("cores", []):
+                            continue
+                        territory_count += 1
+                
                 if subject in queued_cores:
                     btn = Button(self.panel_rect.x + 320, y_pos, "small", "red", "Cancel", lambda s=subject: self.cancel_queue(s))
                 else:
                     btn = Button(self.panel_rect.x + 320, y_pos, "small", "green", "Create", lambda s=subject: self.queue_creation(s))
+                    if territory_count == 0:
+                        btn.disabled = True
+                        btn.color, btn.hover_color = c.UI_COLORS["grey"]
+                        btn.text = "No Land"
+
                 btn.is_scrollable = True
                 btn.base_y = y_pos - self.scroll_y
                 self.elements.append(btn)
@@ -1426,7 +1476,7 @@ class Create_Integrated_Puppet_Screen(GameState):
 
     def queue_creation(self, subject):
         queue = self.map_screen.nation_data[self.player].setdefault("release_puppet_queue", [])
-        queue.append({"core_nation": subject, "turns_left": 1})
+        queue.append({"core_nation": subject, "turns_left": 1, "keep_cores": self.keep_cores})
         self.map_screen.show_feedback(f"Creation of {subject} queued (1 turn).")
         self.refresh_ui()
 
@@ -1513,11 +1563,11 @@ class Create_Integrated_Puppet_Screen(GameState):
         title = font.render("Create Integrated Puppet", True, (255, 255, 255))
         surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 10))
 
-        clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 50, self.panel_rect.width - 10, self.panel_rect.height - 60)
+        clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 110, self.panel_rect.width - 10, self.panel_rect.height - 120)
         old_clip = surface.get_clip()
         surface.set_clip(clip_rect)
         
-        y_off = self.panel_rect.y + 60 + self.scroll_y
+        y_off = self.panel_rect.y + 120 + self.scroll_y
         if not self.valid_subjects:
             surface.blit(tiny_font.render("No potential subjects available.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
         else:
@@ -1533,8 +1583,8 @@ class Create_Integrated_Puppet_Screen(GameState):
         surface.set_clip(old_clip)
 
         if self.max_scroll < 0:
-            viewport_h = self.panel_rect.height - 60
-            track_rect = pygame.Rect(self.panel_rect.right - 15, self.panel_rect.y + 50, 10, viewport_h)
+            viewport_h = self.panel_rect.height - 110
+            track_rect = pygame.Rect(self.panel_rect.right - 15, self.panel_rect.y + 100, 10, viewport_h)
             pygame.draw.rect(surface, (50, 50, 70), track_rect)
             ratio = self.scroll_y / self.max_scroll
             handle_h = max(20, viewport_h * (viewport_h / (viewport_h - self.max_scroll)))

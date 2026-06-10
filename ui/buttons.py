@@ -326,11 +326,17 @@ def update_button_states(map_screen):
                 i_am_leader = queries.is_faction_leader(map_screen.player_country, map_screen.nation_data)
                 target_is_leader = queries.is_faction_leader(owner, map_screen.nation_data)
 
-                # War / Peace UI routing
-                dw_enabled = not (not at_war and in_same_faction)
+                my_master = map_screen.nation_data.get(map_screen.player_country, {}).get("master", "")
+                t_master = map_screen.nation_data.get(owner, {}).get("master", "")
+
+                is_rebellion = (my_master == owner)
+                is_preemptive = (t_master == map_screen.player_country)
+
+                # War / Peace UI routing (Allows internal faction wars strictly for rebellions & preemptive attacks)
+                dw_enabled = not (not at_war and in_same_faction and not (is_rebellion or is_preemptive))
                 has_truce = queries.has_active_truce(map_screen.player_country, owner, map_screen.nation_data)
                 
-                # --- NEW: Fetch the exact number of turns remaining ---
+                # Fetch the exact number of turns remaining ---
                 truce_turns = map_screen.nation_data.get(map_screen.player_country, {}).get("truces", {}).get(owner, 0)
                 
                 if has_truce and not at_war:
@@ -346,11 +352,8 @@ def update_button_states(map_screen):
                     dw_text = "Edit War Declaration"
                 else: 
                     if has_truce and not at_war:
-                        # --- NEW: Display the turns in the button text ---
                         dw_text = f"Truce Active ({truce_turns})"
                     else:
-                        my_master = map_screen.nation_data.get(map_screen.player_country, {}).get("master", "")
-                        t_master = map_screen.nation_data.get(owner, {}).get("master", "")
                         if at_war:
                             dw_text = "Ceasefire / Peace"
                         elif my_master == owner:

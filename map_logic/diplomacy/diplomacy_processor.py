@@ -963,7 +963,8 @@ def process_diplomacy_turn(self):
                     
             for rq in ready_to_release:
                 core_nation = rq["core_nation"]
+                keep_cores = rq.get("keep_cores", False)
                 from map_logic.diplomacy.diplomacy_agreements import finalize_create_integrated_puppet
-                finalize_create_integrated_puppet(self.map_data, self.nation_data, country_name, core_nation, self)
+                finalize_create_integrated_puppet(self.map_data, self.nation_data, country_name, core_nation, self, keep_cores)
                 if country_name == self.player_country:
                     self.show_feedback(f"Created integrated puppet from {core_nation} cores!")

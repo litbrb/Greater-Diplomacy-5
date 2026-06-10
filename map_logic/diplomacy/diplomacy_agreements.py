@@ -1,6 +1,8 @@
 import re
 from map_logic.system32 import edit_province_ownership
 from data import queries
+from map_logic.system32 import edit_province_ownership
+from map_logic.diplomacy.diplomacy_events import log_global_event
 import data.constants as c
 
 # --- RECURSIVE PUPPET HELPERS ---
@@ -106,7 +108,7 @@ def finalize_take_puppets(map_data, nation_data, master, target_puppet):
         p_type = nation_data.get(p, {}).get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
         assign_puppet(map_data, nation_data, master, p, p_type)
 
-def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation, map_screen):
+def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation, map_screen, keep_cores=False):
     master_name = nation_data.get(master, {}).get("name", master)
     
     # Load from active data or from disk if dead
@@ -132,6 +134,11 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
     import copy
     new_data = copy.deepcopy(base_data)
     new_data["name"] = new_name
+    
+    # --- NEW: Inherit Master's Color ---
+    master_color = nation_data.get(master, {}).get("color", [255, 255, 255])
+    new_data["color"] = list(master_color)
+    
     new_data["is_playable"] = True
     new_data["at_war_with"] = []
     new_data["allied_with"] = []
@@ -152,12 +159,13 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
     assign_puppet(map_data, nation_data, master, new_id, c.PUPPET_TYPE_INTEGRATED)
     
     # Transfer tiles
-    from map_logic.system32 import edit_province_ownership
     for prov in map_data.values():
         if prov.get("owner") == master and core_nation in prov.get("cores", []):
+            # --- NEW: Keep Cores Check ---
+            if keep_cores and master in prov.get("cores", []):
+                continue
             edit_province_ownership.conquer_province(map_screen, prov, new_id)
             
-    from map_logic.diplomacy.diplomacy_events import log_global_event
     log_global_event(nation_data, f"{master_name} has formed {new_name}.")
 
 # ---------------------------------

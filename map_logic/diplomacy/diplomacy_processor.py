@@ -951,3 +951,19 @@ def process_diplomacy_turn(self):
                             self.show_feedback(f"Returned Province {prov_id} to {recipient}!")
                             
                     return_queue.pop(i)
+
+        # --- PROCESS PUPPET RELEASE QUEUE ---
+        release_queue = data.get("release_puppet_queue", [])
+        if release_queue:
+            ready_to_release = []
+            for i in range(len(release_queue) - 1, -1, -1):
+                release_queue[i]["turns_left"] -= 1
+                if release_queue[i]["turns_left"] <= 0:
+                    ready_to_release.insert(0, release_queue.pop(i))
+                    
+            for rq in ready_to_release:
+                core_nation = rq["core_nation"]
+                from map_logic.diplomacy.diplomacy_agreements import finalize_create_integrated_puppet
+                finalize_create_integrated_puppet(self.map_data, self.nation_data, country_name, core_nation, self)
+                if country_name == self.player_country:
+                    self.show_feedback(f"Created integrated puppet from {core_nation} cores!")

@@ -349,7 +349,16 @@ def update_button_states(map_screen):
                         # --- NEW: Display the turns in the button text ---
                         dw_text = f"Truce Active ({truce_turns})"
                     else:
-                        dw_text = "Ceasefire / Peace" if at_war else "Declare War"
+                        my_master = map_screen.nation_data.get(map_screen.player_country, {}).get("master", "")
+                        t_master = map_screen.nation_data.get(owner, {}).get("master", "")
+                        if at_war:
+                            dw_text = "Ceasefire / Peace"
+                        elif my_master == owner:
+                            dw_text = "Independence war"
+                        elif t_master == map_screen.player_country:
+                            dw_text = "Preemptive war"
+                        else:
+                            dw_text = "Declare War"
                     
                 set_btn(map_screen.btn_declare_war, True, dw_enabled, dw_text, "red")
                 

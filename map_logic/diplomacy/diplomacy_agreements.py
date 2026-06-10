@@ -106,6 +106,60 @@ def finalize_take_puppets(map_data, nation_data, master, target_puppet):
         p_type = nation_data.get(p, {}).get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
         assign_puppet(map_data, nation_data, master, p, p_type)
 
+def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation, map_screen):
+    master_name = nation_data.get(master, {}).get("name", master)
+    
+    # Load from active data or from disk if dead
+    if core_nation in nation_data:
+        core_name = nation_data[core_nation].get("name", core_nation)
+        base_data = nation_data[core_nation].copy()
+    else:
+        from data.io import country_io
+        base_data = country_io.get_country_stats(core_nation).copy()
+        core_name = base_data.get("name", core_nation)
+
+    base_str = f"{master_name}'s Protectorate of {core_name}"
+    new_id = base_str
+    new_name = base_str
+    
+    # Check collision to avoid overwriting existing subjects
+    suffix = 1
+    while new_id in nation_data or any(d.get("name") == new_name for d in nation_data.values()):
+        suffix += 1
+        new_id = f"{base_str} {suffix}"
+        new_name = f"{base_str} {suffix}"
+        
+    import copy
+    new_data = copy.deepcopy(base_data)
+    new_data["name"] = new_name
+    new_data["is_playable"] = True
+    new_data["at_war_with"] = []
+    new_data["allied_with"] = []
+    new_data["pending_diplomacy"] = {}
+    new_data["claims"] = []
+    new_data["claim_queue"] = []
+    new_data["revoke_queue"] = []
+    new_data["return_queue"] = []
+    new_data["puppets"] = []
+    new_data["master"] = ""
+    new_data["puppet_type"] = ""
+    new_data["faction"] = ""
+    new_data["is_faction_leader"] = False
+    
+    nation_data[new_id] = new_data
+    
+    # Assign as puppet
+    assign_puppet(map_data, nation_data, master, new_id, c.PUPPET_TYPE_INTEGRATED)
+    
+    # Transfer tiles
+    from map_logic.system32 import edit_province_ownership
+    for prov in map_data.values():
+        if prov.get("owner") == master and core_nation in prov.get("cores", []):
+            edit_province_ownership.conquer_province(map_screen, prov, new_id)
+            
+    from map_logic.diplomacy.diplomacy_events import log_global_event
+    log_global_event(nation_data, f"{master_name} has formed {new_name}.")
+
 # ---------------------------------
 
 def finalize_war(map_data, nation_data, a, b):

@@ -46,8 +46,11 @@ def handle_declare_war(map_screen):
 
     # Prevent declaring war on your own faction
     if queries.are_in_same_faction(player, target, map_screen.nation_data):
-        map_screen.show_feedback("Cannot declare war on a faction member!")
-        return
+        is_rebellion = (my_master == target and my_type == c.PUPPET_TYPE_AUTONOMOUS)
+        is_preemptive = (t_master == player and t_type == c.PUPPET_TYPE_AUTONOMOUS)
+        if not (is_rebellion or is_preemptive):
+            map_screen.show_feedback("Cannot declare war on a faction member!")
+            return
 
     # Prevent declaring war with active truce
     if queries.has_active_truce(player, target, map_screen.nation_data):

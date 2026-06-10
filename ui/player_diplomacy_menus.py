@@ -1262,7 +1262,8 @@ class Puppets_Screen(GameState):
             s_man = Slider(self.panel_rect.x + 200, y_pos, 100, "Siphon Man", min(siphon["manpower"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "manpower", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
             s_mat = Slider(self.panel_rect.x + 320, y_pos, 100, "Siphon Mat", min(siphon["materials"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "materials", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
             s_fuel = Slider(self.panel_rect.x + 440, y_pos, 100, "Siphon Fuel", min(siphon["fuel"], c.MAX_PUPPET_SIPHON), lambda val, n=p: self.set_siphon(n, "fuel", val), visual_max=c.MAX_PUPPET_SIPHON, allowed_max=c.MAX_PUPPET_SIPHON)
-            self.elements.extend([s_man, s_mat, s_fuel])
+            # no you're not allowed to siphon manpower off your puppets
+            self.elements.extend([s_mat, s_fuel])
             
             y_pos += 90
             

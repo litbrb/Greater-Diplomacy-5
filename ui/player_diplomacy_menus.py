@@ -1077,15 +1077,7 @@ class Trade_Screen(GameState):
             self.take_fuel_str = "0"
 
     def confirm_trade(self):
-        # this prevents puppets from initiating trades
-        if self.map_screen.nation_data.get(self.map_screen.player_country, {}).get("master"):
-            self.map_screen.show_feedback("Puppets cannot initiate trades!")
-            return
         
-        # add in some code here to prevent others from initiating trades with puppets, in addition to the greying out of the trade button
-        # so even if they somehow get past that they can't do the trade
-        # we did it above, we could prolly do it here too
-            
         self.evaluate_input()
         
         # Don't allow empty trades

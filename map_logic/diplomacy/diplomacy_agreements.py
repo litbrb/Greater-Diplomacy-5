@@ -13,6 +13,19 @@ def break_puppet_link(nation_data, master, puppet):
         nation_data[puppet]["master"] = ""
         nation_data[puppet]["puppet_type"] = ""
 
+def pull_master_into_war(puppet, target, map_data, nation_data):
+    master = nation_data.get(puppet, {}).get("master", "")
+    if master and master != target:
+        if target not in nation_data.get(master, {}).get("at_war_with", []):
+            nation_data.setdefault(master, {}).setdefault("at_war_with", []).append(target)
+        if master not in nation_data.get(target, {}).get("at_war_with", []):
+            nation_data.setdefault(target, {}).setdefault("at_war_with", []).append(master)
+        
+        # Recursively pull the master's OTHER puppets into the war too!
+        pull_puppets_into_war(master, target, map_data, nation_data)
+        
+        log_global_event(nation_data, f"{master} has joined the war on the side of {puppet}!")
+
 def assign_puppet(map_data, nation_data, master, puppet, puppet_type=c.PUPPET_TYPE_AUTONOMOUS):
     p_data = nation_data.get(puppet, {})
     m_data = nation_data.get(master, {})
@@ -171,13 +184,18 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
 # ---------------------------------
 
 def finalize_war(map_data, nation_data, a, b):
-    # GUARDRAIL: If they are in the same faction, the aggressor (a) leaves automatically
-    if queries.are_in_same_faction(a, b, nation_data):
-        finalize_faction_leave(nation_data, a)
-        
-    # If they are master and puppet, break the bond and declare independence
     master_a = nation_data.get(a, {}).get("master", "")
     master_b = nation_data.get(b, {}).get("master", "")
+
+    # GUARDRAIL: If they are in the same faction, the aggressor (a) leaves automatically
+    # UNLESS it's a preemptive war against a puppet, then the puppet leaves
+    if queries.are_in_same_faction(a, b, nation_data):
+        if master_b == a:
+            finalize_faction_leave(nation_data, b)
+        else:
+            finalize_faction_leave(nation_data, a)
+        
+    # If they are master and puppet, break the bond and declare independence
     if master_a == b:
         break_puppet_link(nation_data, b, a)
         from map_logic.diplomacy.diplomacy_events import log_global_event
@@ -211,6 +229,10 @@ def finalize_war(map_data, nation_data, a, b):
     # Pull subjects into the fray
     pull_puppets_into_war(a, b, map_data, nation_data)
     pull_puppets_into_war(b, a, map_data, nation_data)
+    
+    # Pull masters into the fray (which cascades to their other puppets)
+    pull_master_into_war(a, b, map_data, nation_data)
+    pull_master_into_war(b, a, map_data, nation_data)
 
 def finalize_neutral(nation_data, a, b):
     for country, other in [(a, b), (b, a)]:

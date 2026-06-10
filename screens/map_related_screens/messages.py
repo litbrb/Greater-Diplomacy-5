@@ -335,8 +335,14 @@ class Messages_Screen(GameState):
                 self.elements.append(Button(btn_x, btn_y, "small", "blue", "Queue", self.send_message))
                 
                 is_puppet = bool(p_data.get("master", ""))
+                target_is_puppet = bool(self.map_screen.nation_data.get(self.selected_recipient, {}).get("master", ""))
+                
                 if is_puppet:
                     btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Puppets Can't Trade", lambda: None)
+                    btn_trade.disabled = True
+                    self.elements.append(btn_trade)
+                elif target_is_puppet:
+                    btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Target is Puppet", lambda: None)
                     btn_trade.disabled = True
                     self.elements.append(btn_trade)
                 else:

@@ -300,6 +300,8 @@ CLAIM_TURN_NON_CORE = 2
 
 WARGOAL_TAKE_CLAIMS = "Take Claims"
 WARGOAL_NO_CB = "No Casus Belli"
+WARGOAL_INDEPENDENCE = "Independence"
+WARGOAL_PREEMPTIVE = "Preemptive"
 
 PEACE_SURRENDER = "Surrender"
 PEACE_WHITE_PEACE = "Ceasefire"

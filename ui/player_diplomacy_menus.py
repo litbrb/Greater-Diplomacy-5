@@ -52,14 +52,31 @@ class Declare_War_Screen(GameState):
         if map_screen.player_country == "Spectator":
             has_wg = True
             cb_required = False
+            
+        my_master = map_screen.nation_data.get(map_screen.player_country, {}).get("master", "")
+        their_master = map_screen.nation_data.get(target_nation, {}).get("master", "")
+        
+        is_independence = (my_master == target_nation)
+        is_preemptive = (their_master == map_screen.player_country)
+        
+        if is_independence:
+            puppet_cb_label = c.WARGOAL_INDEPENDENCE
+            puppet_cb_enabled = True
+        elif is_preemptive:
+            puppet_cb_label = c.WARGOAL_PREEMPTIVE
+            puppet_cb_enabled = True
+        else:
+            puppet_cb_label = "Not a puppet!"
+            puppet_cb_enabled = False
 
         self.wargoal_options = [
             {"label": c.WARGOAL_TAKE_CLAIMS, "enabled": has_wg},
+            {"label": puppet_cb_label, "enabled": puppet_cb_enabled},
             {"label": c.WARGOAL_NO_CB, "enabled": not cb_required},
             {"label": "Don't Declare War", "enabled": True}
         ]
             
-        self.selected_wargoal_idx = 2 # Default to Don't Declare War
+        self.selected_wargoal_idx = 3 # Default to Don't Declare War
         
         # Check if a war declaration is already queued
         pending = map_screen.nation_data.get(map_screen.player_country, {}).get("pending_diplomacy", {}).get(target_nation, {})
@@ -74,7 +91,7 @@ class Declare_War_Screen(GameState):
         else:
             # Auto-select the first enabled wargoal that actually declares war if available
             for i, opt in enumerate(self.wargoal_options):
-                if opt["enabled"] and i != 2:
+                if opt["enabled"] and i != 3:
                     self.selected_wargoal_idx = i
                     break
 
@@ -95,7 +112,7 @@ class Declare_War_Screen(GameState):
             else:
                 color = "grey"
                 
-            # Place the first two buttons left and right, and the 3rd centered below
+            # Place the first two buttons left and right, and the 3rd/4th centered below
             if i == 0:
                 btn_x = self.panel_rect.centerx - 210
                 btn_y = self.panel_rect.y + 80
@@ -104,8 +121,12 @@ class Declare_War_Screen(GameState):
                 btn_x = self.panel_rect.centerx + 10
                 btn_y = self.panel_rect.y + 80
                 btn_size = "medium"
+            elif i == 2:
+                btn_x = self.panel_rect.centerx - 210
+                btn_y = self.panel_rect.y + 150
+                btn_size = "medium"
             else:
-                btn_x = self.panel_rect.centerx - 100
+                btn_x = self.panel_rect.centerx + 10
                 btn_y = self.panel_rect.y + 150
                 btn_size = "medium"
 
@@ -1060,6 +1081,10 @@ class Trade_Screen(GameState):
         if self.map_screen.nation_data.get(self.map_screen.player_country, {}).get("master"):
             self.map_screen.show_feedback("Puppets cannot initiate trades!")
             return
+        
+        # add in some code here to prevent others from initiating trades with puppets, in addition to the greying out of the trade button
+        # so even if they somehow get past that they can't do the trade
+        # we did it above, we could prolly do it here too
             
         self.evaluate_input()
         

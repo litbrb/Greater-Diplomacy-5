@@ -257,6 +257,11 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         if action_type in ["FACTION_INVITE", "CREATE_FACTION"]:
             accepted = True
             
+    # NEW: AI Master-Puppet Faction Acceptance
+    my_master = ai_stats.get("master", "")
+    if my_master == sender_nation and action_type in ["FACTION_INVITE", "CREATE_FACTION", "JOIN_FACTION_REQ"]:
+        accepted = True
+            
     # 2. Check for Join Faction Requests (If we are the leader)
     if action_type == "JOIN_FACTION_REQ" and ai_stats.get("is_faction_leader", False):
         relation_score = queries.get_relation_score(ai_nation, sender_nation, nation_data)
@@ -282,6 +287,7 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         params = pending.get("parameters", {})
         
         puppet_state = params.get("puppet_state", "NONE")
+        sender_master = nation_data.get(sender_nation, {}).get("master", "")
         
         # We are the AI (Receiving). Therefore we "Take" what they "Give", and we "Give" what they "Take".
         ai_takes_mats = params.get("give_materials", 0)
@@ -289,7 +295,7 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         ai_gives_mats = params.get("take_materials", 0)
         ai_gives_fuel = params.get("take_fuel", 0)
         
-        if puppet_state != "NONE":
+        if puppet_state != "NONE" or my_master or sender_master:
             accepted = False
         elif ai_gives_mats == 0 and ai_gives_fuel == 0 and (ai_takes_mats > 0 or ai_takes_fuel > 0):
             accepted = True

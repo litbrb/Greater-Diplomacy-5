@@ -66,7 +66,7 @@ class Declare_War_Screen(GameState):
             puppet_cb_label = c.WARGOAL_PREEMPTIVE
             puppet_cb_enabled = True
         else:
-            puppet_cb_label = "Not a puppet!"
+            puppet_cb_label = c.WARGOAL_INDEPENDENCE
             puppet_cb_enabled = False
 
         self.wargoal_options = [

@@ -173,11 +173,15 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
     
     # Transfer tiles
     for prov in map_data.values():
-        if prov.get("owner") == master and core_nation in prov.get("cores", []):
-            # --- NEW: Keep Cores Check ---
-            if keep_cores and master in prov.get("cores", []):
-                continue
-            edit_province_ownership.conquer_province(map_screen, prov, new_id)
+        if core_nation in prov.get("cores", []):
+            if new_id not in prov.get("cores", []):
+                prov.setdefault("cores", []).append(new_id)
+
+            if prov.get("owner") == master:
+                # --- NEW: Keep Cores Check ---
+                if keep_cores and master in prov.get("cores", []):
+                    continue
+                edit_province_ownership.conquer_province(map_screen, prov, new_id)
             
     log_global_event(nation_data, f"{master_name} has formed {new_name}.")
 

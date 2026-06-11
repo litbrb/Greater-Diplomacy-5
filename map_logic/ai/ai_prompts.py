@@ -137,7 +137,7 @@ def get_unilateral_system_prompt(action_context):
         "- Do NOT output 'JOIN_WARS' if you're trying to join the war of someone not in your faction, instead just type 'WAR_DECLARATION' against the target country.\n"
         "- If your plan requires two steps (like leaving your faction this turn to declare war next turn), "
         "put your immediate move in 'action'/'action_target' and your next move in 'follow_up_action'/'follow_up_target'.\n"
-        "- If you declare war on your master, put 'Independence' in the 'message' field. If you declare war on your puppet, put 'Preemptive'. Puppets and masters automatically leave shared factions upon war. Puppets cannot engage in 'TRADE' agreements.\n"
+        "- If you declare war on your master, put 'Independence' in the 'message' field. If you declare war on your puppet, put 'Preemptive'. Puppets and masters automatically leave shared factions upon war. Integrated puppets cannot engage in 'TRADE' agreements.\n"
         "- You MUST specify an 'opinion_change' integer between -20 and 20 indicating how much this event improved or worsened your general opinion of the sender.\n"
         "Reply ONLY with a valid JSON object matching this schema: "
         '{"message": "In-character dialogue reacting to the event in english", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0}'
@@ -158,7 +158,7 @@ def get_bilateral_system_prompt(accepted):
         "- Do NOT output 'JOIN_WARS' if you're trying to join the war of someone not in your faction, instead just type 'WAR_DECLARATION' against the target country.\n"
         "- If your plan requires two steps (like leaving your faction this turn to declare war next turn), "
         "put your immediate move in 'action'/'action_target' and your next move in 'follow_up_action'/'follow_up_target'.\n"
-        "- If you declare war on your master, put 'Independence' in the 'message' field. If you declare war on your puppet, put 'Preemptive'. Puppets and masters automatically leave shared factions upon war. Puppets cannot engage in 'TRADE' agreements.\n"
+        "- If you declare war on your master, put 'Independence' in the 'message' field. If you declare war on your puppet, put 'Preemptive'. Puppets and masters automatically leave shared factions upon war. Integrated puppets cannot engage in 'TRADE' agreements.\n"
         "- You MUST specify an 'opinion_change' integer between -20 and 20 indicating how much this proposal improved or worsened your general opinion of the sender.\n"
         "Reply ONLY with a valid JSON object matching this schema: "
         '{"message": "In-character dialogue responding to the proposal in english", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0}'
@@ -184,7 +184,7 @@ def get_custom_message_system_prompt():
         "- Do NOT output 'JOIN_WARS' if you're trying to join the war of someone not in your faction, instead just type 'WAR_DECLARATION' against the target country.\n"
         "- If your plan requires two steps (like leaving your faction this turn to declare war next turn), "
         "put your immediate move in 'action'/'action_target' and your next move in 'follow_up_action'/'follow_up_target'.\n"
-        "- If you declare war on your master, put 'Independence' in the 'message' field. If you declare war on your puppet, put 'Preemptive'. Puppets and masters automatically leave shared factions upon war. Puppets cannot engage in 'TRADE' agreements.\n"
+        "- If you declare war on your master, put 'Independence' in the 'message' field. If you declare war on your puppet, put 'Preemptive'. Puppets and masters automatically leave shared factions upon war. Integrated puppets cannot engage in 'TRADE' agreements.\n"
         "- You MUST specify an 'opinion_change' integer between -20 and 20 indicating how much this message improved or worsened your general opinion of the sender.\n"
         "Reply ONLY with a valid JSON object matching this schema: "
         '{"message": "Your in-character response here", "action": "NONE", "action_target": "NONE", "follow_up_action": "NONE", "follow_up_target": "NONE", "opinion_change": 0}'

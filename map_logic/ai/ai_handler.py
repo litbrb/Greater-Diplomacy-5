@@ -288,6 +288,11 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         
         puppet_state = params.get("puppet_state", "NONE")
         sender_master = nation_data.get(sender_nation, {}).get("master", "")
+        sender_type = nation_data.get(sender_nation, {}).get("puppet_type", "")
+        my_type = ai_stats.get("puppet_type", "")
+        
+        is_sender_integrated = bool(sender_master and sender_type == c.PUPPET_TYPE_INTEGRATED)
+        is_my_integrated = bool(my_master and my_type == c.PUPPET_TYPE_INTEGRATED)
         
         # We are the AI (Receiving). Therefore we "Take" what they "Give", and we "Give" what they "Take".
         ai_takes_mats = params.get("give_materials", 0)
@@ -295,7 +300,7 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         ai_gives_mats = params.get("take_materials", 0)
         ai_gives_fuel = params.get("take_fuel", 0)
         
-        if puppet_state != "NONE" or my_master or sender_master:
+        if puppet_state != "NONE" or is_sender_integrated or is_my_integrated:
             accepted = False
         elif ai_gives_mats == 0 and ai_gives_fuel == 0 and (ai_takes_mats > 0 or ai_takes_fuel > 0):
             accepted = True

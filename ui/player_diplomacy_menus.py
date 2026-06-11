@@ -1020,6 +1020,10 @@ class Trade_Screen(GameState):
         # Puppet Options
         y_pos = self.panel_rect.y + 220
         
+        my_master = self.map_screen.nation_data.get(self.map_screen.player_country, {}).get("master", "")
+        their_master = self.map_screen.nation_data.get(self.target_nation, {}).get("master", "")
+        is_either_puppet = bool(my_master) or bool(their_master)
+        
         btn_sender = Button(self.panel_rect.x + 30, y_pos, "medium", "blue" if self.puppet_state != "SENDER" else "green", "Make Them Puppet", lambda: self.set_puppet_state("SENDER"))
         if self.puppet_state == "SENDER": btn_sender.is_selected = True
         
@@ -1028,6 +1032,12 @@ class Trade_Screen(GameState):
         
         btn_recv = Button(self.panel_rect.right - 230, y_pos, "medium", "blue" if self.puppet_state != "RECEIVER" else "green", "Become Their Puppet", lambda: self.set_puppet_state("RECEIVER"))
         if self.puppet_state == "RECEIVER": btn_recv.is_selected = True
+        
+        if is_either_puppet:
+            btn_sender.disabled = True
+            btn_sender.color, btn_sender.hover_color = c.UI_COLORS["grey"]
+            btn_recv.disabled = True
+            btn_recv.color, btn_recv.hover_color = c.UI_COLORS["grey"]
         
         self.elements.extend([btn_sender, btn_none, btn_recv])
 
@@ -1466,6 +1476,22 @@ class Create_Integrated_Puppet_Screen(GameState):
                     if prov.get("owner") == self.player and subject in prov.get("cores", []):
                         if getattr(self, 'keep_cores', False) and self.player in prov.get("cores", []):
                             continue
+                            
+                        # Account for previously queued puppets taking the land first
+                        taken_by_queue = False
+                        for q in queue:
+                            q_core = q["core_nation"]
+                            q_keep_cores = q.get("keep_cores", False)
+                            
+                            if q_core in prov.get("cores", []):
+                                if q_keep_cores and self.player in prov.get("cores", []):
+                                    continue
+                                taken_by_queue = True
+                                break
+                                
+                        if taken_by_queue:
+                            continue
+
                         territory_count += 1
                 
                 if subject in queued_cores:

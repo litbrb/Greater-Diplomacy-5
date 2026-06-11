@@ -99,7 +99,7 @@ class Economy_Screen(GameState):
             if bd.get('conscription', 0) != 0:
                 cons_val = int(bd.get('conscription', 0))
                 sign = "+" if cons_val > 0 else ""
-                label = "Conscription Income" if cons_val > 0 else "Conscription Cost"
+                label = "Unused Equipment Income" if cons_val > 0 else "Relaxed Conscription Cost"
                 detail_breakdown += f"  |  {label}: {sign}{cons_val}"
             if bd.get('conversion', 0) != 0:
                 conv_val = int(bd.get('conversion', 0))

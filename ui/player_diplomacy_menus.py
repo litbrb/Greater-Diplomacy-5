@@ -854,7 +854,7 @@ class Peace_Screen(GameState):
         surface.blit(acc_surf, (self.panel_rect.centerx - acc_surf.get_width()//2, self.panel_rect.y + 50))
 
         for el in self.elements:
-            if getattr(el, 'visible', True):
+            if el.visible:
                 el.draw(surface)
 
 # ==========================================
@@ -931,10 +931,10 @@ class View_Peace_Treaty_Screen(GameState):
         cx, cy = prov["center"]
         for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
             sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
-            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * getattr(self.map_screen.camera, 'tilt_factor', 1.0) + self.map_screen.top_ui_height
+            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * self.map_screen.camera.tilt_factor + self.map_screen.top_ui_height
             if -100 < sx < c.SCREEN_WIDTH + 100:
                 radius_x = max(6, int(10 * self.map_screen.camera.zoom))
-                radius_y = int(radius_x * getattr(self.map_screen.camera, 'tilt_factor', 1.0)) if c.APPLY_TILT_TO_OVERLAYS else radius_x
+                radius_y = int(radius_x * self.map_screen.camera.tilt_factor) if c.APPLY_TILT_TO_OVERLAYS else radius_x
                 
                 ellipse_surf = pygame.Surface((radius_x*2, radius_y*2), pygame.SRCALPHA)
                 pygame.draw.ellipse(ellipse_surf, (*color, 150), ellipse_surf.get_rect())
@@ -979,7 +979,7 @@ class View_Peace_Treaty_Screen(GameState):
         surface.blit(title, bg_rect)
         
         for el in self.elements:
-            if getattr(el, 'visible', True):
+            if el.visible:
                 el.draw(surface)
 
 # ==========================================
@@ -1228,7 +1228,7 @@ class Trade_Screen(GameState):
         draw_box(self.panel_rect.x + 430, self.panel_rect.y + 150, self.take_fuel_str, self.active_input == "TAKE_FUEL")
 
         for el in self.elements:
-            if getattr(el, 'visible', True):
+            if el.visible:
                 el.draw(surface)
 
         # Resource HUD (Replicating Production Screen Logic)
@@ -1446,7 +1446,7 @@ class Puppets_Screen(GameState):
         surface.set_clip(old_clip)
         
         for el in self.elements:
-            if getattr(el, 'visible', True):
+            if el.visible:
                 el.draw(surface)
 
 class Create_Integrated_Puppet_Screen(GameState):
@@ -1653,7 +1653,7 @@ class Create_Integrated_Puppet_Screen(GameState):
             pygame.draw.rect(surface, (150, 150, 150), pygame.Rect(track_rect.x, handle_y, 10, handle_h), border_radius=5)
 
         for el in self.elements:
-            if getattr(el, 'visible', True):
+            if el.visible:
                 el.draw(surface)
 
 

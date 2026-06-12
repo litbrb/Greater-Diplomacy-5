@@ -391,7 +391,7 @@ class Edit_Country_Screen(GameState):
     def handle_events(self, events):
         for event in events:
             # --- UNSAVED CHANGES POPUP INTERCEPT ---
-            if getattr(self, "show_unsaved_confirmation", False):
+            if self.show_unsaved_confirmation:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         self.force_exit_to_map()

@@ -331,7 +331,7 @@ class Select_Base_Map(GameState):
                 elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     self.is_dragging_scrollbar = False
 
-                elif event.type == pygame.MOUSEMOTION and getattr(self, 'is_dragging_scrollbar', False):
+                elif event.type == pygame.MOUSEMOTION and self.is_dragging_scrollbar:
                     self._snap_scroll(event.pos[1])
 
             for el in self.elements:
@@ -404,5 +404,5 @@ class Select_Base_Map(GameState):
                 surface.blit(sub_msg, sub_rect)
 
         for el in self.elements:
-            if getattr(el, 'visible', True):
+            if el.visible:
                 el.draw(surface)

@@ -51,7 +51,7 @@ def process_proactive_llm_tasks(map_screen):
     # REMOVED THE "with" BLOCK SO IT DOESN'T BLOCK ON EXIT
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_threads)
     futures = {}
-    my_turn_id = getattr(ai_handler, 'CURRENT_TURN_ID', 0)
+    my_turn_id = ai_handler.CURRENT_TURN_ID
     for task in tasks:
         future = executor.submit(ai_handler.generate_proactive_text, map_screen.nation_data, active_nations, task["sender"], task["target"], task["context"], human_players, my_turn_id)
         futures[future] = task

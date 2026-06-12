@@ -258,7 +258,7 @@ def process_diplomacy_turn(self):
         self.loading_status_text = f"Processing Global Responses (0/{self.responsive_tasks_total})..."
     
         # If skipping, bypass the executor entirely
-        if getattr(self, 'force_skip_llm', False):
+        if self.force_skip_llm:
             for task in ai_tasks:
                 target_ai, sender = task["target"], task["sender"]
                 if task["action"] == "CUSTOM_MSG":
@@ -305,7 +305,7 @@ def process_diplomacy_turn(self):
                     futures[future] = task
                     
             while futures:
-                if getattr(self, 'force_skip_llm', False):
+                if self.force_skip_llm:
                     for f in futures:
                         f.cancel()
                     for f, task in list(futures.items()):
@@ -376,7 +376,7 @@ def process_diplomacy_turn(self):
                             self.responsive_tasks_completed += 1
                             self.loading_status_text = f"Processing Global Responses ({self.responsive_tasks_completed}/{self.responsive_tasks_total})..."
         
-        if not getattr(self, 'force_skip_llm', False):
+        if not self.force_skip_llm:
             executor.shutdown(wait=True)
 
 

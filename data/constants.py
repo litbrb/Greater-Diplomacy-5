@@ -569,6 +569,9 @@ AI_REINFORCE_COMBAT_WEIGHT = 20 # Pulls pathing land units toward active battles
 
 AI_MIN_COAST_FOR_NAVY = 8 # Tiles needed to justify building a navy
 
+AI_TANK_MIN_BASE_THRESHOLD = 2000
+AI_TANK_MIN_DIVISOR = 2000
+
 # ==========================================
 # DIPLOMATIC ACTION CLASSIFICATIONS
 # ==========================================

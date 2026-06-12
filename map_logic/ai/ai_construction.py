@@ -74,10 +74,32 @@ def process_ai_economy_decisions(map_screen):
         if ratio_mat > target_mat: deficits.append("cost_materials")
         if ratio_fuel > target_fuel: deficits.append("cost_fuel")
 
+        # --- DYNAMIC TANK OVERRIDE LOGIC ---
+        best_tank = queries.get_best_offensive_unit(data.get("research", {}), unit_library)
+        min_tank_count = queries.get_minimum_tank_count(inc_mat)
+        
+        current_tank_count = 0
+        for prov in my_provs:
+            for u in prov.get("units", []) + prov.get("unit_queue", []):
+                u_type = u.get("type", "") if "type" in u else u.get("unit_type", "")
+                if "Tank" in u_type or "Armored" in u_type or u_type == "Cavalry":
+                    if isinstance(u, dict) and u.get("owner", ai_name) == ai_name:
+                        current_tank_count += 1
+                        
+        force_tank = (current_tank_count < min_tank_count) and (best_tank is not None)
+        tank_cost_mat = 0
+        tank_cost_fuel = 0
+        if force_tank:
+            t_stats = unit_library.get(best_tank, {})
+            tank_cost_mat = t_stats.get("cost_materials", 0)
+            tank_cost_fuel = t_stats.get("cost_fuel", 0)
+
         # --- DYNAMIC AI CONSCRIPTION LOGIC ---
         # If AI has excess manpower but needs materials, convert manpower to materials
         # 1.0 = keep all, 0.0 = convert all
-        if ratio_mat > target_mat and ratio_man < target_man and data.get("manpower", 0) > 1000:
+        if force_tank and data.get("materials", 0) < tank_cost_mat:
+            data["conscription_slider"] = 0.0 # Emergency: Convert 100% to save for tanks
+        elif ratio_mat > target_mat and ratio_man < target_man and data.get("manpower", 0) > 1000:
             data["conscription_slider"] = 0.5 # Convert 50%
         elif (data.get("manpower", 0) > 10000 and data.get("materials", 0) < 1000) or data.get("manpower", 0) > 100000:
             data["conscription_slider"] = 0.0 # Emergency: Convert 100%
@@ -89,7 +111,12 @@ def process_ai_economy_decisions(map_screen):
         max_conversion = queries.get_max_fuel_conversion(data)
 
         # If the ai is low on fuel but has a lot of materials, let them use this feature to balance out their economy
-        if max_conversion > 0:
+        if force_tank:
+            if data.get("fuel", 0) < tank_cost_fuel and data.get("materials", 0) > tank_cost_mat:
+                data["mat_to_fuel_slider"] = max_conversion # Need fuel for tank
+            else:
+                data["mat_to_fuel_slider"] = 0.0 # Stop burning materials to save up for tanks
+        elif max_conversion > 0:
             if ratio_fuel > target_fuel and ratio_mat < target_mat and data.get("materials", 0) > 500:
                 data["mat_to_fuel_slider"] = max_conversion * 0.5 # Convert using 50% of their LEGAL MAXIMUM capability
             elif data.get("materials", 0) > 5000 and data.get("fuel", 0) < 500 or data.get("materials", 0) > 50000:
@@ -276,7 +303,7 @@ def process_ai_economy_decisions(map_screen):
             ratio_fuel = upk_fuel / inc_fuel if inc_fuel > 0 else 1.0
 
             # Stop recruiting if we've reached our target army size
-            if ratio_mat >= target_mat or ratio_man >= target_man:
+            if not force_tank and (ratio_mat >= target_mat or ratio_man >= target_man):
                 break
                 
             fuel_shortage = ratio_fuel >= target_fuel
@@ -290,8 +317,12 @@ def process_ai_economy_decisions(map_screen):
             
             unit_name_to_build = None
 
+            # 0. Force Tank Check (Highest Priority if below minimum)
+            if force_tank:
+                unit_name_to_build = best_tank
+
             # 1. Naval Check (Priority if below ratio)
-            if current_navy_ratio < target_navy_ratio:
+            if not unit_name_to_build and current_navy_ratio < target_navy_ratio:
                 if not fuel_shortage:
                     unit_name_to_build = queries.get_best_naval_unit(data.get("research", {}), unit_library)
 
@@ -308,6 +339,21 @@ def process_ai_economy_decisions(map_screen):
             cost_mat = unit_stats.get("cost_materials", 0)
             cost_man = unit_stats.get("cost_manpower", 0)
             cost_fuel = unit_stats.get("cost_fuel", 0)
+            
+            # --- SECONDARY FUEL CHECK (Upfront Cost vs Income) ---
+            # If we passed the income ratio checks but we simply don't have enough 
+            # stockpiled fuel to buy the unit, hard fallback to basic infantry!
+            if cost_fuel > 0 and data.get("fuel", 0) < cost_fuel:
+                if force_tank:
+                    break # Save up for the tank! Do not waste resources on infantry.
+                    
+                unit_name_to_build = queries.get_highest_infantry(data, tech_tree, unit_library, allow_fuel_units=False)
+                
+                # Re-fetch stats for the fallback unit
+                unit_stats = unit_library.get(unit_name_to_build, {})
+                cost_mat = unit_stats.get("cost_materials", 0)
+                cost_man = unit_stats.get("cost_manpower", 0)
+                cost_fuel = unit_stats.get("cost_fuel", 0)
             
             # --- SECONDARY FUEL CHECK (Upfront Cost vs Income) ---
             # If we passed the income ratio checks but we simply don't have enough 
@@ -363,6 +409,9 @@ def process_ai_economy_decisions(map_screen):
                     naval_count += 1
                 elif "Tank" in unit_name_to_build or "Armored" in unit_name_to_build or unit_name_to_build == "Cavalry":
                     tank_count += 1
+                    # Recalculate force_tank so we don't accidentally buy way more tanks than the minimum!
+                    if force_tank and tank_count >= min_tank_count:
+                        force_tank = False 
                 else:
                     infantry_count += 1
                 

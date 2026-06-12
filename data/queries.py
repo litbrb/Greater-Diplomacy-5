@@ -3,6 +3,7 @@ import os
 import re
 import base64
 import itertools
+import math
 import pygame
 import data.constants as c
 
@@ -820,6 +821,10 @@ def get_economy_projections(target_nation, map_data, nation_data):
         
     return p_econ.get("total_inc"), p_econ.get("upkeep"), p_econ.get("breakdown")
 
+def get_minimum_tank_count(material_income):
+    """Calculates the baseline number of tanks an AI should force itself to field."""
+    count = math.ceil((material_income - c.AI_TANK_MIN_BASE_THRESHOLD) / c.AI_TANK_MIN_DIVISOR)
+    return max(0, count)
 
 # ==========================================
 # MAP & ENTITY QUERIES

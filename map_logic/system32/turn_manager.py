@@ -3,6 +3,9 @@ import threading
 from map_logic.system32 import turn_processor
 from map_logic.system32 import loading_screen
 from ui import buttons, diplomatic_popups
+from map_logic.ai import ai_handler
+from data import queries
+
 import traceback
 
 def advance_time(map_screen):
@@ -81,12 +84,9 @@ def trigger_ai_thread(map_screen):
     map_screen.force_skip_llm = False # Reset the skip flag
     
     # --- IMPORTANT: Reset the module-level abort flag so APIs work again ---
-    from map_logic.ai import ai_handler
     ai_handler.FORCE_SKIP = False
     ai_handler.CURRENT_TURN_ID = getattr(ai_handler, 'CURRENT_TURN_ID', 0) + 1
-    
-    from data import queries
-    
+        
     # Pre-calculate determinable totals so the UI instantly knows the workload
     map_screen.proactive_tasks_total = len(queries.get_active_ai_nations(map_screen))
     map_screen.proactive_tasks_completed = 0

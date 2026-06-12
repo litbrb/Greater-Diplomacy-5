@@ -504,12 +504,13 @@ class Edit_Country_Screen(GameState):
                 self.redo()
             else:
                 if self.active_input:
+                    # TODO: constants.py the hardcoded 50 please
                     if self.active_input == "COUNTRY_NAME":
-                        self.country_name, _ = process_text_input(event, self.country_name, max_length=25)
+                        self.country_name, _ = process_text_input(event, self.country_name, max_length=50)
                     elif self.active_input == "NAME":
-                        self.leader_name, _ = process_text_input(event, self.leader_name, max_length=20)
+                        self.leader_name, _ = process_text_input(event, self.leader_name, max_length=50)
                     elif self.active_input == "TITLE":
-                        self.leader_title, _ = process_text_input(event, self.leader_title, max_length=20)
+                        self.leader_title, _ = process_text_input(event, self.leader_title, max_length=50)
 
     def additional_draw(self, surface):
         title_font = fonts.get("title")

@@ -37,7 +37,8 @@ def draw_tooltip(self, surface):
     if self.base_layer == "CORES":
         cores = prov.get("cores", [])
         if cores:
-            lines.append(f"Cores: {', '.join(cores)}")
+            core_names = [self.nation_data.get(c, {}).get("name", c) for c in cores]
+            lines.append(f"Cores: {', '.join(core_names)}")
 
     # 2. Add contextual info based on secondary view mode
     if self.secondary_mode == "BLANK":

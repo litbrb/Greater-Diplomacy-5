@@ -181,31 +181,46 @@ def update_country_centers(map_screen):
             # If we haven't checked this province yet, it's a new landmass
             if prov_id not in visited:
                 comp = []
-                queue = [prov]
+                unwrapped_centers = []
+                queue = [(prov, prov["center"][0], prov["center"][1])]
                 visited.add(prov_id)
                 
                 # Flood-fill to find all connected provinces with the SAME grouping key
                 while queue:
-                    curr = queue.pop(0)
+                    curr, uw_x, uw_y = queue.pop(0)
                     comp.append(curr)
+                    unwrapped_centers.append((uw_x, uw_y))
+                    
                     for n_id in curr.get("neighbors", []):
                         if n_id not in visited:
                             n_prov = map_screen.id_to_province.get(n_id)
                             if n_prov and grouping_key_func(n_prov) == group_val:
                                 visited.add(n_id)
-                                queue.append(n_prov)
+                                
+                                n_cx, n_cy = n_prov["center"]
+                                dx = n_cx - (uw_x % map_screen.map_w)
+                                
+                                if map_screen.loop_map:
+                                    if dx > map_screen.map_w / 2:
+                                        dx -= map_screen.map_w
+                                    elif dx < -map_screen.map_w / 2:
+                                        dx += map_screen.map_w
+                                        
+                                next_uw_x = uw_x + dx
+                                
+                                queue.append((n_prov, next_uw_x, n_cy))
                 
                 count = len(comp)
                 if count == 0: continue
                 
-                # 1. Average center (Mean)
-                avg_x = sum(ch["center"][0] for ch in comp) / count
-                avg_y = sum(ch["center"][1] for ch in comp) / count
+                # 1. Average center (Mean) using unwrapped coordinates
+                avg_x = sum(cx for cx, cy in unwrapped_centers) / count
+                avg_y = sum(cy for cx, cy in unwrapped_centers) / count
                 
                 # 2. Covariance Matrix calculations (for rotation and scale)
-                c_xx = sum((ch["center"][0] - avg_x)**2 for ch in comp) / count
-                c_yy = sum((ch["center"][1] - avg_y)**2 for ch in comp) / count
-                c_xy = sum((ch["center"][0] - avg_x) * (ch["center"][1] - avg_y) for ch in comp) / count
+                c_xx = sum((cx - avg_x)**2 for cx, cy in unwrapped_centers) / count
+                c_yy = sum((cy - avg_y)**2 for cx, cy in unwrapped_centers) / count
+                c_xy = sum((cx - avg_x) * (cy - avg_y) for cx, cy in unwrapped_centers) / count
                 
                 # Calculate angle (math.atan2 handles division by zero safely)
                 # atan2 returns radians, we need degrees. Pygame rotates counter-clockwise.
@@ -224,8 +239,16 @@ def update_country_centers(map_screen):
                 country_length = math.sqrt(major_variance) * 3.0
                 country_thickness = math.sqrt(minor_variance) * 3.0
                 
-                # Snap to the closest actual province in this component
-                closest_prov = min(comp, key=lambda ch: (ch["center"][0] - avg_x)**2 + (ch["center"][1] - avg_y)**2)
+                # Snap to the closest actual province in this component using unwrapped distance
+                best_idx = 0
+                best_dist = float('inf')
+                for i, (cx, cy) in enumerate(unwrapped_centers):
+                    dist = (cx - avg_x)**2 + (cy - avg_y)**2
+                    if dist < best_dist:
+                        best_dist = dist
+                        best_idx = i
+                
+                closest_prov = comp[best_idx]
                 
                 blobs.append({
                     "owner": group_val, # Reusing "owner" key so the renderer accepts it generically

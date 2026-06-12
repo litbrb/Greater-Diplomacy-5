@@ -329,14 +329,21 @@ def execute_peace_treaty(map_data, nation_data, proposer, target, peace_type, ma
     finalize_neutral(nation_data, proposer, target)
 
 def finalize_create_faction(map_data, nation_data, creator):
-    fac = f"The {nation_data[creator].get('name', creator)} Pact"
-    nation_data[creator]["faction"] = fac
-    nation_data[creator]["is_faction_leader"] = True
+    master = nation_data.get(creator, {}).get("master", "")
+    leader = master if master else creator
+    
+    fac = f"The {nation_data[leader].get('name', leader)} Pact"
+    nation_data[leader]["faction"] = fac
+    nation_data[leader]["is_faction_leader"] = True
+    
+    if master:
+        nation_data[creator]["faction"] = fac
+        nation_data[creator]["is_faction_leader"] = False
 
     if queries.is_faction_at_war(fac, nation_data):
         queries.save_faction_pre_war_map(fac, map_data, nation_data)
         
-    pull_puppets_into_faction(creator, fac, map_data, nation_data)
+    pull_puppets_into_faction(leader, fac, map_data, nation_data)
 
 def finalize_disband_faction(nation_data, leader):
     fac = nation_data[leader].get("faction", "")

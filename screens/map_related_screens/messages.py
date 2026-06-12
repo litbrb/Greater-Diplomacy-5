@@ -248,6 +248,7 @@ class Messages_Screen(GameState):
         if self.selected_recipient:
             locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
             if not locked:
+                # TODO: another hardcoded limit!!! move to constants.py!!!
                 self.compose_text, status = process_text_input(event, self.compose_text, max_length=150)
                 if status == "SUBMIT":
                     self.send_message()

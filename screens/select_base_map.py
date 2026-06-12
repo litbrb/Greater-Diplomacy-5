@@ -36,6 +36,18 @@ class Select_Base_Map(GameState):
         self.renaming_scenario = None
         self.refresh_maps()
 
+    def update(self):
+        super().update()
+        
+        # Automatically refresh if the number of maps has changed since last viewed
+        current_custom = len(os.listdir(c.SCENARIOS_CUSTOM_DIR)) if os.path.exists(c.SCENARIOS_CUSTOM_DIR) else 0
+        current_base = len(os.listdir(c.BASE_MAPS_DIR)) if os.path.exists(c.BASE_MAPS_DIR) else 0
+        
+        if getattr(self, 'last_custom_count', -1) != current_custom or getattr(self, 'last_base_count', -1) != current_base:
+            self.last_custom_count = current_custom
+            self.last_base_count = current_base
+            self.refresh_maps()
+
     def refresh_maps(self):
         self.elements = []
         
@@ -79,6 +91,7 @@ class Select_Base_Map(GameState):
 
         elif self.sub_state == "BASE_MAPS":
             self.elements.append(Button(20, 20, "small", "red", "Back", lambda: self.set_sub_state("CUSTOM_MAPS")))
+            self.elements.append(Button(c.SCREEN_WIDTH - 220, 20, "medium", "purple", "Data Refresh", self.trigger_base_map_data_refresh))
             
             base_dir = c.BASE_MAPS_DIR
             if not os.path.exists(base_dir):
@@ -91,6 +104,104 @@ class Select_Base_Map(GameState):
                     Button("centered", btn_y, "new_game", "blue", name, 
                            lambda n=name: self.start_editor_with_map(n))
                 )
+
+    def trigger_base_map_data_refresh(self):
+        """Headlessly instantiates each base map, runs internal data sync cleaners, and forces an in-place write to disk."""
+        from screens.map import Map
+        import json
+        import pygame
+        import tkinter as tk
+        from tkinter import messagebox
+        
+        maps_processed = 0
+        base_dir = c.BASE_MAPS_DIR
+
+        if not os.path.exists(base_dir):
+            return
+
+        maps = os.listdir(base_dir)
+
+        for name in maps:
+            scenario_path = os.path.join(base_dir, name)
+            map_json_path = os.path.join(scenario_path, "map_data.json")
+            
+            if not os.path.isdir(scenario_path) or not os.path.exists(map_json_path):
+                continue
+                
+            try:
+                # 1. Instantiate Map with standard singleplayer configurations
+                temp_map_context = Map(load_path=scenario_path, is_scenario=True)
+                
+                # 2. Execute the official resync pipeline
+                temp_map_context.refresh_nation_data()
+                print(f"refreshed {name}")
+                
+                # Set all playable country resources to 0
+                for nation_name, stats in temp_map_context.nation_data.items():
+                    if nation_name != "GLOBAL_EVENTS" and nation_name not in c.UNPLAYABLE_NATIONS:
+                        stats["manpower"] = 0
+                        stats["materials"] = 0
+                        stats["fuel"] = 0
+                
+                # 3. Clean country flags/portraits
+                queries.scrub_default_images(temp_map_context.nation_data)
+                
+                # 4. Reconstruct the exact structural configuration payload
+                save_dict = {
+                    "date": {
+                        "day": temp_map_context.time_manager.day,
+                        "month": temp_map_context.time_manager.month_index,
+                        "year": temp_map_context.time_manager.year,
+                        "total_turns": getattr(temp_map_context.time_manager, 'total_turns', 0)
+                    },
+                    "loop_map": temp_map_context.loop_map,
+                    "player_country": temp_map_context.player_country,
+                    "active_players": getattr(temp_map_context, "active_players", [temp_map_context.player_country]),
+                    "current_player_index": getattr(temp_map_context, "current_player_index", 0),
+                    "default_research": getattr(temp_map_context, "default_research", None),
+                    "nation_data": temp_map_context.nation_data,
+                    "provinces": {}
+                }
+                
+                for data in temp_map_context.map_data.values():
+                    save_dict["provinces"][data["json_key"]] = {
+                        "owner": data["owner"],
+                        "cores": data.get("cores", []),
+                        "is_coastal": data.get("is_coastal", False),
+                        "units": data.get("units", []),
+                        "building_queue": data.get("building_queue", []),
+                        "unit_queue": data.get("unit_queue", []),
+                        "orders": data.get("orders", []),
+                        "resources": data.get("resources", []),
+                        "buildings": data.get("buildings", [])
+                    }
+
+                # 5. Perform the manual write operations in-place
+                indent_val = c.SAVE_INDENT
+                
+                with open(os.path.join(scenario_path, "meta.json"), "w") as f:
+                    json.dump(save_dict, f, indent=indent_val)
+                    
+                with open(map_json_path, "w") as f:
+                    json.dump(temp_map_context.raw_json_data, f, indent=indent_val)
+                    
+                if hasattr(temp_map_context, 'history'):
+                    with open(os.path.join(scenario_path, "history.json"), "w") as f:
+                        json.dump(temp_map_context.history, f, indent=c.HISTORY_INDENT)
+                        
+                pygame.image.save(temp_map_context.political_map, os.path.join(scenario_path, "political.png"))
+                pygame.image.save(temp_map_context.terrain_map, os.path.join(scenario_path, "terrain.png"))
+                pygame.image.save(temp_map_context.id_map, os.path.join(scenario_path, "id_map.png"))
+                pygame.image.save(temp_map_context.cores_map, os.path.join(scenario_path, "cores.png"))
+                
+                maps_processed += 1
+            except Exception as e:
+                print(f"[REFRESH ERROR] Failed to automatically sync structural data profiles for base map '{name}': {e}")
+
+        print(f"Synced {maps_processed} base maps!")
+        root = queries.get_transient_tk_root()
+        messagebox.showinfo("Data Refresh", f"Synced {maps_processed} base maps successfully.", parent=root)
+        queries.destroy_tk_root(root)
 
     # --- FILE MANAGEMENT LOGIC ---
     def import_scenario_zip(self):

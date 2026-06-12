@@ -86,7 +86,7 @@ def handle_specific_action(map_screen, action_type):
     """A clean, generic handler replacing the overloaded faction button logic."""
     target = map_screen.selected_province.get("owner")
         
-    custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
+    custom_msg = map_screen.mail_draft_text.strip()
     
     # Block puppets from creating/joining factions independently
     if action_type in ["CREATE_FACTION", "JOIN_FACTION_REQ", "FACTION_INVITE", "LEAVE_FACTION", "DISBAND_FACTION", "KICK_FACTION_MEMBER"]:
@@ -214,7 +214,7 @@ def handle_join_wars(map_screen):
         map_screen.show_feedback("Cannot join wars while leaving the faction!")
         return
         
-    custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
+    custom_msg = map_screen.mail_draft_text.strip()
     msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, "JOIN_WARS", custom_msg)
     map_screen.mail_input_active = False
     map_screen.show_feedback(msg)
@@ -234,7 +234,7 @@ def handle_call_to_arms(map_screen):
         map_screen.show_feedback("Cannot call to arms while leaving the faction!")
         return
         
-    custom_msg = getattr(map_screen, "mail_draft_text", "").strip()
+    custom_msg = map_screen.mail_draft_text.strip()
     msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, "CALL_TO_ARMS", custom_msg)
     map_screen.mail_input_active = False
     map_screen.show_feedback(msg)

@@ -116,7 +116,7 @@ def draw_map_screen(self, surface):
                     
                     # Hide the arrows if it's not the current player's unit, the player isn't spectating,
                     # and the game isn't actively resolving AI/global turns.
-                    if not is_current_player_unit and not is_spectator and not getattr(self, 'viewing_ai_moves', False):
+                    if not is_current_player_unit and not is_spectator and not self.viewing_ai_moves:
                         continue
                     # ----------------------------
 

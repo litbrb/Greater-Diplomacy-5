@@ -36,8 +36,8 @@ def render_buttons(self):
     # ==================================================================== #
     #                        LEFT & BOTTOM UI BARS                         #
     # ==================================================================== #
-    is_spec = getattr(self, 'player_country', '') == "Spectator"
-    is_ed = getattr(self, 'is_editor', False)
+    is_spec = self.player_country == "Spectator"
+    is_ed = self.is_editor
 
     econ_callback = (lambda: editor_menus.open_editor_economy(self)) if (is_ed or is_spec) else (lambda: self.change_state("ECONOMY"))
     research_callback = (lambda: editor_menus.open_map_research_editor(self)) if (is_ed or is_spec) else (lambda: self.change_state("RESEARCH"))
@@ -212,7 +212,7 @@ def update_button_states(map_screen):
             btn.visible = True
 
         # Use the cleaner 'is_selected' gold border instead of overriding raw RGB values
-        current_mode = getattr(map_screen, "editor_mode", "")
+        current_mode = map_screen.editor_mode
         map_screen.btn_ed_resource.is_selected = (current_mode == "RESOURCE")
         map_screen.btn_ed_nation.is_selected = (current_mode == "NATION")
         map_screen.btn_ed_building.is_selected = (current_mode == "BUILDING")

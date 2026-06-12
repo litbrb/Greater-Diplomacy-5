@@ -24,17 +24,17 @@ def draw_tooltip(self, surface):
         owner_display = terrain.replace('_', ' ').title()
     
     # 1. Start with the basic header info based on the primary map mode
-    if getattr(self, 'base_layer', '') == "TERRAIN":
+    if self.base_layer == "TERRAIN":
         terrain_display = terrain.replace('_', ' ').title()
         lines = [f"ID: {prov['id']} | {terrain_display}"]
-    elif getattr(self, 'base_layer', '') == "RELATIONS":
+    elif self.base_layer == "RELATIONS":
         # Show exactly how much they like us
         rel_score = queries.get_relation_score(self.player_country, owner_id, self.nation_data, self.id_to_province)
         lines = [f"ID: {prov['id']} | {owner_display}", f"Opinion: {rel_score}"]
     else:
         lines = [f"ID: {prov['id']} | {owner_display}"]
 
-    if getattr(self, 'base_layer', '') == "CORES":
+    if self.base_layer == "CORES":
         cores = prov.get("cores", [])
         if cores:
             lines.append(f"Cores: {', '.join(cores)}")

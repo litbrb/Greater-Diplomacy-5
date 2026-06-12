@@ -51,6 +51,7 @@ class Map(GameState):
         self.ai_processing_complete = False
         self.is_refreshing = False
         self.thread_error = None
+        self.force_skip_llm = False
         
         # --- MULTI-TURN FLAGS ---
         self.multi_turn_processing_complete = False

@@ -36,10 +36,26 @@ class Map(GameState):
         self.current_player_index = 0
         self.show_player_ready_screen = False
 
-       # --- BACKGROUND PROCESSING FLAGS ---
+       # --- UI DISPLAY OVERRIDES ---
+        self.hide_raised_rect = False
+        self.hide_top_info = False
+        self.hide_tooltip = False
+        self.hide_resource_hud = False
+        self.hide_minimap = False
+        self.centers_need_update = False
+        self.error_copied = False
+        self.random_settings = None
+
+        # --- BACKGROUND PROCESSING FLAGS ---
         self.ai_is_thinking = False
         self.ai_processing_complete = False
+        self.is_refreshing = False
         self.thread_error = None
+        
+        # --- MULTI-TURN FLAGS ---
+        self.multi_turn_processing_complete = False
+        self.multi_turns_total = 0
+        self.multi_turns_completed = 0
         
         # --- NEW PROGRESS BAR TRACKERS ---
         self.loading_status_text = "Waiting..."

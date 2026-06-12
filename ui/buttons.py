@@ -189,7 +189,7 @@ def update_button_states(map_screen):
         (map_screen.btn_view_blank, map_screen.secondary_mode == "BLANK"),
         (map_screen.btn_view_units, map_screen.secondary_mode == "UNITS"),
         (map_screen.btn_view_economy, map_screen.secondary_mode == "ECONOMY"),
-        (map_screen.btn_toggle_names, getattr(map_screen, 'show_country_names', True))
+        (map_screen.btn_toggle_names, map_screen.show_country_names)
     ]
     for btn, is_active in toggles:
         btn.visible = True
@@ -220,8 +220,8 @@ def update_button_states(map_screen):
         map_screen.btn_ed_unit.is_selected = (current_mode == "UNIT")
 
     else:
-        viewing_ai = getattr(map_screen, 'viewing_ai_moves', False)
-        is_thinking = getattr(map_screen, 'ai_is_thinking', False) or getattr(map_screen, 'is_refreshing', False) # Check our flags
+        viewing_ai = map_screen.viewing_ai_moves
+        is_thinking = map_screen.ai_is_thinking or map_screen.is_refreshing
 
         # Hide/disable the button if we are thinking
         map_screen.btn_next_turn.visible = not is_sel and not is_thinking
@@ -230,11 +230,11 @@ def update_button_states(map_screen):
 
         # Visibility and active color swapping for the skip toggle
         map_screen.btn_skip_ai.visible = not is_sel and not is_thinking
-        skip_on = getattr(map_screen, 'skip_ai_view', False)
+        skip_on = map_screen.skip_ai_view
         map_screen.btn_skip_ai.text = "Skip AI: ON" if skip_on else "Skip AI: OFF"
         map_screen.btn_skip_ai.color, map_screen.btn_skip_ai.hover_color = c.UI_COLORS["green" if skip_on else "red"]
 
-        is_spec = getattr(map_screen, 'player_country', '') == "Spectator"
+        is_spec = map_screen.player_country == "Spectator"
         map_screen.btn_multi_turn.visible = not is_sel and not is_thinking and is_spec
 
         gp_btns = [

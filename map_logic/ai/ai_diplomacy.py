@@ -38,7 +38,7 @@ def process_proactive_llm_tasks(map_screen):
     active_nations = set(queries.get_living_nations(map_screen.map_data))
     
     # If skipping, bypass the executor entirely to save time and prevent thread leakage
-    if getattr(map_screen, 'force_skip_llm', False):
+    if map_screen.force_skip_llm:
         for task in tasks:
             final_msg = task["fallback"]
             sender_data = map_screen.nation_data.get(task["sender"], {})
@@ -58,7 +58,7 @@ def process_proactive_llm_tasks(map_screen):
         
     while futures:
         # Check if the user pressed the Force Skip button
-        if getattr(map_screen, 'force_skip_llm', False):
+        if map_screen.force_skip_llm:
             # Cancel pending futures to prevent API spam
             for f in futures:
                 f.cancel()
@@ -120,7 +120,7 @@ def process_proactive_llm_tasks(map_screen):
                     map_screen.loading_status_text = f"Drafting Proactive Responses ({map_screen.proactive_llm_tasks_completed}/{map_screen.proactive_llm_tasks_total})..."
             
     # Clean up gracefully if it finished normally without skipping
-    if not getattr(map_screen, 'force_skip_llm', False):
+    if not map_screen.force_skip_llm:
         executor.shutdown(wait=True)
 
 def process_basic_proactive_ai(map_screen):
@@ -129,7 +129,7 @@ def process_basic_proactive_ai(map_screen):
     ai_nations = queries.get_active_ai_nations(map_screen)
     
     # Grab the active players to pass down for our FULL/ABSOLUTE optimization check
-    human_players = getattr(map_screen, 'active_players', [map_screen.player_country])
+    human_players = map_screen.active_players
 
     # --- Trigger the UI Progress Bar ---
     map_screen.proactive_tasks_total = len(ai_nations)

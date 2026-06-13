@@ -5,7 +5,7 @@ from map_logic.rendering.font_manager import fonts
 
 def draw_bottom_text(map_screen, surface):
     """Draws the bottom resource bar with net income overlays."""
-    hide_hud = getattr(map_screen, 'hide_resource_hud', False) or map_screen.is_editor
+    hide_hud = map_screen.hide_resource_hud or map_screen.is_editor
     
     if hide_hud:
         return

@@ -33,6 +33,12 @@ SCREEN_HEIGHT = 720
 FEEDBACK_TEXT_OFFSET_X = 620
 FEEDBACK_TEXT_Y = 220
 
+# --- Text Input Limits ---
+MAX_API_KEY_LENGTH = 200
+MAX_MODEL_NAME_LENGTH = 150
+MAX_MESSAGE_LENGTH = 150
+MAX_MAIL_DRAFT_LENGTH = 120
+
 # Economy Data
 BASE_YIELDS = {
     "manpower": 100,
@@ -231,6 +237,10 @@ PROVINCE_UI = {
     "diplomatic_box": (10, 150, 140, 450),
     "mail_box": (400, 300, 150, 300)
 }
+
+MAP_QUEUE_OVERLAY_WIDTH = 400
+MAP_QUEUE_OVERLAY_X = SCREEN_WIDTH - MAP_QUEUE_OVERLAY_WIDTH - 20
+MAP_QUEUE_OVERLAY_Y = 250
 
 DIPLOMATIC_INFO_TITLE = "Diplomatic Info"
 MAX_DIPLOMACY_DISPLAY = 10 # <-- Added this constant to prevent hardcoding display limits

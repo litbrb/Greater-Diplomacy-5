@@ -57,7 +57,7 @@ def draw_map_queue_overlay(surface, target_province):
     if not b_queue and not u_queue: return
     
     # Make the box wider to fit two columns seamlessly underneath the Production button
-    panel_rect = pygame.Rect(1380 - 200, 250, 400, min(400, max(len(b_queue), len(u_queue)) * 35 + 40))
+    panel_rect = pygame.Rect(c.MAP_QUEUE_OVERLAY_X, c.MAP_QUEUE_OVERLAY_Y, c.MAP_QUEUE_OVERLAY_WIDTH, min(400, max(len(b_queue), len(u_queue)) * 35 + 40))
     
     panel_surf = pygame.Surface((panel_rect.width, panel_rect.height), pygame.SRCALPHA)
     panel_surf.fill((30, 30, 50, 200))

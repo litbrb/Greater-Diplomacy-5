@@ -136,7 +136,7 @@ def draw_country_names(map_screen, surface):
                                 scaled_shadow = pygame.transform.rotate(scaled_shadow, angle)
 
                             # 3. Apply Tilt Compression to Text AFTER Rotation
-                            if getattr(map_screen.camera, 'tilt_factor', 1.0) < 0.99 and c.APPLY_TILT_TO_TEXT:
+                            if map_screen.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_TEXT:
                                 final_w = scaled_text.get_width()
                                 final_h = max(1, int(scaled_text.get_height() * map_screen.camera.tilt_factor))
                                 scaled_text = pygame.transform.scale(scaled_text, (final_w, final_h))

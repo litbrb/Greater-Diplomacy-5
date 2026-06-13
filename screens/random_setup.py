@@ -194,9 +194,9 @@ class Random_Setup(GameState):
             "year": self.current_year,
             "island_filter_size": self.current_island_size,
             "procedural_type": self.procedural_types[self.proc_type_index],
-            "single_tile_start": getattr(self, "single_tile_start", False),
-            "resource_chance": getattr(self, "resource_chance", 0.15),
-            "base_days_per_turn": getattr(self, "base_days_per_turn", 15)
+            "single_tile_start": self.single_tile_start,
+            "resource_chance": self.resource_chance,
+            "base_days_per_turn": self.base_days_per_turn
         }
         self.next_state = "MAP"
         self.done = True

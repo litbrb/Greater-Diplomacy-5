@@ -4,7 +4,7 @@ from map_logic.rendering.font_manager import fonts
 
 def draw_top_text(map_screen, surface):
     """Draws the current date/time and the 'Playing As' country name."""
-    if getattr(map_screen, 'hide_top_info', False):
+    if map_screen.hide_top_info:
         return
 
     def draw_with_bg(surf_text, x, y):

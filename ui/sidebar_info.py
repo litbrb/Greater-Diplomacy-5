@@ -27,7 +27,7 @@ def draw_sidebar_info(self, surface):
 
     # --- FOG OF WAR VISIBILITY CHECK ---
     is_visible = True
-    if getattr(self, 'visible_provinces', None) is not None:
+    if self.visible_provinces is not None:
         if province["id"] not in self.visible_provinces:
             is_visible = False
             

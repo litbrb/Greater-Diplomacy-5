@@ -253,8 +253,7 @@ def handle_map_events(self, event):
             elif self.mail_input_active:
                 
                 self.mail_draft_text, status = process_text_input(
-                    # TODO: maybe make this hardcoded 120 stored in constants.py somewhere
-                    event, self.mail_draft_text, max_length=120
+                    event, self.mail_draft_text, max_length=c.MAX_MAIL_DRAFT_LENGTH
                 )
                 
                 if status == "SUBMIT":

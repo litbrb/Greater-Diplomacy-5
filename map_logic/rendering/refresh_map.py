@@ -179,7 +179,7 @@ def refresh_relations_map(self):
     
     new_rel_surf = pygame.Surface(self.id_map.get_size(), depth=24)
     pygame.surfarray.blit_array(new_rel_surf, out_3d)
-    new_rel_surf.set_colorkey((255, 0, 255)) 
+    new_rel_surf.set_colorkey(c.COLOR_CHROMA_PINK) 
     
     self.relations_map = new_rel_surf
     if self.map_mode == "RELATIONS":
@@ -251,7 +251,7 @@ def refresh_cores_map(self):
     
     new_pol_surf = pygame.Surface(self.id_map.get_size(), depth=24)
     pygame.surfarray.blit_array(new_pol_surf, out_3d)
-    new_pol_surf.set_colorkey((255, 0, 255)) 
+    new_pol_surf.set_colorkey(c.COLOR_CHROMA_PINK) 
     
     self.cores_map = new_pol_surf
     if self.map_mode == "CORES":
@@ -319,7 +319,7 @@ def refresh_factions_map(self):
     
     new_fac_surf = pygame.Surface(self.id_map.get_size(), depth=24)
     pygame.surfarray.blit_array(new_fac_surf, out_3d)
-    new_fac_surf.set_colorkey((255, 0, 255)) 
+    new_fac_surf.set_colorkey(c.COLOR_CHROMA_PINK) 
     
     self.factions_map = new_fac_surf
     if self.map_mode == "FACTIONS":
@@ -410,7 +410,7 @@ def refresh_faction_territories_map(self):
     new_pol_surf.set_colorkey(c.COLOR_CHROMA_PINK) 
     
     self.faction_territories_map = new_pol_surf
-    if getattr(self, 'map_mode', '') == "FACTION_TERRITORIES":
+    if self.map_mode == "FACTION_TERRITORIES":
         self.active_map = self.faction_territories_map
         
     print(f"Faction Territories map refreshed in {pygame.time.get_ticks() - timer} ms")

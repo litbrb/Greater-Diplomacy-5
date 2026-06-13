@@ -14,7 +14,7 @@ def advance_time(map_screen):
     map_screen.turn_start_time = pygame.time.get_ticks()
     
     # PHASE 2: Resolve the turn (Synchronous execution with UI updates for refreshes)
-    if getattr(map_screen, 'viewing_ai_moves', False):
+    if map_screen.viewing_ai_moves:
         map_screen.is_refreshing = True
         map_screen.loading_status_text = "Resolving Orders & Map Refreshes..."
         

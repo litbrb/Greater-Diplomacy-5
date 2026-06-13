@@ -240,6 +240,7 @@ def process_basic_proactive_ai(map_screen):
                                 "fallback": fallback,
                                 "action_type": "JOIN_FACTION_REQ"
                             })
+                            break # Act once per turn to avoid conflicts (lol imagine trying to create 2 seperate factions simultaneously)
                 else:
                     # Find nations also at war with our enemy who aren't in a faction to form a new one with
                     potential_partners = []
@@ -284,34 +285,33 @@ def process_basic_proactive_ai(map_screen):
                 if member == ai_name or member not in active_nations: continue
                 
                 member_enemies = map_screen.nation_data[member].get("at_war_with", [])
-                unshared_wars = [e for e in my_enemies if e not in member_enemies and e in active_nations and not queries.has_active_truce(member, e, map_screen.nation_data)]
-                
-                if unshared_wars:
-                    if not queries.is_ai_diplo_on_cooldown(ai_name, member, "CALL_TO_ARMS", map_screen.nation_data):
-                        existing = pending.get(member, {})
-                        turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+            unshared_wars = [e for e in my_enemies if e not in member_enemies and e in active_nations and not queries.has_active_truce(member, e, map_screen.nation_data)]
+            
+            if unshared_wars:
+                if not queries.is_ai_diplo_on_cooldown(ai_name, member, "CALL_TO_ARMS", map_screen.nation_data):
+                    existing = pending.get(member, {})
+                    turns = existing.get("turns", 0) if isinstance(existing, dict) else 0
+                    
+                    if member not in pending or turns == 0:
+                        target_enemy = unshared_wars[0]
+                        action_context = ai_prompts.get_proactive_action_context("CALL_TO_ARMS", target_enemy)
+                        fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_CALL_TO_ARMS", "We request your aid in our ongoing conflicts!")
                         
-                        if member not in pending or turns == 0:
-                            target_enemy = unshared_wars[0]
-                            action_context = ai_prompts.get_proactive_action_context("CALL_TO_ARMS", target_enemy)
-                            fallback = ai_prompts.AI_FALLBACK_RESPONSES.get("PROACTIVE_CALL_TO_ARMS", "We request your aid in our ongoing conflicts!")
-                            
-                            pending[member] = {
-                                "action": "CALL_TO_ARMS",
-                                "turns": 0,
-                                "message": fallback
-                            }
-                            queries.set_ai_diplo_cooldown(ai_name, member, "CALL_TO_ARMS", map_screen.nation_data)
-                            
-                            map_screen.proactive_llm_tasks.append({
-                                "sender": ai_name,
-                                "target": member,
-                                "context": action_context,
-                                "fallback": fallback,
-                                "action_type": "CALL_TO_ARMS"
-                            })
-                            break # Act once per turn to avoid conflicts
-
+                        pending[member] = {
+                            "action": "CALL_TO_ARMS",
+                            "turns": 0,
+                            "message": fallback
+                        }
+                        queries.set_ai_diplo_cooldown(ai_name, member, "CALL_TO_ARMS", map_screen.nation_data)
+                        
+                        map_screen.proactive_llm_tasks.append({
+                            "sender": ai_name,
+                            "target": member,
+                            "context": action_context,
+                            "fallback": fallback,
+                            "action_type": "CALL_TO_ARMS"
+                        })
+                        
         # --- 3. Faction War Joining Logic ---
         if my_faction:
             faction_members = queries.get_faction_members(my_faction, map_screen.nation_data)
@@ -346,8 +346,7 @@ def process_basic_proactive_ai(map_screen):
                                 "fallback": fallback,
                                 "action_type": "JOIN_WARS"
                             })
-                            break # Act once per turn to avoid conflicts
-
+                            
         # --- 4. Declare War for Cores Logic ---
         if not is_already_at_war and not (my_master and my_type == c.PUPPET_TYPE_INTEGRATED):
             current_turn = queries.get_total_turns(map_screen.time_manager)

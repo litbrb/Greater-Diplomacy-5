@@ -23,7 +23,7 @@ def draw_combat_bubbles(self_map, surface):
     
     for pred in predictions:
         # --- FOG OF WAR COMBAT VISIBILITY CHECK ---
-        if getattr(self_map, 'visible_provinces', None) is not None:
+        if self_map.visible_provinces is not None:
             if pred["type"] == "meeting":
                 if pred["loc"][0] not in self_map.visible_provinces and pred["loc"][1] not in self_map.visible_provinces:
                     continue

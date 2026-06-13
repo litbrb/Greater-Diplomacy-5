@@ -4,7 +4,7 @@ from data import queries
 
 def draw_flag(map_screen, surface):
     """Handles decoding and drawing the nation's flag in the top UI bar."""
-    if getattr(map_screen, 'hide_top_info', False):
+    if map_screen.hide_top_info:
         return
         
     # Determine which country to display

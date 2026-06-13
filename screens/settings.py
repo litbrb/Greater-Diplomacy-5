@@ -176,17 +176,14 @@ class Settings(GameState):
         # Handle dynamic text entry mapping
         elif self.active_input and self.ai_mode != "OFF":
             mode = self.ai_mode.lower()
-            # TODO: you guessed it constants.py this hardcoded stuff
-            # imagine if i was somehow unknowingly commiting some kinda sin by centralizing hardcoded compenents
-            # ehhhhsdffgjsdk
             if self.active_input.endswith("_KEY"):
                 current_text = getattr(self, f"{mode}_api_key_text")
-                new_text, status = ui_elements.process_text_input(event, current_text, max_length=200)
+                new_text, status = ui_elements.process_text_input(event, current_text, max_length=c.MAX_API_KEY_LENGTH)
                 setattr(self, f"{mode}_api_key_text", new_text)
                 setattr(self.controller, f"{mode}_api_key", new_text.strip())
             elif self.active_input.endswith("_MOD"):
                 current_text = getattr(self, f"{mode}_model_text")
-                new_text, status = ui_elements.process_text_input(event, current_text, max_length=150)
+                new_text, status = ui_elements.process_text_input(event, current_text, max_length=c.MAX_MODEL_NAME_LENGTH)
                 setattr(self, f"{mode}_model_text", new_text)
                 setattr(self.controller, f"{mode}_model", new_text.strip())
 

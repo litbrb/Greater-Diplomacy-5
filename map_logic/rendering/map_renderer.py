@@ -234,7 +234,7 @@ def draw_map_screen(self, surface):
 
     # Check flag before drawing the tooltip
     # this is the stuff that makes it so that if you select a province you don't display the tooltip
-    if self.hovered_province and not self.selected_province and not getattr(self, 'hide_tooltip', False): 
+    if self.hovered_province and not self.selected_province and not self.hide_tooltip: 
         tooltip.draw_tooltip(self, surface)
         
     # --- LAYER 7: EXIT CONFIRMATION MODAL ---

@@ -204,13 +204,13 @@ class New_Game(GameState):
                             "day": temp_map_context.time_manager.day,
                             "month": temp_map_context.time_manager.month_index,
                             "year": temp_map_context.time_manager.year,
-                            "total_turns": getattr(temp_map_context.time_manager, 'total_turns', 0)
+                            "total_turns": temp_map_context.time_manager.total_turns
                         },
                         "loop_map": temp_map_context.loop_map,
                         "player_country": temp_map_context.player_country,
-                        "active_players": getattr(temp_map_context, "active_players", [temp_map_context.player_country]),
-                        "current_player_index": getattr(temp_map_context, "current_player_index", 0),
-                        "default_research": getattr(temp_map_context, "default_research", None),
+                        "active_players": temp_map_context.active_players,
+                        "current_player_index": temp_map_context.current_player_index,
+                        "default_research": temp_map_context.default_research,
                         "nation_data": temp_map_context.nation_data,
                         "provinces": {}
                     }

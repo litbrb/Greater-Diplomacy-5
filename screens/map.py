@@ -529,7 +529,7 @@ class Map(GameState):
         
         diplomatic_popups.draw(self, surface)
         
-        if getattr(self, 'thread_error', None):
+        if self.thread_error:
             surface.fill((150, 0, 0))
             title = fonts.get("heading1").render("FATAL THREAD ERROR", True, (255, 255, 255))
             surface.blit(title, (20, 20))
@@ -552,7 +552,7 @@ class Map(GameState):
             surface.blit(btn_txt, btn_txt.get_rect(center=btn_rect.center))
             
             # Show "Copied!" feedback text above the button
-            if getattr(self, 'error_copied', False):
+            if self.error_copied:
                 copied_txt = fonts.get("small").render("Copied!", True, (100, 255, 100))
                 surface.blit(copied_txt, (btn_rect.centerx - copied_txt.get_width()//2, btn_rect.y - 25))
                 

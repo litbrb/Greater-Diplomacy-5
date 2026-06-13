@@ -106,7 +106,7 @@
     },
     "Basic Recruitment Center": {
         "time": 6, "group": "recruitment", "req": null,
-        "cost_materials": 5000, "cost_manpower": 0, "cost_fuel": 0,
+        "cost_materials": 2500, "cost_manpower": 0, "cost_fuel": 0,
         "prod_materials": 0, "prod_manpower": 50, "prod_fuel": 0
     },
     "Recruitment Building Lvl 1": {

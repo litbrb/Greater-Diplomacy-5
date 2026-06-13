@@ -257,6 +257,11 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         if action_type in ["FACTION_INVITE", "CREATE_FACTION"]:
             accepted = True
             
+    # Accept calls to arms and requests to join wars if in the same faction
+    if action_type in ["JOIN_WARS", "CALL_TO_ARMS"]:
+        if queries.are_in_same_faction(ai_nation, sender_nation, nation_data):
+            accepted = True
+            
     # NEW: AI Master-Puppet Faction Acceptance
     my_master = ai_stats.get("master", "")
     if my_master == sender_nation and action_type in ["FACTION_INVITE", "CREATE_FACTION", "JOIN_FACTION_REQ"]:

@@ -25056,7 +25056,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Papal States": {
             "name": "Papal States",
@@ -25102,7 +25103,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Western Sahara": {
             "name": "Western Sahara",
@@ -25148,7 +25150,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Eswatini": {
             "name": "Eswatini",
@@ -25194,7 +25197,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Lesotho": {
             "name": "Lesotho",
@@ -25240,7 +25244,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Djibouti": {
             "name": "Djibouti",
@@ -25286,7 +25291,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Gabon": {
             "name": "Gabon",
@@ -25332,7 +25338,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Guinea-Bissau": {
             "name": "Guinea-Bissau",
@@ -25378,7 +25385,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Guinea": {
             "name": "Guinea",
@@ -25424,7 +25432,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Malawi": {
             "name": "Malawi",
@@ -25470,7 +25479,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Shanxi": {
             "name": "Shanxi",
@@ -25516,7 +25526,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Sierra Leone": {
             "name": "Sierra Leone",
@@ -25562,7 +25573,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Tajikistan": {
             "name": "Tajikistan",
@@ -25608,7 +25620,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "The Gambia": {
             "name": "The Gambia",
@@ -25654,7 +25667,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Togo": {
             "name": "Togo",
@@ -25700,7 +25714,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Burundi": {
             "name": "Burundi",
@@ -25746,7 +25761,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Ghana": {
             "name": "Ghana",
@@ -25781,6 +25797,283 @@
                 "general_recruitment": 0,
                 "recruitment_buildings": 0,
                 "basic_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {},
+            "relations": {}
+        },
+        "British Malaya": {
+            "name": "British Malaya",
+            "color": [
+                255,
+                0,
+                128
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "French Indochina": {
+            "name": "French Indochina",
+            "color": [
+                50,
+                150,
+                255
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "French Madagascar": {
+            "name": "French Madagascar",
+            "color": [
+                50,
+                150,
+                255
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "Italian East Africa": {
+            "name": "Italian East Africa",
+            "color": [
+                0,
+                200,
+                0
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "Malagasy Protectorate": {
+            "name": "Malagasy Protectorate",
+            "color": [
+                50,
+                150,
+                255
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "Protectorate of Bohemia and Moravia": {
+            "name": "Protectorate of Bohemia and Moravia",
+            "color": [
+                64,
+                0,
+                128
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
             },
             "manpower": 0,
             "materials": 0,

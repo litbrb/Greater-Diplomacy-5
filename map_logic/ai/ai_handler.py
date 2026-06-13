@@ -277,9 +277,7 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         share_enemies = bool(ai_enemies.intersection(sender_enemies))
         
         # Accept if relations are good OR they are helping us fight common threats
-        # Using a constant for threshold, defaulting to 50 if undefined
-        threshold = getattr(c, 'AI_RELATION_FACTION_THRESHOLD', 50)
-        if relation_score >= threshold or share_enemies:
+        if relation_score >= c.AI_RELATION_FACTION_THRESHOLD or share_enemies:
             accepted = True
 
     # 3. Evaluate peace deals dynamically using the centralized query

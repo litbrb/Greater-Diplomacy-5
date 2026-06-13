@@ -109,7 +109,7 @@ class New_Game(GameState):
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 self.is_dragging_scrollbar = False
 
-            elif event.type == pygame.MOUSEMOTION and getattr(self, 'is_dragging_scrollbar', False):
+            elif event.type == pygame.MOUSEMOTION and self.is_dragging_scrollbar:
                 self._snap_scroll(event.pos[1])
 
     def additional_draw(self, surface):

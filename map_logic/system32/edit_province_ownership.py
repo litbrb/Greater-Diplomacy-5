@@ -12,7 +12,7 @@ def conquer_province(self, province, new_owner):
         # SKIP individual surface updates during Turn Resolution or AI thinking to prevent massive lag and thread crashes.
         # The main thread will bulk-refresh the map using NumPy at the end of the phase.
         if not self.viewing_ai_moves and not self.ai_is_thinking:
-            nations_dict = country_io.get_nation_colors() 
+            nations_dict = country_io.get_nation_colors()
             new_color = nations_dict.get(new_owner, (255, 255, 255)) # Fallback to white if unclaimed
             
             map_utils.update_single_province_surface(

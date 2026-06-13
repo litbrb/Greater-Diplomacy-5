@@ -369,7 +369,7 @@ class Select_Base_Map(GameState):
                 self.scroll_handle_rect = None
 
             # Rename Box
-            if getattr(self, 'renaming_scenario', None):
+            if self.renaming_scenario:
                 scenario_dir = c.SCENARIOS_CUSTOM_DIR
                 scenarios = os.listdir(scenario_dir)
                 idx = scenarios.index(self.renaming_scenario) if self.renaming_scenario in scenarios else 0
@@ -387,7 +387,7 @@ class Select_Base_Map(GameState):
                 surface.blit(instr, (input_rect.x, input_rect.y - 25))
 
             # Delete Confirmation
-            if getattr(self, 'deleting_scenario', None):
+            if self.deleting_scenario:
                 overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
                 overlay.fill((0, 0, 0, 180))
                 surface.blit(overlay, (0, 0))

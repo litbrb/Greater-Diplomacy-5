@@ -64,6 +64,6 @@ def draw_ui_bars(map_screen, surface):
     draw_textured_rect(surface, map_screen.top_bar_rect, top_bg, mode="tile")
     draw_textured_rect(surface, map_screen.bot_bar_rect, bot_bg, mode="tile")
     
-    if not map_screen.selection_mode and not getattr(map_screen, 'hide_raised_rect', False):
+    if not map_screen.selection_mode and not map_screen.hide_raised_rect:
         draw_textured_rect(surface, map_screen.raised_rect, side_bg, mode="tile")
         draw_textured_rect(surface, map_screen.ui_background_rect, corner_bg, mode="stretch")

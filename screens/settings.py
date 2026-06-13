@@ -16,9 +16,9 @@ class Settings(GameState):
         self.return_state = "MENU"
         
         self.sfx_volume = self.controller.sfx_volume
-        self.num_players = getattr(self.controller, 'num_players', 1)
-        self.ai_mode = getattr(self.controller, 'ai_mode', 'GEMINI')
-        self.ai_immersion_level = getattr(self.controller, 'ai_immersion_level', 'LITE')
+        self.num_players = self.controller.num_players
+        self.ai_mode = self.controller.ai_mode
+        self.ai_immersion_level = self.controller.ai_immersion_level
         self.ai_modes = ["OFF", "GEMINI", "OLLAMA", "CHATGPT", "CLAUDE"]
         
         self.last_ai_mode = self.ai_mode if self.ai_mode != "OFF" else c.DEFAULT_AI_MODE
@@ -27,25 +27,25 @@ class Settings(GameState):
         self.listening_for = None
 
         # Dynamically load all 8 string fields from the controller
-        self.gemini_api_key_text = getattr(self.controller, 'gemini_api_key', '')
-        self.gemini_model_text = getattr(self.controller, 'gemini_model', 'gemini-2.5-flash')
+        self.gemini_api_key_text = self.controller.gemini_api_key
+        self.gemini_model_text = self.controller.gemini_model
 
         # Load dynamic mouse button config from controller, fallback to constants configuration setting
-        self.drag_mouse_button_toggle = getattr(self.controller, 'drag_mouse_button_toggle', c.DRAG_MOUSE_BUTTON_TOGGLE)
+        self.drag_mouse_button_toggle = self.controller.drag_mouse_button_toggle
 
-        self.ollama_api_key_text = getattr(self.controller, 'ollama_api_key', '')
-        self.ollama_model_text = getattr(self.controller, 'ollama_model', 'llama3')
+        self.ollama_api_key_text = self.controller.ollama_api_key
+        self.ollama_model_text = self.controller.ollama_model
 
-        self.chatgpt_api_key_text = getattr(self.controller, 'chatgpt_api_key', '')
-        self.chatgpt_model_text = getattr(self.controller, 'chatgpt_model', 'gpt-4o-mini')
+        self.chatgpt_api_key_text = self.controller.chatgpt_api_key
+        self.chatgpt_model_text = self.controller.chatgpt_model
 
-        self.claude_api_key_text = getattr(self.controller, 'claude_api_key', '')
-        self.claude_model_text = getattr(self.controller, 'claude_model', 'claude-3-haiku-20240307')
+        self.claude_api_key_text = self.controller.claude_api_key
+        self.claude_model_text = self.controller.claude_model
 
         self.active_input = None # Dynamically track which box is selected: "{MODE}_KEY" or "{MODE}_MOD"
 
-        self.ai_threads = getattr(self.controller, 'ai_threads', c.DEFAULT_AI_THREADS)
-        self.show_fps = getattr(self.controller, 'show_fps', c.SHOW_FPS)
+        self.ai_threads = self.controller.ai_threads
+        self.show_fps = self.controller.show_fps
         self.refresh_ui()
 
     def toggle_fps(self):

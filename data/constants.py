@@ -524,6 +524,7 @@ AI_EXPEDITION_WEIGHT = 5
 # AI PROACTIVE DIPLOMACY THRESHOLDS
 # ==========================================
 
+AI_RELATION_FACTION_THRESHOLD = 50
 AI_WAR_STRENGTH_THRESHOLD = 1.2 # AI must be 20% stronger on the shared border to declare war
 AI_GLOBAL_STRENGTH_THRESHOLD = 0.8 # AI must have at least 80% of the target's total alliance + economic power to consider war
 AI_DIPLO_COOLDOWN = 12 # How many turns before AI can retry a rejected/ignored proactive diplomatic action. -1 means infinite.

@@ -118,7 +118,7 @@ class Map(GameState):
             load_map.load_map_assets(self, load_path)
 
         # Sync constants mapping directly from loaded configuration store values if they exist
-        if hasattr(self, 'controller') and getattr(self.controller, 'drag_mouse_button_toggle', None):
+        if hasattr(self, 'controller') and hasattr(self.controller, 'drag_mouse_button_toggle'):
             c.DRAG_MOUSE_BUTTON_TOGGLE = self.controller.drag_mouse_button_toggle
 
         # Capture settings passed from New_Game

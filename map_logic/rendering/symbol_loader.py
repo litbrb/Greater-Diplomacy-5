@@ -134,7 +134,7 @@ def get_symbol(name, zoom, color=None):
 
     # 3. Scale the final image dynamically based on camera zoom and custom base scales
     # Check constants for a specific scale override, default to 1.0
-    custom_scale = getattr(c, 'SYMBOL_BASE_SCALES', {}).get(base_name, 1.0)
+    custom_scale = c.SYMBOL_BASE_SCALES.get(base_name, 1.0)
     return _scale_img(target_img, zoom, custom_scale)
 
 def _scale_img(img, zoom, custom_scale=1.0):

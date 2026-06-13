@@ -204,7 +204,7 @@ def process_diplomacy_turn(self):
 
             # EVERY ACTION NOW EVALUATES ON TURN 1
             if turns == 1:
-                is_human_target = target in getattr(self, 'active_players', [])
+                is_human_target = target in self.active_players
                 if not is_human_target:
                     if action in c.UNILATERAL_ACTIONS or action in c.BILATERAL_ACTIONS:
                         ai_tasks.append({"sender": country_name, "target": target, "action": action, "content": custom_msg})
@@ -217,7 +217,7 @@ def process_diplomacy_turn(self):
                     members = queries.get_faction_members(fac, self.nation_data) if fac else []
                     info["cached_members"] = members
                     for m in members:
-                        if m != country_name and m not in getattr(self, 'active_players', []):
+                        if m != country_name and m not in self.active_players:
                             ai_tasks.append({"sender": country_name, "target": m, "action": action})
 
     # --- 3. EXECUTE AI THREADS ---
@@ -717,20 +717,20 @@ def process_diplomacy_turn(self):
                 # Cleanup or increment
                 if target in actions_to_clear:
                     pass # It was executed entirely on turn 0, so we skip the increment
-                elif country_name not in getattr(self, 'active_players', []) and action.startswith("MSG:"):
+                elif country_name not in self.active_players and action.startswith("MSG:"):
                     # If an AI sent a pure message, it's delivered instantly on turn 0, so clear it.
                     actions_to_clear.append(target)
                 else:
                     info["turns"] += 1
 
             elif turns == 1:
-                is_human_target = target in getattr(self, 'active_players', [])
+                is_human_target = target in self.active_players
 
                 if is_unilateral:
                     if action == "DISBAND_FACTION" or action == "LEAVE_FACTION":
                         members = info.get("cached_members", [])
                         for m in members:
-                            if m != country_name and m not in getattr(self, 'active_players', []):
+                            if m != country_name and m not in self.active_players:
                                 if action == "DISBAND_FACTION":
                                     reply_dict = ai_results.get((country_name, m, action), {})
                                     msg_text = reply_dict.get("message", ai_prompts.AI_FALLBACK_RESPONSES.get("FACTION_DISBANDED", "It is a shame to see our alliance broken."))

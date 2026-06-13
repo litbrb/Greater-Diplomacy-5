@@ -132,7 +132,7 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
     if len(nodes) < 2: return
     
     # --- FOG OF WAR VISIBILITY CHECK ---
-    visible_provs = getattr(map_screen, 'visible_provinces', None)
+    visible_provs = map_screen.visible_provinces
     def is_segment_visible(n1, n2):
         if force_visible or visible_provs is None:
             return True
@@ -291,7 +291,7 @@ def draw_overlay_content(self, surface):
     for color_key, province in self.map_data.items():
         
         # --- FOG OF WAR VISIBILITY CHECK ---
-        if getattr(self, 'visible_provinces', None) is not None and province["id"] not in self.visible_provinces:
+        if self.visible_provinces is not None and province["id"] not in self.visible_provinces:
             continue
             
         cx, cy = province["center"]

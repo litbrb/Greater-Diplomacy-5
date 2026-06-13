@@ -236,9 +236,18 @@ class Settings(GameState):
         font = fonts.get("normal")
         
         if self.ai_mode in ["GEMINI", "CHATGPT", "CLAUDE", "OLLAMA"]:
-            mode_prefix = self.ai_mode.lower()
-            key_text_var = getattr(self, f"{mode_prefix}_api_key_text")
-            mod_text_var = getattr(self, f"{mode_prefix}_model_text")
+            if self.ai_mode == "GEMINI":
+                key_text_var = self.gemini_api_key_text
+                mod_text_var = self.gemini_model_text
+            elif self.ai_mode == "OLLAMA":
+                key_text_var = self.ollama_api_key_text
+                mod_text_var = self.ollama_model_text
+            elif self.ai_mode == "CHATGPT":
+                key_text_var = self.chatgpt_api_key_text
+                mod_text_var = self.chatgpt_model_text
+            elif self.ai_mode == "CLAUDE":
+                key_text_var = self.claude_api_key_text
+                mod_text_var = self.claude_model_text
 
             # --- TOP BOX: API KEY / URL ---
             label_top = "Ollama Base URL (blank = localhost):" if self.ai_mode == "OLLAMA" else f"Paste {self.ai_mode.capitalize()} API Key:"

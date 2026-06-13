@@ -26,6 +26,9 @@ class Select_Base_Map(GameState):
         self.deleting_scenario = None
         self.renaming_scenario = None
         self.new_name_text = ""
+        
+        self.last_custom_count = -1
+        self.last_base_count = -1
 
         self.refresh_maps()
 
@@ -43,7 +46,7 @@ class Select_Base_Map(GameState):
         current_custom = len(os.listdir(c.SCENARIOS_CUSTOM_DIR)) if os.path.exists(c.SCENARIOS_CUSTOM_DIR) else 0
         current_base = len(os.listdir(c.BASE_MAPS_DIR)) if os.path.exists(c.BASE_MAPS_DIR) else 0
         
-        if getattr(self, 'last_custom_count', -1) != current_custom or getattr(self, 'last_base_count', -1) != current_base:
+        if self.last_custom_count != current_custom or self.last_base_count != current_base:
             self.last_custom_count = current_custom
             self.last_base_count = current_base
             self.refresh_maps()
@@ -65,7 +68,7 @@ class Select_Base_Map(GameState):
             self.max_scroll = min(0, (c.SCREEN_HEIGHT - 200) - total_content_height - 20)
 
             for i, name in enumerate(scenarios):
-                if getattr(self, 'deleting_scenario', None) == name or getattr(self, 'renaming_scenario', None) == name:
+                if self.deleting_scenario == name or self.renaming_scenario == name:
                     continue
                     
                 btn_y = 150 + (i * 60) + self.scroll_y
@@ -299,7 +302,7 @@ class Select_Base_Map(GameState):
     def handle_events(self, events):
         import pygame
         for event in events:
-            if getattr(self, 'renaming_scenario', None):
+            if self.renaming_scenario:
                 is_valid_char = lambda ch: ch.isalnum() or ch in " _-"
                 self.new_name_text, status = process_text_input(event, self.new_name_text, validation_func=is_valid_char)
                 if status == "SUBMIT": self.finish_rename()
@@ -308,7 +311,7 @@ class Select_Base_Map(GameState):
                     self.refresh_maps()
                 continue
                 
-            if getattr(self, 'deleting_scenario', None):
+            if self.deleting_scenario:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN: self.confirm_delete()
                     elif event.key == pygame.K_ESCAPE: self.cancel_delete()

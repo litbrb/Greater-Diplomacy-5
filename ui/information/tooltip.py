@@ -11,7 +11,7 @@ def draw_tooltip(self, surface):
     
     # --- FOG OF WAR VISIBILITY CHECK ---
     is_visible = True
-    if getattr(self, 'visible_provinces', None) is not None:
+    if self.visible_provinces is not None:
         if prov["id"] not in self.visible_provinces:
             is_visible = False
             

@@ -236,11 +236,11 @@ class Messages_Screen(GameState):
             self.is_dragging_messages = False
             
         elif event.type == pygame.MOUSEMOTION:
-            if getattr(self, 'is_dragging_contacts', False):
+            if self.is_dragging_contacts:
                 self.contact_scroll_y += event.rel[1]
                 self.contact_scroll_y = max(self.max_contact_scroll, min(0, self.contact_scroll_y))
                 self.refresh_ui() 
-            elif getattr(self, 'is_dragging_messages', False):
+            elif self.is_dragging_messages:
                 self.scroll_y -= event.rel[1] # Subtract so dragging down pulls up newer messages
                 self.scroll_y = max(0, min(self.scroll_y, self.max_msg_scroll))
                 

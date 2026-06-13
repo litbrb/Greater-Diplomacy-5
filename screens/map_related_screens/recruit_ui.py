@@ -56,7 +56,7 @@ def draw_map_queue_overlay(surface, target_province, map_screen=None):
     
     # --- FOG OF WAR VISIBILITY CHECK ---
     is_visible = True
-    if map_screen and getattr(map_screen, 'visible_provinces', None) is not None:
+    if map_screen and map_screen.visible_provinces is not None:
         if target_province["id"] not in map_screen.visible_provinces:
             is_visible = False
 

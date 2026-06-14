@@ -123,16 +123,29 @@ def select_core_brush(self):
     
     nations = sorted(list(self.nation_data.keys()), key=lambda k: unicodedata.normalize('NFKD', k).encode('ascii', 'ignore').decode('utf-8').lower())
     lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
+    
+    lb.insert(tk.END, "Unclaimed")
+    lb.insert(tk.END, "The Rot")
+    lb.insert(tk.END, "----------")
+
     for n in nations:
-        if n not in c.UNPLAYABLE_NATIONS or n in ["Unclaimed", "None"]:
+        if n in ["Unclaimed", "The Rot"]:
+            continue
+        if n not in c.UNPLAYABLE_NATIONS or n in ["None"]:
             lb.insert(tk.END, n)
+            
     lb.pack(side="left", fill="both", expand=True)
     scrollbar.config(command=lb.yview)
     
     def on_select(event=None):
         selection = lb.curselection()
         if selection:
-            self.brush_nation = lb.get(selection[0])
+            selected_val = lb.get(selection[0])
+            if selected_val == "----------":
+                lb.selection_clear(selection[0])
+                return
+                
+            self.brush_nation = selected_val
             self.editor_mode = "CORE" 
             self.show_feedback(f"Core Brush: {self.brush_nation}")
         close_menu()
@@ -141,6 +154,115 @@ def select_core_brush(self):
               bg="#FF69B4", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
 
     lb.bind('<Double-1>', on_select)
+    _run_editor_loop(self, root)
+
+
+def select_claim_brush(self):
+    """Opens a Tkinter selection window and sets mode to CLAIM."""
+    root = _create_editor_window("Select Claim Nation", "300x450")
+    self.menu_active = True
+
+    def close_menu():
+        self.menu_active = False
+        root.destroy()
+
+    root.protocol("WM_DELETE_WINDOW", close_menu)
+    tk.Label(root, text="Select Nation to Add Claims:", font=("Arial", 12)).pack(pady=10)
+    
+    frame = tk.Frame(root)
+    frame.pack(fill="both", expand=True, padx=10)
+    scrollbar = tk.Scrollbar(frame)
+    scrollbar.pack(side="right", fill="y")
+    
+    nations = sorted(list(self.nation_data.keys()), key=lambda k: unicodedata.normalize('NFKD', k).encode('ascii', 'ignore').decode('utf-8').lower())
+    lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
+    
+    lb.insert(tk.END, "Unclaimed")
+    lb.insert(tk.END, "The Rot")
+    lb.insert(tk.END, "----------")
+
+    for n in nations:
+        if n in ["Unclaimed", "The Rot"]:
+            continue
+        if n not in c.UNPLAYABLE_NATIONS or n in ["None"]:
+            lb.insert(tk.END, n)
+            
+    lb.pack(side="left", fill="both", expand=True)
+    scrollbar.config(command=lb.yview)
+    
+    def on_select(event=None):
+        selection = lb.curselection()
+        if selection:
+            selected_val = lb.get(selection[0])
+            if selected_val == "----------":
+                lb.selection_clear(selection[0])
+                return
+                
+            self.brush_nation = selected_val
+            self.editor_mode = "CLAIM" 
+            self.show_feedback(f"Claim Brush: {self.brush_nation}")
+        close_menu()
+
+    tk.Button(root, text="Confirm Selection", command=on_select, 
+              bg="#FFD700", fg="black", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
+
+    lb.bind('<Double-1>', on_select)
+    _run_editor_loop(self, root)
+
+
+def open_editor_claims(self):
+    """Opens a Tkinter window listing every claim on the map."""
+    root = _create_editor_window("Global Claims Overview", "600x500")
+    self.menu_active = True
+
+    def close_menu():
+        self.menu_active = False
+        root.destroy()
+        
+    root.protocol("WM_DELETE_WINDOW", close_menu)
+
+    style = ttk.Style(root)
+    try:
+        style.theme_use("clam") 
+    except:
+        pass 
+        
+    style.configure("Treeview.Heading", 
+                    background="#d9e1f2", 
+                    font=('Arial', 10, 'bold'),
+                    relief="flat")
+                    
+    style.configure("Treeview", 
+                    background="#ffffff",
+                    fieldbackground="#ffffff",
+                    rowheight=28,
+                    font=('Arial', 10))
+                    
+    columns = ("Country", "Claimed Provinces")
+    tree = ttk.Treeview(root, columns=columns, show="headings")
+    
+    tree.heading("Country", text="Country")
+    tree.heading("Claimed Provinces", text="Claimed Provinces")
+    tree.column("Country", width=150, anchor="w")
+    tree.column("Claimed Provinces", width=420, anchor="w")
+
+    tree.tag_configure('evenrow', background='#ffffff')
+    tree.tag_configure('oddrow', background='#f2f2f2') 
+
+    row_idx = 0
+    for c_name in sorted(list(self.nation_data.keys())):
+        claims = self.nation_data[c_name].get("claims", [])
+        if claims:
+            claims_str = ", ".join(map(str, claims))
+            tag = 'evenrow' if row_idx % 2 == 0 else 'oddrow'
+            tree.insert("", tk.END, values=(c_name, claims_str), tags=(tag,))
+            row_idx += 1
+
+    scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
+    tree.configure(yscroll=scrollbar.set)
+    scrollbar.pack(side="right", fill="y")
+    tree.pack(fill="both", expand=True)
+
     _run_editor_loop(self, root)
 
 def select_building_brush(self):

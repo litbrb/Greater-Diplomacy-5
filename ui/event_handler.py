@@ -145,7 +145,15 @@ def handle_map_events(self, event):
                             edit_province_ownership.clear_cores(self, self.hovered_province)
                         else:
                             edit_province_ownership.add_core(self, self.hovered_province, self.brush_nation)
-                
+                            
+                # --- CLAIM MODE ---
+                elif self.editor_mode == "CLAIM":
+                    if self.hovered_province.get("owner") not in c.WATER_NATIONS:
+                        if self.brush_nation in ["Unclaimed", "None", ""]:
+                            edit_province_ownership.clear_claims(self, self.hovered_province)
+                        else:
+                            edit_province_ownership.add_claim(self, self.hovered_province, self.brush_nation)
+
                 # --- BUILDING MODE ---
                 elif self.editor_mode == "BUILDING":
                     current_buildings = self.hovered_province.get("buildings", [])
@@ -199,6 +207,8 @@ def handle_map_events(self, event):
                     
                     if self.editor_mode == "CORE":
                         edit_province_ownership.remove_core(self, self.hovered_province, self.brush_nation)
+                    elif self.editor_mode == "CLAIM":
+                        edit_province_ownership.remove_claim(self, self.hovered_province, self.brush_nation)
                     else:
                         self.brush_nation = self.hovered_province.get("owner", "Unclaimed")
                         self.show_feedback(f"Picked: {self.brush_nation}")

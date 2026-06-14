@@ -224,7 +224,10 @@ class Claims_Screen(GameState):
         
         self.scroll_y = 0
         self.max_scroll = 0
-        self.view_mode = "YOURS"
+        
+        # Determine if we have global viewing privileges
+        self.is_global_viewer = map_screen.is_editor or self.player in ["Spectator", "None"]
+        self.view_mode = "GLOBAL" if self.is_global_viewer else "YOURS"
         
         self.refresh_ui()
 
@@ -236,11 +239,16 @@ class Claims_Screen(GameState):
     def refresh_ui(self):
         self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Back", self.exit_screen)]
         
-        btn_yours = Button(self.panel_rect.x + 20, self.panel_rect.y + 40, "medium", "blue" if self.view_mode == "YOURS" else "grey", "Your Claims", lambda: self.set_view_mode("YOURS"))
-        btn_theirs = Button(self.panel_rect.x + 200, self.panel_rect.y + 40, "medium", "blue" if self.view_mode == "THEIRS" else "grey", "Claims On You", lambda: self.set_view_mode("THEIRS"))
-        btn_yours.is_selected = (self.view_mode == "YOURS")
-        btn_theirs.is_selected = (self.view_mode == "THEIRS")
-        self.elements.extend([btn_yours, btn_theirs])
+        if self.is_global_viewer:
+            btn_global = Button(self.panel_rect.x + 20, self.panel_rect.y + 40, "medium", "blue" if self.view_mode == "GLOBAL" else "grey", "Global Claims", lambda: self.set_view_mode("GLOBAL"))
+            btn_global.is_selected = (self.view_mode == "GLOBAL")
+            self.elements.append(btn_global)
+        else:
+            btn_yours = Button(self.panel_rect.x + 20, self.panel_rect.y + 40, "medium", "blue" if self.view_mode == "YOURS" else "grey", "Your Claims", lambda: self.set_view_mode("YOURS"))
+            btn_theirs = Button(self.panel_rect.x + 200, self.panel_rect.y + 40, "medium", "blue" if self.view_mode == "THEIRS" else "grey", "Claims On You", lambda: self.set_view_mode("THEIRS"))
+            btn_yours.is_selected = (self.view_mode == "YOURS")
+            btn_theirs.is_selected = (self.view_mode == "THEIRS")
+            self.elements.extend([btn_yours, btn_theirs])
         
     def exit_screen(self):
         self.done = True
@@ -435,7 +443,19 @@ class Claims_Screen(GameState):
         
         foreign_claims_list.sort(key=lambda x: (x["prov_id"], x["nation"]))
         
-        if self.view_mode == "YOURS":
+        global_claims_list = []
+        if self.view_mode == "GLOBAL":
+            for n, d in self.map_screen.nation_data.items():
+                if n in c.UNPLAYABLE_NATIONS and n != "None": continue
+                for pid in d.get("claims", []):
+                    global_claims_list.append({"nation": n, "prov_id": pid})
+            global_claims_list.sort(key=lambda x: (x["nation"], x["prov_id"]))
+            
+            for item in global_claims_list:
+                color = self.map_screen.nation_colors.get(item["nation"], (255, 255, 255))
+                self.draw_highlight(surface, item["prov_id"], color)
+
+        elif self.view_mode == "YOURS":
             for pid in core_ids:
                 self.draw_highlight(surface, pid, (255, 105, 180))
             
@@ -474,11 +494,11 @@ class Claims_Screen(GameState):
         title = font.render("Territory Claims", True, (255, 255, 255))
         surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 10))
         
-        # Combine manually claimed tiles and foreign-owned cores into one list
-        # Order forced: Manual non-core claims first, then Auto-Cores at the bottom
         display_claims = claims + [c_id for c_id in core_ids if c_id not in claims]
         
-        if self.view_mode == "YOURS":
+        if self.view_mode == "GLOBAL":
+            content_h = 40 + (len(global_claims_list) * 25 if global_claims_list else 25)
+        elif self.view_mode == "YOURS":
             content_h = 40 + (len(queue) * 25 if queue else 25) + 40 + (len(display_claims) * 25 if display_claims else 25)
         else:
             content_h = 40 + (len(foreign_claims_list) * 25 if foreign_claims_list else 25)
@@ -493,7 +513,22 @@ class Claims_Screen(GameState):
         
         y_off = self.panel_rect.y + 100 + self.scroll_y
         
-        if self.view_mode == "YOURS":
+        if self.view_mode == "GLOBAL":
+            surface.blit(sub_font.render("All Map Claims:", True, (255, 215, 0)), (self.panel_rect.x + 20, y_off))
+            y_off += 30
+            
+            if not global_claims_list:
+                surface.blit(tiny_font.render("No claims on the map.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
+            else:
+                for item in global_claims_list:
+                    nation_name = self.map_screen.nation_data.get(item["nation"], {}).get("name", item["nation"])
+                    color = self.map_screen.nation_colors.get(item["nation"], (255, 255, 255))
+                    
+                    txt = tiny_font.render(f"- Prov {item['prov_id']} ({nation_name})", True, color)
+                    surface.blit(txt, (self.panel_rect.x + 30, y_off))
+                    y_off += 25
+
+        elif self.view_mode == "YOURS":
             surface.blit(sub_font.render("Queued Claims:", True, (150, 200, 255)), (self.panel_rect.x + 20, y_off))
             y_off += 30
             

@@ -9,11 +9,14 @@ def conquer_province(self, province, new_owner):
         province["owner"] = new_owner
         
         # 2. Visual Update
-        # SKIP individual surface updates during Turn Resolution or AI thinking to prevent massive lag and thread crashes.
-        # The main thread will bulk-refresh the map using NumPy at the end of the phase.
         if not self.viewing_ai_moves and not self.ai_is_thinking:
             nations_dict = country_io.get_nation_colors()
-            new_color = nations_dict.get(new_owner, (255, 255, 255)) # Fallback to white if unclaimed
+            new_color = list(nations_dict.get(new_owner, (255, 255, 255))) # Fallback to white if unclaimed
+            
+            # --- THE MAGIC PINK BUG FIX ---
+            # If the nation's color is completely identical to our colorkey mapping, shift it 1 bit
+            if tuple(new_color) == (255, 0, 255):
+                new_color = (254, 0, 255)
             
             map_utils.update_single_province_surface(
                 self.political_map, 
@@ -39,7 +42,10 @@ def get_mixed_core_color(cores):
     if not cores:
         return (255, 255, 255)
     if len(cores) == 1:
-        return nations_dict.get(cores[0], (255, 255, 255))
+        color = nations_dict.get(cores[0], (255, 255, 255))
+        if tuple(color) == (255, 0, 255):
+            return (254, 0, 255)
+        return color
         
     r = g = b = valid = 0
     for c in cores:
@@ -48,7 +54,12 @@ def get_mixed_core_color(cores):
             r += col[0]; g += col[1]; b += col[2]
             valid += 1
             
-    return (r // valid, g // valid, b // valid) if valid > 0 else (255, 255, 255)
+    color = (r // valid, g // valid, b // valid) if valid > 0 else (255, 255, 255)
+    
+    # Check Magic Pink for blended multi-core tiles as well!
+    if tuple(color) == (255, 0, 255):
+        return (254, 0, 255)
+    return color
 
 def add_core(self, province, nation):
     if province and nation:
@@ -83,3 +94,29 @@ def clear_cores(self, province):
         if not self.viewing_ai_moves and not getattr(self, 'ai_is_thinking', False):
             map_utils.update_single_province_surface(self.cores_map, self.id_map, province["map_color"], (255, 255, 255))
             if self.map_mode == "CORES": self.active_map = self.cores_map
+
+def add_claim(self, province, nation):
+    if province and nation:
+        prov_id = province["id"]
+        claims = self.nation_data.setdefault(nation, {}).setdefault("claims", [])
+        if prov_id not in claims:
+            claims.append(prov_id)
+        # Force a label text realignment
+        self.centers_need_update = True
+
+def remove_claim(self, province, nation):
+    if province and nation:
+        prov_id = province["id"]
+        claims = self.nation_data.get(nation, {}).get("claims", [])
+        if prov_id in claims:
+            claims.remove(prov_id)
+        self.centers_need_update = True
+
+def clear_claims(self, province):
+    if province:
+        prov_id = province["id"]
+        for n_data in self.nation_data.values():
+            claims = n_data.get("claims", [])
+            if prov_id in claims:
+                claims.remove(prov_id)
+        self.centers_need_update = True

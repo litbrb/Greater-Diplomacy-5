@@ -44,13 +44,14 @@ def render_buttons(self):
     self.btn_ed_load = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*0.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Load", lambda: editor_menus.editor_load_map(self))
     self.btn_ed_nation = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*1.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Nation Brush", lambda: editor_menus.select_brush_nation(self))
     self.btn_ed_core = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*2.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Core Brush", lambda: editor_menus.select_core_brush(self))
-    self.btn_ed_autocore = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*3.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Auto-Core", self.auto_assign_cores)
-    self.btn_ed_resource = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*4, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "purple", "Resource", lambda: editor_menus.select_resource_brush(self), image=icons.get("resource"), show_text=False)
-    self.btn_ed_building = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*4.5, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Building", lambda: editor_menus.select_building_brush(self), image=icons.get("industry"), show_text=False)
-    self.btn_ed_unit = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*5, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Unit", lambda: editor_menus.select_unit_brush(self), image=icons.get("unit"), show_text=False)
-    self.btn_ed_refresh = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*6, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Data Refresh", self.refresh_nation_data)
-    self.btn_ed_date = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*7, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Set Date", lambda: editor_menus.open_editor_date(self))
-    self.btn_ed_diplo = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*8, c.BOTTOM_BAR_UI_CENTER_Y, "small", "red", "Diplomacy", lambda: editor_menus.open_diplomacy_editor(self))
+    self.btn_ed_claim = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*3.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "yellow", "Claim Brush", lambda: editor_menus.select_claim_brush(self))
+    self.btn_ed_autocore = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*4.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Auto-Core", self.auto_assign_cores)
+    self.btn_ed_resource = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*5.0, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "purple", "Resource", lambda: editor_menus.select_resource_brush(self), image=icons.get("resource"), show_text=False)
+    self.btn_ed_building = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*5.5, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Building", lambda: editor_menus.select_building_brush(self), image=icons.get("industry"), show_text=False)
+    self.btn_ed_unit = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*6.0, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Unit", lambda: editor_menus.select_unit_brush(self), image=icons.get("unit"), show_text=False)
+    self.btn_ed_refresh = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*7.0, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Data Refresh", self.refresh_nation_data)
+    self.btn_ed_date = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*8.0, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Set Date", lambda: editor_menus.open_editor_date(self))
+    self.btn_ed_diplo = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*9.0, c.BOTTOM_BAR_UI_CENTER_Y, "small", "red", "Diplomacy", lambda: editor_menus.open_diplomacy_editor(self))
 
     # Gameplay Buttons
     self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Next Turn", lambda: turn_manager.advance_time(self))
@@ -66,6 +67,11 @@ def render_buttons(self):
             self.editing_country = self.player_country
             self.change_state("EDIT_COUNTRY")
 
+    # FIX: Defer the conditional checks to execution time to prevent initialization sequence bugs!
+    econ_callback = lambda: editor_menus.open_editor_economy(self) if (self.is_editor or self.player_country == "Spectator") else self.change_state("ECONOMY")
+    research_callback = lambda: editor_menus.open_map_research_editor(self) if (self.is_editor or self.player_country == "Spectator") else self.change_state("RESEARCH")
+    msgs_callback = lambda: editor_menus.open_spectator_messages(self) if (self.is_editor or self.player_country == "Spectator") else self.change_state("MESSAGES")
+
     self.btn_gp_edit = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 1, "left_ui_button", "pink", "Identity", open_edit_country_action, image=icons.get("brush"), show_text=True)
     self.btn_gp_econ = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 2, "left_ui_button", "pink", "Economy", econ_callback, image=icons.get("economy(the_economy_of_a_country_to_be_unusually_specific)"), show_text=True)
     self.btn_gp_rd = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 3, "left_ui_button", "pink", "R&D", research_callback, image=icons.get("research"), show_text=True)
@@ -74,7 +80,10 @@ def render_buttons(self):
     self.btn_gp_settings = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 6, "left_ui_button", "pink", "Settings", lambda: self.change_state("SETTINGS"), image=icons.get("settings"), show_text=True)
     self.btn_gp_music = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 7, "left_ui_button", "pink", "Music", lambda: self.change_state("MUSIC_PLAYER"), image=icons.get("music"), show_text=True)
     self.btn_gp_faction = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 8, "left_ui_button", "pink", "Faction", lambda: self.change_state("FACTION"), image=icons.get("faction"), show_text=True)
+    
+    # Route everyone to the native Pygame screen so they can see map highlights
     self.btn_gp_claims = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 9, "left_ui_button", "pink", "Claims", lambda: player_diplomacy_actions.open_claims_menu(self), image=icons.get("paper"), show_text=True)
+    
     self.btn_gp_puppets = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 10, "left_ui_button", "pink", "Puppets", lambda: player_diplomacy_actions.open_puppets_menu(self), image=icons.get("faction"), show_text=True)
 
     # Register the Slider below the Faction button
@@ -126,7 +135,7 @@ def render_buttons(self):
         self.btn_view_terrain, self.btn_view_political, self.btn_view_relations, self.btn_view_cores, self.btn_view_factions,
         self.btn_view_resources, self.btn_view_blank, self.btn_view_units, self.btn_view_economy, self.btn_toggle_names,
         self.btn_ed_load, self.btn_ed_nation,
-        self.btn_ed_core, self.btn_ed_autocore, self.btn_ed_resource, self.btn_ed_building,
+        self.btn_ed_core, self.btn_ed_claim, self.btn_ed_autocore, self.btn_ed_resource, self.btn_ed_building,
         self.btn_ed_unit, self.btn_ed_refresh, self.btn_ed_date, self.btn_ed_diplo,
         self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
         self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_gp_claims, self.btn_gp_puppets, self.btn_go_orders, self.btn_go_production,
@@ -198,8 +207,8 @@ def update_button_states(map_screen):
     if map_screen.is_editor:
         ed_btns = [
             map_screen.btn_gp_edit, map_screen.btn_gp_econ, map_screen.btn_gp_rd,
-            map_screen.btn_gp_msgs, map_screen.btn_gp_save,
-            map_screen.btn_ed_load, map_screen.btn_ed_nation, map_screen.btn_ed_core, 
+            map_screen.btn_gp_msgs, map_screen.btn_gp_save, map_screen.btn_gp_claims,
+            map_screen.btn_ed_load, map_screen.btn_ed_nation, map_screen.btn_ed_core, map_screen.btn_ed_claim, 
             map_screen.btn_ed_autocore, map_screen.btn_ed_resource, map_screen.btn_ed_building, 
             map_screen.btn_ed_unit, map_screen.btn_ed_refresh, 
             map_screen.btn_ed_date, map_screen.btn_ed_diplo,
@@ -214,6 +223,7 @@ def update_button_states(map_screen):
         map_screen.btn_ed_nation.is_selected = (current_mode == "NATION")
         map_screen.btn_ed_building.is_selected = (current_mode == "BUILDING")
         map_screen.btn_ed_core.is_selected = (current_mode == "CORE")
+        map_screen.btn_ed_claim.is_selected = (current_mode == "CLAIM")
         map_screen.btn_ed_unit.is_selected = (current_mode == "UNIT")
 
     else:

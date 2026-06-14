@@ -572,7 +572,7 @@ AI_INFANTRY_TO_TANK_RATIO = 1 # Tanks honestly have no downsides aside from long
 
 AI_WAR_UPKEEP_MULTIPLIER = 1.5
 
-AI_MAX_NAVY_RATIO = 0.2 # Maximum percentage of an AI's army that can be navy
+AI_MAX_NAVY_RATIO = 0.5 # Maximum percentage of an AI's army that can be navy
 AI_CONVOY_ESCORT_WEIGHT = 1 # Negative weight to pull pathing warships towards convoys
 AI_CONVOY_COMBAT_WEIGHT = 50 # MASSIVE priority to escort convoys actively being attacked
 AI_CONVOY_DANGER_SHIP_WEIGHT = 25 # Priority for convoys near enemy ships

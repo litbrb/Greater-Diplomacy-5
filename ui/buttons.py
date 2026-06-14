@@ -41,17 +41,17 @@ def render_buttons(self):
     msgs_callback = (lambda: editor_menus.open_spectator_messages(self)) if (is_ed or is_spec) else (lambda: self.change_state("MESSAGES"))
 
    # Editor Buttons
-    self.btn_ed_load = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*0.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Load", lambda: editor_menus.editor_load_map(self))
-    self.btn_ed_nation = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*1.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Nation Brush", lambda: editor_menus.select_brush_nation(self))
-    self.btn_ed_core = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*2.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Core Brush", lambda: editor_menus.select_core_brush(self))
-    self.btn_ed_claim = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*3.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "yellow", "Claim Brush", lambda: editor_menus.select_claim_brush(self))
-    self.btn_ed_autocore = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*4.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Auto-Core", self.auto_assign_cores)
-    self.btn_ed_resource = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*5.0, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "purple", "Resource", lambda: editor_menus.select_resource_brush(self), image=icons.get("resource"), show_text=False)
-    self.btn_ed_building = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*5.5, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Building", lambda: editor_menus.select_building_brush(self), image=icons.get("industry"), show_text=False)
-    self.btn_ed_unit = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*6.0, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Unit", lambda: editor_menus.select_unit_brush(self), image=icons.get("unit"), show_text=False)
-    self.btn_ed_refresh = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*7.0, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Data Refresh", self.refresh_nation_data)
-    self.btn_ed_date = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*8.0, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Set Date", lambda: editor_menus.open_editor_date(self))
-    self.btn_ed_diplo = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*9.0, c.BOTTOM_BAR_UI_CENTER_Y, "small", "red", "Diplomacy", lambda: editor_menus.open_diplomacy_editor(self))
+    self.btn_ed_load = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X * 0, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Load", lambda: editor_menus.editor_load_map(self))
+    self.btn_ed_nation = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*1, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Nation Brush", lambda: editor_menus.select_brush_nation(self))
+    self.btn_ed_core = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Core Brush", lambda: editor_menus.select_core_brush(self))
+    self.btn_ed_autocore = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*3, c.BOTTOM_BAR_UI_CENTER_Y, "small", "pink", "Auto-Core", self.auto_assign_cores)
+    self.btn_ed_claim = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*4, c.BOTTOM_BAR_UI_CENTER_Y, "small", "orange", "Claim Brush", lambda: editor_menus.select_claim_brush(self))
+    self.btn_ed_resource = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*4.5, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "purple", "Resource", lambda: editor_menus.select_resource_brush(self), image=icons.get("resource"), show_text=False)
+    self.btn_ed_building = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*5, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Building", lambda: editor_menus.select_building_brush(self), image=icons.get("industry"), show_text=False)
+    self.btn_ed_unit = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*5.5, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "grey", "Unit", lambda: editor_menus.select_unit_brush(self), image=icons.get("unit"), show_text=False)
+    self.btn_ed_refresh = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*6.5, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Data Refresh", self.refresh_nation_data)
+    self.btn_ed_date = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*7, c.BOTTOM_BAR_UI_CENTER_Y, "small_square", "orange", "Set Date", lambda: editor_menus.open_editor_date(self), image=icons.get("clock"), show_text=False)
+    self.btn_ed_diplo = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X*8, c.BOTTOM_BAR_UI_CENTER_Y, "small", "red", "Diplomacy", lambda: editor_menus.open_diplomacy_editor(self))
 
     # Gameplay Buttons
     self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Next Turn", lambda: turn_manager.advance_time(self))

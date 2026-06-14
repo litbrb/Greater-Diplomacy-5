@@ -204,7 +204,7 @@ def select_claim_brush(self):
         close_menu()
 
     tk.Button(root, text="Confirm Selection", command=on_select, 
-              bg="#FFD700", fg="black", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
+              bg="#FF8800", fg="black", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
 
     lb.bind('<Double-1>', on_select)
     _run_editor_loop(self, root)
@@ -407,7 +407,7 @@ def open_editor_date(self):
         except ValueError:
             messagebox.showerror("Error", "Please enter valid integers.")
 
-    tk.Button(root, text="Apply Date", command=apply_date, bg="#FF9800", fg="white", pady=5).pack(pady=15, fill="x", padx=20)
+    tk.Button(root, text="Apply Date", command=apply_date, bg="#FF9800", fg="black", pady=5).pack(pady=15, fill="x", padx=20)
     _run_editor_loop(self, root)
 
 

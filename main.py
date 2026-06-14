@@ -160,7 +160,8 @@ class Controller:
             "load_game": symbol_loader.get_symbol("Load Game", 1),
             "new_game": symbol_loader.get_symbol("New Game", 1),
             "map_editor": symbol_loader.get_symbol("Map Editor", 1),
-            "credits": symbol_loader.get_symbol("Credits", 1)
+            "credits": symbol_loader.get_symbol("Credits", 1),
+            "clock": symbol_loader.get_symbol("Clock", 1.6),
         }
 
         # 1. Define Hardcoded Defaults

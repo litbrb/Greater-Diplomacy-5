@@ -71927,7 +71927,7 @@
             1915,
             1949
         ],
-        "owner": "United Kingdom",
+        "owner": "Belgian Congo",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -71935,7 +71935,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Uganda"
+            "Belgian Congo",
+            "Democratic Republic of the Congo"
         ],
         "json_key": "(202, 7, 0)",
         "map_color": [
@@ -74165,7 +74166,7 @@
             2005,
             2106
         ],
-        "owner": "United Kingdom",
+        "owner": "Belgian Congo",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -74173,7 +74174,8 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Uganda"
+            "Belgian Congo",
+            "Democratic Republic of the Congo"
         ],
         "json_key": "(14, 8, 0)",
         "map_color": [

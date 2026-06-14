@@ -20,7 +20,7 @@ def process_dead_nations(self):
 
     # 2. Instantly clean up ghost wars so surviving nations stop treating them as active threats
     # (We run this again here because check_for_post_combat_captures just changed who is alive)
-    for nation, data in self.nation_data.items():
+    for nation, data in list(self.nation_data.items()):
         if "at_war_with" in data:
             if nation not in living_nations:
                 # If the nation itself is dead, wipe its entire war list

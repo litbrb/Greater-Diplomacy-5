@@ -19938,7 +19938,6 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Hungary",
             "Slovakia"
         ],
         "json_key": "(32, 2, 0)",
@@ -20087,7 +20086,6 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Hungary",
             "Slovakia"
         ],
         "json_key": "(36, 2, 0)",
@@ -20631,7 +20629,6 @@
         ],
         "resources": {},
         "cores": [
-            "Hungary",
             "Slovakia"
         ],
         "json_key": "(49, 2, 0)",
@@ -26771,7 +26768,6 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Hungary",
             "Yugoslavia"
         ],
         "json_key": "(216, 2, 0)",

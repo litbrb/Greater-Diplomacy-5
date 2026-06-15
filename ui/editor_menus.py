@@ -1000,10 +1000,13 @@ def open_scripted_events_editor(self):
                 
             act_strs = []
             for a in actions:
-                if a.get('type') == "Send Custom Message":
+                a_type = a.get('type')
+                if a_type == "Send Custom Message":
                     act_strs.append(f"MSG to '{a.get('target')}'")
+                elif a_type in ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]:
+                    act_strs.append(f"{a_type}: '{a.get('message')}'")
                 else:
-                    act_strs.append(f"{a.get('type')} '{a.get('target')}'")
+                    act_strs.append(f"{a_type} '{a.get('target')}'")
                     
             act_str = f"Then {', '.join(act_strs)}"
             if len(act_str) > 40:
@@ -1232,8 +1235,6 @@ def open_scripted_events_editor(self):
         
         act_scroll.pack(side="right", fill="y")
         act_canvas.pack(side="left", fill="both", expand=True)
-
-        act_row_objects = []
         
         act_row_objects = []
         
@@ -1257,7 +1258,7 @@ def open_scripted_events_editor(self):
 
         def add_action_row(a_data=None):
             if a_data is None:
-                a_data = {"type": "Declare War", "target": "None", "message": "", "appearance_data": {}}
+                a_data = {"type": "Declare War", "target": "None", "message": ""}
                 
             row_frame = tk.Frame(act_frame, relief="ridge", bd=2)
             row_frame.pack(fill="x", pady=2, padx=2)
@@ -1266,59 +1267,34 @@ def open_scripted_events_editor(self):
             target_var = tk.StringVar(value=a_data.get("target", "None"))
             msg_var = tk.StringVar(value=a_data.get("message", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Edit Appearance"], width=18, state="readonly")
+            edit_options = ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]
+            all_options = ["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message"] + edit_options
+            
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=all_options, width=18, state="readonly")
             type_cb.pack(side="left", padx=5)
             
             target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
             msg_ent = tk.Entry(row_frame, textvariable=msg_var, width=20)
             
-            # Create row_obj FIRST so it can be passed into the edit_app function below
             row_obj = {
                 "frame": row_frame,
                 "type_var": type_var,
                 "target_var": target_var,
-                "msg_var": msg_var,
-                "app_data": a_data.get("appearance_data", {})
+                "msg_var": msg_var
             }
-            
-            def edit_app():
-                app_win = tk.Toplevel(root)
-                app_win.title("Appearance Details")
-                app_win.geometry("300x250")
-                app_win.attributes("-topmost", True)
-                
-                fields = ["name", "leader_name", "leader_title", "color", "flag_data", "portrait_data"]
-                ents = {}
-                for i, f in enumerate(fields):
-                    tk.Label(app_win, text=f.replace("_", " ").title()+":").grid(row=i, column=0, sticky="e", padx=5, pady=5)
-                    ent = tk.Entry(app_win, width=30)
-                    ent.insert(0, row_obj["app_data"].get(f, ""))
-                    ent.grid(row=i, column=1, pady=5)
-                    ents[f] = ent
-                    
-                def save_app():
-                    for f in fields:
-                        row_obj["app_data"][f] = ents[f].get()
-                    app_win.destroy()
-                    
-                tk.Button(app_win, text="Save", command=save_app, bg="#4CAF50", fg="white").grid(row=len(fields), column=0, columnspan=2, pady=10)
-
-            app_btn = tk.Button(row_frame, text="Configure Appearance", command=edit_app)
             
             def update_act_row(*args):
                 t = type_var.get()
                 if t == "Send Custom Message":
                     target_cb.pack(side="left", padx=5)
                     msg_ent.pack(side="left", padx=5)
-                    app_btn.pack_forget()
-                elif t == "Edit Appearance":
+                elif t in edit_options:
                     target_cb.pack_forget()
-                    msg_ent.pack_forget()
-                    app_btn.pack(side="left", padx=5)
+                    target_var.set("None") # Reset to None since it targets self
+                    msg_ent.pack(side="left", padx=5)
                 else:
                     target_cb.pack(side="left", padx=5)
                     msg_ent.pack_forget()
-                    app_btn.pack_forget()
                     
             type_var.trace_add("write", update_act_row)
             update_act_row()
@@ -1350,8 +1326,7 @@ def open_scripted_events_editor(self):
                 final_acts.append({
                     "type": ro["type_var"].get(),
                     "target": ro["target_var"].get(),
-                    "message": ro["msg_var"].get(),
-                    "appearance_data": ro.get("app_data", {})
+                    "message": ro["msg_var"].get()
                 })
                 
             new_event = {

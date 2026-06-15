@@ -630,16 +630,23 @@ def process_scripted_events(map_screen):
                     a_type = act.get("type")
                     raw_targets = act.get("target", "None")
                     
-                    if a_type == "Edit Appearance":
-                        app_data = act.get("appearance_data", {})
-                        if app_data.get("name"): data["name"] = app_data["name"]
-                        if app_data.get("leader_name"): data["leader_name"] = app_data["leader_name"]
-                        if app_data.get("leader_title"): data["leader_title"] = app_data["leader_title"]
-                        if app_data.get("flag_data"): data["flag_data"] = app_data["flag_data"]
-                        if app_data.get("portrait_data"): data["portrait_data"] = app_data["portrait_data"]
-                        if app_data.get("color"):
+                    if a_type in ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]:
+                        val = act.get("message", "")
+                        if not val: continue
+                        
+                        if a_type == "Edit Name":
+                            data["name"] = val
+                        elif a_type == "Edit Leader Name":
+                            data["leader_name"] = val
+                        elif a_type == "Edit Leader Title":
+                            data["leader_title"] = val
+                        elif a_type == "Edit Flag":
+                            data["flag_data"] = val
+                        elif a_type == "Edit Portrait":
+                            data["portrait_data"] = val
+                        elif a_type == "Edit Color":
                             try:
-                                new_col = tuple(map(int, app_data["color"].replace(" ", "").split(',')))
+                                new_col = tuple(map(int, val.replace(" ", "").split(',')))
                                 if len(new_col) == 3:
                                     data["color"] = list(new_col)
                                     if hasattr(map_screen, 'nation_colors'):

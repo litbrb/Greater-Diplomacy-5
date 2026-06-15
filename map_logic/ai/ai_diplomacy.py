@@ -495,6 +495,7 @@ def process_scripted_events(map_screen):
         
     active_nations = set(queries.get_living_nations(map_screen.map_data))
     human_players = getattr(map_screen, 'active_players', [map_screen.player_country])
+    current_turn = queries.get_total_turns(map_screen.time_manager)
     
     for nation_name in active_nations:
         if nation_name in human_players:
@@ -505,49 +506,86 @@ def process_scripted_events(map_screen):
         if not events:
             continue
             
-        # Keep track of events that have already fired so they don't fire every turn
         fired_events = data.setdefault("fired_scripted_events", [])
         
         for i, evt in enumerate(events):
-            if i in fired_events:
+            if i in fired_events and evt.get("fire_once", True):
                 continue
-                
-            cond_type = evt.get("condition_type")
-            cond_val = evt.get("condition_val")
             
-            condition_met = False
-            if cond_type == "Turn Number":
-                try:
-                    if queries.get_total_turns(map_screen.time_manager) >= int(cond_val):
-                        condition_met = True
-                except ValueError:
-                    pass
-            elif cond_type == "At War With":
-                if cond_val in active_nations and queries.are_at_war(nation_name, cond_val, map_screen.nation_data):
-                    condition_met = True
-            elif cond_type == "In Faction With":
-                if cond_val in active_nations and queries.are_in_same_faction(nation_name, cond_val, map_screen.nation_data):
-                    condition_met = True
-            elif cond_type == "At Peace With":
-                if cond_val in active_nations and not queries.are_at_war(nation_name, cond_val, map_screen.nation_data):
-                    condition_met = True
+            # Backwards compatibility parser
+            if "conditions" not in evt:
+                evt["conditions"] = [{
+                    "type": evt.get("condition_type", "Turn Number"),
+                    "operator": "==",
+                    "value": evt.get("condition_val", ""),
+                    "chain": "AND"
+                }]
+                evt["fire_once"] = True
+
+            conditions = evt.get("conditions", [])
+            if not conditions:
+                continue
+
+            overall_met = False
+
+            for c_idx, cond in enumerate(conditions):
+                c_type = cond.get("type")
+                c_op = cond.get("operator", "==")
+                c_val = cond.get("value", "")
+                chain = cond.get("chain", "AND")
+                
+                res = False
+                
+                if c_type == "Turn Number":
+                    try:
+                        if "BETWEEN" in c_op:
+                            parts = c_val.split(",")
+                            if len(parts) >= 2:
+                                v1, v2 = int(parts[0].strip()), int(parts[1].strip())
+                                if c_op == "BETWEEN (INC)":
+                                    res = (v1 <= current_turn <= v2)
+                                else:
+                                    res = (v1 < current_turn < v2)
+                        else:
+                            v = int(c_val.strip())
+                            if c_op == "==": res = (current_turn == v)
+                            elif c_op == ">": res = (current_turn > v)
+                            elif c_op == "<": res = (current_turn < v)
+                            elif c_op == ">=": res = (current_turn >= v)
+                            elif c_op == "<=": res = (current_turn <= v)
+                    except ValueError:
+                        pass
+                        
+                elif c_type == "At War With":
+                    res = (c_val in active_nations and queries.are_at_war(nation_name, c_val, map_screen.nation_data))
+                elif c_type == "In Faction With":
+                    res = (c_val in active_nations and queries.are_in_same_faction(nation_name, c_val, map_screen.nation_data))
+                elif c_type == "At Peace With":
+                    res = (c_val in active_nations and not queries.are_at_war(nation_name, c_val, map_screen.nation_data))
                     
-            if condition_met:
+                if c_idx == 0:
+                    overall_met = res
+                else:
+                    if chain == "AND": overall_met = overall_met and res
+                    elif chain == "OR": overall_met = overall_met or res
+                    elif chain == "XOR": overall_met = overall_met ^ res
+                    elif chain == "NOR": overall_met = not (overall_met or res)
+                    
+            if overall_met:
                 action_type = evt.get("action_type")
                 action_target = evt.get("action_target")
                 
-                # Queue the action using existing AI queued actions mechanism
                 ai_queue = data.setdefault("queued_ai_actions", [])
-                
                 eng_action = ""
-                if action_type == "Declare War":
-                    eng_action = "WAR_DECLARATION"
-                elif action_type == "Join Faction":
-                    eng_action = "JOIN_FACTION_REQ"
-                elif action_type == "Create Faction":
-                    eng_action = "CREATE_FACTION"
+                
+                if action_type == "Declare War": eng_action = "WAR_DECLARATION"
+                elif action_type == "Join Faction": eng_action = "JOIN_FACTION_REQ"
+                elif action_type == "Create Faction": eng_action = "CREATE_FACTION"
                     
                 if eng_action:
-                    ai_queue.append({"target": action_target, "action": eng_action})
-                
-                fired_events.append(i)
+                    # Prevent queueing the same action repetitively if repeating
+                    already_queued = any(q["target"] == action_target and q["action"] == eng_action for q in ai_queue)
+                    if not already_queued:
+                        ai_queue.append({"target": action_target, "action": eng_action})
+                        if evt.get("fire_once", True) and i not in fired_events:
+                            fired_events.append(i)

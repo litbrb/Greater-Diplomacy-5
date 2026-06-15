@@ -970,9 +970,34 @@ def open_scripted_events_editor(self):
         if not target: return
         events = self.nation_data.get(target, {}).get("scripted_events", [])
         for i, evt in enumerate(events):
-            cond_str = f"If {evt['condition_type']} '{evt['condition_val']}'"
-            act_str = f"Then {evt['action_type']} '{evt['action_target']}'"
-            events_listbox.insert(tk.END, f"{i+1}. {cond_str} -> {act_str}")
+            # Backwards compatibility parsing
+            if "conditions" not in evt:
+                evt["conditions"] = [{
+                    "type": evt.get("condition_type", "Turn Number"),
+                    "operator": "==",
+                    "value": evt.get("condition_val", ""),
+                    "chain": "AND"
+                }]
+                evt["fire_once"] = True
+                
+            conds = evt["conditions"]
+            cond_strs = []
+            
+            for idx, c_dict in enumerate(conds):
+                prefix = "" if idx == 0 else f" {c_dict.get('chain', 'AND')} "
+                if c_dict.get("type") == "Turn Number":
+                    cond_strs.append(f"{prefix}Turn {c_dict.get('operator', '==')} {c_dict.get('value')}")
+                else:
+                    cond_strs.append(f"{prefix}{c_dict.get('type')} {c_dict.get('value')}")
+            
+            full_cond_str = "".join(cond_strs)
+            if len(full_cond_str) > 40:
+                full_cond_str = full_cond_str[:37] + "..."
+                
+            act_str = f"Then {evt.get('action_type')} '{evt.get('action_target')}'"
+            once_str = " [Once]" if evt.get("fire_once", True) else " [Repeat]"
+            
+            events_listbox.insert(tk.END, f"{i+1}. If {full_cond_str} -> {act_str}{once_str}")
 
     def load_nation_data(event):
         sel = nation_list.curselection()
@@ -984,50 +1009,192 @@ def open_scripted_events_editor(self):
 
     nation_list.bind("<<ListboxSelect>>", load_nation_data)
 
-    def add_event():
+    def get_expected_date_string(turns_str):
+        import re
+        from map_logic.system32.time_handler import TimeHandler
+        nums = re.findall(r'\d+', turns_str)
+        if not nums: return ""
+        
+        date_strs = []
+        for num in nums[:2]: # Max 2 for BETWEEN intervals
+            t = int(num)
+            temp_time = TimeHandler(start_year=self.time_manager.year)
+            temp_time.day = self.time_manager.day
+            temp_time.month_index = self.time_manager.month_index
+            dpt = self.scenario_settings.get("base_days_per_turn", c.DEFAULT_DAYS_PER_TURN)
+            
+            temp_time.process_time(t * dpt)
+            date_strs.append(temp_time.get_date_string())
+            
+        return " / ".join(date_strs)
+
+    def open_event_window(event_idx=None):
         target = current_target[0]
         if not target:
             messagebox.showwarning("Warning", "Select a nation first.")
             return
 
-        add_win = tk.Toplevel(root)
-        add_win.title(f"Add Event: {target}")
-        add_win.geometry("400x300")
-        add_win.attributes("-topmost", True)
+        edit_win = tk.Toplevel(root)
+        edit_win.title(f"{'Edit' if event_idx is not None else 'Add'} Event: {target}")
+        edit_win.geometry("750x550")
+        edit_win.attributes("-topmost", True)
+        
+        event_data = {}
+        if event_idx is not None:
+            event_data = self.nation_data[target]["scripted_events"][event_idx]
+            if "conditions" not in event_data:
+                event_data["conditions"] = [{
+                    "type": event_data.get("condition_type", "Turn Number"),
+                    "operator": "==",
+                    "value": event_data.get("condition_val", ""),
+                    "chain": "AND"
+                }]
+                event_data["fire_once"] = True
+                
+        conds_data = event_data.get("conditions", [{"chain": "AND", "type": "Turn Number", "operator": "==", "value": ""}])
 
-        tk.Label(add_win, text="Condition Type:").grid(row=0, column=0, pady=5, padx=5, sticky="e")
-        cond_type_var = tk.StringVar(value="Turn Number")
-        cond_type_menu = ttk.Combobox(add_win, textvariable=cond_type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With"], state="readonly")
-        cond_type_menu.grid(row=0, column=1, pady=5, padx=5, sticky="w")
-
-        tk.Label(add_win, text="Condition Value:").grid(row=1, column=0, pady=5, padx=5, sticky="e")
-        cond_val_var = tk.StringVar()
-        cond_val_entry = tk.Entry(add_win, textvariable=cond_val_var)
-        cond_val_entry.grid(row=1, column=1, pady=5, padx=5, sticky="w")
-
-        tk.Label(add_win, text="Action Type:").grid(row=2, column=0, pady=5, padx=5, sticky="e")
-        act_type_var = tk.StringVar(value="Declare War")
-        act_type_menu = ttk.Combobox(add_win, textvariable=act_type_var, values=["Declare War", "Join Faction", "Create Faction"], state="readonly")
-        act_type_menu.grid(row=2, column=1, pady=5, padx=5, sticky="w")
-
-        tk.Label(add_win, text="Action Target:").grid(row=3, column=0, pady=5, padx=5, sticky="e")
-        act_target_var = tk.StringVar()
-        act_target_menu = ttk.Combobox(add_win, textvariable=act_target_var, values=["None"] + sorted(active_countries))
-        act_target_menu.grid(row=3, column=1, pady=5, padx=5, sticky="w")
-
-        def save_new_event():
-            new_event = {
-                "condition_type": cond_type_var.get(),
-                "condition_val": cond_val_var.get(),
-                "action_type": act_type_var.get(),
-                "action_target": act_target_var.get()
+        # --- Top controls ---
+        top_frame = tk.Frame(edit_win)
+        top_frame.pack(fill="x", padx=10, pady=5)
+        
+        tk.Label(top_frame, text="Action Type:").grid(row=0, column=0, pady=2, sticky="e")
+        act_type_var = tk.StringVar(value=event_data.get("action_type", "Declare War"))
+        ttk.Combobox(top_frame, textvariable=act_type_var, values=["Declare War", "Join Faction", "Create Faction"], state="readonly").grid(row=0, column=1, pady=2, sticky="w")
+        
+        tk.Label(top_frame, text="Target:").grid(row=1, column=0, pady=2, sticky="e")
+        act_target_var = tk.StringVar(value=event_data.get("action_target", "None"))
+        ttk.Combobox(top_frame, textvariable=act_target_var, values=["None"] + sorted(active_countries)).grid(row=1, column=1, pady=2, sticky="w")
+        
+        fire_once_var = tk.BooleanVar(value=event_data.get("fire_once", True))
+        tk.Checkbutton(top_frame, text="Single-Time Event (Fire Only Once)", variable=fire_once_var).grid(row=2, column=0, columnspan=2, sticky="w")
+        
+        # --- Conditions Frame ---
+        tk.Label(edit_win, text="Conditionals:", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
+        
+        cond_canvas = tk.Canvas(edit_win)
+        cond_scroll = tk.Scrollbar(edit_win, orient="vertical", command=cond_canvas.yview)
+        cond_frame = tk.Frame(cond_canvas)
+        
+        cond_frame.bind("<Configure>", lambda e: cond_canvas.configure(scrollregion=cond_canvas.bbox("all")))
+        cond_canvas.create_window((0, 0), window=cond_frame, anchor="nw")
+        cond_canvas.configure(yscrollcommand=cond_scroll.set)
+        
+        cond_canvas.pack(fill="both", expand=True, padx=10, pady=5)
+        cond_scroll.pack(side="right", fill="y")
+        
+        row_objects = []
+        
+        def add_condition_row(c_data=None):
+            if c_data is None:
+                c_data = {"chain": "AND", "type": "Turn Number", "operator": "==", "value": ""}
+                
+            row_frame = tk.Frame(cond_frame, relief="ridge", bd=2)
+            row_frame.pack(fill="x", pady=2, padx=2)
+            
+            is_first = (len(row_objects) == 0)
+            
+            chain_var = tk.StringVar(value=c_data.get("chain", "AND"))
+            if not is_first:
+                ttk.Combobox(row_frame, textvariable=chain_var, values=["AND", "OR", "XOR", "NOR"], width=5, state="readonly").pack(side="left", padx=2)
+            else:
+                tk.Label(row_frame, text=" IF ", width=5).pack(side="left", padx=2)
+                
+            type_var = tk.StringVar(value=c_data.get("type", "Turn Number"))
+            op_var = tk.StringVar(value=c_data.get("operator", "=="))
+            val_var = tk.StringVar(value=c_data.get("value", ""))
+            
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With"], width=15, state="readonly")
+            type_cb.pack(side="left", padx=2)
+            
+            op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=14, state="readonly")
+            op_cb.pack(side="left", padx=2)
+            
+            val_ent = tk.Entry(row_frame, textvariable=val_var, width=15)
+            val_ent.pack(side="left", padx=2)
+            
+            date_lbl = tk.Label(row_frame, text="", fg="gray", width=30, anchor="w")
+            date_lbl.pack(side="left", padx=2)
+            
+            def update_row(*args):
+                ctype = type_var.get()
+                if ctype == "Turn Number":
+                    op_cb.config(values=["==", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"])
+                    if op_var.get() not in ["==", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"]:
+                        op_var.set("==")
+                    
+                    # Compute expected date projection
+                    d_str = get_expected_date_string(val_var.get())
+                    if d_str:
+                        date_lbl.config(text=f"({d_str})")
+                    else:
+                        date_lbl.config(text="")
+                else:
+                    op_cb.config(values=["=="])
+                    op_var.set("==")
+                    date_lbl.config(text="")
+            
+            type_var.trace_add("write", update_row)
+            val_var.trace_add("write", update_row)
+            update_row() # Initial call
+            
+            row_obj = {
+                "frame": row_frame,
+                "chain_var": chain_var,
+                "type_var": type_var,
+                "op_var": op_var,
+                "val_var": val_var
             }
-            data = self.nation_data.setdefault(target, {})
-            data.setdefault("scripted_events", []).append(new_event)
-            refresh_events_list()
-            add_win.destroy()
+            
+            def remove_self():
+                row_frame.destroy()
+                row_objects.remove(row_obj)
+                
+            if not is_first:
+                tk.Button(row_frame, text="X", fg="white", bg="red", command=remove_self).pack(side="right", padx=2)
+                
+            row_objects.append(row_obj)
+            
+        for c_data in conds_data:
+            add_condition_row(c_data)
 
-        tk.Button(add_win, text="Save Event", command=save_new_event, bg="#4CAF50", fg="white").grid(row=4, column=0, columnspan=2, pady=15)
+        def save_event():
+            final_conds = []
+            for ro in row_objects:
+                final_conds.append({
+                    "chain": ro["chain_var"].get(),
+                    "type": ro["type_var"].get(),
+                    "operator": ro["op_var"].get(),
+                    "value": ro["val_var"].get()
+                })
+                
+            new_event = {
+                "conditions": final_conds,
+                "action_type": act_type_var.get(),
+                "action_target": act_target_var.get(),
+                "fire_once": fire_once_var.get()
+            }
+            
+            target_data = self.nation_data.setdefault(target, {})
+            events_list = target_data.setdefault("scripted_events", [])
+            
+            if event_idx is not None:
+                events_list[event_idx] = new_event
+            else:
+                events_list.append(new_event)
+                
+            refresh_events_list()
+            edit_win.destroy()
+
+        bot_frame = tk.Frame(edit_win)
+        bot_frame.pack(fill="x", pady=10, padx=10)
+        
+        tk.Button(bot_frame, text="Add Conditional", command=add_condition_row, bg="#2196F3", fg="white").pack(side="left")
+        tk.Button(bot_frame, text="Save Event", command=save_event, bg="#4CAF50", fg="white").pack(side="right")
+
+    def edit_event():
+        sel = events_listbox.curselection()
+        if not sel: return
+        open_event_window(sel[0])
 
     def remove_event():
         target = current_target[0]
@@ -1043,7 +1210,8 @@ def open_scripted_events_editor(self):
 
     btn_frame = tk.Frame(right_frame)
     btn_frame.pack(fill="x", pady=5)
-    tk.Button(btn_frame, text="Add Event", command=add_event, bg="#2196F3", fg="white").pack(side="left", expand=True, fill="x", padx=5)
+    tk.Button(btn_frame, text="Add New Event", command=lambda: open_event_window(None), bg="#2196F3", fg="white").pack(side="left", expand=True, fill="x", padx=5)
+    tk.Button(btn_frame, text="Edit Selected", command=edit_event, bg="#FF9800", fg="black").pack(side="left", expand=True, fill="x", padx=5)
     tk.Button(btn_frame, text="Remove Selected", command=remove_event, bg="#f44336", fg="white").pack(side="right", expand=True, fill="x", padx=5)
 
     _run_editor_loop(self, root)

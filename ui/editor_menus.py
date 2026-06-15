@@ -1103,7 +1103,7 @@ def open_scripted_events_editor(self):
             op_var = tk.StringVar(value=c_data.get("operator", "=="))
             val_var = tk.StringVar(value=c_data.get("value", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With"], width=15, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)"], width=15, state="readonly")
             type_cb.pack(side="left", padx=2)
             
             op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=14, state="readonly")
@@ -1117,15 +1117,18 @@ def open_scripted_events_editor(self):
             
             def update_row(*args):
                 ctype = type_var.get()
-                if ctype == "Turn Number":
+                if ctype in ["Turn Number", "Random (0.00 - 1.00)"]:
                     op_cb.config(values=["==", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"])
                     if op_var.get() not in ["==", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"]:
                         op_var.set("==")
                     
-                    # Compute expected date projection
-                    d_str = get_expected_date_string(val_var.get())
-                    if d_str:
-                        date_lbl.config(text=f"({d_str})")
+                    if ctype == "Turn Number":
+                        # Compute expected date projection
+                        d_str = get_expected_date_string(val_var.get())
+                        if d_str:
+                            date_lbl.config(text=f"({d_str})")
+                        else:
+                            date_lbl.config(text="")
                     else:
                         date_lbl.config(text="")
                 else:
@@ -1379,4 +1382,83 @@ def open_diplomacy_editor(self):
 
     tk.Button(right_frame, text="Save Changes", command=save_changes, bg="#4CAF50", fg="white", font=("Arial", 12, "bold")).pack(pady=10, fill="x")
 
+    _run_editor_loop(self, root)
+
+def open_edited_countries(self):
+    """Opens a Tkinter window listing countries with edited properties."""
+    from data.io import country_io
+    default_data = country_io.load_all_country_data()
+    
+    edited_list = []
+    for c_id, current_data in self.nation_data.items():
+        if c_id in ["Unclaimed", "Ocean", "Lakes", "The Rot", "Spectator", "GLOBAL_EVENTS", "FACTION_WAR_MAPS"]:
+            continue
+            
+        def_country = default_data.get(c_id, {})
+        changes = {}
+        
+        # Tracking what differs from default
+        c_name = current_data.get("name", c_id)
+        d_name = def_country.get("name", c_id)
+        if c_name != d_name: changes["Name"] = c_name
+        
+        c_leader = current_data.get("leader_name", "")
+        d_leader = def_country.get("leader_name", "")
+        if c_leader != d_leader: changes["Leader Name"] = c_leader
+        
+        c_title = current_data.get("leader_title", "")
+        d_title = def_country.get("leader_title", "")
+        if c_title != d_title: changes["Leader Title"] = c_title
+        
+        c_flag = current_data.get("flag_data", "DEFAULT")
+        if c_flag != "DEFAULT": changes["Flag"] = "CUSTOM"
+        
+        c_port = current_data.get("portrait_data", "DEFAULT")
+        if c_port != "DEFAULT": changes["Portrait"] = "CUSTOM"
+        
+        if changes:
+            edited_list.append((c_id, changes))
+            
+    root = _create_editor_window("Edited Countries Overview", "900x500")
+    self.menu_active = True
+    
+    def close_menu():
+        self.menu_active = False
+        root.destroy()
+        
+    root.protocol("WM_DELETE_WINDOW", close_menu)
+    
+    style = ttk.Style(root)
+    try: style.theme_use("clam")
+    except: pass
+    
+    style.configure("Treeview.Heading", background="#d9e1f2", font=('Arial', 10, 'bold'), relief="flat")
+    style.configure("Treeview", background="#ffffff", fieldbackground="#ffffff", rowheight=28, font=('Arial', 10))
+    
+    columns = ("ID", "Name", "Leader Name", "Leader Title", "Flag", "Portrait")
+    tree = ttk.Treeview(root, columns=columns, show="headings")
+    
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, anchor="center", width=140)
+        
+    tree.tag_configure('evenrow', background='#ffffff')
+    tree.tag_configure('oddrow', background='#f2f2f2')
+    
+    for i, (c_id, changes) in enumerate(edited_list):
+        tag = 'evenrow' if i % 2 == 0 else 'oddrow'
+        tree.insert("", tk.END, values=(
+            c_id,
+            changes.get("Name", "-"),
+            changes.get("Leader Name", "-"),
+            changes.get("Leader Title", "-"),
+            changes.get("Flag", "-"),
+            changes.get("Portrait", "-")
+        ), tags=(tag,))
+        
+    scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
+    tree.configure(yscroll=scrollbar.set)
+    scrollbar.pack(side="right", fill="y")
+    tree.pack(fill="both", expand=True)
+    
     _run_editor_loop(self, root)

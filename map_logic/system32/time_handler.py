@@ -18,14 +18,20 @@ class TimeHandler:
         self.total_turns += 1
         
         # Check for Month overflow (30 days per month)
-        while self.day > 30:
-            self.day -= 30
-            self.month_index += 1
+        if self.day > 30:
+            added_months = (self.day - 1) // 30
+            self.day = ((self.day - 1) % 30) + 1
             
-            # Check for Year overflow
-            if self.month_index >= 12:
-                self.month_index = 0
-                self.year += 1
+            self.month_index += added_months
+            
+            added_years = self.month_index // 12
+            self.month_index = self.month_index % 12
+            
+            self.year += added_years
+
+        # Cap the year to 5 digits to prevent calculation/UI freezes
+        """if self.year > 99999:
+            self.year = 99999"""
 
         # Round up to the next 15 or 30 day turn increment
         """if self.day <= 15:

@@ -555,6 +555,28 @@ def process_scripted_events(map_screen):
                             elif c_op == "<=": res = (current_turn <= v)
                     except ValueError:
                         pass
+                
+                # Random Generation
+                elif c_type == "Random (0.00 - 1.00)":
+                    rand_val = random.random()
+                    try:
+                        if "BETWEEN" in c_op:
+                            parts = c_val.split(",")
+                            if len(parts) >= 2:
+                                v1, v2 = float(parts[0].strip()), float(parts[1].strip())
+                                if c_op == "BETWEEN (INC)":
+                                    res = (v1 <= rand_val <= v2)
+                                else:
+                                    res = (v1 < rand_val < v2)
+                        else:
+                            v = float(c_val.strip())
+                            if c_op == "==": res = (rand_val == v)
+                            elif c_op == ">": res = (rand_val > v)
+                            elif c_op == "<": res = (rand_val < v)
+                            elif c_op == ">=": res = (rand_val >= v)
+                            elif c_op == "<=": res = (rand_val <= v)
+                    except ValueError:
+                        pass
                         
                 elif c_type == "At War With":
                     res = (c_val in active_nations and queries.are_at_war(nation_name, c_val, map_screen.nation_data))

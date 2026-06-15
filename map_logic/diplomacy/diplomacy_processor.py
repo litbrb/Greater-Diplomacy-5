@@ -87,21 +87,29 @@ def process_diplomacy_turn(self):
                 del truces[target]
 
     # --- 0. PROCESS QUEUED AI MULTI-TURN ACTIONS ---
-    for country_name, data in self.nation_data.items():
-        if isinstance(data, dict) and "queued_ai_actions" in data and data["queued_ai_actions"]:
-            pending = data.setdefault("pending_diplomacy", {})
-            for q_action in data["queued_ai_actions"]:
-                target = q_action["target"]
-                action_type = q_action["action"]
-                
-                # Ensure self-targeting actions target the AI itself!
-                if action_type in ["CREATE_FACTION", "LEAVE_FACTION", "DISBAND_FACTION"]:
-                    target = country_name
-                
-                # Inject it as a fresh action for this turn, bypassing the LLM
-                if target not in pending or (isinstance(pending[target], dict) and pending[target].get("turns", 0) == 0):
-                    pending[target] = {"action": action_type, "turns": 0, "timer": 0, "message": ai_prompts.AI_FALLBACK_RESPONSES.get("FOLLOW_UP_DECLARATION")}
-            data["queued_ai_actions"] = []
+        for country_name, data in self.nation_data.items():
+            if isinstance(data, dict) and "queued_ai_actions" in data and data["queued_ai_actions"]:
+                pending = data.setdefault("pending_diplomacy", {})
+                for q_action in data["queued_ai_actions"]:
+                    target = q_action["target"]
+                    action_type = q_action["action"]
+                    
+                    # Ensure self-targeting actions target the AI itself!
+                    # FIX: Removed CREATE_FACTION so it properly targets the intended partner
+                    if action_type in ["LEAVE_FACTION", "DISBAND_FACTION"]:
+                        target = country_name
+                    
+                    # Inject it as a fresh action for this turn, bypassing the LLM
+                    if target not in pending or (isinstance(pending[target], dict) and pending[target].get("turns", 0) == 0):
+                        if action_type == "JOIN_FACTION_REQ":
+                            msg = "We formally request to join your faction."
+                        elif action_type == "CREATE_FACTION":
+                            msg = "We propose establishing a new faction together."
+                        else:
+                            msg = ai_prompts.AI_FALLBACK_RESPONSES.get("FOLLOW_UP_DECLARATION", "")
+
+                        pending[target] = {"action": action_type, "turns": 0, "timer": 0, "message": msg}
+                data["queued_ai_actions"] = []
 
     # --- 0. FIND ALIVE NATIONS ---
     active_nations = queries.get_living_nations(self.map_data)
@@ -456,7 +464,7 @@ def process_diplomacy_turn(self):
             delayed_responses.append((country_name, country_name, "DISBAND_FACTION", 0, ""))
 
         if follow_up and follow_up != "NONE":
-            final_f_up_target = country_name if follow_up in ["CREATE_FACTION", "LEAVE_FACTION", "DISBAND_FACTION"] else f_up_target
+            final_f_up_target = country_name if follow_up in ["LEAVE_FACTION", "DISBAND_FACTION"] else f_up_target
             ai_queue = self.nation_data[country_name].setdefault("queued_ai_actions", [])
             ai_queue.append({"target": final_f_up_target, "action": follow_up})
             log_global_event(self.nation_data, f"RUMOR: Internal shuffling suggests {country_name} is preparing further diplomatic moves regarding {f_up_target}...")

@@ -994,7 +994,15 @@ def open_scripted_events_editor(self):
             if len(full_cond_str) > 40:
                 full_cond_str = full_cond_str[:37] + "..."
                 
-            act_str = f"Then {evt.get('action_type')} '{evt.get('action_target')}'"
+            actions = evt.get("actions", [])
+            if not actions and "action_type" in evt:
+                actions = [{"type": evt["action_type"], "target": evt.get("action_target", "None")}]
+                
+            act_strs = [f"{a.get('type')} '{a.get('target')}'" for a in actions]
+            act_str = f"Then {', '.join(act_strs)}"
+            if len(act_str) > 40:
+                act_str = act_str[:37] + "..."
+                
             once_str = " [Once]" if evt.get("fire_once", True) else " [Repeat]"
             
             events_listbox.insert(tk.END, f"{i+1}. If {full_cond_str} -> {act_str}{once_str}")
@@ -1036,7 +1044,7 @@ def open_scripted_events_editor(self):
 
         edit_win = tk.Toplevel(root)
         edit_win.title(f"{'Edit' if event_idx is not None else 'Add'} Event: {target}")
-        edit_win.geometry("750x550")
+        edit_win.geometry("800x650")
         edit_win.attributes("-topmost", True)
         
         event_data = {}
@@ -1052,35 +1060,34 @@ def open_scripted_events_editor(self):
                 event_data["fire_once"] = True
                 
         conds_data = event_data.get("conditions", [{"chain": "AND", "type": "Turn Number", "operator": "==", "value": ""}])
+        
+        acts_data = event_data.get("actions", [])
+        if not acts_data and "action_type" in event_data:
+            acts_data = [{"type": event_data["action_type"], "target": event_data.get("action_target", "None")}]
 
         # --- Top controls ---
         top_frame = tk.Frame(edit_win)
         top_frame.pack(fill="x", padx=10, pady=5)
         
-        tk.Label(top_frame, text="Action Type:").grid(row=0, column=0, pady=2, sticky="e")
-        act_type_var = tk.StringVar(value=event_data.get("action_type", "Declare War"))
-        ttk.Combobox(top_frame, textvariable=act_type_var, values=["Declare War", "Join Faction", "Create Faction"], state="readonly").grid(row=0, column=1, pady=2, sticky="w")
-        
-        tk.Label(top_frame, text="Target:").grid(row=1, column=0, pady=2, sticky="e")
-        act_target_var = tk.StringVar(value=event_data.get("action_target", "None"))
-        ttk.Combobox(top_frame, textvariable=act_target_var, values=["None"] + sorted(active_countries)).grid(row=1, column=1, pady=2, sticky="w")
-        
         fire_once_var = tk.BooleanVar(value=event_data.get("fire_once", True))
-        tk.Checkbutton(top_frame, text="Single-Time Event (Fire Only Once)", variable=fire_once_var).grid(row=2, column=0, columnspan=2, sticky="w")
+        tk.Checkbutton(top_frame, text="Single-Time Event (Fire Only Once)", variable=fire_once_var).pack(anchor="w")
         
         # --- Conditions Frame ---
-        tk.Label(edit_win, text="Conditionals:", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
+        tk.Label(edit_win, text="Conditionals:", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(5, 0))
         
-        cond_canvas = tk.Canvas(edit_win)
-        cond_scroll = tk.Scrollbar(edit_win, orient="vertical", command=cond_canvas.yview)
+        cond_container = tk.Frame(edit_win)
+        cond_container.pack(fill="both", expand=True, padx=10, pady=2)
+        
+        cond_canvas = tk.Canvas(cond_container, height=180)
+        cond_scroll = tk.Scrollbar(cond_container, orient="vertical", command=cond_canvas.yview)
         cond_frame = tk.Frame(cond_canvas)
         
         cond_frame.bind("<Configure>", lambda e: cond_canvas.configure(scrollregion=cond_canvas.bbox("all")))
         cond_canvas.create_window((0, 0), window=cond_frame, anchor="nw")
         cond_canvas.configure(yscrollcommand=cond_scroll.set)
         
-        cond_canvas.pack(fill="both", expand=True, padx=10, pady=5)
         cond_scroll.pack(side="right", fill="y")
+        cond_canvas.pack(side="left", fill="both", expand=True)
         
         row_objects = []
         
@@ -1103,10 +1110,10 @@ def open_scripted_events_editor(self):
             op_var = tk.StringVar(value=c_data.get("operator", "=="))
             val_var = tk.StringVar(value=c_data.get("value", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)"], width=15, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)", "Received Action"], width=18, state="readonly")
             type_cb.pack(side="left", padx=2)
             
-            op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=14, state="readonly")
+            op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=19, state="readonly")
             op_cb.pack(side="left", padx=2)
             
             val_ent = tk.Entry(row_frame, textvariable=val_var, width=15)
@@ -1131,10 +1138,15 @@ def open_scripted_events_editor(self):
                             date_lbl.config(text="")
                     else:
                         date_lbl.config(text="")
+                elif ctype == "Received Action":
+                    op_cb.config(values=["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "PEACE_TREATY", "CEASEFIRE"])
+                    if op_var.get() not in ["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "PEACE_TREATY", "CEASEFIRE"]:
+                        op_var.set("WAR_DECLARATION")
                 else:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="")
+                    date_lbl.config(text="(Sender Nation ID)")
             
             type_var.trace_add("write", update_row)
             val_var.trace_add("write", update_row)
@@ -1160,6 +1172,57 @@ def open_scripted_events_editor(self):
         for c_data in conds_data:
             add_condition_row(c_data)
 
+        # --- Actions Frame ---
+        tk.Label(edit_win, text="Actions:", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(5, 0))
+        
+        act_container = tk.Frame(edit_win)
+        act_container.pack(fill="both", expand=True, padx=10, pady=2)
+        
+        act_canvas = tk.Canvas(act_container, height=180)
+        act_scroll = tk.Scrollbar(act_container, orient="vertical", command=act_canvas.yview)
+        act_frame = tk.Frame(act_canvas)
+        
+        act_frame.bind("<Configure>", lambda e: act_canvas.configure(scrollregion=act_canvas.bbox("all")))
+        act_canvas.create_window((0, 0), window=act_frame, anchor="nw")
+        act_canvas.configure(yscrollcommand=act_scroll.set)
+        
+        act_scroll.pack(side="right", fill="y")
+        act_canvas.pack(side="left", fill="both", expand=True)
+
+        act_row_objects = []
+        
+        def add_action_row(a_data=None):
+            if a_data is None:
+                a_data = {"type": "Declare War", "target": "None"}
+                
+            row_frame = tk.Frame(act_frame, relief="ridge", bd=2)
+            row_frame.pack(fill="x", pady=2, padx=2)
+            
+            type_var = tk.StringVar(value=a_data.get("type", "Declare War"))
+            target_var = tk.StringVar(value=a_data.get("target", "None"))
+            
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal"], width=18, state="readonly")
+            type_cb.pack(side="left", padx=5)
+            
+            target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
+            target_cb.pack(side="left", padx=5)
+            
+            row_obj = {
+                "frame": row_frame,
+                "type_var": type_var,
+                "target_var": target_var
+            }
+            
+            def remove_self():
+                row_frame.destroy()
+                act_row_objects.remove(row_obj)
+                
+            tk.Button(row_frame, text="X", fg="white", bg="red", command=remove_self).pack(side="right", padx=5)
+            act_row_objects.append(row_obj)
+
+        for a_data in acts_data:
+            add_action_row(a_data)
+
         def save_event():
             final_conds = []
             for ro in row_objects:
@@ -1170,10 +1233,16 @@ def open_scripted_events_editor(self):
                     "value": ro["val_var"].get()
                 })
                 
+            final_acts = []
+            for ro in act_row_objects:
+                final_acts.append({
+                    "type": ro["type_var"].get(),
+                    "target": ro["target_var"].get()
+                })
+                
             new_event = {
                 "conditions": final_conds,
-                "action_type": act_type_var.get(),
-                "action_target": act_target_var.get(),
+                "actions": final_acts,
                 "fire_once": fire_once_var.get()
             }
             
@@ -1191,8 +1260,9 @@ def open_scripted_events_editor(self):
         bot_frame = tk.Frame(edit_win)
         bot_frame.pack(fill="x", pady=10, padx=10)
         
-        tk.Button(bot_frame, text="Add Conditional", command=add_condition_row, bg="#2196F3", fg="white").pack(side="left")
-        tk.Button(bot_frame, text="Save Event", command=save_event, bg="#4CAF50", fg="white").pack(side="right")
+        tk.Button(bot_frame, text="Add Conditional", command=add_condition_row, bg="#2196F3", fg="white").pack(side="left", padx=5)
+        tk.Button(bot_frame, text="Add Action", command=add_action_row, bg="#9C27B0", fg="white").pack(side="left", padx=5)
+        tk.Button(bot_frame, text="Save Event", command=save_event, bg="#4CAF50", fg="white").pack(side="right", padx=5)
 
     def edit_event():
         sel = events_listbox.curselection()

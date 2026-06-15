@@ -584,6 +584,9 @@ def process_scripted_events(map_screen):
                     res = (c_val in active_nations and queries.are_in_same_faction(nation_name, c_val, map_screen.nation_data))
                 elif c_type == "At Peace With":
                     res = (c_val in active_nations and not queries.are_at_war(nation_name, c_val, map_screen.nation_data))
+                elif c_type == "Received Action":
+                    pend_act, pend_turns = queries.get_diplomatic_status(c_val, nation_name, map_screen.nation_data)
+                    res = (pend_act == c_op and pend_turns > 0)
                     
                 if c_idx == 0:
                     overall_met = res
@@ -594,20 +597,34 @@ def process_scripted_events(map_screen):
                     elif chain == "NOR": overall_met = not (overall_met or res)
                     
             if overall_met:
-                action_type = evt.get("action_type")
-                action_target = evt.get("action_target")
+                actions = evt.get("actions", [])
+                if not actions and "action_type" in evt:
+                    actions = [{"type": evt["action_type"], "target": evt.get("action_target", "None")}]
                 
                 ai_queue = data.setdefault("queued_ai_actions", [])
-                eng_action = ""
                 
-                if action_type == "Declare War": eng_action = "WAR_DECLARATION"
-                elif action_type == "Join Faction": eng_action = "JOIN_FACTION_REQ"
-                elif action_type == "Create Faction": eng_action = "CREATE_FACTION"
+                for act in actions:
+                    a_type = act.get("type")
+                    a_target = act.get("target")
                     
-                if eng_action:
-                    # Prevent queueing the same action repetitively if repeating
-                    already_queued = any(q["target"] == action_target and q["action"] == eng_action for q in ai_queue)
-                    if not already_queued:
-                        ai_queue.append({"target": action_target, "action": eng_action})
-                        if evt.get("fire_once", True) and i not in fired_events:
-                            fired_events.append(i)
+                    eng_action = ""
+                    if a_type == "Declare War": eng_action = "WAR_DECLARATION"
+                    elif a_type == "Join Faction": eng_action = "JOIN_FACTION_REQ"
+                    elif a_type == "Create Faction": eng_action = "CREATE_FACTION"
+                    elif a_type == "Accept Proposal":
+                        pend_act, pend_turns = queries.get_diplomatic_status(a_target, nation_name, map_screen.nation_data)
+                        if pend_turns > 0 and pend_act in c.BILATERAL_ACTIONS:
+                            eng_action = "ACCEPT_" + pend_act
+                    elif a_type == "Reject Proposal":
+                        pend_act, pend_turns = queries.get_diplomatic_status(a_target, nation_name, map_screen.nation_data)
+                        if pend_turns > 0 and pend_act in c.BILATERAL_ACTIONS:
+                            eng_action = "REJECT_" + pend_act
+                        
+                    if eng_action:
+                        # Prevent queueing the same action repetitively if repeating
+                        already_queued = any(q["target"] == a_target and q["action"] == eng_action for q in ai_queue)
+                        if not already_queued:
+                            ai_queue.append({"target": a_target, "action": eng_action})
+                            
+                if evt.get("fire_once", True) and i not in fired_events:
+                    fired_events.append(i)

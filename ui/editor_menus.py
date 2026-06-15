@@ -998,7 +998,13 @@ def open_scripted_events_editor(self):
             if not actions and "action_type" in evt:
                 actions = [{"type": evt["action_type"], "target": evt.get("action_target", "None")}]
                 
-            act_strs = [f"{a.get('type')} '{a.get('target')}'" for a in actions]
+            act_strs = []
+            for a in actions:
+                if a.get('type') == "Send Custom Message":
+                    act_strs.append(f"MSG to '{a.get('target')}'")
+                else:
+                    act_strs.append(f"{a.get('type')} '{a.get('target')}'")
+                    
             act_str = f"Then {', '.join(act_strs)}"
             if len(act_str) > 40:
                 act_str = act_str[:37] + "..."
@@ -1102,7 +1108,7 @@ def open_scripted_events_editor(self):
             
             chain_var = tk.StringVar(value=c_data.get("chain", "AND"))
             if not is_first:
-                ttk.Combobox(row_frame, textvariable=chain_var, values=["AND", "OR", "XOR", "NOR"], width=5, state="readonly").pack(side="left", padx=2)
+                ttk.Combobox(row_frame, textvariable=chain_var, values=["AND", "OR", "XOR", "NOR", "NAND"], width=5, state="readonly").pack(side="left", padx=2)
             else:
                 tk.Label(row_frame, text=" IF ", width=5).pack(side="left", padx=2)
                 
@@ -1110,7 +1116,7 @@ def open_scripted_events_editor(self):
             op_var = tk.StringVar(value=c_data.get("operator", "=="))
             val_var = tk.StringVar(value=c_data.get("value", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)", "Received Action"], width=18, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Occupying Core Of", "Bordering"], width=18, state="readonly")
             type_cb.pack(side="left", padx=2)
             
             op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=19, state="readonly")
@@ -1142,11 +1148,12 @@ def open_scripted_events_editor(self):
                     op_cb.config(values=["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "PEACE_TREATY", "CEASEFIRE"])
                     if op_var.get() not in ["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "PEACE_TREATY", "CEASEFIRE"]:
                         op_var.set("WAR_DECLARATION")
+                    date_lbl.config(text="(Sender Nation ID)")
                 else:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="")
-                    date_lbl.config(text="(Sender Nation ID)")
+                    date_lbl.config(text="(Target Nation ID)")
             
             type_var.trace_add("write", update_row)
             val_var.trace_add("write", update_row)
@@ -1193,24 +1200,37 @@ def open_scripted_events_editor(self):
         
         def add_action_row(a_data=None):
             if a_data is None:
-                a_data = {"type": "Declare War", "target": "None"}
+                a_data = {"type": "Declare War", "target": "None", "message": ""}
                 
             row_frame = tk.Frame(act_frame, relief="ridge", bd=2)
             row_frame.pack(fill="x", pady=2, padx=2)
             
             type_var = tk.StringVar(value=a_data.get("type", "Declare War"))
             target_var = tk.StringVar(value=a_data.get("target", "None"))
+            msg_var = tk.StringVar(value=a_data.get("message", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal"], width=18, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message"], width=18, state="readonly")
             type_cb.pack(side="left", padx=5)
             
             target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
             target_cb.pack(side="left", padx=5)
             
+            msg_ent = tk.Entry(row_frame, textvariable=msg_var, width=20)
+            
+            def update_act_row(*args):
+                if type_var.get() == "Send Custom Message":
+                    msg_ent.pack(side="left", padx=5)
+                else:
+                    msg_ent.pack_forget()
+                    
+            type_var.trace_add("write", update_act_row)
+            update_act_row()
+            
             row_obj = {
                 "frame": row_frame,
                 "type_var": type_var,
-                "target_var": target_var
+                "target_var": target_var,
+                "msg_var": msg_var
             }
             
             def remove_self():
@@ -1237,7 +1257,8 @@ def open_scripted_events_editor(self):
             for ro in act_row_objects:
                 final_acts.append({
                     "type": ro["type_var"].get(),
-                    "target": ro["target_var"].get()
+                    "target": ro["target_var"].get(),
+                    "message": ro["msg_var"].get()
                 })
                 
             new_event = {

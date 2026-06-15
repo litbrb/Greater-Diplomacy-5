@@ -587,6 +587,12 @@ def process_scripted_events(map_screen):
                 elif c_type == "Received Action":
                     pend_act, pend_turns = queries.get_diplomatic_status(c_val, nation_name, map_screen.nation_data)
                     res = (pend_act == c_op and pend_turns > 0)
+                elif c_type == "Country Exists":
+                    res = (c_val in active_nations)
+                elif c_type == "Occupying Core Of":
+                    res = any(p.get("owner") == nation_name and c_val in p.get("cores", []) for p in map_screen.map_data.values())
+                elif c_type == "Bordering":
+                    res = c_val in queries.get_neighboring_nations(nation_name, map_screen.map_data, map_screen.id_to_province)
                     
                 if c_idx == 0:
                     overall_met = res
@@ -595,6 +601,7 @@ def process_scripted_events(map_screen):
                     elif chain == "OR": overall_met = overall_met or res
                     elif chain == "XOR": overall_met = overall_met ^ res
                     elif chain == "NOR": overall_met = not (overall_met or res)
+                    elif chain == "NAND": overall_met = not (overall_met and res)
                     
             if overall_met:
                 actions = evt.get("actions", [])
@@ -605,26 +612,34 @@ def process_scripted_events(map_screen):
                 
                 for act in actions:
                     a_type = act.get("type")
-                    a_target = act.get("target")
+                    raw_targets = act.get("target", "None")
                     
-                    eng_action = ""
-                    if a_type == "Declare War": eng_action = "WAR_DECLARATION"
-                    elif a_type == "Join Faction": eng_action = "JOIN_FACTION_REQ"
-                    elif a_type == "Create Faction": eng_action = "CREATE_FACTION"
-                    elif a_type == "Accept Proposal":
-                        pend_act, pend_turns = queries.get_diplomatic_status(a_target, nation_name, map_screen.nation_data)
-                        if pend_turns > 0 and pend_act in c.BILATERAL_ACTIONS:
-                            eng_action = "ACCEPT_" + pend_act
-                    elif a_type == "Reject Proposal":
-                        pend_act, pend_turns = queries.get_diplomatic_status(a_target, nation_name, map_screen.nation_data)
-                        if pend_turns > 0 and pend_act in c.BILATERAL_ACTIONS:
-                            eng_action = "REJECT_" + pend_act
+                    # Supports comma-separated targets for simultaneous multi-country actions
+                    target_list = [t.strip() for t in str(raw_targets).split(",") if t.strip()]
+                    
+                    for a_target in target_list:
+                        if a_target == "None": continue
                         
-                    if eng_action:
-                        # Prevent queueing the same action repetitively if repeating
-                        already_queued = any(q["target"] == a_target and q["action"] == eng_action for q in ai_queue)
-                        if not already_queued:
-                            ai_queue.append({"target": a_target, "action": eng_action})
+                        eng_action = ""
+                        if a_type == "Declare War": eng_action = "WAR_DECLARATION"
+                        elif a_type == "Join Faction": eng_action = "JOIN_FACTION_REQ"
+                        elif a_type == "Create Faction": eng_action = "CREATE_FACTION"
+                        elif a_type == "Send Ceasefire": eng_action = "CEASEFIRE"
+                        elif a_type == "Send Custom Message": eng_action = f"MSG:{act.get('message', '')}"
+                        elif a_type == "Accept Proposal":
+                            pend_act, pend_turns = queries.get_diplomatic_status(a_target, nation_name, map_screen.nation_data)
+                            if pend_turns > 0 and pend_act in c.BILATERAL_ACTIONS:
+                                eng_action = "ACCEPT_" + pend_act
+                        elif a_type == "Reject Proposal":
+                            pend_act, pend_turns = queries.get_diplomatic_status(a_target, nation_name, map_screen.nation_data)
+                            if pend_turns > 0 and pend_act in c.BILATERAL_ACTIONS:
+                                eng_action = "REJECT_" + pend_act
+                            
+                        if eng_action:
+                            # Prevent queueing the same action repetitively if repeating
+                            already_queued = any(q["target"] == a_target and q["action"] == eng_action for q in ai_queue)
+                            if not already_queued:
+                                ai_queue.append({"target": a_target, "action": eng_action})
                             
                 if evt.get("fire_once", True) and i not in fired_events:
                     fired_events.append(i)

@@ -8,7 +8,7 @@ def conquer_province(self, province, new_owner):
     if province:
         # --- NEW: If you ever lose a territory, you immediately get a claim on it ---
         old_owner = province.get("owner", "Unclaimed")
-        if old_owner not in c.UNPLAYABLE_NATIONS and old_owner != new_owner:
+        if old_owner not in c.UNPLAYABLE_NATIONS and old_owner != new_owner and not self.is_editor:
             add_claim(self, province, old_owner)
 
         # 1. Logic Update
@@ -39,8 +39,9 @@ def conquer_province(self, province, new_owner):
         # Flag this for an update later rather than doing the heavy math instantly
         self.centers_need_update = True
 
-        if not province.get("cores"):
-            province["cores"] = [new_owner]
+        if not self.is_editor:
+            if not province.get("cores"):
+                province["cores"] = [new_owner]
 
 def get_mixed_core_color(cores):
     """Helper function to average the colors of all cores on a tile."""

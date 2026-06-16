@@ -90,9 +90,15 @@ def get_proactive_action_context(action_type, target=None):
         return f"declaring war on {target} to reclaim rightful core territory, you are not negotiating"
     elif action_type == "JOIN_FACTION_REQ":
         return "requesting to join your faction to stand against our mutual enemies"
-    elif action_type == "CREATE_FACTION": # Added this block
+    elif action_type == "CREATE_FACTION":
         return "proposing to create a new faction together to combat mutual threats"
-    return ""
+    elif action_type.startswith("ACCEPT_"):
+        return f"accepting the {action_type.replace('ACCEPT_', '').replace('_', ' ').lower()} proposal"
+    elif action_type.startswith("REJECT_"):
+        return f"rejecting the {action_type.replace('REJECT_', '').replace('_', ' ').lower()} proposal"
+    elif action_type.startswith("MSG:"):
+        return f"sending a diplomatic message: '{action_type[4:]}'"
+    return "taking a diplomatic action"
 
 def get_unilateral_receive_context(action_type, sender_nation, custom_msg=""):
     # Returns the context for when an AI receives an un-rejectable action (like War).

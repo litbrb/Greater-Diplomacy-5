@@ -582,19 +582,20 @@ def process_scripted_events(map_screen):
                     except ValueError:
                         pass
                         
-                elif c_type == "At War With":
-                    res = (c_val in active_nations and queries.are_at_war(nation_name, c_val, map_screen.nation_data))
-                elif c_type == "In Faction With":
-                    res = (c_val in active_nations and queries.are_in_same_faction(nation_name, c_val, map_screen.nation_data))
-                elif c_type == "At Peace With":
-                    res = (c_val in active_nations and not queries.are_at_war(nation_name, c_val, map_screen.nation_data))
-                elif c_type == "Received Action":
-                    pend_act, pend_turns = queries.get_diplomatic_status(c_val, nation_name, map_screen.nation_data)
-                    res = (pend_act == c_op and pend_turns > 0)
-                elif c_type == "Country Exists":
-                    res = (c_val in active_nations)
-                elif c_type == "Country Doesn't Exist":
-                    res = (c_val not in active_nations)
+                elif c_type in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist"]:
+                    targets = [t.strip() for t in str(c_val).split(",") if t.strip()]
+                    if not targets:
+                        res = False
+                    elif c_type == "At War With":
+                        res = all(t in active_nations and queries.are_at_war(nation_name, t, map_screen.nation_data) for t in targets)
+                    elif c_type == "In Faction With":
+                        res = all(t in active_nations and queries.are_in_same_faction(nation_name, t, map_screen.nation_data) for t in targets)
+                    elif c_type == "At Peace With":
+                        res = all(t in active_nations and not queries.are_at_war(nation_name, t, map_screen.nation_data) for t in targets)
+                    elif c_type == "Country Exists":
+                        res = all(t in active_nations for t in targets)
+                    elif c_type == "Country Doesn't Exist":
+                        res = all(t not in active_nations for t in targets)
                 elif c_type == "Occupying All Cores Of":
                     res = queries.is_occupying_all_cores(nation_name, c_val, map_screen.map_data)
                 elif c_type == "Occupying Tile":
@@ -625,6 +626,7 @@ def process_scripted_events(map_screen):
                     actions = [{"type": evt["action_type"], "target": evt.get("action_target", "None")}]
                 
                 ai_queue = data.setdefault("queued_ai_actions", [])
+                pending = data.setdefault("pending_diplomacy", {})
                 
                 for act in actions:
                     a_type = act.get("type")
@@ -654,7 +656,15 @@ def process_scripted_events(map_screen):
                                     map_screen.centers_need_update = True
                             except Exception:
                                 pass
-                        continue # End this action here, do not add to diplomacy queue
+                        continue
+
+                    if a_type == "Queue Claims":
+                        prov_ids = [int(p.strip()) for p in str(act.get("message", "")).split(",") if p.strip().isdigit()]
+                        for pid in prov_ids:
+                            queue = data.setdefault("claim_queue", [])
+                            if not any(q["prov_id"] == pid for q in queue) and pid not in data.get("claims", []):
+                                queue.append({"prov_id": pid, "turns_left": c.CLAIM_TURN_NON_CORE})
+                        continue
                     
                     # Supports comma-separated targets for simultaneous multi-country actions
                     target_list = [t.strip() for t in str(raw_targets).split(",") if t.strip()]
@@ -676,12 +686,33 @@ def process_scripted_events(map_screen):
                             pend_act, pend_turns = queries.get_diplomatic_status(a_target, nation_name, map_screen.nation_data)
                             if pend_turns > 0 and pend_act in c.BILATERAL_ACTIONS:
                                 eng_action = "REJECT_" + pend_act
-                            
+                        
                         if eng_action:
-                            # Prevent queueing the same action repetitively if repeating
-                            already_queued = any(q["target"] == a_target and q["action"] == eng_action for q in ai_queue)
+                            already_queued = (a_target in pending and isinstance(pending[a_target], dict) and pending[a_target].get("action") == eng_action)
                             if not already_queued:
-                                ai_queue.append({"target": a_target, "action": eng_action})
+                                custom_msg = act.get("message", "")
+                                ai_generate = act.get("ai_generate", False)
+                                
+                                pending[a_target] = {
+                                    "action": eng_action,
+                                    "turns": 0,
+                                    "timer": 0,
+                                    "message": custom_msg
+                                }
+                                
+                                if ai_generate:
+                                    action_context = ai_prompts.get_proactive_action_context(eng_action.replace("ACCEPT_", "").replace("REJECT_", ""), a_target)
+                                    if eng_action.startswith("MSG:"):
+                                        action_context = ai_prompts.get_proactive_action_context(eng_action, a_target)
+                                        
+                                    fallback = custom_msg if custom_msg else "We have sent a diplomatic missive."
+                                    map_screen.proactive_llm_tasks.append({
+                                        "sender": nation_name,
+                                        "target": a_target,
+                                        "context": action_context,
+                                        "fallback": fallback,
+                                        "action_type": eng_action
+                                    })
                             
                 if evt.get("fire_once", True) and i not in fired_events:
                     fired_events.append(i)

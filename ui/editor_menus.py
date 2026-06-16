@@ -1005,6 +1005,8 @@ def open_scripted_events_editor(self):
                     act_strs.append(f"MSG to '{a.get('target')}'")
                 elif a_type in ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]:
                     act_strs.append(f"{a_type}: '{a.get('message')}'")
+                elif a_type == "Queue Claims":
+                    act_strs.append(f"Queue Claims on Provs: '{a.get('message')}'")
                 else:
                     act_strs.append(f"{a_type} '{a.get('target')}'")
                     
@@ -1172,14 +1174,14 @@ def open_scripted_events_editor(self):
                     if op_var.get() not in ["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "CEASEFIRE"]:
                         op_var.set("WAR_DECLARATION")
                     date_lbl.config(text="(Sender Nation ID)")
-                elif ctype == "Country Doesn't Exist":
+                elif ctype in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
-                    date_lbl.config(text="(Target Nation ID)")
+                    date_lbl.config(text="(Target Nation IDs, comma separated)")
                 elif ctype == "Occupying All Cores Of":
                     op_cb.config(values=["==", "!="])
                     if op_var.get() not in ["==", "!="]: op_var.set("==")
-                    date_lbl.config(text="(Target Nation ID)")
+                    date_lbl.config(text="(Target Nation IDs, comma separated)")
                 elif ctype == "Occupying Tile":
                     op_cb.config(values=["==", "!="])
                     if op_var.get() not in ["==", "!="]: op_var.set("==")
@@ -1187,11 +1189,11 @@ def open_scripted_events_editor(self):
                 elif ctype in ["Is AI Controlled", "Is Player Controlled"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
-                    date_lbl.config(text="(Target Nation ID or blank for self)")
+                    date_lbl.config(text="(Target Nation IDs, comma separated)") # or blank for self
                 else:
                     op_cb.config(values=["=="])
                     op_var.set("==")
-                    date_lbl.config(text="(Target Nation ID)")
+                    date_lbl.config(text="(Target Nation ID, comma separated)")
             
             type_var.trace_add("write", update_row)
             val_var.trace_add("write", update_row)
@@ -1266,21 +1268,24 @@ def open_scripted_events_editor(self):
             type_var = tk.StringVar(value=a_data.get("type", "Declare War"))
             target_var = tk.StringVar(value=a_data.get("target", "None"))
             msg_var = tk.StringVar(value=a_data.get("message", ""))
+            ai_var = tk.BooleanVar(value=a_data.get("ai_generate", False))
             
             edit_options = ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]
-            all_options = ["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message"] + edit_options
+            all_options = ["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims"] + edit_options
             
             type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=all_options, width=18, state="readonly")
             type_cb.pack(side="left", padx=5)
             
             target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
             msg_ent = tk.Entry(row_frame, textvariable=msg_var, width=20)
+            ai_cb = tk.Checkbutton(row_frame, text="AI Msg", variable=ai_var)
             
             row_obj = {
                 "frame": row_frame,
                 "type_var": type_var,
                 "target_var": target_var,
-                "msg_var": msg_var
+                "msg_var": msg_var,
+                "ai_var": ai_var
             }
             
             def update_act_row(*args):
@@ -1288,13 +1293,21 @@ def open_scripted_events_editor(self):
                 if t == "Send Custom Message":
                     target_cb.pack(side="left", padx=5)
                     msg_ent.pack(side="left", padx=5)
+                    ai_cb.pack(side="left", padx=5)
                 elif t in edit_options:
                     target_cb.pack_forget()
                     target_var.set("None") # Reset to None since it targets self
                     msg_ent.pack(side="left", padx=5)
+                    ai_cb.pack_forget()
+                elif t == "Queue Claims":
+                    target_cb.pack_forget()
+                    target_var.set("None")
+                    msg_ent.pack(side="left", padx=5)
+                    ai_cb.pack_forget()
                 else:
                     target_cb.pack(side="left", padx=5)
-                    msg_ent.pack_forget()
+                    msg_ent.pack(side="left", padx=5)
+                    ai_cb.pack(side="left", padx=5)
                     
             type_var.trace_add("write", update_act_row)
             update_act_row()
@@ -1326,7 +1339,8 @@ def open_scripted_events_editor(self):
                 final_acts.append({
                     "type": ro["type_var"].get(),
                     "target": ro["target_var"].get(),
-                    "message": ro["msg_var"].get()
+                    "message": ro["msg_var"].get(),
+                    "ai_generate": ro["ai_var"].get()
                 })
                 
             new_event = {

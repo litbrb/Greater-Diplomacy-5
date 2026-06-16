@@ -63,6 +63,13 @@ _JSON_CACHE = {
     "active_albums": {"path": c.ACTIVE_ALBUMS_PATH, "data": None}
 }
 
+def scenario_has_scripted_events(nation_data):
+    """Checks if any nation in the scenario has scripted events."""
+    for data in nation_data.values():
+        if isinstance(data, dict) and data.get("scripted_events"):
+            return True
+    return False
+
 def get_scenario_settings(): 
     return _load_cached_json("scenario_settings")
 

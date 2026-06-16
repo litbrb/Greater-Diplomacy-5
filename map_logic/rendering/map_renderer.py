@@ -203,6 +203,38 @@ def draw_map_screen(self, surface):
         pygame.draw.rect(surface, (0, 0, 0, 180), bg_rect.inflate(20, 10))
         surface.blit(txt, bg_rect)
 
+        # --- NEW: Scripted Events Checkmark ---
+        has_events = queries.scenario_has_scripted_events(self.nation_data)
+        cb_font = fonts.get("normal")
+
+        if has_events:
+            se_val = self.scenario_settings.get("use_scripted_events", c.DEFAULT_USE_SCRIPTED_EVENTS)
+            if se_val:
+                cb_text = "Scripted Events Enabled"
+            else:
+                cb_text = "Scripted Events Disabled"
+            cb_color = (255, 255, 255)
+        else:
+            se_val = False
+            cb_text = "No Scripted Events Detected"
+            cb_color = (150, 150, 150)
+
+        txt_w = cb_font.size(cb_text)[0]
+        total_w = 20 + 10 + txt_w
+        start_x = surface.get_width() // 2 - total_w // 2
+        start_y = c.SCREEN_HEIGHT - 40
+        self.se_checkbox_rect = pygame.Rect(start_x, start_y, 20, 20)
+
+        bg_rect2 = pygame.Rect(start_x - 10, start_y - 5, total_w + 20, 30)
+        pygame.draw.rect(surface, (0, 0, 0, 180), bg_rect2)
+
+        pygame.draw.rect(surface, cb_color, self.se_checkbox_rect, 2)
+        if se_val and has_events:
+            pygame.draw.rect(surface, (0, 255, 0), self.se_checkbox_rect.inflate(-8, -8))
+
+        cb_surf = cb_font.render(cb_text, True, cb_color)
+        surface.blit(cb_surf, (self.se_checkbox_rect.right + 10, self.se_checkbox_rect.y))
+
         if self.pending_selection:
             overlay = pygame.Surface((surface.get_width(), surface.get_height()), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 100))

@@ -44,32 +44,23 @@ class Scenario_Settings(GameState):
             Button("centered", 240, "medium", cb_color, cb_text, self.toggle_casus_belli)
         )
 
-        # Toggle Button - Scripted Events
-        se_val = self.settings.get("use_scripted_events", c.DEFAULT_USE_SCRIPTED_EVENTS)
-        se_color = "green" if se_val else "red"
-        se_text = "Scripted Events: ON" if se_val else "Scripted Events: OFF"
-
-        self.elements.append(
-            Button("centered", 320, "medium", se_color, se_text, self.toggle_scripted_events)
-        )
-
         # Toggle Button - AI Off
         ai_off_val = self.settings.get("ai_off", c.DEFAULT_AI_OFF)
         ai_off_color = "red" if ai_off_val else "green" 
         ai_off_text = "AI: OFF" if ai_off_val else "AI: ON"
 
         self.elements.append(
-            Button("centered", 400, "medium", ai_off_color, ai_off_text, self.toggle_ai_off)
+            Button("centered", 320, "medium", ai_off_color, ai_off_text, self.toggle_ai_off)
         )
 
         dpt_val = self.settings.get("days_per_turn", "Default")
         self.elements.append(
-            Button("centered", 480, "medium", "blue", f"Days Per Turn: {dpt_val}", self.cycle_days_per_turn)
+            Button("centered", 400, "medium", "blue", f"Days Per Turn: {dpt_val}", self.cycle_days_per_turn)
         )
 
         # Reset Defaults Button
         self.elements.append(
-            Button("centered", 560, "medium", "grey", "Reset to Defaults", self.reset_defaults)
+            Button("centered", 480, "medium", "grey", "Reset to Defaults", self.reset_defaults)
         )
 
     def toggle_fog(self):
@@ -79,11 +70,6 @@ class Scenario_Settings(GameState):
 
     def toggle_casus_belli(self):
         self.settings["casus_belli_required"] = not self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)
-        queries.save_scenario_settings(self.settings)
-        self.refresh_ui()
-
-    def toggle_scripted_events(self):
-        self.settings["use_scripted_events"] = not self.settings.get("use_scripted_events", c.DEFAULT_USE_SCRIPTED_EVENTS)
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 

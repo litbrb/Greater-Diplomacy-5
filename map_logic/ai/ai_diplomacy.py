@@ -582,7 +582,7 @@ def process_scripted_events(map_screen):
                     except ValueError:
                         pass
                         
-                elif c_type in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist"]:
+                elif c_type in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
                     targets = [t.strip() for t in str(c_val).split(",") if t.strip()]
                     if not targets:
                         res = False
@@ -596,6 +596,17 @@ def process_scripted_events(map_screen):
                         res = all(t in active_nations for t in targets)
                     elif c_type == "Country Doesn't Exist":
                         res = all(t not in active_nations for t in targets)
+                    elif c_type == "Occupying Claims Of":
+                        res = all(any(map_screen.id_to_province.get(pid, {}).get("owner") == nation_name for pid in map_screen.nation_data.get(t, {}).get("claims", [])) for t in targets)
+                    elif c_type == "Occupying All Claims":
+                        res = all(map_screen.nation_data.get(t, {}).get("claims") and all(map_screen.id_to_province.get(pid, {}).get("owner") == nation_name for pid in map_screen.nation_data.get(t, {}).get("claims", [])) for t in targets)
+                elif c_type == "True":
+                    res = True
+                elif c_type == "False":
+                    res = False
+                elif c_type == "Received Action":
+                    pend_act, pend_turns = queries.get_diplomatic_status(c_val, nation_name, map_screen.nation_data)
+                    res = (pend_act == c_op and pend_turns > 0)
                 elif c_type == "Occupying All Cores Of":
                     res = queries.is_occupying_all_cores(nation_name, c_val, map_screen.map_data)
                 elif c_type == "Occupying Tile":
@@ -664,6 +675,25 @@ def process_scripted_events(map_screen):
                             queue = data.setdefault("claim_queue", [])
                             if not any(q["prov_id"] == pid for q in queue) and pid not in data.get("claims", []):
                                 queue.append({"prov_id": pid, "turns_left": c.CLAIM_TURN_NON_CORE})
+                        continue
+
+                    if a_type == "Revoke Claims":
+                        prov_ids = [int(p.strip()) for p in str(act.get("message", "")).split(",") if p.strip().isdigit()]
+                        revoke_queue = data.setdefault("revoke_queue", [])
+                        for pid in prov_ids:
+                            if not any(rq["prov_id"] == pid for rq in revoke_queue) and pid in data.get("claims", []):
+                                revoke_queue.append({"prov_id": pid, "turns_left": 1})
+                        continue
+
+                    if a_type == "Revoke All Claims":
+                        target_list = [t.strip() for t in str(raw_targets).split(",") if t.strip()]
+                        for a_target in target_list:
+                            if a_target == "None": continue
+                            t_data = map_screen.nation_data.get(a_target, {})
+                            revoke_queue = t_data.setdefault("revoke_queue", [])
+                            for pid in t_data.get("claims", []):
+                                if not any(rq["prov_id"] == pid for rq in revoke_queue):
+                                    revoke_queue.append({"prov_id": pid, "turns_left": 1})
                         continue
                     
                     # Supports comma-separated targets for simultaneous multi-country actions

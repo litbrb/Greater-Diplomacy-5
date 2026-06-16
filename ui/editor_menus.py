@@ -1007,6 +1007,10 @@ def open_scripted_events_editor(self):
                     act_strs.append(f"{a_type}: '{a.get('message')}'")
                 elif a_type == "Queue Claims":
                     act_strs.append(f"Queue Claims on Provs: '{a.get('message')}'")
+                elif a_type == "Revoke Claims":
+                    act_strs.append(f"Revoke Claims on Provs: '{a.get('message')}'")
+                elif a_type == "Revoke All Claims":
+                    act_strs.append(f"Revoke All Claims for '{a.get('target')}'")
                 else:
                     act_strs.append(f"{a_type} '{a.get('target')}'")
                     
@@ -1142,7 +1146,7 @@ def open_scripted_events_editor(self):
             op_var = tk.StringVar(value=c_data.get("operator", "=="))
             val_var = tk.StringVar(value=c_data.get("value", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering"], width=18, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Claims Of", "Occupying All Claims", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering", "True", "False"], width=18, state="readonly")
             type_cb.pack(side="left", padx=2)
             
             op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=19, state="readonly")
@@ -1174,10 +1178,14 @@ def open_scripted_events_editor(self):
                     if op_var.get() not in ["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "CEASEFIRE"]:
                         op_var.set("WAR_DECLARATION")
                     date_lbl.config(text="(Sender Nation ID)")
-                elif ctype in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist"]:
+                elif ctype in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="(Target Nation IDs, comma separated)")
+                elif ctype in ["True", "False"]:
+                    op_cb.config(values=["=="])
+                    op_var.set("==")
+                    date_lbl.config(text="")
                 elif ctype == "Occupying All Cores Of":
                     op_cb.config(values=["==", "!="])
                     if op_var.get() not in ["==", "!="]: op_var.set("==")
@@ -1271,7 +1279,7 @@ def open_scripted_events_editor(self):
             ai_var = tk.BooleanVar(value=a_data.get("ai_generate", False))
             
             edit_options = ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]
-            all_options = ["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims"] + edit_options
+            all_options = ["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims"] + edit_options
             
             type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=all_options, width=18, state="readonly")
             type_cb.pack(side="left", padx=5)
@@ -1299,10 +1307,14 @@ def open_scripted_events_editor(self):
                     target_var.set("None") # Reset to None since it targets self
                     msg_ent.pack(side="left", padx=5)
                     ai_cb.pack_forget()
-                elif t == "Queue Claims":
+                elif t in ["Queue Claims", "Revoke Claims"]:
                     target_cb.pack_forget()
                     target_var.set("None")
                     msg_ent.pack(side="left", padx=5)
+                    ai_cb.pack_forget()
+                elif t == "Revoke All Claims":
+                    target_cb.pack(side="left", padx=5)
+                    msg_ent.pack_forget()
                     ai_cb.pack_forget()
                 else:
                     target_cb.pack(side="left", padx=5)
@@ -1385,11 +1397,35 @@ def open_scripted_events_editor(self):
             events.pop(idx)
             refresh_events_list()
 
+    def move_event_up():
+        target = current_target[0]
+        sel = events_listbox.curselection()
+        if not target or not sel: return
+        idx = sel[0]
+        if idx > 0:
+            events = self.nation_data[target]["scripted_events"]
+            events.insert(idx - 1, events.pop(idx))
+            refresh_events_list()
+            events_listbox.selection_set(idx - 1)
+
+    def move_event_down():
+        target = current_target[0]
+        sel = events_listbox.curselection()
+        if not target or not sel: return
+        idx = sel[0]
+        events = self.nation_data[target]["scripted_events"]
+        if idx < len(events) - 1:
+            events.insert(idx + 1, events.pop(idx))
+            refresh_events_list()
+            events_listbox.selection_set(idx + 1)
+
     btn_frame = tk.Frame(right_frame)
     btn_frame.pack(fill="x", pady=5)
-    tk.Button(btn_frame, text="Add New Event", command=lambda: open_event_window(None), bg="#2196F3", fg="white").pack(side="left", expand=True, fill="x", padx=5)
-    tk.Button(btn_frame, text="Edit Selected", command=edit_event, bg="#FF9800", fg="black").pack(side="left", expand=True, fill="x", padx=5)
-    tk.Button(btn_frame, text="Remove Selected", command=remove_event, bg="#f44336", fg="white").pack(side="right", expand=True, fill="x", padx=5)
+    tk.Button(btn_frame, text="Add New Event", command=lambda: open_event_window(None), bg="#2196F3", fg="white").pack(side="left", expand=True, fill="x", padx=2)
+    tk.Button(btn_frame, text="Edit", command=edit_event, bg="#FF9800", fg="black").pack(side="left", expand=True, fill="x", padx=2)
+    tk.Button(btn_frame, text="^", command=move_event_up, bg="#d9e1f2", fg="black").pack(side="left", expand=False, fill="x", padx=2)
+    tk.Button(btn_frame, text="v", command=move_event_down, bg="#d9e1f2", fg="black").pack(side="left", expand=False, fill="x", padx=2)
+    tk.Button(btn_frame, text="Remove", command=remove_event, bg="#f44336", fg="white").pack(side="right", expand=True, fill="x", padx=2)
 
     _run_editor_loop(self, root)
 

@@ -238,32 +238,62 @@ def get_nations_holding_our_cores_or_claims(nation, map_data, nation_data):
                 targets.add(owner)
     return targets
 
-def get_border_strength(nation_a, nation_b, map_data, id_to_province):
-    """Calculates the military strength of both nations localized to their shared border."""
-    border_provs_a = set()
-    border_provs_b = set()
+def get_border_strength(nation_a, nation_b, map_data, id_to_province, nation_data):
+    """Calculates the military strength of both nations localized to their shared border zone."""
+    combined_border_provs = set()
     
+    # Build a single "Front Line" zone that includes BOTH sides of the border
     for prov in map_data.values():
         owner = prov.get("owner")
         if owner == nation_a:
             for n_id in prov.get("neighbors", []):
                 n_prov = id_to_province.get(n_id)
                 if n_prov and n_prov.get("owner") == nation_b:
-                    border_provs_a.add(prov["id"])
-                    border_provs_b.add(n_id)
+                    combined_border_provs.add(prov["id"])
+                    combined_border_provs.add(n_id)
                     
-    def calc_strength(prov_ids, target_nation):
+    def calc_strength(prov_ids, evaluating_nation, opposing_nation):
         strength = 0
+        
+        # Include imperial family (puppets), allies, and faction members defending the border
+        friendly_nations = set([evaluating_nation])
+        faction = nation_data.get(evaluating_nation, {}).get("faction", "")
+        if faction:
+            friendly_nations.update(get_faction_members(faction, nation_data))
+        friendly_nations.update(get_imperial_family(evaluating_nation, nation_data))
+        friendly_nations.update(nation_data.get(evaluating_nation, {}).get("allied_with", []))
+        
         for prov_id in prov_ids:
             prov = id_to_province.get(prov_id)
             if prov:
-                for u in prov.get("units", []):
-                    if u.get("owner") == target_nation:
-                        hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
-                        strength += u.get("attack", 0) + u.get("defense", 0) + hp_val
+                # Gather all friendly units on this tile
+                friendly_units = [u for u in prov.get("units", []) if u.get("owner") in friendly_nations]
+                
+                # Cap by combat width (MAX_COMBAT_ATTACKERS) prioritizing best units
+                top_units = sorted(friendly_units, key=lambda x: x.get("attack", 0) + x.get("defense", 0), reverse=True)[:c.MAX_COMBAT_ATTACKERS]
+                
+                tile_strength = 0
+                for u in top_units:
+                    hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
+                    base_str = u.get("attack", 0) + u.get("defense", 0) + hp_val
+                    
+                    # Reduce strength if this unit is actively fighting someone else on this tile
+                    in_combat_with_third_party = False
+                    for other_u in prov.get("units", []):
+                        other_owner = other_u.get("owner")
+                        if other_owner != opposing_nation and are_at_war(u.get("owner"), other_owner, nation_data):
+                            in_combat_with_third_party = True
+                            break
+                            
+                    if in_combat_with_third_party:
+                        base_str *= c.AI_BORDER_DISTRACTION_MULTIPLIER
+                        
+                    tile_strength += base_str
+                strength += tile_strength
         return strength
 
-    return calc_strength(border_provs_a, nation_a), calc_strength(border_provs_b, nation_b)
+    # Both nations now look at the exact same cluster of frontline tiles
+    return calc_strength(combined_border_provs, nation_a, nation_b), calc_strength(combined_border_provs, nation_b, nation_a)
 
 def are_at_war(nation_a, nation_b, nation_data):
     """Returns True if nation_b is in nation_a's war list."""
@@ -1503,7 +1533,7 @@ def ai_thinks_it_can_win(ai_nation, target_nation, map_data, nation_data, id_to_
     if not id_to_province:
         id_to_province = {prov["id"]: prov for prov in map_data.values()}
 
-    my_border_str, target_border_str = get_border_strength(ai_nation, target_nation, map_data, id_to_province)
+    my_border_str, target_border_str = get_border_strength(ai_nation, target_nation, map_data, id_to_province, nation_data)
     
     # Prevent division by zero if they have literally no troops on the border
     target_border_str = max(1, target_border_str)

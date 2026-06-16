@@ -547,6 +547,7 @@ AI_WAR_DECLARATION_CHANCE = 0.50 # 50% chance the AI actually declares war when 
 # How much the AI values the strength of their target's current enemies. 
 # 0.8 means if the target is fighting someone with 1000 strength, the AI feels 800 points braver.
 AI_ENEMY_DISTRACTION_WEIGHT = 0.8
+AI_BORDER_DISTRACTION_MULTIPLIER = 0.5 # Multiplier for border units actively engaged in combat with a third party
 
 # ==========================================
 # AI RECRUITMENT PREFERENCES

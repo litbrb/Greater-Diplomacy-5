@@ -376,7 +376,7 @@ def open_editor_date(self):
 
     tk.Label(root, text="Base Days Per Turn:", font=("Arial", 10)).pack(pady=(10, 2))
     dpt_ent = tk.Entry(root, justify="center")
-    dpt_ent.insert(0, str(self.scenario_settings.get("base_days_per_turn", c.DEFAULT_DAYS_PER_TURN)))
+    dpt_ent.insert(0, str(queries.get_days_per_turn(self.scenario_settings)))
     dpt_ent.pack()
 
     def apply_date():
@@ -401,6 +401,10 @@ def open_editor_date(self):
             self.time_manager.month_index = m
             self.time_manager.year = y
             self.scenario_settings["base_days_per_turn"] = b_dpt
+            self.scenario_settings["days_per_turn"] = "Default"
+            
+            # Prevents 'Data Refresh' from wiping the custom turn rate
+            queries.save_scenario_settings(self.scenario_settings)
             
             self.show_feedback(f"Date & Turn Rate set!")
             close_menu()

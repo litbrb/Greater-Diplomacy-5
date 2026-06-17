@@ -33,7 +33,7 @@ def load_map_assets(self, load_path):
     # --- UNIFIED SETTINGS LOADING ---
     scenario_settings = queries.get_scenario_settings()
     # Ensure we always have a dictionary to reference
-    self.scenario_settings = scenario_settings if scenario_settings is not None else {
+    self.scenario_settings = copy.deepcopy(scenario_settings) if scenario_settings is not None else {
         "fog_of_war": c.DEFAULT_FOG_OF_WAR,
         "casus_belli_required": c.DEFAULT_CASUS_BELLI
     }

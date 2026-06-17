@@ -1146,7 +1146,7 @@ def open_scripted_events_editor(self):
             op_var = tk.StringVar(value=c_data.get("operator", "=="))
             val_var = tk.StringVar(value=c_data.get("value", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "In Faction With", "At Peace With", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Claims Of", "Occupying All Claims", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering", "True", "False"], width=18, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "Is At War", "In Faction With", "Not In Faction With", "At Peace With", "Is At Peace", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Claims Of", "Occupying All Claims", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering", "Not Bordering", "True", "False"], width=18, state="readonly")
             type_cb.pack(side="left", padx=2)
             
             op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=19, state="readonly")
@@ -1174,15 +1174,15 @@ def open_scripted_events_editor(self):
                     else:
                         date_lbl.config(text="")
                 elif ctype == "Received Action":
-                    op_cb.config(values=["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "CEASEFIRE"])
-                    if op_var.get() not in ["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "CEASEFIRE"]:
+                    op_cb.config(values=["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "CREATE_FACTION", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "CEASEFIRE"])
+                    if op_var.get() not in ["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "CREATE_FACTION", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "CEASEFIRE"]:
                         op_var.set("WAR_DECLARATION")
                     date_lbl.config(text="(Sender Nation ID)")
-                elif ctype in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
+                elif ctype in ["At War With", "In Faction With", "Not In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="(Target Nation IDs, comma separated)")
-                elif ctype in ["True", "False"]:
+                elif ctype in ["True", "False", "Is At War", "Is At Peace"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="")

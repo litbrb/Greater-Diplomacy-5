@@ -617,7 +617,7 @@ def process_scripted_events(map_screen):
                     except ValueError:
                         pass
                         
-                elif c_type in ["At War With", "In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
+                elif c_type in ["At War With", "In Faction With", "Not In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
                     targets = [t.strip() for t in str(c_val).split(",") if t.strip()]
                     if not targets:
                         res = False
@@ -625,6 +625,8 @@ def process_scripted_events(map_screen):
                         res = all(t in active_nations and queries.are_at_war(nation_name, t, map_screen.nation_data) for t in targets)
                     elif c_type == "In Faction With":
                         res = all(t in active_nations and queries.are_in_same_faction(nation_name, t, map_screen.nation_data) for t in targets)
+                    elif c_type == "Not In Faction With":
+                        res = all(t in active_nations and not queries.are_in_same_faction(nation_name, t, map_screen.nation_data) for t in targets)
                     elif c_type == "At Peace With":
                         res = all(t in active_nations and not queries.are_at_war(nation_name, t, map_screen.nation_data) for t in targets)
                     elif c_type == "Country Exists":
@@ -656,6 +658,12 @@ def process_scripted_events(map_screen):
                     res = any(p.get("owner") == nation_name and c_val in p.get("cores", []) for p in map_screen.map_data.values())
                 elif c_type == "Bordering":
                     res = c_val in queries.get_neighboring_nations(nation_name, map_screen.map_data, map_screen.id_to_province)
+                elif c_type == "Not Bordering":
+                    res = c_val not in queries.get_neighboring_nations(nation_name, map_screen.map_data, map_screen.id_to_province)
+                elif c_type == "Is At War":
+                    res = len(map_screen.nation_data.get(nation_name, {}).get("at_war_with", [])) > 0
+                elif c_type == "Is At Peace":
+                    res = len(map_screen.nation_data.get(nation_name, {}).get("at_war_with", [])) == 0
                     
                 if c_idx == 0:
                     overall_met = res

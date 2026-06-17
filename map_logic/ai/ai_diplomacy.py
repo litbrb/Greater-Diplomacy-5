@@ -617,7 +617,7 @@ def process_scripted_events(map_screen):
                     except ValueError:
                         pass
                         
-                elif c_type in ["At War With", "In Faction With", "Not In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
+                elif c_type in ["At War With", "In Faction With", "Not In Faction With", "Has Truce With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
                     targets = [t.strip() for t in str(c_val).split(",") if t.strip()]
                     if not targets:
                         res = False
@@ -627,6 +627,8 @@ def process_scripted_events(map_screen):
                         res = all(t in active_nations and queries.are_in_same_faction(nation_name, t, map_screen.nation_data) for t in targets)
                     elif c_type == "Not In Faction With":
                         res = all(t in active_nations and not queries.are_in_same_faction(nation_name, t, map_screen.nation_data) for t in targets)
+                    elif c_type == "Has Truce With":
+                        res = all(t in active_nations and queries.has_active_truce(nation_name, t, map_screen.nation_data) for t in targets)
                     elif c_type == "At Peace With":
                         res = all(t in active_nations and not queries.are_at_war(nation_name, t, map_screen.nation_data) for t in targets)
                     elif c_type == "Country Exists":
@@ -666,6 +668,12 @@ def process_scripted_events(map_screen):
                 elif c_type == "Is At Peace":
                     target_check = c_val if c_val else nation_name
                     res = len(map_screen.nation_data.get(target_check, {}).get("at_war_with", [])) == 0
+                elif c_type == "Is In Faction":
+                    target_check = c_val if c_val else nation_name
+                    res = map_screen.nation_data.get(target_check, {}).get("faction", "") != ""
+                elif c_type == "Is Faction Leader":
+                    target_check = c_val if c_val else nation_name
+                    res = queries.is_faction_leader(target_check, map_screen.nation_data)
                     
                 if c_idx == 0:
                     overall_met = res
@@ -751,6 +759,7 @@ def process_scripted_events(map_screen):
                         if a_type == "Declare War": eng_action = "WAR_DECLARATION"
                         elif a_type == "Join Faction": eng_action = "JOIN_FACTION_REQ"
                         elif a_type == "Create Faction": eng_action = "CREATE_FACTION"
+                        elif a_type == "Invite to Faction": eng_action = "FACTION_INVITE"
                         elif a_type == "Send Ceasefire": eng_action = "CEASEFIRE"
                         elif a_type == "Send Custom Message": eng_action = f"MSG:{act.get('message', '')}"
                         elif a_type == "Accept Proposal":

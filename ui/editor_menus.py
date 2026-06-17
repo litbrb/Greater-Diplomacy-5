@@ -955,6 +955,9 @@ def open_scripted_events_editor(self):
 - Is At War: Checks if the target nation (or self if blank) is currently in any war
 - In Faction With: Checks if the nation shares a faction with the target(s)
 - Not In Faction With: Checks if the nation does NOT share a faction with the target(s)
+- Is In Faction: Checks if the target nation (or self if blank) is currently in any faction
+- Is Faction Leader: Checks if the target nation (or self if blank) is the leader of their faction
+- Has Truce With: Checks if the nation has an active truce with the specified target(s) (comma-separated)
 - At Peace With: Checks if the nation is explicitly NOT at war with the target(s)
 - Is At Peace: Checks if the target nation (or self if blank) is in ZERO wars
 - Random (0.00 - 1.00): Returns a random value between 0.0 and 1.0
@@ -972,7 +975,7 @@ def open_scripted_events_editor(self):
 
 === ACTIONS ===
 - Declare War: Declares war on the target
-- Join Faction / Create Faction: Modifies faction alignments
+- Join Faction / Create Faction / Invite to Faction: Modifies faction alignments
 - Accept / Reject Proposal: Responds to a pending diplomatic request
 - Send Ceasefire: Offers peace to the target
 - Send Custom Message: Sends a text message to the target. AI can generate it if checked
@@ -1203,7 +1206,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             op_var = tk.StringVar(value=c_data.get("operator", "=="))
             val_var = tk.StringVar(value=c_data.get("value", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "Is At War", "In Faction With", "Not In Faction With", "At Peace With", "Is At Peace", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Claims Of", "Occupying All Claims", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering", "Not Bordering", "True", "False"], width=18, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "Is At War", "In Faction With", "Not In Faction With", "Is In Faction", "Is Faction Leader", "Has Truce With", "At Peace With", "Is At Peace", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Claims Of", "Occupying All Claims", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering", "Not Bordering", "True", "False"], width=18, state="readonly")
             type_cb.pack(side="left", padx=2)
             
             op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=19, state="readonly")
@@ -1235,7 +1238,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     if op_var.get() not in ["WAR_DECLARATION", "JOIN_WARS", "CALL_TO_ARMS", "CREATE_FACTION", "FACTION_INVITE", "JOIN_FACTION_REQ", "TRADE", "CEASEFIRE"]:
                         op_var.set("WAR_DECLARATION")
                     date_lbl.config(text="(Sender Nation ID)")
-                elif ctype in ["At War With", "In Faction With", "Not In Faction With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
+                elif ctype in ["At War With", "In Faction With", "Not In Faction With", "Has Truce With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="(Target Nation IDs, comma separated)")
@@ -1251,7 +1254,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     op_cb.config(values=["==", "!="])
                     if op_var.get() not in ["==", "!="]: op_var.set("==")
                     date_lbl.config(text="(Tile IDs, comma separated)")
-                elif ctype in ["Is AI Controlled", "Is Player Controlled", "Is At War", "Is At Peace"]:
+                elif ctype in ["Is AI Controlled", "Is Player Controlled", "Is At War", "Is At Peace", "Is In Faction", "Is Faction Leader"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="(Target Nation ID, or blank for self)")
@@ -1336,7 +1339,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             ai_var = tk.BooleanVar(value=a_data.get("ai_generate", False))
             
             edit_options = ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]
-            all_options = ["Declare War", "Join Faction", "Create Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims"] + edit_options
+            all_options = ["Declare War", "Join Faction", "Create Faction", "Invite to Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims"] + edit_options
             
             type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=all_options, width=18, state="readonly")
             type_cb.pack(side="left", padx=5)

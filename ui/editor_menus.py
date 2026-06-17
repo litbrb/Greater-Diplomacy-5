@@ -934,6 +934,52 @@ def open_scripted_events_editor(self):
         root.destroy()
     root.protocol("WM_DELETE_WINDOW", close_menu)
 
+    def show_scripted_events_help():
+        """Spawns a read-only popup explaining the scripting engine."""
+        help_win = tk.Toplevel(root)
+        help_win.title("Scripted Events Help")
+        help_win.geometry("600x600")
+        help_win.attributes("-topmost", True)
+        
+        text_widget = tk.Text(help_win, wrap="word", font=("Arial", 10))
+        text_widget.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        help_text = """=== CONDITIONALS ===
+- Turn Number: Checks if the current game turn matches the specified value.
+- At War With: Checks if the nation is at war with the specified target(s) (comma-separated).
+- Is At War: Checks if the target nation (or self if blank) is currently in any war.
+- In Faction With: Checks if the nation shares a faction with the target(s).
+- Not In Faction With: Checks if the nation does NOT share a faction with the target(s).
+- At Peace With: Checks if the nation is explicitly NOT at war with the target(s).
+- Is At Peace: Checks if the target nation (or self if blank) is in ZERO wars.
+- Random (0.00 - 1.00): Rolls a random chance between 0.0 and 1.0 to trigger.
+- Received Action: Checks if a specific diplomatic action is pending from a specific sender.
+- Country Exists: Checks if the target(s) currently hold territory on the map.
+- Country Doesn't Exist: Checks if the target(s) are completely wiped off the map.
+- Occupying Core Of: Checks if the nation occupies any core of the target.
+- Occupying All Cores Of: Checks if the nation occupies EVERY core of the target.
+- Occupying Claims Of: Checks if the nation occupies any claim of the target.
+- Occupying All Claims: Checks if the nation occupies EVERY claim of the target.
+- Occupying Tile: Checks if the nation occupies specific province IDs (comma-separated).
+- Is AI Controlled: Checks if the target nation (or self if blank) is controlled by AI.
+- Is Player Controlled: Checks if the target nation (or self if blank) is controlled by a human.
+- Bordering / Not Bordering: Checks physical adjacency to the target.
+
+=== ACTIONS ===
+- Declare War: Declares war on the target.
+- Join Faction / Create Faction: Modifies faction alignments.
+- Accept / Reject Proposal: Responds to a pending diplomatic request.
+- Send Ceasefire: Offers peace to the target.
+- Send Custom Message: Sends a text message to the target. AI can generate it if checked.
+- Queue Claims: Begins fabricating claims on the specified Province IDs (comma-separated).
+- Revoke Claims: Removes claims on the specified Province IDs (comma-separated).
+- Revoke All Claims: Removes ALL claims held by the target nation.
+- Edit Name / Leader / Title: Changes cosmetic names for the event owner.
+- Edit Color / Flag / Portrait: Modifies cosmetic visual aspects."""
+        
+        text_widget.insert("1.0", help_text)
+        text_widget.config(state="disabled") # Make read-only
+
     # UI Layout
     left_frame = tk.Frame(root, width=200)
     left_frame.pack(side="left", fill="y", padx=10, pady=10)
@@ -950,8 +996,16 @@ def open_scripted_events_editor(self):
     for i in sorted(active_countries):
         nation_list.insert(tk.END, i)
 
-    title_lbl = tk.Label(right_frame, text="Select a nation...", font=("Arial", 14, "bold"))
-    title_lbl.pack(pady=5)
+    # --- Replaced standard title label with a header frame for the Help Button ---
+    header_frame = tk.Frame(right_frame)
+    header_frame.pack(fill="x", pady=5)
+    
+    title_lbl = tk.Label(header_frame, text="Select a nation...", font=("Arial", 14, "bold"))
+    title_lbl.pack(side="left")
+    
+    help_btn = tk.Button(header_frame, text="Help / Info", command=show_scripted_events_help, bg="#2196F3", fg="white", font=("Arial", 9, "bold"))
+    help_btn.pack(side="right", padx=5)
+    # ----------------------------------------------------------------------------
 
     events_frame = tk.Frame(right_frame)
     events_frame.pack(fill="both", expand=True, pady=5)
@@ -1182,7 +1236,7 @@ def open_scripted_events_editor(self):
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="(Target Nation IDs, comma separated)")
-                elif ctype in ["True", "False", "Is At War", "Is At Peace"]:
+                elif ctype in ["True", "False"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
                     date_lbl.config(text="")
@@ -1194,10 +1248,10 @@ def open_scripted_events_editor(self):
                     op_cb.config(values=["==", "!="])
                     if op_var.get() not in ["==", "!="]: op_var.set("==")
                     date_lbl.config(text="(Tile IDs, comma separated)")
-                elif ctype in ["Is AI Controlled", "Is Player Controlled"]:
+                elif ctype in ["Is AI Controlled", "Is Player Controlled", "Is At War", "Is At Peace"]:
                     op_cb.config(values=["=="])
                     op_var.set("==")
-                    date_lbl.config(text="(Target Nation IDs, comma separated)") # or blank for self
+                    date_lbl.config(text="(Target Nation ID, or blank for self)")
                 else:
                     op_cb.config(values=["=="])
                     op_var.set("==")

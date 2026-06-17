@@ -661,9 +661,11 @@ def process_scripted_events(map_screen):
                 elif c_type == "Not Bordering":
                     res = c_val not in queries.get_neighboring_nations(nation_name, map_screen.map_data, map_screen.id_to_province)
                 elif c_type == "Is At War":
-                    res = len(map_screen.nation_data.get(nation_name, {}).get("at_war_with", [])) > 0
+                    target_check = c_val if c_val else nation_name
+                    res = len(map_screen.nation_data.get(target_check, {}).get("at_war_with", [])) > 0
                 elif c_type == "Is At Peace":
-                    res = len(map_screen.nation_data.get(nation_name, {}).get("at_war_with", [])) == 0
+                    target_check = c_val if c_val else nation_name
+                    res = len(map_screen.nation_data.get(target_check, {}).get("at_war_with", [])) == 0
                     
                 if c_idx == 0:
                     overall_met = res

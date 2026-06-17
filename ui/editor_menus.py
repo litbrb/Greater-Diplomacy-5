@@ -938,7 +938,7 @@ def open_scripted_events_editor(self):
         """Spawns a read-only popup explaining the scripting engine."""
         help_win = tk.Toplevel(root)
         help_win.title("Scripted Events Help")
-        help_win.geometry("600x700")
+        help_win.geometry("700x800")
         help_win.attributes("-topmost", True)
         
         text_widget = tk.Text(help_win, wrap="word", font=("Arial", 10))
@@ -978,7 +978,7 @@ def open_scripted_events_editor(self):
 - Join Faction / Create Faction / Invite to Faction: Modifies faction alignments
 - Accept / Reject Proposal: Responds to a pending diplomatic request
 - Send Ceasefire: Offers peace to the target
-- Send Custom Message: Sends a text message to the target. AI can generate it if checked
+- Send Custom Message: Sends a text message to the target
 - Queue Claims: Begins fabricating claims on the specified Province IDs (comma-separated)
 - Revoke Claims: Removes claims on the specified Province IDs (comma-separated)
 - Revoke All Claims: Removes ALL claims held by the target nation

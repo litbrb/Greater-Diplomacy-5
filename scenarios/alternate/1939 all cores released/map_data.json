@@ -65194,7 +65194,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Brunei"

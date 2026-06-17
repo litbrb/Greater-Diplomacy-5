@@ -51995,7 +51995,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(205, 7, 0)": {
             "owner": "Ocean",

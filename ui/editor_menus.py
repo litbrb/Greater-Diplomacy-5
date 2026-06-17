@@ -938,44 +938,52 @@ def open_scripted_events_editor(self):
         """Spawns a read-only popup explaining the scripting engine."""
         help_win = tk.Toplevel(root)
         help_win.title("Scripted Events Help")
-        help_win.geometry("600x600")
+        help_win.geometry("600x700")
         help_win.attributes("-topmost", True)
         
         text_widget = tk.Text(help_win, wrap="word", font=("Arial", 10))
         text_widget.pack(fill="both", expand=True, padx=10, pady=10)
         
-        help_text = """=== CONDITIONALS ===
-- Turn Number: Checks if the current game turn matches the specified value.
-- At War With: Checks if the nation is at war with the specified target(s) (comma-separated).
-- Is At War: Checks if the target nation (or self if blank) is currently in any war.
-- In Faction With: Checks if the nation shares a faction with the target(s).
-- Not In Faction With: Checks if the nation does NOT share a faction with the target(s).
-- At Peace With: Checks if the nation is explicitly NOT at war with the target(s).
-- Is At Peace: Checks if the target nation (or self if blank) is in ZERO wars.
-- Random (0.00 - 1.00): Rolls a random chance between 0.0 and 1.0 to trigger.
-- Received Action: Checks if a specific diplomatic action is pending from a specific sender.
-- Country Exists: Checks if the target(s) currently hold territory on the map.
-- Country Doesn't Exist: Checks if the target(s) are completely wiped off the map.
-- Occupying Core Of: Checks if the nation occupies any core of the target.
-- Occupying All Cores Of: Checks if the nation occupies EVERY core of the target.
-- Occupying Claims Of: Checks if the nation occupies any claim of the target.
-- Occupying All Claims: Checks if the nation occupies EVERY claim of the target.
-- Occupying Tile: Checks if the nation occupies specific province IDs (comma-separated).
-- Is AI Controlled: Checks if the target nation (or self if blank) is controlled by AI.
-- Is Player Controlled: Checks if the target nation (or self if blank) is controlled by a human.
-- Bordering / Not Bordering: Checks physical adjacency to the target.
+        help_text = """ === EVENT TYPE ===
+- AI Only: Event fires only if this country is controlled by an AI
+- Player Only: Event fires only if this country is controlled by a player
+- Both: Event fires if this country is controlled by either an AI or a player
+
+=== CONDITIONALS ===
+- Turn Number: Checks if the current game turn matches the specified value
+- At War With: Checks if the nation is at war with the specified target(s) (comma-separated)
+- Is At War: Checks if the target nation (or self if blank) is currently in any war
+- In Faction With: Checks if the nation shares a faction with the target(s)
+- Not In Faction With: Checks if the nation does NOT share a faction with the target(s)
+- At Peace With: Checks if the nation is explicitly NOT at war with the target(s)
+- Is At Peace: Checks if the target nation (or self if blank) is in ZERO wars
+- Random (0.00 - 1.00): Returns a random value between 0.0 and 1.0
+- Received Action: Checks if a specific diplomatic action is pending from a specific sender
+- Country Exists: Checks if the target(s) currently hold territory on the map
+- Country Doesn't Exist: Checks if the target(s) are completely wiped off the map
+- Occupying Core Of: Checks if the nation occupies any core of the target
+- Occupying All Cores Of: Checks if the nation occupies EVERY core of the target
+- Occupying Claims Of: Checks if the nation occupies any claim of the target
+- Occupying All Claims: Checks if the nation occupies EVERY claim of the target
+- Occupying Tile: Checks if the nation occupies specific province IDs (comma-separated)
+- Is AI Controlled: Checks if the target nation (or self if blank) is controlled by AI
+- Is Player Controlled: Checks if the target nation (or self if blank) is controlled by a human
+- Bordering / Not Bordering: Checks physical adjacency to the target
 
 === ACTIONS ===
-- Declare War: Declares war on the target.
-- Join Faction / Create Faction: Modifies faction alignments.
-- Accept / Reject Proposal: Responds to a pending diplomatic request.
-- Send Ceasefire: Offers peace to the target.
-- Send Custom Message: Sends a text message to the target. AI can generate it if checked.
-- Queue Claims: Begins fabricating claims on the specified Province IDs (comma-separated).
-- Revoke Claims: Removes claims on the specified Province IDs (comma-separated).
-- Revoke All Claims: Removes ALL claims held by the target nation.
-- Edit Name / Leader / Title: Changes cosmetic names for the event owner.
-- Edit Color / Flag / Portrait: Modifies cosmetic visual aspects."""
+- Declare War: Declares war on the target
+- Join Faction / Create Faction: Modifies faction alignments
+- Accept / Reject Proposal: Responds to a pending diplomatic request
+- Send Ceasefire: Offers peace to the target
+- Send Custom Message: Sends a text message to the target. AI can generate it if checked
+- Queue Claims: Begins fabricating claims on the specified Province IDs (comma-separated)
+- Revoke Claims: Removes claims on the specified Province IDs (comma-separated)
+- Revoke All Claims: Removes ALL claims held by the target nation
+- Edit Name / Leader / Title: Changes cosmetic names for the event owner
+- Edit Color / Flag / Portrait: Modifies cosmetic visual aspects
+
+The AI Msg Checkbox means that you can allow the ai to generate custom text for that message
+It will fallback to whatever you manually entered if the llm ai is turned off or otherwise fails"""
         
         text_widget.insert("1.0", help_text)
         text_widget.config(state="disabled") # Make read-only

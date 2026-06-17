@@ -26572,7 +26572,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(20, 0, 0)": {
             "owner": "Russia",
@@ -28005,7 +28007,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(135, 0, 0)": {
             "owner": "Ocean",
@@ -28042,7 +28046,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(138, 0, 0)": {
             "owner": "Dominion of Canada",
@@ -28081,7 +28087,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(141, 0, 0)": {
             "owner": "Sweden",
@@ -28170,7 +28178,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(148, 0, 0)": {
             "owner": "Ocean",
@@ -28207,7 +28217,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(151, 0, 0)": {
             "owner": "Ocean",
@@ -28281,7 +28293,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(157, 0, 0)": {
             "owner": "Dominion of Canada",
@@ -28409,7 +28423,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(167, 0, 0)": {
             "owner": "Russia",
@@ -28683,7 +28699,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(189, 0, 0)": {
             "owner": "Dominion of Canada",
@@ -28972,7 +28990,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(212, 0, 0)": {
             "owner": "Sweden",
@@ -29126,7 +29146,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(224, 0, 0)": {
             "owner": "Russia",
@@ -29372,7 +29394,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(244, 0, 0)": {
             "owner": "Lithuania",
@@ -29411,7 +29435,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(247, 0, 0)": {
             "owner": "United Kingdom",
@@ -29424,7 +29450,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(248, 0, 0)": {
             "owner": "Dominion of Canada",
@@ -29743,7 +29771,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(17, 1, 0)": {
             "owner": "Ocean",
@@ -29947,7 +29977,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(33, 1, 0)": {
             "owner": "Dominion of Canada",
@@ -29960,7 +29992,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(34, 1, 0)": {
             "owner": "Ireland",
@@ -30173,7 +30207,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(51, 1, 0)": {
             "owner": "Ireland",
@@ -30186,7 +30222,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(52, 1, 0)": {
             "owner": "Russia",
@@ -30251,7 +30289,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(57, 1, 0)": {
             "owner": "German Reich",
@@ -30405,7 +30445,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(69, 1, 0)": {
             "owner": "Poland",
@@ -30418,7 +30460,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(70, 1, 0)": {
             "owner": "Belarus",
@@ -30522,7 +30566,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(78, 1, 0)": {
             "owner": "United States of America",
@@ -30956,7 +31002,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(112, 1, 0)": {
             "owner": "Ocean",
@@ -31119,7 +31167,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(125, 1, 0)": {
             "owner": "German Reich",
@@ -31386,7 +31436,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(146, 1, 0)": {
             "owner": "German Reich",
@@ -31566,7 +31618,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(160, 1, 0)": {
             "owner": "Russia",
@@ -31631,7 +31685,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(165, 1, 0)": {
             "owner": "Belgium",
@@ -31644,7 +31700,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(166, 1, 0)": {
             "owner": "German Reich",
@@ -31885,7 +31943,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(185, 1, 0)": {
             "owner": "German Reich",
@@ -32336,7 +32396,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(220, 1, 0)": {
             "owner": "Ukraine",
@@ -32477,7 +32539,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(231, 1, 0)": {
             "owner": "Ukraine",
@@ -32579,7 +32643,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(239, 1, 0)": {
             "owner": "Ukraine",
@@ -32657,7 +32723,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(245, 1, 0)": {
             "owner": "United States of America",
@@ -32761,7 +32829,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(253, 1, 0)": {
             "owner": "France",
@@ -32865,7 +32935,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(5, 2, 0)": {
             "owner": "Ukraine",
@@ -32980,7 +33052,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(14, 2, 0)": {
             "owner": "Czechia",
@@ -33030,7 +33104,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(18, 2, 0)": {
             "owner": "Russia",
@@ -33407,7 +33483,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(47, 2, 0)": {
             "owner": "Ukraine",
@@ -33446,7 +33524,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(50, 2, 0)": {
             "owner": "Hungary",
@@ -33650,7 +33730,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(66, 2, 0)": {
             "owner": "Ocean",
@@ -33700,7 +33782,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(70, 2, 0)": {
             "owner": "France",
@@ -33791,7 +33875,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(77, 2, 0)": {
             "owner": "Hungary",
@@ -33947,7 +34033,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(89, 2, 0)": {
             "owner": "Dominion of Canada",
@@ -34162,7 +34250,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(106, 2, 0)": {
             "owner": "Ocean",
@@ -34412,7 +34502,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(126, 2, 0)": {
             "owner": "Ocean",
@@ -34475,7 +34567,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(131, 2, 0)": {
             "owner": "Switzerland",
@@ -34694,7 +34788,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(148, 2, 0)": {
             "owner": "Romania",
@@ -34770,7 +34866,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(154, 2, 0)": {
             "owner": "Kazakhstan",
@@ -35111,7 +35209,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(181, 2, 0)": {
             "owner": "Ukraine",
@@ -35324,7 +35424,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(198, 2, 0)": {
             "owner": "Kazakhstan",
@@ -35500,7 +35602,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(212, 2, 0)": {
             "owner": "Romania",
@@ -35513,7 +35617,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(213, 2, 0)": {
             "owner": "Russia",
@@ -35706,7 +35812,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(228, 2, 0)": {
             "owner": "Italy",
@@ -35732,7 +35840,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(230, 2, 0)": {
             "owner": "Dominion of Canada",
@@ -36262,7 +36372,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(16, 3, 0)": {
             "owner": "Italy",
@@ -36314,7 +36426,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(20, 3, 0)": {
             "owner": "Kazakhstan",
@@ -36416,7 +36530,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(28, 3, 0)": {
             "owner": "Georgia",
@@ -36429,7 +36545,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(29, 3, 0)": {
             "owner": "Manchukuo",
@@ -36544,7 +36662,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(38, 3, 0)": {
             "owner": "United States of America",
@@ -36696,7 +36816,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(50, 3, 0)": {
             "owner": "Yugoslavia",
@@ -37134,7 +37256,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(84, 3, 0)": {
             "owner": "Georgia",
@@ -37338,7 +37462,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(100, 3, 0)": {
             "owner": "Turkey",
@@ -37486,7 +37612,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(112, 3, 0)": {
             "owner": "Manchukuo",
@@ -37575,7 +37703,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(119, 3, 0)": {
             "owner": "Manchukuo",
@@ -37627,7 +37757,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(123, 3, 0)": {
             "owner": "Spain",
@@ -37796,7 +37928,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(136, 3, 0)": {
             "owner": "Turkey",
@@ -37848,7 +37982,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(140, 3, 0)": {
             "owner": "Italy",
@@ -37900,7 +38036,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(144, 3, 0)": {
             "owner": "France",
@@ -37952,7 +38090,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(148, 3, 0)": {
             "owner": "Ocean",
@@ -37989,7 +38129,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(151, 3, 0)": {
             "owner": "Azerbaijan",
@@ -38052,7 +38194,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(156, 3, 0)": {
             "owner": "Xinjiang",
@@ -38117,7 +38261,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(161, 3, 0)": {
             "owner": "Kazakhstan",
@@ -38260,7 +38406,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(172, 3, 0)": {
             "owner": "Spain",
@@ -38401,7 +38549,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(183, 3, 0)": {
             "owner": "Ocean",
@@ -38438,7 +38588,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(186, 3, 0)": {
             "owner": "Portugal",
@@ -38477,7 +38629,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(189, 3, 0)": {
             "owner": "Turkmenistan",
@@ -38696,7 +38850,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(206, 3, 0)": {
             "owner": "Mengjiang",
@@ -39013,7 +39169,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(231, 3, 0)": {
             "owner": "Japanese Empire",
@@ -39117,7 +39275,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(239, 3, 0)": {
             "owner": "United States of America",
@@ -39488,7 +39648,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(12, 4, 0)": {
             "owner": "Xibei San Ma",
@@ -39642,7 +39804,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(24, 4, 0)": {
             "owner": "Turkey",
@@ -39655,7 +39819,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(25, 4, 0)": {
             "owner": "Turkey",
@@ -39842,7 +40008,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(40, 4, 0)": {
             "owner": "Xibei San Ma",
@@ -39894,7 +40062,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(44, 4, 0)": {
             "owner": "Spain",
@@ -40177,7 +40347,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(67, 4, 0)": {
             "owner": "Turkey",
@@ -40229,7 +40401,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(71, 4, 0)": {
             "owner": "Iran",
@@ -40396,7 +40570,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(84, 4, 0)": {
             "owner": "United States of America",
@@ -40505,7 +40681,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(93, 4, 0)": {
             "owner": "Tajikistan",
@@ -40555,7 +40733,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(97, 4, 0)": {
             "owner": "Iraq",
@@ -40731,7 +40911,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(111, 4, 0)": {
             "owner": "Iran",
@@ -40861,7 +41043,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(121, 4, 0)": {
             "owner": "Nationalist China",
@@ -40900,7 +41084,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(124, 4, 0)": {
             "owner": "Ocean",
@@ -40950,7 +41136,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(128, 4, 0)": {
             "owner": "Ocean",
@@ -41011,7 +41199,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(133, 4, 0)": {
             "owner": "Japanese Empire",
@@ -41024,7 +41214,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(134, 4, 0)": {
             "owner": "Iran",
@@ -41154,7 +41346,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(144, 4, 0)": {
             "owner": "Algeria",
@@ -41180,7 +41374,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(146, 4, 0)": {
             "owner": "Syria",
@@ -41564,7 +41760,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(176, 4, 0)": {
             "owner": "Ocean",
@@ -41842,7 +42040,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(198, 4, 0)": {
             "owner": "Afghanistan",
@@ -42135,7 +42335,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(221, 4, 0)": {
             "owner": "Ocean",
@@ -42311,7 +42513,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(235, 4, 0)": {
             "owner": "Nationalist China",
@@ -42721,7 +42925,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(11, 5, 0)": {
             "owner": "Tibet",
@@ -42747,7 +42953,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(13, 5, 0)": {
             "owner": "Saudi Arabia",
@@ -42851,7 +43059,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(21, 5, 0)": {
             "owner": "United States of America",
@@ -42949,7 +43159,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(29, 5, 0)": {
             "owner": "Libya",
@@ -43064,7 +43276,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(38, 5, 0)": {
             "owner": "Jordan",
@@ -43103,7 +43317,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(41, 5, 0)": {
             "owner": "Morocco",
@@ -43116,7 +43332,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(42, 5, 0)": {
             "owner": "Iraq",
@@ -43166,7 +43384,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(46, 5, 0)": {
             "owner": "Pakistan",
@@ -43205,7 +43425,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(49, 5, 0)": {
             "owner": "Saudi Arabia",
@@ -43511,7 +43733,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(73, 5, 0)": {
             "owner": "Saudi Arabia",
@@ -43691,7 +43915,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(87, 5, 0)": {
             "owner": "United States of America",
@@ -43704,7 +43930,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(88, 5, 0)": {
             "owner": "Egypt",
@@ -43743,7 +43971,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(91, 5, 0)": {
             "owner": "Iran",
@@ -43756,7 +43986,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(92, 5, 0)": {
             "owner": "Iran",
@@ -43923,7 +44155,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(105, 5, 0)": {
             "owner": "Nationalist China",
@@ -44116,7 +44350,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(120, 5, 0)": {
             "owner": "Kuwait",
@@ -44485,7 +44721,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(149, 5, 0)": {
             "owner": "India",
@@ -44635,7 +44873,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(161, 5, 0)": {
             "owner": "Morocco",
@@ -44674,7 +44914,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(164, 5, 0)": {
             "owner": "Nationalist China",
@@ -44700,7 +44942,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(166, 5, 0)": {
             "owner": "Ocean",
@@ -45011,7 +45255,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(191, 5, 0)": {
             "owner": "India",
@@ -45204,7 +45450,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(206, 5, 0)": {
             "owner": "Ocean",
@@ -45276,7 +45524,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(212, 5, 0)": {
             "owner": "India",
@@ -45430,7 +45680,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(224, 5, 0)": {
             "owner": "Myanmar",
@@ -45469,7 +45721,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(227, 5, 0)": {
             "owner": "Bangladesh",
@@ -45519,7 +45773,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(231, 5, 0)": {
             "owner": "Nationalist China",
@@ -45656,7 +45912,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(242, 5, 0)": {
             "owner": "Morocco",
@@ -45838,7 +46096,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(0, 6, 0)": {
             "owner": "India",
@@ -46157,7 +46417,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(25, 6, 0)": {
             "owner": "Hawaii",
@@ -46209,7 +46471,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(29, 6, 0)": {
             "owner": "Guangxi Clique",
@@ -46387,7 +46651,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(43, 6, 0)": {
             "owner": "India",
@@ -46576,7 +46842,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(58, 6, 0)": {
             "owner": "Guangxi Clique",
@@ -46615,7 +46883,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(61, 6, 0)": {
             "owner": "Mexico",
@@ -46804,7 +47074,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(76, 6, 0)": {
             "owner": "India",
@@ -46904,7 +47176,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(84, 6, 0)": {
             "owner": "Myanmar",
@@ -47015,7 +47289,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(93, 6, 0)": {
             "owner": "Myanmar",
@@ -47052,7 +47328,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(96, 6, 0)": {
             "owner": "Vietnam",
@@ -47078,7 +47356,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(98, 6, 0)": {
             "owner": "Mexico",
@@ -47352,7 +47632,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(120, 6, 0)": {
             "owner": "Sudan",
@@ -47365,7 +47647,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(121, 6, 0)": {
             "owner": "Saudi Arabia",
@@ -47648,7 +47932,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(144, 6, 0)": {
             "owner": "Haiti",
@@ -47661,7 +47947,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(145, 6, 0)": {
             "owner": "Thailand",
@@ -47711,7 +47999,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(149, 6, 0)": {
             "owner": "India",
@@ -47737,7 +48027,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(151, 6, 0)": {
             "owner": "Ocean",
@@ -47772,7 +48064,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(154, 6, 0)": {
             "owner": "United Kingdom",
@@ -47911,7 +48205,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(165, 6, 0)": {
             "owner": "Mauritania",
@@ -48002,7 +48298,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(172, 6, 0)": {
             "owner": "Thailand",
@@ -48065,7 +48363,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(177, 6, 0)": {
             "owner": "Thailand",
@@ -48104,7 +48404,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(180, 6, 0)": {
             "owner": "Mali",
@@ -48256,7 +48558,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(192, 6, 0)": {
             "owner": "Niger",
@@ -48587,7 +48891,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(219, 6, 0)": {
             "owner": "Sudan",
@@ -48687,7 +48993,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(227, 6, 0)": {
             "owner": "Ocean",
@@ -48724,7 +49032,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(230, 6, 0)": {
             "owner": "Thailand",
@@ -48737,7 +49047,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(231, 6, 0)": {
             "owner": "Niger",
@@ -48876,7 +49188,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(242, 6, 0)": {
             "owner": "Yemen",
@@ -48889,7 +49203,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(243, 6, 0)": {
             "owner": "Mali",
@@ -48965,7 +49281,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(249, 6, 0)": {
             "owner": "Senegal",
@@ -49030,7 +49348,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(254, 6, 0)": {
             "owner": "Venezuela",
@@ -49056,7 +49376,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(0, 7, 0)": {
             "owner": "Philippines",
@@ -49093,7 +49415,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(3, 7, 0)": {
             "owner": "Ocean",
@@ -49143,7 +49467,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(7, 7, 0)": {
             "owner": "Cambodia",
@@ -49182,7 +49508,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(10, 7, 0)": {
             "owner": "Ocean",
@@ -49206,7 +49534,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(12, 7, 0)": {
             "owner": "Chad",
@@ -49308,7 +49638,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(20, 7, 0)": {
             "owner": "Nigeria",
@@ -49425,7 +49757,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(29, 7, 0)": {
             "owner": "Cameroon",
@@ -49501,7 +49835,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(35, 7, 0)": {
             "owner": "Vietnam",
@@ -49564,7 +49900,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(40, 7, 0)": {
             "owner": "Nigeria",
@@ -49603,7 +49941,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(43, 7, 0)": {
             "owner": "Cambodia",
@@ -49616,7 +49956,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(44, 7, 0)": {
             "owner": "Colombia",
@@ -49629,7 +49971,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(45, 7, 0)": {
             "owner": "Venezuela",
@@ -50288,7 +50632,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(98, 7, 0)": {
             "owner": "Ivory Coast",
@@ -50399,7 +50745,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(107, 7, 0)": {
             "owner": "Ocean",
@@ -50545,7 +50893,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(119, 7, 0)": {
             "owner": "Colombia",
@@ -50788,7 +51138,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(138, 7, 0)": {
             "owner": "Nigeria",
@@ -50979,7 +51331,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(153, 7, 0)": {
             "owner": "Philippines",
@@ -51029,7 +51383,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(157, 7, 0)": {
             "owner": "Sudan",
@@ -51092,7 +51448,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(162, 7, 0)": {
             "owner": "Brazil",
@@ -51129,7 +51487,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(165, 7, 0)": {
             "owner": "Ethiopia",
@@ -51181,7 +51541,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(169, 7, 0)": {
             "owner": "Liberia",
@@ -51194,7 +51556,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(170, 7, 0)": {
             "owner": "Cameroon",
@@ -51307,7 +51671,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(179, 7, 0)": {
             "owner": "Ocean",
@@ -51505,7 +51871,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(195, 7, 0)": {
             "owner": "Ocean",
@@ -51701,7 +52069,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(211, 7, 0)": {
             "owner": "Somalia",
@@ -51840,7 +52210,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(222, 7, 0)": {
             "owner": "Peru",
@@ -52127,7 +52499,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(245, 7, 0)": {
             "owner": "Democratic Republic of the Congo",
@@ -52253,7 +52627,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(255, 7, 0)": {
             "owner": "Indonesia",
@@ -52520,7 +52896,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(20, 8, 0)": {
             "owner": "Brazil",
@@ -52546,7 +52924,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(22, 8, 0)": {
             "owner": "Indonesia",
@@ -52622,7 +53002,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(28, 8, 0)": {
             "owner": "Peru",
@@ -52635,7 +53017,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(29, 8, 0)": {
             "owner": "Peru",
@@ -52683,7 +53067,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(33, 8, 0)": {
             "owner": "Ocean",
@@ -53007,7 +53393,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(59, 8, 0)": {
             "owner": "Papua New Guinea",
@@ -53464,7 +53852,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(96, 8, 0)": {
             "owner": "Tanzania",
@@ -53579,7 +53969,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(105, 8, 0)": {
             "owner": "Indonesia",
@@ -53716,7 +54108,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(116, 8, 0)": {
             "owner": "Democratic Republic of the Congo",
@@ -53829,7 +54223,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(125, 8, 0)": {
             "owner": "Democratic Republic of the Congo",
@@ -53894,7 +54290,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(130, 8, 0)": {
             "owner": "Brazil",
@@ -53957,7 +54355,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(135, 8, 0)": {
             "owner": "Peru",
@@ -54048,7 +54448,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(142, 8, 0)": {
             "owner": "Ocean",
@@ -54159,7 +54561,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(151, 8, 0)": {
             "owner": "Bolivia",
@@ -54357,7 +54761,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(167, 8, 0)": {
             "owner": "Democratic Republic of the Congo",
@@ -55092,7 +55498,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(226, 8, 0)": {
             "owner": "Malawi",
@@ -55105,7 +55513,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(227, 8, 0)": {
             "owner": "Bolivia",
@@ -55144,7 +55554,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(230, 8, 0)": {
             "owner": "Democratic Republic of the Congo",
@@ -55362,7 +55774,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(248, 8, 0)": {
             "owner": "Ocean",
@@ -55458,7 +55872,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(0, 9, 0)": {
             "owner": "Ocean",
@@ -55521,7 +55937,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(5, 9, 0)": {
             "owner": "Mozambique",
@@ -55586,7 +56004,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(10, 9, 0)": {
             "owner": "Zambia",
@@ -55847,7 +56267,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(31, 9, 0)": {
             "owner": "Ocean",
@@ -55906,7 +56328,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(36, 9, 0)": {
             "owner": "Uruguay",
@@ -56323,7 +56747,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(69, 9, 0)": {
             "owner": "Botswana",
@@ -56362,7 +56788,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(72, 9, 0)": {
             "owner": "Madagascar",
@@ -56445,7 +56873,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(79, 9, 0)": {
             "owner": "Mozambique",
@@ -56508,7 +56938,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(84, 9, 0)": {
             "owner": "Namibia",
@@ -56661,7 +57093,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(97, 9, 0)": {
             "owner": "Argentina",
@@ -56757,7 +57191,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(105, 9, 0)": {
             "owner": "Australia",
@@ -57136,7 +57572,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(136, 9, 0)": {
             "owner": "Australia",
@@ -57212,7 +57650,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(142, 9, 0)": {
             "owner": "Union of South Africa",
@@ -57469,7 +57909,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(163, 9, 0)": {
             "owner": "Australia",
@@ -57608,7 +58050,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(174, 9, 0)": {
             "owner": "Ocean",
@@ -57717,7 +58161,9 @@
             "unit_queue": [],
             "orders": [],
             "resources": {},
-            "buildings": []
+            "buildings": [
+                "Basic Factory"
+            ]
         },
         "(183, 9, 0)": {
             "owner": "Ocean",

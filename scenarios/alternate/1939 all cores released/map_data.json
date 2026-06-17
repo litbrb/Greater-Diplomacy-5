@@ -568,7 +568,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Alaska"
@@ -4246,7 +4248,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Finland"
@@ -4342,7 +4346,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Dominion of Canada"
@@ -4437,7 +4443,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -4668,7 +4676,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -4771,7 +4781,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Sweden"
@@ -4967,7 +4979,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Norway"
@@ -5284,7 +5298,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United Kingdom"
@@ -5991,7 +6007,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Estonia"
@@ -6733,7 +6751,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -7124,7 +7144,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Latvia"
@@ -7786,7 +7808,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Lithuania"
@@ -7881,7 +7905,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Denmark"
@@ -7913,7 +7939,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United Kingdom"
@@ -8719,7 +8747,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -9236,7 +9266,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United Kingdom"
@@ -9270,7 +9302,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Dominion of Canada"
@@ -9821,7 +9855,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Belarus"
@@ -9852,7 +9888,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ireland"
@@ -10016,7 +10054,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "German Reich"
@@ -10408,7 +10448,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "German Reich"
@@ -10440,7 +10482,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Poland"
@@ -10699,7 +10743,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Netherlands"
@@ -11812,7 +11858,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -12229,7 +12277,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United Kingdom"
@@ -12920,7 +12970,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "German Reich"
@@ -13379,7 +13431,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Poland"
@@ -13543,7 +13597,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -13576,7 +13632,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Belgium"
@@ -14197,7 +14255,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "German Reich"
@@ -15348,7 +15408,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ukraine"
@@ -15708,7 +15770,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Czechia"
@@ -15972,7 +16036,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Luxembourg"
@@ -16166,7 +16232,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Sakhalin"
@@ -16426,7 +16494,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Dominion of Canada"
@@ -16686,7 +16756,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "France"
@@ -16978,7 +17050,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "France"
@@ -17107,7 +17181,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -18067,7 +18143,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "German Reich"
@@ -18166,7 +18244,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Slovakia"
@@ -18697,7 +18777,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Austria"
@@ -18830,7 +18912,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Dominion of Canada"
@@ -19058,7 +19142,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -19450,7 +19536,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -20002,7 +20090,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Tannu Tuva"
@@ -20663,7 +20753,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -20828,7 +20920,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Kazakhstan"
@@ -21373,7 +21467,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Hungary"
@@ -21574,7 +21670,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -22461,7 +22559,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Switzerland"
@@ -23014,7 +23114,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ukraine"
@@ -23473,7 +23575,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Romania"
@@ -23505,7 +23609,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Romania"
@@ -23993,7 +24099,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "France"
@@ -24057,7 +24165,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Dominion of Canada"
@@ -25445,7 +25555,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Bulgaria"
@@ -25574,7 +25686,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Italy"
@@ -25835,7 +25949,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Yugoslavia"
@@ -25868,7 +25984,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Georgia"
@@ -26162,7 +26280,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Russia"
@@ -26546,7 +26666,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "France"
@@ -27665,7 +27787,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Yugoslavia"
@@ -28188,7 +28312,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Turkey"
@@ -28578,7 +28704,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mengjiang"
@@ -28807,7 +28935,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mongolia"
@@ -28934,7 +29064,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -29357,7 +29489,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Turkey"
@@ -29490,7 +29624,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Spain"
@@ -29620,7 +29756,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -29744,7 +29882,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Uzbekistan"
@@ -29846,7 +29986,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Armenia"
@@ -30012,7 +30154,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Italy"
@@ -30177,7 +30321,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Turkmenistan"
@@ -30535,7 +30681,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -30892,7 +31040,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Portugal"
@@ -30990,7 +31140,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Azerbaijan"
@@ -31088,7 +31240,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Albania"
@@ -31645,7 +31799,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Kyrgyzstan"
@@ -32470,7 +32626,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Manchukuo"
@@ -32734,7 +32892,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Korea"
@@ -33683,7 +33843,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Italy"
@@ -34065,7 +34227,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Spain"
@@ -34097,7 +34261,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Turkey"
@@ -34588,7 +34754,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Xinjiang"
@@ -34718,7 +34886,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Japanese Empire"
@@ -35475,7 +35645,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Shanxi"
@@ -35603,7 +35775,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Greece"
@@ -36028,7 +36202,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Tajikistan"
@@ -36330,7 +36506,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Syria"
@@ -36455,7 +36633,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Cyprus"
@@ -36917,7 +37097,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Tunisia"
@@ -37240,7 +37422,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Nationalist China"
@@ -37335,7 +37519,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -37464,7 +37650,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Algeria"
@@ -37630,7 +37818,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Xibei San Ma"
@@ -37661,7 +37851,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Japanese Empire"
@@ -37990,7 +38182,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Korea"
@@ -38054,7 +38248,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Lebanon"
@@ -39028,7 +39224,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Japanese Empire"
@@ -39741,7 +39939,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Japanese Empire"
@@ -40492,7 +40692,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Afghanistan"
@@ -40953,7 +41155,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Communist China"
@@ -41996,7 +42200,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -42061,7 +42267,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Israel"
@@ -42319,7 +42527,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Libya"
@@ -42574,7 +42784,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Nationalist China"
@@ -42859,7 +43071,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mexico"
@@ -42957,7 +43171,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -42990,7 +43206,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Morocco"
@@ -43119,7 +43337,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Iraq"
@@ -43216,7 +43436,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Palestine"
@@ -43999,7 +44221,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Egypt"
@@ -44458,7 +44682,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Nationalist China"
@@ -44490,7 +44716,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United States of America"
@@ -44590,7 +44818,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Kuwait"
@@ -44622,7 +44852,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Iran"
@@ -45047,7 +45279,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Tibet"
@@ -45539,7 +45773,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Jordan"
@@ -46486,7 +46722,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Pakistan"
@@ -46864,7 +47102,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Nepal"
@@ -46961,7 +47201,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Bhutan"
@@ -47022,7 +47264,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Midway"
@@ -47844,7 +48088,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "India"
@@ -48332,7 +48578,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Nationalist China"
@@ -48526,7 +48774,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "United Arab Emirates"
@@ -48911,7 +49161,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Egypt"
@@ -49006,7 +49258,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Bahamas"
@@ -49131,7 +49385,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Qatar"
@@ -49486,7 +49742,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mexico"
@@ -49942,7 +50200,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mexico"
@@ -50750,7 +51010,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Bangladesh"
@@ -50872,7 +51134,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Yunnan"
@@ -51329,7 +51593,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Oman"
@@ -51812,7 +52078,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Guangxi Clique"
@@ -51909,7 +52177,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Saudi Arabia"
@@ -52393,7 +52663,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mauritania"
@@ -52648,7 +52920,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Hawaii"
@@ -52946,7 +53220,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "India"
@@ -53042,7 +53318,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Cuba"
@@ -53105,7 +53383,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Belize"
@@ -53817,7 +54097,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Dominican Republic"
@@ -53849,7 +54131,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Sudan"
@@ -54578,7 +54862,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Jamaica"
@@ -54609,7 +54895,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Haiti"
@@ -54739,7 +55027,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Laos"
@@ -54807,7 +55097,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Guatemala"
@@ -54908,7 +55200,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Honduras"
@@ -55255,7 +55549,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Nicaragua"
@@ -55476,7 +55772,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Myanmar"
@@ -55640,7 +55938,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "El Salvador"
@@ -55740,7 +56040,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Senegal"
@@ -56133,7 +56435,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "India"
@@ -57009,7 +57313,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mali"
@@ -57273,7 +57579,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Niger"
@@ -57365,7 +57673,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "The Gambia"
@@ -57397,7 +57707,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Thailand"
@@ -57750,7 +58062,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Eritrea"
@@ -57781,7 +58095,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Yemen"
@@ -57971,7 +58287,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Philippines"
@@ -58134,7 +58452,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Vietnam"
@@ -58201,7 +58521,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Costa Rica"
@@ -58296,7 +58618,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Chad"
@@ -58427,7 +58751,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ethiopia"
@@ -58521,7 +58847,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Burkina Faso"
@@ -58585,7 +58913,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Venezuela"
@@ -58838,7 +59168,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Guinea-Bissau"
@@ -59132,7 +59464,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Panama"
@@ -59322,7 +59656,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "India"
@@ -59483,7 +59819,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Guinea"
@@ -59582,7 +59920,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Djibouti"
@@ -59614,7 +59954,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Cambodia"
@@ -59647,7 +59989,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Colombia"
@@ -61356,7 +61700,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Sierra Leone"
@@ -61645,7 +61991,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Togo"
@@ -62038,7 +62386,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ethiopia"
@@ -62648,7 +62998,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Benin"
@@ -63125,7 +63477,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Central African Republic"
@@ -63251,7 +63605,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Sri Lanka"
@@ -63416,7 +63772,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ecuador"
@@ -63511,7 +63869,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ghana"
@@ -63641,7 +64001,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Ivory Coast"
@@ -63672,7 +64034,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Liberia"
@@ -63965,7 +64329,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Nigeria"
@@ -64491,7 +64857,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Somalia"
@@ -65023,7 +65391,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Uganda"
@@ -65369,7 +65739,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Cameroon"
@@ -66115,7 +66487,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Malaysia"
@@ -66435,7 +66809,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Equatorial Guinea"
@@ -67112,7 +67488,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Kenya"
@@ -67175,7 +67553,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Gabon"
@@ -67366,7 +67746,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Brazil"
@@ -67399,7 +67781,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Peru"
@@ -67527,7 +67911,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Indonesia"
@@ -68365,7 +68751,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Rwanda"
@@ -69573,7 +69961,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Republic of the Congo"
@@ -69855,7 +70245,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Burundi"
@@ -70206,7 +70598,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Solomon Islands"
@@ -70500,7 +70894,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Democratic Republic of the Congo"
@@ -70661,7 +71057,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Papua New Guinea"
@@ -70820,7 +71218,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Indonesia"
@@ -71049,7 +71449,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Tanzania"
@@ -71333,7 +71735,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Bolivia"
@@ -71842,7 +72246,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Brazil"
@@ -73725,7 +74131,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Angola"
@@ -73757,7 +74165,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Malawi"
@@ -73854,7 +74264,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Brazil"
@@ -74438,7 +74850,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Paraguay"
@@ -74696,7 +75110,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Madagascar"
@@ -74862,7 +75278,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Zambia"
@@ -75025,7 +75443,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Vanuatu"
@@ -75697,7 +76117,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Mozambique"
@@ -75857,7 +76279,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Zimbabwe"
@@ -76906,7 +77330,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Uruguay"
@@ -77004,7 +77430,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Botswana"
@@ -77229,7 +77657,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Argentina"
@@ -77393,7 +77823,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Namibia"
@@ -77808,7 +78240,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Chile"
@@ -78062,7 +78496,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Eswatini"
@@ -79046,7 +79482,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Lesotho"
@@ -79240,7 +79678,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Australia"
@@ -79914,7 +80354,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Union of South Africa"
@@ -80270,7 +80712,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "New Zealand"
@@ -80553,7 +80997,9 @@
         "building_queue": [],
         "unit_queue": [],
         "orders": [],
-        "buildings": [],
+        "buildings": [
+            "Basic Factory"
+        ],
         "resources": {},
         "cores": [
             "Australia"

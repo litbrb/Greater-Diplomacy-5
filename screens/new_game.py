@@ -26,6 +26,12 @@ class New_Game(GameState):
         self.scroll_track_rect = None
         self.scroll_handle_rect = None
         
+        # --- REFRESH STATE ---
+        self.is_refreshing = False
+        self.refresh_total = 0
+        self.refresh_completed = 0
+        self.refresh_status = ""
+        
         self.refresh_scenarios()
 
     def set_sub_state(self, state):
@@ -80,6 +86,17 @@ class New_Game(GameState):
                            lambda n=name, d=scenario_dir: self.start_scenario(n, d))
                 )
 
+    def update(self):
+        super().update()
+        
+        # Forcefully hide all UI buttons while the loading screen is active
+        if getattr(self, 'is_refreshing', False):
+            for el in self.elements:
+                el.visible = False
+        else:
+            for el in self.elements:
+                el.visible = True
+
     # --- SCROLL LOGIC ---
     def _snap_scroll(self, my):
         view_h = c.SCREEN_HEIGHT - 200
@@ -111,6 +128,14 @@ class New_Game(GameState):
 
             elif event.type == pygame.MOUSEMOTION and self.is_dragging_scrollbar:
                 self._snap_scroll(event.pos[1])
+
+    def handle_events(self, events):
+        if getattr(self, 'is_refreshing', False):
+            return
+        for event in events:
+            for el in self.elements:
+                el.handle_event(event)
+            self.additional_events(event)
 
     def additional_draw(self, surface):
         if self.sub_state == "CATEGORY":
@@ -145,6 +170,33 @@ class New_Game(GameState):
                 self.scroll_track_rect = None
                 self.scroll_handle_rect = None
 
+        # --- Draw Progress Bar Overlay ---
+        if getattr(self, 'is_refreshing', False):
+            overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 200))
+            surface.blit(overlay, (0, 0))
+
+            center_x, center_y = c.SCREEN_WIDTH // 2, c.SCREEN_HEIGHT // 2
+            
+            font_title = fonts.get("title")
+            txt = font_title.render(self.refresh_status, True, (255, 255, 255))
+            surface.blit(txt, txt.get_rect(center=(center_x, center_y - 40)))
+
+            bar_w, bar_h = 400, 30
+            bar_x = center_x - (bar_w // 2)
+            
+            pygame.draw.rect(surface, (40, 40, 60), (bar_x, center_y, bar_w, bar_h), border_radius=5)
+            
+            progress_ratio = (self.refresh_completed / float(self.refresh_total)) if self.refresh_total > 0 else 0.0
+            fill_w = int(bar_w * progress_ratio)
+            if fill_w > 0:
+                pygame.draw.rect(surface, (100, 200, 100), (bar_x, center_y, fill_w, bar_h), border_radius=5)
+                
+            pygame.draw.rect(surface, (200, 200, 200), (bar_x, center_y, bar_w, bar_h), 2, border_radius=5)
+            
+            pct_txt = fonts.get("tiny").render(f"{self.refresh_completed} / {self.refresh_total}", True, (255, 255, 255))
+            surface.blit(pct_txt, pct_txt.get_rect(center=(center_x, center_y + bar_h // 2)))
+
     def scenario_settings(self):
         from screens.scenario_settings import Scenario_Settings
         Scenario_Settings.return_screen = "NEW_GAME"
@@ -162,7 +214,7 @@ class New_Game(GameState):
     def trigger_global_data_refresh(self):
         """Calls the unified data refresh query for playable scenarios."""
         dirs_to_check = [c.SCENARIOS_HISTORICAL_DIR, c.SCENARIOS_ALTERNATE_DIR, c.SCENARIOS_CUSTOM_DIR]
-        queries.refresh_map_directories(dirs_to_check, success_message="Synced scenarios successfully.")
+        queries.refresh_map_directories(self, dirs_to_check, success_message="Synced scenarios successfully.")
 
     def map_selected(self):
         self.next_state = "MAP"

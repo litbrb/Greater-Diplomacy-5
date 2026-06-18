@@ -1634,29 +1634,44 @@ def will_ai_accept_peace(target_nation, proposer_nation, peace_type, map_data, n
 # ==========================================
 # DATA SYNC & REFRESH
 # ==========================================
+import threading
 
-def refresh_map_directories(dirs_to_check, success_message="Data refreshed successfully!"):
-    """Headlessly instantiates maps, runs internal data sync cleaners, and forces an in-place write to disk."""
-    from screens.map import Map
-    import tkinter as tk
-    from tkinter import messagebox
-
-    maps_processed = 0
-
+def refresh_map_directories(screen, dirs_to_check, success_message="Data refreshed successfully!"):
+    """Headlessly instantiates maps on a background thread to prevent UI freezing."""
+    # Count total maps first
+    total_maps = 0
+    valid_scenarios = []
     for scenario_dir in dirs_to_check:
         if not os.path.exists(scenario_dir):
             continue
-
-        scenarios = os.listdir(scenario_dir)
-
-        for name in scenarios:
+        for name in os.listdir(scenario_dir):
             scenario_path = os.path.join(scenario_dir, name)
             map_json_path = os.path.join(scenario_path, "map_data.json")
+            if os.path.isdir(scenario_path) and os.path.exists(map_json_path):
+                valid_scenarios.append((scenario_dir, name, scenario_path, map_json_path))
+                total_maps += 1
+    
+    if total_maps == 0:
+        import tkinter as tk
+        from tkinter import messagebox
+        root = get_transient_tk_root()
+        messagebox.showinfo("Data Refresh", "No maps found to refresh.", parent=root)
+        destroy_tk_root(root)
+        return
 
-            if not os.path.isdir(scenario_path) or not os.path.exists(map_json_path):
-                continue
+    # Setup screen state for UI
+    screen.is_refreshing = True
+    screen.refresh_total = total_maps
+    screen.refresh_completed = 0
+    screen.refresh_status = "Initializing..."
 
+    def _refresh_thread():
+        from screens.map import Map
+        maps_processed = 0
+
+        for scenario_dir, name, scenario_path, map_json_path in valid_scenarios:
             try:
+                screen.refresh_status = f"Syncing: {name}..."
                 # 1. Instantiate Map with standard singleplayer configurations to pull existing meta/map data into memory
                 temp_map_context = Map(load_path=scenario_path, is_scenario=True)
 
@@ -1722,13 +1737,19 @@ def refresh_map_directories(dirs_to_check, success_message="Data refreshed succe
                 pygame.image.save(temp_map_context.cores_map, os.path.join(scenario_path, "cores.png"))
 
                 maps_processed += 1
+                screen.refresh_completed = maps_processed
+
             except Exception as e:
                 print(f"[REFRESH ERROR] Failed to automatically sync structural data profiles for '{name}': {e}")
 
-        print(f"Synced {maps_processed} maps!")
-        root = get_transient_tk_root()
-        messagebox.showinfo("Data Refresh", f"{success_message}\n\nProcessed {maps_processed} maps.", parent=root)
-        destroy_tk_root(root)
+        screen.refresh_status = f"{success_message} Processed {maps_processed} maps."
+        # Allow a short delay for the user to read the success message before closing the bar
+        import time
+        time.sleep(1.5)
+        screen.is_refreshing = False
+
+    # Fire and forget the background process
+    threading.Thread(target=_refresh_thread, daemon=True).start()
 
 # ==========================================
 # TKINTER DIALOG HELPERS

@@ -30,6 +30,12 @@ class Select_Base_Map(GameState):
         self.last_custom_count = -1
         self.last_base_count = -1
 
+        # --- REFRESH STATE ---
+        self.is_refreshing = False
+        self.refresh_total = 0
+        self.refresh_completed = 0
+        self.refresh_status = ""
+
         self.refresh_maps()
 
     def set_sub_state(self, state):
@@ -50,6 +56,14 @@ class Select_Base_Map(GameState):
             self.last_custom_count = current_custom
             self.last_base_count = current_base
             self.refresh_maps()
+
+        # Forcefully hide all UI buttons while the loading screen is active
+        if getattr(self, 'is_refreshing', False):
+            for el in self.elements:
+                el.visible = False
+        else:
+            for el in self.elements:
+                el.visible = True
 
     def refresh_maps(self):
         self.elements = []
@@ -111,7 +125,7 @@ class Select_Base_Map(GameState):
     def trigger_base_map_data_refresh(self):
         """Calls the unified data refresh query for base maps."""
         dirs_to_check = [c.BASE_MAPS_DIR]
-        queries.refresh_map_directories(dirs_to_check, success_message="Synced base maps successfully.")
+        queries.refresh_map_directories(self, dirs_to_check, success_message="Synced base maps successfully.")
 
     # --- FILE MANAGEMENT LOGIC ---
     def import_scenario_zip(self):
@@ -211,6 +225,9 @@ class Select_Base_Map(GameState):
             
     def handle_events(self, events):
         import pygame
+        if getattr(self, 'is_refreshing', False):
+            return
+            
         for event in events:
             if self.renaming_scenario:
                 is_valid_char = lambda ch: ch.isalnum() or ch in " _-"
@@ -319,3 +336,30 @@ class Select_Base_Map(GameState):
         for el in self.elements:
             if el.visible:
                 el.draw(surface)
+
+        # --- Draw Progress Bar Overlay ---
+        if getattr(self, 'is_refreshing', False):
+            overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 200))
+            surface.blit(overlay, (0, 0))
+
+            center_x, center_y = c.SCREEN_WIDTH // 2, c.SCREEN_HEIGHT // 2
+            
+            font_title = fonts.get("title")
+            txt = font_title.render(self.refresh_status, True, (255, 255, 255))
+            surface.blit(txt, txt.get_rect(center=(center_x, center_y - 40)))
+
+            bar_w, bar_h = 400, 30
+            bar_x = center_x - (bar_w // 2)
+            
+            pygame.draw.rect(surface, (40, 40, 60), (bar_x, center_y, bar_w, bar_h), border_radius=5)
+            
+            progress_ratio = (self.refresh_completed / float(self.refresh_total)) if self.refresh_total > 0 else 0.0
+            fill_w = int(bar_w * progress_ratio)
+            if fill_w > 0:
+                pygame.draw.rect(surface, (100, 200, 100), (bar_x, center_y, fill_w, bar_h), border_radius=5)
+                
+            pygame.draw.rect(surface, (200, 200, 200), (bar_x, center_y, bar_w, bar_h), 2, border_radius=5)
+            
+            pct_txt = fonts.get("tiny").render(f"{self.refresh_completed} / {self.refresh_total}", True, (255, 255, 255))
+            surface.blit(pct_txt, pct_txt.get_rect(center=(center_x, center_y + bar_h // 2)))

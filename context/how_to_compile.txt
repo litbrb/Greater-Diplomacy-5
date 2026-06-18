@@ -1,12 +1,18 @@
 WINDOWS:
 pyinstaller --clean --onefile --add-binary "win64-libsoloud.dll;." --add-binary "mac64-libsoloud.dylib;." --add-binary "lin64-libsoloud.so;." main.py
 
-POWERSHELL:
-./main.exe
-
 MACOS:
-py2applet --make-setup main.py
 rm -rf build dist
-
-python3 setup.py py2app -A
 python3 setup.py py2app
+
+==========
+
+RESET THESE:
+[assets + base_maps + data + scenarios]
+
+OTHER MACOS COMMANDS:
+py2applet --make-setup main.py
+python3 setup.py py2app -A
+
+HOW TO RUN IN POWERSHELL:
+./main.exe

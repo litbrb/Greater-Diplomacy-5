@@ -1632,6 +1632,105 @@ def will_ai_accept_peace(target_nation, proposer_nation, peace_type, map_data, n
     return True
 
 # ==========================================
+# DATA SYNC & REFRESH
+# ==========================================
+
+def refresh_map_directories(dirs_to_check, success_message="Data refreshed successfully!"):
+    """Headlessly instantiates maps, runs internal data sync cleaners, and forces an in-place write to disk."""
+    from screens.map import Map
+    import tkinter as tk
+    from tkinter import messagebox
+
+    maps_processed = 0
+
+    for scenario_dir in dirs_to_check:
+        if not os.path.exists(scenario_dir):
+            continue
+
+        scenarios = os.listdir(scenario_dir)
+
+        for name in scenarios:
+            scenario_path = os.path.join(scenario_dir, name)
+            map_json_path = os.path.join(scenario_path, "map_data.json")
+
+            if not os.path.isdir(scenario_path) or not os.path.exists(map_json_path):
+                continue
+
+            try:
+                # 1. Instantiate Map with standard singleplayer configurations to pull existing meta/map data into memory
+                temp_map_context = Map(load_path=scenario_path, is_scenario=True)
+
+                # 2. Execute the official resync pipeline
+                temp_map_context.refresh_nation_data()
+                print(f"refreshed {name}")
+
+                # Set all playable country resources to 0 before compounding income calculations
+                for nation_name, stats in temp_map_context.nation_data.items():
+                    if nation_name != "GLOBAL_EVENTS" and nation_name not in c.UNPLAYABLE_NATIONS:
+                        stats["manpower"] = 0
+                        stats["materials"] = 0
+                        stats["fuel"] = 0
+
+                # 3. Clean country flags/portraits inside memory before serializing
+                scrub_default_images(temp_map_context.nation_data)
+
+                # 4. Reconstruct the exact structural configuration payload
+                save_dict = {
+                    "date": {
+                        "day": temp_map_context.time_manager.day,
+                        "month": temp_map_context.time_manager.month_index,
+                        "year": temp_map_context.time_manager.year,
+                        "total_turns": temp_map_context.time_manager.total_turns
+                    },
+                    "loop_map": temp_map_context.loop_map,
+                    "player_country": temp_map_context.player_country,
+                    "active_players": temp_map_context.active_players,
+                    "current_player_index": temp_map_context.current_player_index,
+                    "scenario_settings": temp_map_context.scenario_settings,
+                    "default_research": temp_map_context.default_research,
+                    "nation_data": temp_map_context.nation_data,
+                    "provinces": {}
+                }
+
+                for data in temp_map_context.map_data.values():
+                    save_dict["provinces"][data["json_key"]] = {
+                        "owner": data["owner"],
+                        "cores": data.get("cores", []),
+                        "is_coastal": data.get("is_coastal", False),
+                        "units": data.get("units", []),
+                        "building_queue": data.get("building_queue", []),
+                        "unit_queue": data.get("unit_queue", []),
+                        "orders": data.get("orders", []),
+                        "resources": data.get("resources", []),
+                        "buildings": data.get("buildings", [])
+                    }
+
+                # 5. Perform the manual write operations in-place
+                with open(os.path.join(scenario_path, "meta.json"), "w") as f:
+                    json.dump(save_dict, f, indent=c.SAVE_INDENT)
+
+                with open(map_json_path, "w") as f:
+                    json.dump(temp_map_context.raw_json_data, f, indent=c.SAVE_INDENT)
+
+                if hasattr(temp_map_context, 'history'):
+                    with open(os.path.join(scenario_path, "history.json"), "w") as f:
+                        json.dump(temp_map_context.history, f, indent=c.HISTORY_INDENT)
+
+                pygame.image.save(temp_map_context.political_map, os.path.join(scenario_path, "political.png"))
+                pygame.image.save(temp_map_context.terrain_map, os.path.join(scenario_path, "terrain.png"))
+                pygame.image.save(temp_map_context.id_map, os.path.join(scenario_path, "id_map.png"))
+                pygame.image.save(temp_map_context.cores_map, os.path.join(scenario_path, "cores.png"))
+
+                maps_processed += 1
+            except Exception as e:
+                print(f"[REFRESH ERROR] Failed to automatically sync structural data profiles for '{name}': {e}")
+
+        print(f"Synced {maps_processed} maps!")
+        root = get_transient_tk_root()
+        messagebox.showinfo("Data Refresh", f"{success_message}\n\nProcessed {maps_processed} maps.", parent=root)
+        destroy_tk_root(root)
+
+# ==========================================
 # TKINTER DIALOG HELPERS
 # ==========================================
 

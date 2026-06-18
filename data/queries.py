@@ -87,7 +87,21 @@ def get_days_per_turn(scenario_settings):
         return c.DEFAULT_DAYS_PER_TURN
 
 def save_scenario_settings(data):
-    save_cached_json("scenario_settings", data)
+    cache_obj = _JSON_CACHE["scenario_settings"]
+    
+    # 1. Keep full data in memory cache so 'Data Refresh' doesn't wipe custom turn rates
+    cache_obj["data"] = data 
+    
+    # 2. Strip scenario-specific variables before writing to the global file
+    safe_data = data.copy()
+    safe_data.pop("base_days_per_turn", None)
+    
+    # 3. Write only the safe data to the JSON on disk
+    try:
+        with open(cache_obj["path"], "w", encoding="utf-8") as f:
+            json.dump(safe_data, f, indent=4)
+    except Exception as e:
+        print(f"Error saving {cache_obj['path']}: {e}")
 
 def clear_json_caches():
     """Forces the game to fetch the updated files on the next read."""

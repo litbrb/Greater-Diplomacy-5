@@ -106,7 +106,9 @@ def save_scenario_settings(data):
 def clear_json_caches():
     """Forces the game to fetch the updated files on the next read."""
     for key in _JSON_CACHE:
-        _JSON_CACHE[key]["data"] = None
+        # Prevent the Data Refresh button from wiping active session configurations
+        if key not in ["settings", "scenario_settings"]:
+            _JSON_CACHE[key]["data"] = None
     print("[SYSTEM] JSON Memory Caches Cleared.")
 
 def _load_cached_json(cache_key):

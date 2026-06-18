@@ -9,6 +9,13 @@
     "player_country": "None",
     "active_players": [],
     "current_player_index": 0,
+    "scenario_settings": {
+        "fog_of_war": true,
+        "casus_belli_required": true,
+        "days_per_turn": "Default",
+        "use_scripted_events": true,
+        "ai_disabled": false
+    },
     "default_research": {
         "aircraft_carrier": 1,
         "armored_car": 4,

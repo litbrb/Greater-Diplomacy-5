@@ -161,6 +161,7 @@ class Select_Base_Map(GameState):
                     "player_country": temp_map_context.player_country,
                     "active_players": temp_map_context.active_players,
                     "current_player_index": temp_map_context.current_player_index,
+                    "scenario_settings": temp_map_context.scenario_settings,
                     "default_research": temp_map_context.default_research,
                     "nation_data": temp_map_context.nation_data,
                     "provinces": {}

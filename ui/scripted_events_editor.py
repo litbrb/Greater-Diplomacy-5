@@ -469,6 +469,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             def update_act_row(*args):
                 t = type_var.get()
                 
+                # Unpack everything first to clear the slate
                 target_cb.pack_forget()
                 msg_ent.pack_forget()
                 ai_cb.pack_forget()
@@ -503,8 +504,10 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                         is_port = (t == "Edit Portrait")
                         size = c.PORTRAIT_SIZE if is_port else c.FLAG_SIZE
                         
+                        # Utilize the queries handler to resolve default imagery and scale appropriately
                         surf = queries.decode_b64_to_surf(b64_str, size, is_portrait=is_port, country_name=target)
                         
+                        # Temporarily swap standard pygame bytes to disk so Tkinter can read them
                         tmp_fd, tmp_path = tempfile.mkstemp(suffix=".png")
                         os.close(tmp_fd)
                         pygame.image.save(surf, tmp_path)
@@ -512,7 +515,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                         try:
                             img = tk.PhotoImage(file=tmp_path)
                             preview_lbl.config(image=img, width=size[0], height=size[1], bg='white')
-                            preview_lbl.image = img 
+                            preview_lbl.image = img # Crucial: Save reference so garbage collector doesn't eat the image
                         except Exception:
                             preview_lbl.config(bg='gray', image='', width=4, height=1)
                             

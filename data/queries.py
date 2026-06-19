@@ -1777,6 +1777,28 @@ def refresh_map_directories(screen, dirs_to_check, success_message="Data refresh
 # TKINTER DIALOG HELPERS
 # ==========================================
 
+def create_tk_window(title, geometry):
+    """Standardizes the creation of floating editor tool windows."""
+    import tkinter as tk
+    root = tk.Tk()
+    root.title(title)
+    root.geometry(geometry)
+    root.attributes("-topmost", True)
+    return root
+
+def run_tk_loop(game_state, root):
+    """Standardizes the Pygame-safe Tkinter event loop."""
+    import pygame
+    import tkinter as tk
+    import data.constants as c
+    while getattr(game_state, 'menu_active', True) and not getattr(game_state, 'done', False):
+        try:
+            root.update()
+            pygame.event.pump()
+            pygame.time.wait(c.CPU_LIMITER)
+        except (tk.TclError, Exception):
+            break
+
 def get_transient_tk_root():
     """Creates a hidden, top-most Tkinter root for native dialogs (file picking, color picking)."""
     import tkinter as tk

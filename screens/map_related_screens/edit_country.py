@@ -105,23 +105,17 @@ class Edit_Country_Screen(GameState):
 
     def pick_map_color(self):
         """Opens a native color picker to select the country's map color."""
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes("-topmost", True) # Keeps it above the Pygame window
-        
+        root = queries.get_transient_tk_root()
         color_code = colorchooser.askcolor(title="Choose Map Color", initialcolor=tuple(self.new_map_color))
         
         if color_code[0]: # If they didn't click cancel
             self.new_map_color = [int(c) for c in color_code[0]]
             
-        root.destroy()
-        pygame.event.pump() # Clears any phantom mouse clicks Tkinter leaves behind
+        queries.destroy_tk_root(root)
 
     def pick_custom_brush_color(self):
         """Opens a native color picker to select a custom drawing color."""
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes("-topmost", True) 
+        root = queries.get_transient_tk_root()
         
         # Slice to [:3] to ensure we only pass RGB to Tkinter, dropping the Alpha
         color_code = colorchooser.askcolor(title="Choose Brush Color", initialcolor=tuple(self.active_color)[:3])
@@ -130,8 +124,7 @@ class Edit_Country_Screen(GameState):
             # Re-append the full opacity alpha channel (255) to the returned RGB tuple
             self.active_color = tuple(int(c) for c in color_code[0]) + (255,)
             
-        root.destroy()
-        pygame.event.pump()
+        queries.destroy_tk_root(root)
         
     def export_flag(self):
         downloads_path = str(Path.home() / "Downloads")
@@ -154,15 +147,12 @@ class Edit_Country_Screen(GameState):
             self.map_screen.show_feedback("Failed to export")
 
     def import_flag(self):
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes("-topmost", True)
+        root = queries.get_transient_tk_root()
         file_path = filedialog.askopenfilename(
             title="Select Flag Image",
             filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp")]
         )
-        root.destroy()
-        pygame.event.pump() # Clears any phantom mouse clicks Tkinter leaves behind
+        queries.destroy_tk_root(root)
 
         if file_path:
             try:
@@ -251,10 +241,7 @@ class Edit_Country_Screen(GameState):
         """Opens a floating Tkinter tree configuration list to copy assets from another nation."""
         import tkinter as tk
 
-        root = tk.Tk()
-        root.title("Switch Appearance Profile")
-        root.geometry("300x450")
-        root.attributes("-topmost", True)
+        root = queries.create_tk_window("Switch Appearance Profile", "300x450")
         self.menu_active = True
 
         def close_menu():
@@ -300,13 +287,7 @@ class Edit_Country_Screen(GameState):
         tk.Button(root, text="Apply Configuration", command=on_select, bg="#FF9800", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
         lb.bind('<Double-1>', on_select)
 
-        while self.menu_active and not self.done:
-            try:
-                root.update()
-                pygame.event.pump()
-                pygame.time.wait(c.CPU_LIMITER)
-            except:
-                break
+        queries.run_tk_loop(self, root)
 
     def save_and_exit(self):
         p_data = self.map_screen.nation_data[self.editing_country]

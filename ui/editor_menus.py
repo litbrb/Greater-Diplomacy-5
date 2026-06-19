@@ -10,28 +10,6 @@ from data import queries
 from map_logic.diplomacy.diplomacy_agreements import assign_puppet
 
 # ==========================================
-# TKINTER WINDOW HELPERS
-# ==========================================
-
-def _create_editor_window(title, geometry):
-    """Standardizes the creation of floating editor tool windows."""
-    root = tk.Tk()
-    root.title(title)
-    root.geometry(geometry)
-    root.attributes("-topmost", True)
-    return root
-
-def _run_editor_loop(map_screen, root):
-    """Standardizes the Pygame-safe Tkinter event loop."""
-    while map_screen.menu_active:
-        try:
-            root.update()
-            pygame.event.pump()
-            pygame.time.wait(10) # --- CPU LIMITER FIX ---
-        except (tk.TclError, Exception):
-            break
-
-# ==========================================
 # EDITOR MENUS
 # ==========================================
 
@@ -49,7 +27,7 @@ def editor_load_map(self):
 
 def select_brush_nation(self):
     """Opens a Tkinter selection window and sets mode to NATION."""
-    root = _create_editor_window("Select Nation", "300x450")
+    root = queries.create_tk_window("Select Nation", "300x450")
     self.menu_active = True
 
     def close_menu():
@@ -102,11 +80,11 @@ def select_brush_nation(self):
               bg="#4CAF50", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
 
     lb.bind('<Double-1>', on_select)
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def select_core_brush(self):
     """Opens a Tkinter selection window and sets mode to CORE."""
-    root = _create_editor_window("Select Core Nation", "300x450")
+    root = queries.create_tk_window("Select Core Nation", "300x450")
     self.menu_active = True
 
     def close_menu():
@@ -154,12 +132,12 @@ def select_core_brush(self):
               bg="#FF69B4", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
 
     lb.bind('<Double-1>', on_select)
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 
 def select_claim_brush(self):
     """Opens a Tkinter selection window and sets mode to CLAIM."""
-    root = _create_editor_window("Select Claim Nation", "300x450")
+    root = queries.create_tk_window("Select Claim Nation", "300x450")
     self.menu_active = True
 
     def close_menu():
@@ -207,12 +185,12 @@ def select_claim_brush(self):
               bg="#FF8800", fg="black", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
 
     lb.bind('<Double-1>', on_select)
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 
 def open_editor_claims(self):
     """Opens a Tkinter window listing every claim on the map."""
-    root = _create_editor_window("Global Claims Overview", "600x500")
+    root = queries.create_tk_window("Global Claims Overview", "600x500")
     self.menu_active = True
 
     def close_menu():
@@ -263,11 +241,11 @@ def open_editor_claims(self):
     scrollbar.pack(side="right", fill="y")
     tree.pack(fill="both", expand=True)
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def select_building_brush(self):
     """Opens a selection window for building types and sets mode to BUILDING."""
-    root = _create_editor_window("Select Building", "300x400")
+    root = queries.create_tk_window("Select Building", "300x400")
     self.menu_active = True
 
     # --- DYNAMIC FETCH ---
@@ -304,7 +282,7 @@ def select_building_brush(self):
               bg="#2196F3", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
 
     lb.bind('<Double-1>', on_select)
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def spec_select_edit_country(self):
     """Opens a Tkinter window for a Spectator to select which nation to edit."""
@@ -313,7 +291,7 @@ def spec_select_edit_country(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = _create_editor_window("Select Nation to Edit", "300x450")
+    root = queries.create_tk_window("Select Nation to Edit", "300x450")
     self.menu_active = True
 
     def close_menu():
@@ -345,11 +323,11 @@ def spec_select_edit_country(self):
               bg="#FF9800", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=10)
 
     lb.bind('<Double-1>', on_select)
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def open_editor_date(self):
     """Opens a Tkinter window to edit the game's starting date."""
-    root = _create_editor_window("Set Start Date", "250x350")
+    root = queries.create_tk_window("Set Start Date", "250x350")
     self.menu_active = True
 
     def close_menu():
@@ -412,7 +390,7 @@ def open_editor_date(self):
             messagebox.showerror("Error", "Please enter valid integers.")
 
     tk.Button(root, text="Apply Date", command=apply_date, bg="#FF9800", fg="black", pady=5).pack(pady=15, fill="x", padx=20)
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 
 def open_editor_economy(self):
@@ -423,7 +401,7 @@ def open_editor_economy(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = _create_editor_window("Global Economy Overview", "1200x500")
+    root = queries.create_tk_window("Global Economy Overview", "1200x500")
     self.menu_active = True
 
     def close_menu():
@@ -560,7 +538,7 @@ def open_editor_economy(self):
     scrollbar.pack(side="right", fill="y")
     tree.pack(fill="both", expand=True)
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
         
 def open_spectator_messages(self):
     """Opens a Tkinter window listing all messages sent between active countries."""
@@ -570,7 +548,7 @@ def open_spectator_messages(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = _create_editor_window("Global Messages Overview", "1100x500")
+    root = queries.create_tk_window("Global Messages Overview", "1100x500")
     self.menu_active = True
 
     def close_menu():
@@ -698,7 +676,7 @@ def open_spectator_messages(self):
     scrollbar.pack(side="right", fill="y")
     tree.pack(fill="both", expand=True)
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def open_map_research_editor(self):
     """Opens a UI to edit research for countries currently existing on the map."""
@@ -733,7 +711,7 @@ def open_map_research_editor(self):
 
     default_res = get_default_research()
 
-    root = _create_editor_window("Map Tech Editor", "350x500")
+    root = queries.create_tk_window("Map Tech Editor", "350x500")
     self.menu_active = True
 
     def close_menu():
@@ -841,11 +819,11 @@ def open_map_research_editor(self):
     tk.Button(root, text="Edit ALL Nations (Bulk)", command=edit_all, bg="#f44336", fg="white", pady=5).pack(fill="x", padx=10, pady=2)
     tk.Button(root, text="Edit Map Default Tech", command=edit_default_only, bg="#FF9800", fg="white", pady=5).pack(fill="x", padx=10, pady=5)
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def select_unit_brush(self):
     """Opens a selection window for unit types and sets mode to UNIT."""
-    root = _create_editor_window("Select Unit", "300x400")
+    root = queries.create_tk_window("Select Unit", "300x400")
     self.menu_active = True
 
     units = list(queries.get_unit_library().keys())
@@ -879,11 +857,11 @@ def select_unit_brush(self):
     tk.Button(root, text="Confirm Selection", command=on_select, bg="#f44336", fg="white", pady=10).pack(fill="x", padx=10, pady=10)
     lb.bind('<Double-1>', on_select)
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def select_resource_brush(self):
     """Opens a selection window for resource types and amounts."""
-    root = _create_editor_window("Resource Brush", "300x250")
+    root = queries.create_tk_window("Resource Brush", "300x250")
     self.menu_active = True
 
     def close_menu():
@@ -922,7 +900,7 @@ def select_resource_brush(self):
     tk.Button(root, text="Confirm Selection", command=on_confirm, 
               bg="#9C27B0", fg="white", font=("Arial", 10, "bold"), pady=10).pack(fill="x", padx=10, pady=15)
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def open_scripted_events_editor(self):
     active_countries = queries.get_living_nations(self.map_data)
@@ -930,7 +908,7 @@ def open_scripted_events_editor(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = _create_editor_window("Scripted Events Editor", "650x550")
+    root = queries.create_tk_window("Scripted Events Editor", "650x550")
     self.menu_active = True
 
     def close_menu():
@@ -1561,7 +1539,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
     tk.Button(btn_frame, text="v", command=move_event_down, bg="#d9e1f2", fg="black").pack(side="left", expand=False, fill="x", padx=2)
     tk.Button(btn_frame, text="Remove", command=remove_event, bg="#f44336", fg="white").pack(side="right", expand=True, fill="x", padx=2)
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def open_diplomacy_editor(self):
     """Opens a Tkinter window to edit global relations and factions."""
@@ -1570,7 +1548,7 @@ def open_diplomacy_editor(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = _create_editor_window("Global Diplomacy & Factions Editor", "550x700")
+    root = queries.create_tk_window("Global Diplomacy & Factions Editor", "550x700")
     self.menu_active = True
 
     def close_menu():
@@ -1726,7 +1704,7 @@ def open_diplomacy_editor(self):
 
     tk.Button(right_frame, text="Save Changes", command=save_changes, bg="#4CAF50", fg="white", font=("Arial", 12, "bold")).pack(pady=10, fill="x")
 
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)
 
 def open_edited_countries(self):
     """Opens a Tkinter window listing countries with edited properties."""
@@ -1763,7 +1741,7 @@ def open_edited_countries(self):
         if changes:
             edited_list.append((c_id, changes))
             
-    root = _create_editor_window("Edited Countries Overview", "900x500")
+    root = queries.create_tk_window("Edited Countries Overview", "900x500")
     self.menu_active = True
     
     def close_menu():
@@ -1805,4 +1783,4 @@ def open_edited_countries(self):
     scrollbar.pack(side="right", fill="y")
     tree.pack(fill="both", expand=True)
     
-    _run_editor_loop(self, root)
+    queries.run_tk_loop(self, root)

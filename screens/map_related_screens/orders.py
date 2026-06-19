@@ -642,8 +642,7 @@ class Orders_Screen(GameState):
                             # Loop the green pathmaking circles so they draw on the seam
                             offsets = [0, -self.map_screen.map_w, self.map_screen.map_w] if self.map_screen.loop_map else [0]
                             for offset in offsets:
-                                sx = (cx + offset - cam.pos.x) * cam.zoom
-                                sy = (cy - cam.pos.y) * cam.zoom * cam.tilt_factor + self.map_screen.top_ui_height
+                                sx, sy = queries.world_to_screen([cx, cy], self.map_screen, offset)
                                 
                                 if 0 <= sx <= c.SCREEN_WIDTH and 0 <= sy <= c.SCREEN_HEIGHT:
                                     pygame.draw.circle(surface, (0, 255, 0), (int(sx), int(sy)), 12, 3)

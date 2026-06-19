@@ -5,6 +5,7 @@ from map_logic.diplomacy import diplomacy_logic
 from gameState import GameState
 from ui_elements import Button, Slider
 from map_logic.rendering.font_manager import fonts
+from map_logic.rendering import overlay_renderer
 
 def _run_pygame_sub_screen(map_screen, screen_obj):
     """Runs a blocking PyGame loop that acts like a GameState to bypass the main state machine."""
@@ -453,23 +454,23 @@ class Claims_Screen(GameState):
             
             for item in global_claims_list:
                 color = self.map_screen.nation_colors.get(item["nation"], (255, 255, 255))
-                self.draw_highlight(surface, item["prov_id"], color)
+                overlay_renderer.draw_map_highlight(surface, self.map_screen, item["prov_id"], color, base_radius=4)
 
         elif self.view_mode == "YOURS":
             for pid in core_ids:
-                self.draw_highlight(surface, pid, (255, 105, 180))
+                overlay_renderer.draw_map_highlight(surface, self.map_screen, pid, (255, 105, 180), base_radius=4)
             
             for pid in claims:
                 if pid in revoke_ids:
-                    self.draw_highlight(surface, pid, (255, 50, 50))
+                    overlay_renderer.draw_map_highlight(surface, self.map_screen, pid, (255, 50, 50), base_radius=4)
                 else:
-                    self.draw_highlight(surface, pid, (255, 215, 0))
+                    overlay_renderer.draw_map_highlight(surface, self.map_screen, pid, (255, 215, 0), base_radius=4)
                 
             for i, q in enumerate(queue):
                 if i == 0:
-                    self.draw_highlight(surface, q["prov_id"], (0, 255, 0))
+                    overlay_renderer.draw_map_highlight(surface, self.map_screen, q["prov_id"], (0, 255, 0), base_radius=4)
                 else:
-                    self.draw_highlight(surface, q["prov_id"], (0, 150, 255))
+                    overlay_renderer.draw_map_highlight(surface, self.map_screen, q["prov_id"], (0, 150, 255), base_radius=4)
         else:
             for pid, claims_on_tile in foreign_claims_map.items():
                 for i, claim_info in enumerate(claims_on_tile):
@@ -479,7 +480,7 @@ class Claims_Screen(GameState):
                     if pid in return_ids:
                         color = (100, 255, 100) # Green highlight for returning tiles
                         
-                    self.draw_highlight(surface, pid, color, inset=i, is_justifying=is_just)
+                    overlay_renderer.draw_map_highlight(surface, self.map_screen, pid, color, base_radius=4, inset=i, is_justifying=is_just)
         
         # Draw Information Panel
         panel_surf = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)
@@ -615,25 +616,6 @@ class Claims_Screen(GameState):
         for el in self.elements:
             if el.visible:
                 el.draw(surface)
-
-    def draw_highlight(self, surface, pid, color, inset=0, is_justifying=False):
-        prov = self.map_screen.id_to_province.get(pid)
-        if not prov: return
-        cx, cy = prov["center"]
-        for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
-            sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
-            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * self.map_screen.camera.tilt_factor + self.map_screen.top_ui_height
-            if -100 < sx < c.SCREEN_WIDTH + 100:
-                radius_x = max(2, int(4 * self.map_screen.camera.zoom))
-                
-                if is_justifying:
-                    radius_x = max(1, int(radius_x * 0.6))
-                    
-                if inset > 0:
-                    radius_x = max(1, radius_x - (inset * max(1, int(1.5 * self.map_screen.camera.zoom))))
-                    
-                radius_y = int(radius_x * self.map_screen.camera.tilt_factor) if c.APPLY_TILT_TO_OVERLAYS else radius_x
-                pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
 
 # ==========================================
 # CEASEFIRE / PEACE SCREEN
@@ -817,25 +799,6 @@ class Peace_Screen(GameState):
                 proj = target
         return proj
 
-    def draw_highlight(self, surface, pid, color):
-        prov = self.map_screen.id_to_province.get(pid)
-        if not prov: return
-        cx, cy = prov["center"]
-        for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
-            sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
-            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * self.map_screen.camera.tilt_factor + self.map_screen.top_ui_height
-            if -100 < sx < c.SCREEN_WIDTH + 100:
-                radius_x = max(6, int(10 * self.map_screen.camera.zoom))
-                radius_y = int(radius_x * self.map_screen.camera.tilt_factor) if c.APPLY_TILT_TO_OVERLAYS else radius_x
-                
-                # Draw thick semi-transparent fill
-                ellipse_surf = pygame.Surface((radius_x*2, radius_y*2), pygame.SRCALPHA)
-                pygame.draw.ellipse(ellipse_surf, (*color, 150), ellipse_surf.get_rect())
-                surface.blit(ellipse_surf, (int(sx) - radius_x, int(sy) - radius_y))
-                
-                # Draw sharp border
-                pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
-
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
         
@@ -869,9 +832,9 @@ class Peace_Screen(GameState):
                 proj = queries.get_projected_owner(prov, peace_type, proposer, target, self.map_screen.nation_data)
                 if proj != curr:
                     if proj == proposer:
-                        self.draw_highlight(surface, prov["id"], p_color)
+                        overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], p_color, base_radius=10)
                     elif proj == target:
-                        self.draw_highlight(surface, prov["id"], t_color)
+                        overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], t_color, base_radius=10)
 
         # Draw the Banner
         panel_surf = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)
@@ -924,22 +887,6 @@ class View_Peace_Treaty_Screen(GameState):
         super().update()
         self.map_screen.camera.update(self.map_screen, c.SCREEN_HEIGHT)
 
-    def draw_highlight(self, surface, pid, color):
-        prov = self.map_screen.id_to_province.get(pid)
-        if not prov: return
-        cx, cy = prov["center"]
-        for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
-            sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
-            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * self.map_screen.camera.tilt_factor + self.map_screen.top_ui_height
-            if -100 < sx < c.SCREEN_WIDTH + 100:
-                radius_x = max(6, int(10 * self.map_screen.camera.zoom))
-                radius_y = int(radius_x * self.map_screen.camera.tilt_factor) if c.APPLY_TILT_TO_OVERLAYS else radius_x
-                
-                ellipse_surf = pygame.Surface((radius_x*2, radius_y*2), pygame.SRCALPHA)
-                pygame.draw.ellipse(ellipse_surf, (*color, 150), ellipse_surf.get_rect())
-                surface.blit(ellipse_surf, (int(sx) - radius_x, int(sy) - radius_y))
-                pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
-
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
         
@@ -968,9 +915,9 @@ class View_Peace_Treaty_Screen(GameState):
                 proj = queries.get_projected_owner(prov, self.peace_type, self.proposer, self.target, self.map_screen.nation_data)
                 if proj != curr:
                     if proj == self.proposer:
-                        self.draw_highlight(surface, prov["id"], p_color)
+                        overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], p_color, base_radius=10)
                     elif proj == self.target:
-                        self.draw_highlight(surface, prov["id"], t_color)
+                        overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], t_color, base_radius=10)
 
         font = fonts.get("heading1")
         title = font.render(f"Projected Map: Peace Treaty from {self.proposer}", True, (255, 255, 255))
@@ -1565,21 +1512,6 @@ class Create_Integrated_Puppet_Screen(GameState):
                 self.scroll_y = max(self.max_scroll, min(0, self.scroll_y))
                 self.refresh_ui()
 
-    def draw_highlight(self, surface, pid, color):
-        prov = self.map_screen.id_to_province.get(pid)
-        if not prov: return
-        cx, cy = prov["center"]
-        for offset in [0, -self.map_screen.map_w, self.map_screen.map_w]:
-            sx = (cx + offset - self.map_screen.camera.pos.x) * self.map_screen.camera.zoom
-            sy = (cy - self.map_screen.camera.pos.y) * self.map_screen.camera.zoom * self.map_screen.camera.tilt_factor + self.map_screen.top_ui_height
-            if -100 < sx < c.SCREEN_WIDTH + 100:
-                radius_x = max(6, int(10 * self.map_screen.camera.zoom))
-                radius_y = int(radius_x * self.map_screen.camera.tilt_factor) if c.APPLY_TILT_TO_OVERLAYS else radius_x
-                ellipse_surf = pygame.Surface((radius_x*2, radius_y*2), pygame.SRCALPHA)
-                pygame.draw.ellipse(ellipse_surf, (*color, 150), ellipse_surf.get_rect())
-                surface.blit(ellipse_surf, (int(sx) - radius_x, int(sy) - radius_y))
-                pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*self.map_screen.camera.zoom)))
-
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
         temp_prov = self.map_screen.selected_province
@@ -1610,7 +1542,7 @@ class Create_Integrated_Puppet_Screen(GameState):
             if prov.get("owner") == self.player:
                 for qc in queued_cores:
                     if qc in prov.get("cores", []):
-                        self.draw_highlight(surface, prov["id"], color_map[qc])
+                        overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], color_map[qc], base_radius=10)
                         break
 
         panel_surf = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)

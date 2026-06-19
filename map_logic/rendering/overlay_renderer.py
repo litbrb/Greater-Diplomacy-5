@@ -110,17 +110,32 @@ def draw_combat_bubbles(self_map, surface):
                     
                 surface.blit(inner, (int(sx) - radius_x, int(sy) - radius_y))
 
+def draw_map_highlight(surface, map_screen, pid, color, base_radius=10, inset=0, is_justifying=False):
+    """Draws a highlighted ellipse over a province for diplomatic or contextual screens."""
+    prov = map_screen.id_to_province.get(pid)
+    if not prov: return
+    for offset in [0, -map_screen.map_w, map_screen.map_w]:
+        sx, sy = queries.world_to_screen(prov["center"], map_screen, offset)
+        if -100 < sx < c.SCREEN_WIDTH + 100:
+            radius_x = max(2, int(base_radius * map_screen.camera.zoom))
+            
+            if is_justifying:
+                radius_x = max(1, int(radius_x * 0.6))
+            if inset > 0:
+                radius_x = max(1, radius_x - (inset * max(1, int(1.5 * map_screen.camera.zoom))))
+                
+            radius_y = int(radius_x * map_screen.camera.tilt_factor) if c.APPLY_TILT_TO_OVERLAYS else radius_x
+            
+            ellipse_surf = pygame.Surface((radius_x*2, radius_y*2), pygame.SRCALPHA)
+            pygame.draw.ellipse(ellipse_surf, (*color, 150), ellipse_surf.get_rect())
+            surface.blit(ellipse_surf, (int(sx) - radius_x, int(sy) - radius_y))
+            pygame.draw.ellipse(surface, color, pygame.Rect(int(sx) - radius_x, int(sy) - radius_y, radius_x*2, radius_y*2), max(2, int(2*map_screen.camera.zoom)))
+
 def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255, 255, 0), alpha=255, force_visible=False):
     """Draws a multi-segment path with lines underneath circles and a triangle at the end."""
     if not path_ids: return
 
     cam = map_screen.camera
-    
-    # 1. Convert to Screen Coordinates (Added offset support for looped rendering)
-    def world_to_screen(pos, offset=0):
-        sx = (pos[0] + offset - cam.pos.x) * cam.zoom
-        sy = (pos[1] - cam.pos.y) * cam.zoom * cam.tilt_factor + map_screen.top_ui_height
-        return sx, sy
 
     # Build an ordered list of all nodes in the path
     nodes = [start_province]
@@ -168,8 +183,8 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
 
         for offset in offsets:
             # 1. Get the actual tilted screen coordinates for final placement
-            start_pos = world_to_screen(p1, offset)
-            end_pos = world_to_screen(p2, offset)
+            start_pos = queries.world_to_screen(p1, map_screen, offset)
+            end_pos = queries.world_to_screen(p2, map_screen, offset)
 
             # Basic culling to avoid drawing off-screen lines
             min_x = min(start_pos[0], end_pos[0])
@@ -236,8 +251,8 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
                 p2[0] += map_screen.map_w
 
         for offset in offsets:
-            start_pos = world_to_screen(p1, offset)
-            end_pos = world_to_screen(p2, offset)
+            start_pos = queries.world_to_screen(p1, map_screen, offset)
+            end_pos = queries.world_to_screen(p2, map_screen, offset)
 
             # Culling Check
             if end_pos[0] < -50 or end_pos[0] > surface.get_width() + 50:

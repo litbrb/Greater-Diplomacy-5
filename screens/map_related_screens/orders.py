@@ -4,7 +4,7 @@ import os
 import gameState as g
 import data.constants as c
 from gameState import GameState
-from ui_elements import Button
+from ui_elements import Button, process_text_input
 from map_logic.rendering.font_manager import fonts
 from data import queries
 from map_logic.rendering import symbol_loader
@@ -22,6 +22,9 @@ class Orders_Screen(GameState):
         self.map_screen = None
         self.selected_unit_index = None 
         self.cancel_rects = []
+        
+        self.renaming_unit_index = None
+        self.rename_text = ""
         
         self.scroll_y = 0
         self.max_scroll_y = 0
@@ -111,7 +114,7 @@ class Orders_Screen(GameState):
 
                 # 2. Inline Convoy Conversion Button
                 if order_type == "CONVERT":
-                    btn_conv = Button(x_pos, y_pos, "orders_panel_button", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx), font_preset="normal")
+                    btn_conv = Button(x_pos, y_pos, "orders_panel_button", "red", "Cancel Conversion", lambda idx=i: self.cancel_unit_order(idx), font_preset="normal")
                 elif in_combat:
                     btn_conv = Button(x_pos, y_pos, "orders_panel_button", "grey", "In Combat", lambda: None, font_preset="normal")
                 elif is_convoy:
@@ -139,13 +142,92 @@ class Orders_Screen(GameState):
 
                 # 3. Inline Disband Button
                 if order_type == "DISBAND":
-                    btn_disband = Button(x_pos + 85, y_pos, "orders_panel_button_2", "red", "Cancel", lambda idx=i: self.cancel_unit_order(idx), font_preset="normal")
+                    btn_disband = Button(x_pos + 85, y_pos, "orders_panel_button_2", "red", "Cancel Disband", lambda idx=i: self.cancel_unit_order(idx), font_preset="normal")
                 else:
                     btn_disband = Button(x_pos + 85, y_pos, "orders_panel_button_2", "red", "Disband", lambda idx=i: self.disband_unit(idx), font_preset="normal")
                 
                 self.elements.append(btn_disband)
+
+                hp = int(unit.get("health", 0))
+                m_hp = int(unit.get("max_health", 1))
+                is_factory = queries.has_industry(self.target_province)
+
+                if order_type == "REPAIR":
+                    btn_repair = Button(x_pos + 160, y_pos, "orders_panel_button_2", "orange", "Cancel Repair", lambda idx=i: self.cancel_unit_order(idx), font_preset="normal")
+                elif hp < m_hp:
+                    if in_combat:
+                        btn_repair = Button(x_pos + 160, y_pos, "orders_panel_button_2", "grey", "In Combat", lambda: None, font_preset="normal")
+                    elif is_factory:
+                        btn_repair = Button(x_pos + 160, y_pos, "orders_panel_button_2", "green", "Repair", lambda idx=i: self.repair_unit(idx), font_preset="normal")
+                    else:
+                        btn_repair = Button(x_pos + 160, y_pos, "orders_panel_button_2", "grey", "Needs Factory", lambda: None, font_preset="normal")
+                else:
+                    btn_repair = Button(x_pos + 160, y_pos, "orders_panel_button_2", "grey", "Full HP", lambda: None, font_preset="normal")
+
+                self.elements.append(btn_repair)
+
+                if self.renaming_unit_index == i:
+                    btn_rename = Button(x_pos + 235, y_pos, "orders_panel_button_2", "green", "Save Name", lambda idx=i: self.save_unit_name(idx), font_preset="normal")
+                else:
+                    btn_rename = Button(x_pos + 235, y_pos, "orders_panel_button_2", "blue", "Rename", lambda idx=i: self.start_renaming(idx), font_preset="normal")
+
+                self.elements.append(btn_rename)
             
             display_index += 1
+
+    def start_renaming(self, index):
+        self.renaming_unit_index = index
+        units = self.target_province.get("units", [])
+        if 0 <= index < len(units):
+            self.rename_text = units[index].get("custom_name", "")
+        self.refresh_ui()
+
+    def save_unit_name(self, index):
+        units = self.target_province.get("units", [])
+        if 0 <= index < len(units):
+            if self.rename_text.strip():
+                units[index]["custom_name"] = self.rename_text.strip()
+            else:
+                units[index].pop("custom_name", None)
+        self.renaming_unit_index = None
+        self.refresh_ui()
+
+    def repair_unit(self, index):
+        in_combat = queries.is_nation_in_combat_here(self.map_screen.player_country, self.target_province, self.map_screen.nation_data)
+        if in_combat:
+            self.map_screen.show_feedback("Cannot repair during combat!")
+            return
+
+        units = self.target_province.get("units", [])
+        if not (0 <= index < len(units)): return
+
+        unit = units[index]
+        u_type = unit.get("original_type", unit.get("type", ""))
+        stats = self.unit_library.get(u_type, {})
+
+        hp = unit.get("health", 0)
+        m_hp = unit.get("max_health", 1)
+
+        missing_pct = (m_hp - hp) / max(1, m_hp)
+
+        cost_mat = int(stats.get("cost_materials", 0) * missing_pct)
+        cost_man = int(stats.get("cost_manpower", 0) * missing_pct)
+        cost_fuel = int(stats.get("cost_fuel", 0) * missing_pct)
+
+        costs = {"cost_materials": cost_mat, "cost_manpower": cost_man, "cost_fuel": cost_fuel}
+        p_data = self.map_screen.nation_data[self.map_screen.player_country]
+
+        if queries.can_afford(p_data, costs):
+            queries.deduct_resources(p_data, costs)
+            unit["order"] = {
+                "type": "REPAIR",
+                "turns_left": 1,
+                "refund": costs
+            }
+            self.map_screen.show_feedback("Repair ordered (1 turn).")
+            self.refresh_ui()
+        else:
+            self.map_screen.show_feedback("Cannot afford repair!")
 
     def disband_unit(self, index):
         units = self.target_province.get("units", [])
@@ -194,7 +276,11 @@ class Orders_Screen(GameState):
     def cancel_unit_order(self, index):
         units = self.target_province.get("units", [])
         if 0 <= index < len(units):
+            order = units[index].get("order", {})
             if "order" in units[index]:
+                if isinstance(order, dict) and "refund" in order:
+                    p_data = self.map_screen.nation_data[self.map_screen.player_country]
+                    queries.refund_resources(p_data, order["refund"])
                 del units[index]["order"]
                 self.map_screen.show_feedback("Order Cancelled")
                 self.refresh_ui()
@@ -206,6 +292,10 @@ class Orders_Screen(GameState):
         for unit in units:
             if unit.get("owner") == self.map_screen.player_country:
                 if "order" in unit:
+                    order = unit["order"]
+                    if isinstance(order, dict) and "refund" in order:
+                        p_data = self.map_screen.nation_data[self.map_screen.player_country]
+                        queries.refund_resources(p_data, order["refund"])
                     del unit["order"]
                     cleared_any = True
                     
@@ -215,6 +305,16 @@ class Orders_Screen(GameState):
 
     def handle_events(self, events):
         for event in events:
+            if event.type == pygame.KEYDOWN and self.renaming_unit_index is not None:
+                if event.key == pygame.K_RETURN:
+                    self.save_unit_name(self.renaming_unit_index)
+                elif event.key == pygame.K_ESCAPE:
+                    self.renaming_unit_index = None
+                    self.refresh_ui()
+                else:
+                    self.rename_text, _ = process_text_input(event, self.rename_text, max_length=20)
+                return
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for rect, idx in self.cancel_rects:
                     if rect.collidepoint(event.pos):
@@ -313,8 +413,8 @@ class Orders_Screen(GameState):
 
             if not target_units: return
 
-            if any(isinstance(u.get("order"), dict) and u["order"].get("type") in ["CONVERT", "DISBAND"] for u in target_units):
-                self.map_screen.show_feedback("Cannot move while converting or disbanding!")
+            if any(isinstance(u.get("order"), dict) and u["order"].get("type") in ["CONVERT", "DISBAND", "REPAIR"] for u in target_units):
+                self.map_screen.show_feedback("Cannot move while converting, disbanding, or repairing!")
                 return
             
             for unit in target_units:
@@ -511,10 +611,21 @@ class Orders_Screen(GameState):
                 hp = int(unit.get("health", 0))
                 m_hp = int(unit.get("max_health", 0))
                 
+                name_txt = unit.get("custom_name", unit.get("type", "Unit"))
+                name_surf = small_font.render(name_txt, True, (255, 255, 255))
+                surface.blit(name_surf, (160, y_pos - 5))
+
                 stats_txt = f"HP: {hp}/{m_hp}"
                 txt_surf = small_font.render(stats_txt, True, (200, 200, 200))
                 
                 surface.blit(txt_surf, (160, y_pos + 15))
+
+                if self.renaming_unit_index == i:
+                    box_rect = pygame.Rect(280 + 315, y_pos, 120, 25)
+                    pygame.draw.rect(surface, (60, 60, 80), box_rect)
+                    pygame.draw.rect(surface, (150, 150, 150), box_rect, 1)
+                    txt = small_font.render(self.rename_text + "|", True, (255, 255, 255))
+                    surface.blit(txt, (box_rect.x + 5, box_rect.y + 4))
 
                 order = unit.get("order", {})
                 path = order.get("path", [])
@@ -592,6 +703,21 @@ class Orders_Screen(GameState):
                             
                         # Use the owner's color to draw the cursor hover with correct alpha logic
                         overlay_renderer.draw_movement_path(surface, self.map_screen, last_node, [hovered["id"]], color=preview_color, alpha=preview_alpha, force_visible=True)
+
+        # --- Resource HUD ---
+        hud_rect = pygame.Rect(0, c.SCREEN_HEIGHT - 60, c.SCREEN_WIDTH, 60)
+        pygame.draw.rect(surface, (30, 30, 30), hud_rect)
+        pygame.draw.line(surface, (100, 100, 100), (0, hud_rect.y), (c.SCREEN_WIDTH, hud_rect.y), 2)
+
+        p_data = self.map_screen.nation_data.get(self.map_screen.player_country, {})
+        res_font = fonts.get("production_hud")
+        resources = [
+            (f"Manpower: {p_data.get('manpower', 0)}", (100, 200, 255)),
+            (f"Materials: {p_data.get('materials', 0)}", (180, 180, 180)),
+            (f"Fuel: {p_data.get('fuel', 0)}", (200, 100, 255))
+        ]
+        for i, (text, color) in enumerate(resources):
+            surface.blit(res_font.render(text, True, color), (50 + (i * 300), hud_rect.y + 15))
 
     def update(self):
         super().update()

@@ -37,7 +37,7 @@ def draw_tooltip(self, surface):
     if self.base_layer == "CORES":
         cores = prov.get("cores", [])
         if cores:
-            core_names = [self.nation_data.get(c, {}).get("name", c) for c in cores]
+            core_names = [self.nation_data.get(core, {}).get("name", core) for core in cores]
             lines.append(f"Cores: {', '.join(core_names)}")
 
     # 2. Add contextual info based on secondary view mode
@@ -47,7 +47,10 @@ def draw_tooltip(self, surface):
         
     elif self.secondary_mode == "UNITS":
         if not is_visible:
-            lines.append("(Units hidden by Fog of War)")
+            if getattr(self, 'partial_visible_provinces', None) is not None and prov["id"] in self.partial_visible_provinces and prov.get("units"):
+                lines.append("- ? (Unknown Units)")
+            else:
+                lines.append("(Units hidden by Fog of War)")
         else:
             units = prov.get("units", [])
             if not units:

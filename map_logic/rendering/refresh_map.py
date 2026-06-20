@@ -423,6 +423,7 @@ def refresh_fog_map(self):
     if not c.USE_FOG_OF_WAR or self.selection_mode:
         self.fog_map = None
         self.visible_provinces = None
+        self.partial_visible_provinces = None
         return
 
     # --- THE FIX: Blanket the entire map in fog during the AI viewing phase in multiplayer ---
@@ -430,22 +431,28 @@ def refresh_fog_map(self):
     is_multiplayer = hasattr(self, 'active_players') and len(self.active_players) > 1
     if self.viewing_ai_moves and is_multiplayer:
         self.visible_provinces = set() # Return an empty set so nothing is visible
+        self.partial_visible_provinces = set()
     else:
         # Dynamically fetch get_visible_provinces from queries
-        self.visible_provinces = queries.get_visible_provinces(self.player_country, self.map_data, self.nation_data)
-
-    if self.visible_provinces is None:
-        self.fog_map = None
-        return
+        vis_result = queries.get_visible_provinces(self)
+        if vis_result[0] is None:
+            self.fog_map = None
+            self.visible_provinces = None
+            self.partial_visible_provinces = None
+            return
+            
+        self.visible_provinces, self.partial_visible_provinces = vis_result
 
     id_array, id_2d = get_id_2d_array(self.id_map)
     lut = np.full(16777216, c.FOG_OF_WAR_ALPHA, dtype=np.uint8)
 
     for color_key, data in self.map_data.items():
+        packed_key = (color_key[0] << 16) | (color_key[1] << 8) | color_key[2]
         if data["id"] in self.visible_provinces:
-            packed_key = (color_key[0] << 16) | (color_key[1] << 8) | color_key[2]
             lut[packed_key] = 0 # 0 Alpha = Completely visible
-
+        elif data["id"] in self.partial_visible_provinces:
+            lut[packed_key] = c.FOG_OF_WAR_ALPHA // 2 # Slightly darker for radius 2
+            
     alpha_2d = lut[id_2d]
 
     fog_surf = pygame.Surface(self.id_map.get_size(), pygame.SRCALPHA)

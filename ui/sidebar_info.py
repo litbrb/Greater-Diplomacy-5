@@ -113,9 +113,14 @@ def draw_sidebar_info(self, surface):
     current_y += 25
 
     if not is_visible:
-        txt = self.small_font.render("(Hidden by Fog of War)", True, (150, 150, 150))
-        surface.blit(txt, (text_x + 5, current_y))
-        current_y += 25
+        if getattr(self, 'partial_visible_provinces', None) is not None and province["id"] in self.partial_visible_provinces and units:
+            txt = self.small_font.render("- ? (Unknown Units)", True, (150, 150, 150))
+            surface.blit(txt, (text_x + 5, current_y))
+            current_y += 25
+        else:
+            txt = self.small_font.render("(Hidden by Fog of War)", True, (150, 150, 150))
+            surface.blit(txt, (text_x + 5, current_y))
+            current_y += 25
     else:
         if not units:
             txt = self.small_font.render("(Empty)", True, (150, 150, 150))

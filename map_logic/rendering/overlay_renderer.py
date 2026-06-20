@@ -24,11 +24,14 @@ def draw_combat_bubbles(self_map, surface):
     for pred in predictions:
         # --- FOG OF WAR COMBAT VISIBILITY CHECK ---
         if self_map.visible_provinces is not None:
+            partial = getattr(self_map, 'partial_visible_provinces', set()) or set()
+            allowed = self_map.visible_provinces.union(partial)
+            
             if pred["type"] == "meeting":
-                if pred["loc"][0] not in self_map.visible_provinces and pred["loc"][1] not in self_map.visible_provinces:
+                if pred["loc"][0] not in allowed and pred["loc"][1] not in allowed:
                     continue
             else:
-                if pred["loc"] not in self_map.visible_provinces:
+                if pred["loc"] not in allowed:
                     continue
     
         friendly_atk = 0
@@ -147,12 +150,13 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
     if len(nodes) < 2: return
     
     # --- FOG OF WAR VISIBILITY CHECK ---
-    visible_provs = map_screen.visible_provinces
     def is_segment_visible(n1, n2):
-        if force_visible or visible_provs is None:
+        if force_visible or map_screen.visible_provinces is None:
             return True
+        partial = getattr(map_screen, 'partial_visible_provinces', set()) or set()
+        allowed = map_screen.visible_provinces.union(partial)
         # If EITHER the start or end of this specific segment is visible, draw the segment!
-        return n1["id"] in visible_provs or n2["id"] in visible_provs
+        return n1["id"] in allowed or n2["id"] in allowed
 
     # Grab the UI symbols (Base scale is tweaked for zoom)
     line_base = symbol_loader.get_symbol("Line", cam.zoom * 1, color)
@@ -306,8 +310,16 @@ def draw_overlay_content(self, surface):
     for color_key, province in self.map_data.items():
         
         # --- FOG OF WAR VISIBILITY CHECK ---
-        if self.visible_provinces is not None and province["id"] not in self.visible_provinces:
-            continue
+        is_vis = True
+        is_partial = False
+        if self.visible_provinces is not None:
+            if province["id"] in self.visible_provinces:
+                is_vis = True
+            elif getattr(self, 'partial_visible_provinces', None) is not None and province["id"] in self.partial_visible_provinces:
+                is_vis = False
+                is_partial = True
+            else:
+                continue # Completely hidden
             
         cx, cy = province["center"]
         
@@ -326,7 +338,7 @@ def draw_overlay_content(self, surface):
                     if province["units"]:
                         draw_unit_icon(self, surface, sx, sy, province)
                         
-                    if queries.is_training_troops(province):
+                    if not is_partial and queries.is_training_troops(province):
                         training_sym = symbol_loader.get_symbol(c.ICON_TRAINING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if training_sym:
                             if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
@@ -336,7 +348,7 @@ def draw_overlay_content(self, surface):
                             surface.blit(training_sym, rect)
 
                     # --- Disband Indicator ---
-                    if any(u.get("order", {}).get("type") == "DISBAND" for u in province.get("units", [])):
+                    if not is_partial and any(u.get("order", {}).get("type") == "DISBAND" for u in province.get("units", [])):
                         disband_sym = symbol_loader.get_symbol(c.ICON_DISBANDING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if disband_sym:
                             if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
@@ -348,6 +360,8 @@ def draw_overlay_content(self, surface):
 
                 # --- ECONOMY VIEW ---
                 elif self.secondary_mode == "ECONOMY":
+                    if is_partial: continue # Hide economy in partial vision
+                    
                     # Draw Buildings
                     buildings = province.get("buildings", []).copy()
                     
@@ -410,6 +424,8 @@ def draw_overlay_content(self, surface):
                 
                 # --- RESOURCES VIEW ---
                 elif self.secondary_mode == "RESOURCES":
+                    if is_partial: continue # Hide resources in partial vision
+                    
                     resources = province.get("resources", {})
                     if isinstance(resources, dict) and resources:
                         offset_x = 0
@@ -432,32 +448,37 @@ def draw_overlay_content(self, surface):
                                 # Shift right so multiple icons stack side-by-side
                                 offset_x += 20 * self.camera.zoom
 
-                # --- OVERLAPPING BUILDING & RECRUITMENT STATUS ICONS ---
-                """if self.secondary_mode in ["UNITS", "ECONOMY"]:
-                    is_training = queries.is_training_troops(province)
-                    is_building = queries.is_constructing_building(province)
-                    
-                    if is_building:
-                        hammer_sym = symbol_loader.get_symbol(c.ICON_CONSTRUCTION, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
-                        if hammer_sym:
-                            if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
-                                hammer_sym = pygame.transform.scale(hammer_sym, (hammer_sym.get_width(), int(hammer_sym.get_height() * self.camera.tilt_factor)))
-                            hammer_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
-                            rect = hammer_sym.get_rect(center=(sx, sy))
-                            surface.blit(hammer_sym, rect)
-
-                    if is_training:
-                        training_sym = symbol_loader.get_symbol(c.ICON_TRAINING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
-                        if training_sym:
-                            if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
-                                training_sym = pygame.transform.scale(training_sym, (training_sym.get_width(), int(training_sym.get_height() * self.camera.tilt_factor)))
-                            training_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
-                            rect = training_sym.get_rect(center=(sx, sy))
-                            surface.blit(training_sym, rect)"""
-
 def draw_unit_icon(self, surface, sx, sy, province):
     units = province.get("units", [])
     if not units:
+        return
+
+    is_partial = False
+    if getattr(self, 'partial_visible_provinces', None) is not None:
+        if province["id"] in self.partial_visible_provinces and province["id"] not in self.visible_provinces:
+            is_partial = True
+
+    if is_partial:
+        internal_w = c.UNIT_BOX_WIDTH
+        internal_h = c.UNIT_BOX_HEIGHT
+        display_scale = 0.25 + (self.camera.zoom * 0.12)
+        scaled_w = max(20, int(internal_w * display_scale))
+        scaled_h = max(8, int(internal_h * display_scale))
+        if self.camera.tilt_factor < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', True):
+            scaled_h = max(8, int(scaled_h * self.camera.tilt_factor))
+        
+        box_surf = pygame.Surface((internal_w, internal_h), pygame.SRCALPHA)
+        box_surf.fill(getattr(c, 'UNIT_BOX_BG_COLOR', (40, 40, 40)))
+        pygame.draw.rect(box_surf, (150, 150, 150), box_surf.get_rect(), 4)
+        
+        font = fonts.get("button")
+        txt = font.render("?", True, getattr(c, 'UNIT_BOX_TEXT_COLOR', (255, 255, 255)))
+        txt_rect = txt.get_rect(center=(internal_w // 2, internal_h // 2))
+        box_surf.blit(txt, txt_rect)
+        
+        final_surf = pygame.transform.smoothscale(box_surf, (scaled_w, scaled_h))
+        rect = final_surf.get_rect(center=(sx, int(sy)))
+        surface.blit(final_surf, rect)
         return
 
     # 1. Group units by owner so we can draw stacked boxes for each nation

@@ -19,10 +19,15 @@ def get_imperial_family(nation, nation_data):
     family.update(nation_data.get(top_dog, {}).get("puppets", []))
     return family
 
-def get_visible_provinces(player_country, map_data, nation_data):
-    """Calculates and returns a set of province IDs currently visible to the player."""
+def get_visible_provinces(map_screen):
+    """Calculates and returns sets of province IDs currently visible and partially visible to the player."""
+    player_country = map_screen.player_country
+    map_data = map_screen.map_data
+    nation_data = map_screen.nation_data
+    id_to_province = map_screen.id_to_province
+
     if player_country in ["Spectator", "Editor", "None"] or player_country not in nation_data:
-        return None # Returns None to signify "Full Visibility / Ignore Fog"
+        return None, None # Returns None to signify "Full Visibility / Ignore Fog"
         
     friendly_nations = set()
     friendly_nations.update(get_imperial_family(player_country, nation_data))
@@ -32,22 +37,73 @@ def get_visible_provinces(player_country, map_data, nation_data):
         friendly_nations.update(get_faction_members(player_faction, nation_data))
         
     visible_set = set()
+    partial_set = set()
+    
+    is_tactical = getattr(map_screen, 'tactical_mode', False) and getattr(map_screen, 'player_unit', None)
+    tactical_unit = getattr(map_screen, 'player_unit', None) if is_tactical else None
+    
+    friendly_unit_locations = []
+    tactical_location = None
     
     for prov in map_data.values():
         owner = prov.get("owner", "")
         
-        has_friendly_unit = False
+        # In general, owning a tile only makes that specific tile visible
+        if owner in friendly_nations:
+            visible_set.add(prov["id"])
+            
         for u in prov.get("units", []):
             if u.get("owner") in friendly_nations:
-                has_friendly_unit = True
-                break
+                friendly_unit_locations.append(prov)
+            if is_tactical and u is tactical_unit:
+                tactical_location = prov
                 
-        # If we own it, or a friendly unit is on it, it (and its neighbors) are visible
-        if owner in friendly_nations or has_friendly_unit:
+    if is_tactical:
+        # Override visibility for tactical mode entirely
+        visible_set.clear()
+        partial_set.clear()
+        if tactical_location:
+            # 1. Radius around unit
+            visible_set.add(tactical_location["id"])
+            for n1 in tactical_location.get("neighbors", []):
+                visible_set.add(n1)
+                n1_prov = id_to_province.get(n1)
+                if n1_prov:
+                    for n2 in n1_prov.get("neighbors", []):
+                        partial_set.add(n2)
+                        
+            # 2. Contiguous landmass check
+            if tactical_location.get("terrain") not in c.WATER_TERRAINS:
+                queue = [tactical_location["id"]]
+                visited = set([tactical_location["id"]])
+                
+                while queue:
+                    curr_id = queue.pop(0)
+                    visible_set.add(curr_id)
+                    curr_prov = id_to_province.get(curr_id)
+                    if curr_prov:
+                        for n_id in curr_prov.get("neighbors", []):
+                            if n_id not in visited:
+                                n_prov = id_to_province.get(n_id)
+                                # Must be owned by friendly nations and be land
+                                if n_prov and n_prov.get("terrain") not in c.WATER_TERRAINS and n_prov.get("owner") in friendly_nations:
+                                    visited.add(n_id)
+                                    queue.append(n_id)
+    else:
+        # Standard mode radius parsing
+        for prov in friendly_unit_locations:
             visible_set.add(prov["id"])
-            visible_set.update(prov.get("neighbors", []))
-                
-    return visible_set
+            for n1 in prov.get("neighbors", []):
+                visible_set.add(n1)
+                n1_prov = id_to_province.get(n1)
+                if n1_prov:
+                    for n2 in n1_prov.get("neighbors", []):
+                        partial_set.add(n2)
+                        
+    # Filter out anything from partial that is already in the closer full visibility group
+    partial_set = partial_set - visible_set
+    
+    return visible_set, partial_set
 
 # ==========================================
 # UNIFIED CACHE MANAGER

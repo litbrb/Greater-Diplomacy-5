@@ -735,6 +735,8 @@ def is_constructing_building(province):
 # ECONOMY QUERIES
 # ==========================================
 
+_ECON_RESOURCES = ["manpower", "materials", "fuel"]
+
 def get_factory_count(nation, map_data):
     """Counts the total number of factories a nation has (built and in-progress)."""
     count = 0
@@ -761,9 +763,8 @@ def get_building_cost(b_name, nation, map_data, bldg_lib):
 def _modify_resources(nation_data_block, costs_dict, is_refund=False):
     """Unified helper to add or subtract resources from a nation."""
     modifier = 1 if is_refund else -1
-    for res in ["materials", "manpower", "fuel"]:
-        cost_key = f"cost_{res}"
-        new_val = nation_data_block.get(res, 0) + (costs_dict.get(cost_key, 0) * modifier)
+    for res in _ECON_RESOURCES:
+        new_val = nation_data_block.get(res, 0) + (costs_dict.get(f"cost_{res}", 0) * modifier)
         nation_data_block[res] = max(0, new_val) if not is_refund else new_val
 
 def refund_resources(nation_data_block, costs_dict): _modify_resources(nation_data_block, costs_dict, is_refund=True)
@@ -771,35 +772,23 @@ def deduct_resources(nation_data_block, costs_dict): _modify_resources(nation_da
 
 def can_afford(nation_data_block, costs_dict):
     """Returns True if the nation has enough resources to cover the costs."""
-    return (nation_data_block.get("materials", 0) >= costs_dict.get("cost_materials", 0) and
-            nation_data_block.get("manpower", 0) >= costs_dict.get("cost_manpower", 0) and
-            nation_data_block.get("fuel", 0) >= costs_dict.get("cost_fuel", 0))
+    return all(nation_data_block.get(res, 0) >= costs_dict.get(f"cost_{res}", 0) for res in _ECON_RESOURCES)
 
 def execute_trade_transfer(proposer_data, target_data, params):
     """Executes a trade transfer between two nations, exchanging escrowed and requested resources."""
-    p_mats = params.get("give_materials", 0)
-    p_fuel = params.get("give_fuel", 0)
-    t_mats = params.get("take_materials", 0)
-    t_fuel = params.get("take_fuel", 0)
-
-    # Target gains proposer's escrow
-    target_data["materials"] = target_data.get("materials", 0) + p_mats
-    target_data["fuel"] = target_data.get("fuel", 0) + p_fuel
-
-    # Target pays their side
-    actual_t_mats = min(t_mats, target_data.get("materials", 0))
-    target_data["materials"] -= actual_t_mats
-    actual_t_fuel = min(t_fuel, target_data.get("fuel", 0))
-    target_data["fuel"] -= actual_t_fuel
-
-    # Proposer receives their side
-    proposer_data["materials"] = proposer_data.get("materials", 0) + actual_t_mats
-    proposer_data["fuel"] = proposer_data.get("fuel", 0) + actual_t_fuel
+    for res in ["materials", "fuel"]:
+        # Target gains proposer's escrow
+        target_data[res] = target_data.get(res, 0) + params.get(f"give_{res}", 0)
+        # Target pays their side
+        actual_take = min(params.get(f"take_{res}", 0), target_data.get(res, 0))
+        target_data[res] -= actual_take
+        # Proposer receives their side
+        proposer_data[res] = proposer_data.get(res, 0) + actual_take
 
 def cancel_trade_escrow(proposer_data, params):
     """Refunds escrowed resources from a pending trade proposal."""
-    proposer_data["materials"] = proposer_data.get("materials", 0) + params.get("give_materials", 0)
-    proposer_data["fuel"] = proposer_data.get("fuel", 0) + params.get("give_fuel", 0)
+    for res in ["materials", "fuel"]:
+        proposer_data[res] = proposer_data.get(res, 0) + params.get(f"give_{res}", 0)
 
 def calculate_all_economies(map_data, nation_data):
     """Standardized economy calculator. Single source of truth for UI and Turn Processor."""
@@ -809,30 +798,24 @@ def calculate_all_economies(map_data, nation_data):
     # Initialize data structure for all active nations
     econ_data = {}
     for name, n_data in list(nation_data.items()):
-        # Fetch Bergius bonus
-        bergius_bonus = 0
-        research_data = n_data.get("research", {})
-        if research_data.get("bergius_process", 0) > 0:
-            bergius_bonus = c.BERGIUS_FUEL_BONUS
+        res_data = n_data.get("research", {})
+        bergius_bonus = c.BERGIUS_FUEL_BONUS if res_data.get("bergius_process", 0) > 0 else 0
+        manpower_bonus = res_data.get("general_recruitment", 0) * c.GENERAL_RECRUITMENT_BONUS
 
-        # Fetch General Recruitment bonus
-        gen_rec_lvl = research_data.get("general_recruitment", 0)
-        manpower_bonus = gen_rec_lvl * c.GENERAL_RECRUITMENT_BONUS
-
-        econ_data[name] = {
-            "dynamic_yields": {
-                "manpower": c.BASE_YIELDS["manpower"] + manpower_bonus,
-                "materials": c.BASE_YIELDS["materials"],
-                "fuel": c.BASE_YIELDS["fuel"] 
-            },
-            "breakdown": {
-                "manpower": {"base": c.COUNTRY_BASE_YIELDS["manpower"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0, "siphon": 0, "siphon_income": 0},
-                "materials": {"base": c.COUNTRY_BASE_YIELDS["materials"], "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0, "siphon": 0, "siphon_income": 0},
-                "fuel": {"base": c.COUNTRY_BASE_YIELDS["fuel"] + bergius_bonus, "core": 0, "non_core": 0, "buildings": 0, "resources": 0, "conversion": 0, "conscription": 0, "siphon": 0, "siphon_income": 0}
-            },
-            "upkeep": {"manpower": 0, "materials": 0, "fuel": 0},
-            "total_inc": {"manpower": 0, "materials": 0, "fuel": 0}
+        dyn_yields = {
+            "manpower": c.BASE_YIELDS["manpower"] + manpower_bonus,
+            "materials": c.BASE_YIELDS["materials"],
+            "fuel": c.BASE_YIELDS["fuel"] 
         }
+        
+        breakdown = {
+            res: {"base": c.COUNTRY_BASE_YIELDS[res] + (bergius_bonus if res == "fuel" else 0), 
+                  "core": 0, "non_core": 0, "buildings": 0, "resources": 0, 
+                  "conversion": 0, "conscription": 0, "siphon": 0, "siphon_income": 0}
+            for res in _ECON_RESOURCES
+        }
+
+        econ_data[name] = {"dynamic_yields": dyn_yields, "breakdown": breakdown, "upkeep": {r: 0 for r in _ECON_RESOURCES}, "total_inc": {r: 0 for r in _ECON_RESOURCES}}
 
     # Single efficient pass over the map
     for province in map_data.values():
@@ -841,46 +824,33 @@ def calculate_all_economies(map_data, nation_data):
         # --- INCOME LOGIC ---
         if owner and owner in econ_data and owner not in c.UNPLAYABLE_NATIONS:
             is_core = owner in province.get("cores", [])
-
-            mat_mult = 1.0 if is_core else c.NON_CORE_MULTIPLIERS["materials"]
-            fuel_mult = 1.0 if is_core else c.NON_CORE_MULTIPLIERS["fuel"]
-            man_mult = 1.0 if is_core else c.NON_CORE_MULTIPLIERS["manpower"]
-
             cat = "core" if is_core else "non_core"
             bd = econ_data[owner]["breakdown"]
             dyn_yields = econ_data[owner]["dynamic_yields"]
 
-            # Use the dynamic yields per nation instead of the global constants
-            bd["manpower"][cat] += man_mult * dyn_yields["manpower"]
-            bd["materials"][cat] += mat_mult * dyn_yields["materials"]
-            bd["fuel"][cat] += fuel_mult * dyn_yields["fuel"]
+            # Base tile yields based on ownership tier
+            for res in _ECON_RESOURCES:
+                mult = 1.0 if is_core else c.NON_CORE_MULTIPLIERS[res]
+                bd[res][cat] += mult * dyn_yields[res]
 
             # Natural Resources
             res = province.get("resources", {})
             if isinstance(res, dict):
-                bd["materials"]["resources"] += int(res.get("Iron", 0)) * mat_mult
-                bd["fuel"]["resources"] += (int(res.get("Coal", 0)) + int(res.get("Oil", 0))) * fuel_mult
+                bd["materials"]["resources"] += int(res.get("Iron", 0)) * (1.0 if is_core else c.NON_CORE_MULTIPLIERS["materials"])
+                bd["fuel"]["resources"] += (int(res.get("Coal", 0)) + int(res.get("Oil", 0))) * (1.0 if is_core else c.NON_CORE_MULTIPLIERS["fuel"])
 
             # Buildings
             for b_name in province.get("buildings", []):
                 stats = bldg_lib.get(b_name, {})
-                bd["manpower"]["buildings"] += stats.get("prod_manpower", 0) 
-                bd["materials"]["buildings"] += stats.get("prod_materials", 0) 
-                bd["fuel"]["buildings"] += stats.get("prod_fuel", 0) 
+                for res in _ECON_RESOURCES:
+                    bd[res]["buildings"] += stats.get(f"prod_{res}", 0) 
 
             # Basic Factory transitional construction yields
             for q in province.get("building_queue", []):
                 if q.get("item_name") == "Basic Factory":
                     rem = q.get("turns_remaining", c.BASIC_FACTORY_TURNS)
-                    
-                    if rem >= 17: yield_mat = 80
-                    elif rem >= 13: yield_mat = 160
-                    elif rem >= 9: yield_mat = 240
-                    elif rem >= 5: yield_mat = 320
-                    else: yield_mat = 400
-                    
-                    if owner in econ_data:
-                        econ_data[owner]["breakdown"]["materials"]["buildings"] += yield_mat
+                    yield_mat = 400 if rem < 5 else (320 if rem < 9 else (240 if rem < 13 else (160 if rem < 17 else 80)))
+                    bd["materials"]["buildings"] += yield_mat
 
         # --- UPKEEP LOGIC ---
         for unit in province.get("units", []):
@@ -888,68 +858,41 @@ def calculate_all_economies(map_data, nation_data):
             if u_owner in econ_data:
                 # FETCH ORIGINAL TYPE SO WE KEEP CHARGING UPKEEP DURING TRANSIT
                 u_type = unit.get("original_type", unit.get("type"))
-                stats = unit_lib.get(u_type, {})
-                upkeep = get_unit_upkeep(stats)
-                econ_data[u_owner]["upkeep"]["manpower"] += upkeep["manpower"]
-                econ_data[u_owner]["upkeep"]["materials"] += upkeep["materials"]
-                econ_data[u_owner]["upkeep"]["fuel"] += upkeep["fuel"]
+                upkeep = get_unit_upkeep(unit_lib.get(u_type, {}))
+                for res in _ECON_RESOURCES:
+                    econ_data[u_owner]["upkeep"][res] += upkeep[res]
+
+    # Helper for converting one resource to another via the dynamic sliders
+    def _process_conversion(data, src, tgt, tag, rate, ratio):
+        raw_inc = sum(data["breakdown"][src].values())
+        divisor = max(1, int(1 / ratio) if ratio > 0 else 1)
+        if rate > 0 and raw_inc >= divisor:
+            convert_amount = int(raw_inc * rate)
+            convert_amount = (convert_amount // divisor) * divisor
+            data["breakdown"][src][tag] = -convert_amount
+            data["breakdown"][tgt][tag] = int(convert_amount * ratio)
 
     # Finalize totals and calculate conversions
     for name, data in econ_data.items():
         n_data = nation_data.get(name, {})
-        conv_rate = min(n_data.get("mat_to_fuel_slider", 0.0), get_max_fuel_conversion(n_data))
-        conscript_rate = n_data.get("conscription_slider", 1.0)
         
-        # Calculate raw material income BEFORE conscription so fuel strictly ignores it
-        raw_inc_mat = sum(data["breakdown"]["materials"].values())
-        raw_inc_man = sum(data["breakdown"]["manpower"].values())
+        # Conscription (1.0 = keep all, 0.0 = convert all)
+        _process_conversion(data, "manpower", "materials", "conscription", 1.0 - n_data.get("conscription_slider", 1.0), c.CONSCRIPTION_RATIO)
+        # Fuel Conversion
+        _process_conversion(data, "materials", "fuel", "conversion", min(n_data.get("mat_to_fuel_slider", 0.0), get_max_fuel_conversion(n_data)), c.FUEL_CONVERSION_RATIO)
 
-        # Conscription is based on Gross Manpower Income (1.0 = keep all, 0.0 = convert all)
-        man_ratio = c.CONSCRIPTION_RATIO
-        man_divisor = max(1, int(1 / man_ratio) if man_ratio > 0 else 1)
-        
-        if conscript_rate < 1.0 and raw_inc_man >= man_divisor:
-            convert_man_amount = int(raw_inc_man * (1.0 - conscript_rate))
-            convert_man_amount = (convert_man_amount // man_divisor) * man_divisor
-            mat_gained = int(convert_man_amount * man_ratio)
-            
-            data["breakdown"]["manpower"]["conscription"] = -convert_man_amount
-            data["breakdown"]["materials"]["conscription"] = mat_gained
-            
-        # Conversion is based on Gross Income, not Net Income (Expenses are ignored)
-        fuel_ratio = c.FUEL_CONVERSION_RATIO
-        fuel_divisor = max(1, int(1 / fuel_ratio) if fuel_ratio > 0 else 1)
-        
-        if conv_rate > 0 and raw_inc_mat >= fuel_divisor:
-            convert_amount = int(raw_inc_mat * conv_rate)
-            convert_amount = (convert_amount // fuel_divisor) * fuel_divisor
-            fuel_gained = int(convert_amount * fuel_ratio)
-            
-            # Treat materials consumed as an expense, and fuel generated as an income
-            data["breakdown"]["materials"]["conversion"] = -convert_amount
-            data["breakdown"]["fuel"]["conversion"] = fuel_gained
+        for res in _ECON_RESOURCES:
+            data["total_inc"][res] = sum(data["breakdown"][res].values())
 
-        data["total_inc"]["manpower"] = sum(data["breakdown"]["manpower"].values())
-        data["total_inc"]["materials"] = sum(data["breakdown"]["materials"].values())
-        data["total_inc"]["fuel"] = sum(data["breakdown"]["fuel"].values())
-
-    # --- PUPPET SIPHONING LOGIC ---
-    for name, data in econ_data.items():
-        n_data = nation_data.get(name, {})
+        # --- PUPPET SIPHONING LOGIC ---
         master = n_data.get("master", "")
-        
         if master and master in econ_data and n_data.get("puppet_type") == c.PUPPET_TYPE_INTEGRATED:
             siphon_rates = n_data.setdefault("siphon_rates", {"manpower": 0.0, "materials": 0.0, "fuel": 0.0})
             
-            for res in ["manpower", "materials", "fuel"]:
-                rate = min(c.MAX_PUPPET_SIPHON, siphon_rates.get(res, 0.0))
-                siphon_amt = int(max(0, data["total_inc"][res]) * rate)
-                
-                # Apply transfers
+            for res in _ECON_RESOURCES:
+                siphon_amt = int(max(0, data["total_inc"][res]) * min(c.MAX_PUPPET_SIPHON, siphon_rates.get(res, 0.0)))
                 data["total_inc"][res] -= siphon_amt
                 econ_data[master]["total_inc"][res] += siphon_amt
-                
-                # Tag it in breakdowns for the UI
                 data["breakdown"][res]["siphon"] = -siphon_amt
                 econ_data[master]["breakdown"][res]["siphon_income"] = econ_data[master]["breakdown"][res].get("siphon_income", 0) + siphon_amt
 
@@ -959,61 +902,45 @@ def get_resource_hud_strings(map_screen, include_net=False):
     """Generates unified resource tracking strings and colors for all UI HUDs."""
     is_tactical = getattr(map_screen, 'tactical_mode', False) and getattr(map_screen, 'player_unit', None)
     
-    man_color = (100, 200, 255)
-    mat_color = (180, 180, 180)
-    fuel_color = (200, 100, 255)
+    res_order = [
+        ("manpower", "Manpower", (100, 200, 255), int(map_screen.player_manpower)),
+        ("materials", "Materials", (180, 180, 180), int(map_screen.player_materials)),
+        ("fuel", "Fuel", (200, 100, 255), int(map_screen.player_fuel))
+    ]
     
-    p_man = int(map_screen.player_manpower)
-    p_mat = int(map_screen.player_materials)
-    p_fuel = int(map_screen.player_fuel)
-    
-    str_man = str_mat = str_fuel = ""
-    
+    total_inc = {r: 0 for r in _ECON_RESOURCES}
+    total_upkeep = {r: 0 for r in _ECON_RESOURCES}
+
     if include_net:
-        def fmt_net(inc, exp):
-            net = int(inc - exp)
-            return f"+{net}" if net >= 0 else str(net)
-            
         if is_tactical:
             u_type = map_screen.player_unit.get("original_type", map_screen.player_unit.get("type"))
             stats = get_unit_library().get(u_type, {})
-            
             total_inc = get_unit_upkeep(stats)
-            total_upkeep = {"manpower": 0, "materials": 0, "fuel": 0}
         else:
             if not hasattr(map_screen, 'econ_cache_time') or pygame.time.get_ticks() - map_screen.econ_cache_time > 1000:
                 map_screen.econ_cache = get_economy_projections(map_screen.player_country, map_screen.map_data, map_screen.nation_data)
                 map_screen.econ_cache_time = pygame.time.get_ticks()
                 
-            cached_data = map_screen.econ_cache
-            if cached_data and len(cached_data) == 3:
-                total_inc, total_upkeep, _ = cached_data
-            else:
-                total_inc = {"manpower": 0, "materials": 0, "fuel": 0}
-                total_upkeep = {"manpower": 0, "materials": 0, "fuel": 0}
+            cached = map_screen.econ_cache
+            if cached and len(cached) == 3:
+                total_inc, total_upkeep, _ = cached
 
-        str_man = f" ({fmt_net(total_inc['manpower'], total_upkeep['manpower'])})"
-        str_mat = f" ({fmt_net(total_inc['materials'], total_upkeep['materials'])})"
-        str_fuel = f" ({fmt_net(total_inc['fuel'], total_upkeep['fuel'])})"
+    def fmt_net(inc, exp):
+        net = int(inc - exp)
+        return f" (+{net})" if net >= 0 else f" ({net})"
 
-    if is_tactical:
-        u_type = map_screen.player_unit.get("original_type", map_screen.player_unit.get("type"))
-        stats = get_unit_library().get(u_type, {})
-        max_man = c.TACTICAL_MAX_MANPOWER
-        max_mat = stats.get("cost_materials", 9999)
-        max_fuel = stats.get("cost_fuel", 0)
+    hud_strings = []
+    for res_key, name, color, p_val in res_order:
+        net_str = fmt_net(total_inc.get(res_key, 0), total_upkeep.get(res_key, 0)) if include_net else ""
         
-        return [
-            (f"Manpower: {p_man}/{int(max_man)}{str_man}", man_color),
-            (f"Materials: {p_mat}/{int(max_mat)}{str_mat}", mat_color),
-            (f"Fuel: {p_fuel}/{int(max_fuel)}{str_fuel}", fuel_color)
-        ]
-    else:
-        return [
-            (f"Manpower: {p_man}{str_man}", man_color),
-            (f"Materials: {p_mat}{str_mat}", mat_color),
-            (f"Fuel: {p_fuel}{str_fuel}", fuel_color)
-        ]
+        if is_tactical:
+            stats = get_unit_library().get(map_screen.player_unit.get("original_type", map_screen.player_unit.get("type")), {})
+            max_val = c.TACTICAL_MAX_MANPOWER if res_key == "manpower" else stats.get(f"cost_{res_key}", 9999 if res_key == "materials" else 0)
+            hud_strings.append((f"{name}: {p_val}/{int(max_val)}{net_str}", color))
+        else:
+            hud_strings.append((f"{name}: {p_val}{net_str}", color))
+            
+    return hud_strings
 
 def get_economy_projections(target_nation, map_data, nation_data):
     """Pulls a specific nation's UI data from the unified calculator."""
@@ -1022,9 +949,9 @@ def get_economy_projections(target_nation, map_data, nation_data):
     
     if not p_econ:
         return (
-            {"manpower": 0, "materials": 0, "fuel": 0},
-            {"manpower": 0, "materials": 0, "fuel": 0},
-            {"manpower": {}, "materials": {}, "fuel": {}}
+            {r: 0 for r in _ECON_RESOURCES},
+            {r: 0 for r in _ECON_RESOURCES},
+            {r: {} for r in _ECON_RESOURCES}
         )
         
     return p_econ.get("total_inc"), p_econ.get("upkeep"), p_econ.get("breakdown")
@@ -2103,7 +2030,6 @@ def get_ordered_unit_groups(unit_library):
 def get_projected_owner(prov, peace_type, proposer, target, nation_data):
     """Simulates the execution of a peace treaty to find who gets what territory."""
     curr = prov.get("owner")
-    proj = curr
 
     def was_original_owner(prov, nation):
         faction = nation_data.get(nation, {}).get("faction", "")
@@ -2116,14 +2042,13 @@ def get_projected_owner(prov, peace_type, proposer, target, nation_data):
         frozen_ids = [int(x.strip()) for x in match.group(1).split(",") if x.strip().isdigit()]
 
     if peace_type.startswith(c.PEACE_WHITE_PEACE):
-        pass
-    elif peace_type.startswith(c.PEACE_DEMAND_CLAIMS):
-        claims = nation_data.get(proposer, {}).get("claims", [])
-        if (prov["id"] in frozen_ids and curr == target) or (curr == target and (prov["id"] in claims or was_original_owner(prov, proposer))):
-            proj = proposer
-    elif peace_type.startswith(c.PEACE_SURRENDER):
-        claims = nation_data.get(target, {}).get("claims", [])
-        if (prov["id"] in frozen_ids and curr == proposer) or (curr == proposer and (prov["id"] in claims or was_original_owner(prov, target))):
-            proj = target
-            
-    return proj
+        return curr
+
+    # Determine winner and loser based on treaty type to streamline core transfer simulation
+    winner, loser = (proposer, target) if peace_type.startswith(c.PEACE_DEMAND_CLAIMS) else (target, proposer)
+    claims = nation_data.get(winner, {}).get("claims", [])
+    
+    if (prov["id"] in frozen_ids and curr == loser) or (curr == loser and (prov["id"] in claims or was_original_owner(prov, winner))):
+        return winner
+        
+    return curr

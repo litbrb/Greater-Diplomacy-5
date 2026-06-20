@@ -139,8 +139,7 @@ class New_Game(GameState):
         else:
             title_text = "MAP EDITOR SCENARIOS"
             
-        title = fonts.get("heading1").render(title_text, True, (255, 255, 255))
-        surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
+        ui_bars.draw_centered_title(surface, title_text, 40)
 
         if self.sub_state != "CATEGORY":
             # --- Draw Scrollbar ---

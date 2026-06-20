@@ -132,15 +132,11 @@ class Load_Game(GameState):
 
         # --- Draw Delete Confirmation Popup ---
         if self.deleting_folder:
-            # Dim the background
-            overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-            overlay.fill((0, 0, 0, 180))
-            surface.blit(overlay, (0, 0))
+            ui_bars.draw_fullscreen_overlay(surface, 180)
             
             # Draw Popup Box
             pop_rect = pygame.Rect(550, 10, 500, 100)
-            pygame.draw.rect(surface, (60, 20, 20), pop_rect)
-            pygame.draw.rect(surface, (255, 50, 50), pop_rect, 3)
+            ui_bars.draw_modal_box(surface, pop_rect, bg_color=(60, 20, 20), border_color=(255, 50, 50), border_width=3)
             
             font = fonts.get("heading2")
             msg = font.render(f"Delete '{self.deleting_folder}'?", True, (255, 255, 255))

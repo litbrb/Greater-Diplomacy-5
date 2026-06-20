@@ -214,24 +214,11 @@ def draw_owner_portrait(self, surface):
     surface.blit(portrait_surf, (start_x, start_y))
     pygame.draw.rect(surface, (200, 200, 200), (start_x, start_y, portrait_dim, portrait_dim), 2)
 
-    # Render Text
-    font = fonts.get("heading2")
-    small_font = fonts.get("normal")
-
-    name_surf = font.render(leader_name, True, (255, 255, 255))
-    name_shadow = font.render(leader_name, True, (0, 0, 0))
-
     # Shift the text downwards cleanly based on whichever dimension we just used
     text_x = start_x
     text_y = start_y + portrait_dim - 5
     
-    # Blit Name
-    surface.blit(name_shadow, (text_x + 1, text_y + 11))
-    surface.blit(name_surf, (text_x, text_y + 10))
-
-    # Blit Title (Only if it exists to save cycles drawing empty strings)
+    # Blit Name and Title using the unified shadow helper
+    fonts.draw_text_with_shadow(surface, leader_name, text_x, text_y + 10, "heading2")
     if has_title:
-        title_surf = small_font.render(leader_title, True, (200, 200, 200))
-        title_shadow = small_font.render(leader_title, True, (0, 0, 0))
-        surface.blit(title_shadow, (text_x + 1, text_y + 41))
-        surface.blit(title_surf, (text_x, text_y + 40))
+        fonts.draw_text_with_shadow(surface, leader_title, text_x, text_y + 40, "normal", text_color=(200, 200, 200))

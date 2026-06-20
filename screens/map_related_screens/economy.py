@@ -1,6 +1,7 @@
 import pygame
 from gameState import GameState
 import data.constants as c
+from ui.bars import ui_bars
 from ui_elements import Button, Slider
 from map_logic.rendering.font_manager import fonts
 from data import queries
@@ -56,11 +57,9 @@ class Economy_Screen(GameState):
     def additional_draw(self, surface):
         if not self.map_screen: return
         
-        font_title = fonts.get("title")
         is_tactical = getattr(self.map_screen, 'tactical_mode', False)
         title_text = "Tactical Unit Economy" if is_tactical else "National Economy"
-        title = font_title.render(title_text, True, (255, 255, 255))
-        surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
+        ui_bars.draw_centered_title(surface, title_text, 40)
         
         p_data = self.map_screen.nation_data[self.map_screen.player_country]
 

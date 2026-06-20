@@ -34,6 +34,31 @@ def draw_standard_scrollbar(surface, scroll_y, max_scroll, track_x, track_y, vie
     
     return track_rect, handle_rect
 
+def draw_fullscreen_overlay(surface, alpha=180):
+    """Draws a semi-transparent black overlay across the entire screen."""
+    overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, alpha))
+    surface.blit(overlay, (0, 0))
+
+def draw_modal_box(surface, rect, bg_color=(40, 40, 50), border_color=(100, 150, 255), border_width=2):
+    """Draws a standardized modal background box with a border."""
+    if len(bg_color) == 4:
+        panel_surf = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+        panel_surf.fill(bg_color)
+        surface.blit(panel_surf, rect.topleft)
+    else:
+        pygame.draw.rect(surface, bg_color, rect)
+    pygame.draw.rect(surface, border_color, rect, border_width)
+
+def draw_centered_title(surface, text, y_pos, font_preset="heading1", color=(255, 255, 255)):
+    """Draws centered title text to standardize headers."""
+    from map_logic.rendering.font_manager import fonts
+    title_font = fonts.get(font_preset)
+    title_surf = title_font.render(text, True, color)
+    rect = title_surf.get_rect(topleft=(c.SCREEN_WIDTH // 2 - title_surf.get_width() // 2, y_pos))
+    surface.blit(title_surf, rect)
+    return rect
+
 # ==========================================
 # CACHE & DRAWING
 # ==========================================

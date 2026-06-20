@@ -269,8 +269,7 @@ class Select_Base_Map(GameState):
         surface.fill(self.bg_color)
         
         title_text = "EDIT EXISTING MAP" if self.sub_state == "CUSTOM_MAPS" else "CREATE NEW MAP FROM BASE"
-        title = fonts.get("heading1").render(title_text, True, (255, 255, 255))
-        surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
+        ui_bars.draw_centered_title(surface, title_text, 40)
 
         if self.sub_state == "CUSTOM_MAPS":
             # Draw Scrollbar
@@ -298,14 +297,11 @@ class Select_Base_Map(GameState):
 
             # Delete Confirmation
             if self.deleting_scenario:
-                overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-                overlay.fill((0, 0, 0, 180))
-                surface.blit(overlay, (0, 0))
+                ui_bars.draw_fullscreen_overlay(surface, 180)
                 
                 pop_rect = pygame.Rect(0, 0, 500, 200)
                 pop_rect.center = (c.SCREEN_WIDTH // 2, c.SCREEN_HEIGHT // 2)
-                pygame.draw.rect(surface, (60, 20, 20), pop_rect)
-                pygame.draw.rect(surface, (255, 50, 50), pop_rect, 3)
+                ui_bars.draw_modal_box(surface, pop_rect, bg_color=(60, 20, 20), border_color=(255, 50, 50), border_width=3)
                 
                 font = fonts.get("heading2")
                 msg = font.render(f"Delete '{self.deleting_scenario}'?", True, (255, 255, 255))

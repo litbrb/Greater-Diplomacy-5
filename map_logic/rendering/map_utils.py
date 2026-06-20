@@ -37,3 +37,11 @@ def create_glow_surface(id_map, province_color_id):
                 cropped_glow.set_at((x, y), (255, 255, 255, 80))
                 
     return cropped_glow, rect
+
+def apply_tilt(surface, tilt_factor, condition_check=True):
+    """Dynamically applies camera tilt compression to a surface."""
+    if tilt_factor < 0.99 and condition_check:
+        new_w = surface.get_width()
+        new_h = max(1, int(surface.get_height() * tilt_factor))
+        return pygame.transform.scale(surface, (new_w, new_h))
+    return surface

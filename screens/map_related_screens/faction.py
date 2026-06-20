@@ -1,6 +1,7 @@
 import pygame
 from gameState import GameState
 import data.constants as c
+from ui.bars import ui_bars
 from ui_elements import Button, process_text_input
 from map_logic.rendering.font_manager import fonts
 from data import queries
@@ -142,14 +143,12 @@ class Faction_Screen(GameState):
         font_normal = fonts.get("normal")
 
         if not my_faction:
-            txt = font_title.render("No Faction", True, (150, 150, 150))
-            surface.blit(txt, (c.SCREEN_WIDTH // 2 - txt.get_width() // 2, 100))
+            ui_bars.draw_centered_title(surface, "No Faction", 100, font_preset="title", color=(150, 150, 150))
             return
 
         if self.is_renaming:
             title_rect = pygame.Rect(c.SCREEN_WIDTH // 2 - 200, 30, 400, 50)
-            pygame.draw.rect(surface, (100, 100, 100), title_rect)
-            pygame.draw.rect(surface, (255, 255, 255), title_rect, 2)
+            ui_bars.draw_modal_box(surface, title_rect, bg_color=(100, 100, 100), border_color=(255, 255, 255), border_width=2)
             
             txt_surf = font_title.render(self.new_faction_name + "|", True, (255, 255, 255))
             surface.blit(txt_surf, (title_rect.x + 10, title_rect.y + 10))
@@ -157,9 +156,8 @@ class Faction_Screen(GameState):
             instr = font_normal.render("Enter: Save | Esc: Cancel", True, (200, 200, 200))
             surface.blit(instr, (c.SCREEN_WIDTH // 2 - instr.get_width() // 2, 90))
         else:
-            title = font_title.render(f"Faction: {my_faction}", True, (255, 255, 255))
-            surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
-
+            ui_bars.draw_centered_title(surface, f"Faction: {my_faction}", 40, font_preset="title")
+            
         members = queries.get_faction_members(my_faction, nation_data)
         leader = queries.get_faction_leader(my_faction, nation_data)
 
@@ -216,9 +214,7 @@ class Faction_Territories_Screen(GameState):
         self.map_screen.base_layer = prev_layer
         self.map_screen.active_map = prev_active
         
-        font = fonts.get("heading1")
-        title = font.render("Faction Territories (Pre-War Borders)", True, (255, 255, 255))
-        surface.blit(title, (c.SCREEN_WIDTH//2 - title.get_width()//2, c.TOP_BAR_UI_CENTER_Y))
+        ui_bars.draw_centered_title(surface, "Faction Territories (Pre-War Borders)", c.TOP_BAR_UI_CENTER_Y)
 
     def update(self):
         super().update()

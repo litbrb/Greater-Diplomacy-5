@@ -284,14 +284,11 @@ def draw_map_screen(self, surface):
         
     # --- LAYER 7: EXIT CONFIRMATION MODAL ---
     if self.show_exit_confirmation:
-        overlay = pygame.Surface((surface.get_width(), surface.get_height()), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 180))
-        surface.blit(overlay, (0, 0))
+        ui_bars.draw_fullscreen_overlay(surface, 180)
 
         box_rect = pygame.Rect(0, 0, 450, 200)
         box_rect.center = (surface.get_width() // 2, surface.get_height() // 2)
-        pygame.draw.rect(surface, (40, 40, 40), box_rect)
-        pygame.draw.rect(surface, (200, 200, 200), box_rect, 2)
+        ui_bars.draw_modal_box(surface, box_rect, bg_color=(40, 40, 40), border_color=(200, 200, 200), border_width=2)
 
         font = fonts.get("heading2")
         msg = "Quit to Main Menu?"

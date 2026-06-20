@@ -67,5 +67,14 @@ class FontManager:
                 
         return self.cache[preset_name]
 
+    def draw_text_with_shadow(self, surface, text, x, y, preset_name="normal", text_color=(255, 255, 255), shadow_color=(0, 0, 0), offset=1):
+        """Helper to draw text with a drop shadow."""
+        font = self.get(preset_name)
+        shadow_surf = font.render(text, True, shadow_color)
+        text_surf = font.render(text, True, text_color)
+        surface.blit(shadow_surf, (x + offset, y + offset))
+        surface.blit(text_surf, (x, y))
+        return text_surf.get_width(), text_surf.get_height()
+
 # Create a global instance that other files can import
 fonts = FontManager()

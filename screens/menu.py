@@ -74,23 +74,11 @@ class Menu(GameState):
             
             # --- Draw the Main Chunk (Now on the Left) ---
             if item["main_text"]:
-                # Shadow
-                shadow = font.render(item["main_text"], True, (0, 0, 0))
-                surface.blit(shadow, (item["main_rect"].x + 1, item["main_rect"].y + 1))
-                
-                # Main text
-                text_surf = font.render(item["main_text"], True, c.MENU_BOTTOM_TEXT_COLOR)
-                surface.blit(text_surf, item["main_rect"].topleft)
+                fonts.draw_text_with_shadow(surface, item["main_text"], item["main_rect"].x, item["main_rect"].y, "heading2", c.MENU_BOTTOM_TEXT_COLOR)
 
             # --- Draw the Link Chunk (Now on the Right) ---
             if item["link_text"]:
-                # Shadow
-                shadow = font.render(item["link_text"], True, (0, 0, 0))
-                surface.blit(shadow, (item["link_rect"].x + 1, item["link_rect"].y + 1))
-                
-                # Main text
-                text_surf = font.render(item["link_text"], True, link_color)
-                surface.blit(text_surf, item["link_rect"].topleft)
+                fonts.draw_text_with_shadow(surface, item["link_text"], item["link_rect"].x, item["link_rect"].y, "heading2", link_color)
                 
                 # Dynamic Underline for hovered active links
                 if is_hovered:

@@ -2,7 +2,7 @@ import pygame
 import math
 import data.constants as c
 from data import queries
-from map_logic.rendering import symbol_loader
+from map_logic.rendering import map_utils, symbol_loader
 from map_logic.rendering.font_manager import fonts
 
 def draw_combat_bubbles(self_map, surface):
@@ -215,11 +215,7 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
                     rotated_line.set_alpha(alpha)
                     
                 # --- THE FIX: Apply the tilt compression to the final rotated block ---
-                if cam.tilt_factor < 0.99 and c.APPLY_TILT_TO_ARROWS:
-                    rotated_line = pygame.transform.scale(
-                        rotated_line, 
-                        (rotated_line.get_width(), int(rotated_line.get_height() * cam.tilt_factor))
-                    )
+                rotated_line = map_utils.apply_tilt(rotated_line, cam.tilt_factor, c.APPLY_TILT_TO_ARROWS)
                 
                 # Place it at the TILTED midpoint
                 rect = rotated_line.get_rect(center=((start_pos[0] + end_pos[0])/2, (start_pos[1] + end_pos[1])/2))
@@ -259,10 +255,8 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
             if is_last:
                 if triangle_img:
                     rotated_tri = pygame.transform.rotate(triangle_img, angle)
-                    if alpha < 255:
-                        rotated_tri.set_alpha(alpha)
-                    if cam.tilt_factor < 0.99 and c.APPLY_TILT_TO_ARROWS:
-                        rotated_tri = pygame.transform.scale(rotated_tri, (rotated_tri.get_width(), int(rotated_tri.get_height() * cam.tilt_factor)))
+                    if alpha < 255: rotated_tri.set_alpha(alpha)
+                    rotated_tri = map_utils.apply_tilt(rotated_tri, cam.tilt_factor, c.APPLY_TILT_TO_ARROWS)
                     rect = rotated_tri.get_rect(center=end_pos)
                     surface.blit(rotated_tri, rect)
                 else:
@@ -276,10 +270,8 @@ def draw_movement_path(surface, map_screen, start_province, path_ids, color=(255
             else:
                 if circle_img:
                     draw_circle = circle_img.copy() if alpha < 255 else circle_img
-                    if alpha < 255:
-                        draw_circle.set_alpha(alpha)
-                    if cam.tilt_factor < 0.99 and c.APPLY_TILT_TO_ARROWS:
-                        draw_circle = pygame.transform.scale(draw_circle, (draw_circle.get_width(), int(draw_circle.get_height() * cam.tilt_factor)))
+                    if alpha < 255: draw_circle.set_alpha(alpha)
+                    draw_circle = map_utils.apply_tilt(draw_circle, cam.tilt_factor, c.APPLY_TILT_TO_ARROWS)
                     rect = draw_circle.get_rect(center=end_pos)
                     surface.blit(draw_circle, rect)
                 else:
@@ -331,8 +323,7 @@ def draw_overlay_content(self, surface):
                     if not is_partial and queries.is_training_troops(province):
                         training_sym = symbol_loader.get_symbol(c.ICON_TRAINING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if training_sym:
-                            if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
-                                training_sym = pygame.transform.scale(training_sym, (training_sym.get_width(), int(training_sym.get_height() * self.camera.tilt_factor)))
+                            training_sym = map_utils.apply_tilt(training_sym, self.camera.tilt_factor, c.APPLY_TILT_TO_STATUS_ICONS)
                             training_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
                             rect = training_sym.get_rect(center=(sx, sy))
                             surface.blit(training_sym, rect)
@@ -341,10 +332,8 @@ def draw_overlay_content(self, surface):
                     if not is_partial and any(u.get("order", {}).get("type") == "DISBAND" for u in province.get("units", [])):
                         disband_sym = symbol_loader.get_symbol(c.ICON_DISBANDING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if disband_sym:
-                            if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
-                                disband_sym = pygame.transform.scale(disband_sym, (disband_sym.get_width(), int(disband_sym.get_height() * self.camera.tilt_factor)))
+                            disband_sym = map_utils.apply_tilt(disband_sym, self.camera.tilt_factor, c.APPLY_TILT_TO_STATUS_ICONS)
                             disband_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
-                            # Shifted slightly right to avoid overlapping completely with training
                             rect = disband_sym.get_rect(center=(sx, sy))
                             surface.blit(disband_sym, rect)
 
@@ -355,8 +344,7 @@ def draw_overlay_content(self, surface):
                         if province.get("buildings") or province.get("building_queue"):
                             sym = symbol_loader.get_symbol("Unknown Building", self.camera.zoom * getattr(c, 'BUILDING_ICON_SCALE', 1.0))
                             if sym:
-                                if self.camera.tilt_factor < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', True):
-                                    sym = pygame.transform.scale(sym, (sym.get_width(), int(sym.get_height() * self.camera.tilt_factor)))
+                                sym = map_utils.apply_tilt(sym, self.camera.tilt_factor, getattr(c, 'APPLY_TILT_TO_OVERLAYS', True))
                                 draw_x = sx - (sym.get_width() // 2)
                                 draw_y = sy - (sym.get_height() // 2)
                                 surface.blit(sym, (draw_x, draw_y))
@@ -386,9 +374,7 @@ def draw_overlay_content(self, surface):
                         symbol = symbol_loader.get_symbol(sym_name, self.camera.zoom * c.BUILDING_ICON_SCALE)
                         
                         if symbol:
-                            if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_OVERLAYS:
-                                symbol = pygame.transform.scale(symbol, (symbol.get_width(), int(symbol.get_height() * self.camera.tilt_factor)))
-                            
+                            symbol = map_utils.apply_tilt(symbol, self.camera.tilt_factor, c.APPLY_TILT_TO_OVERLAYS)
                             # Center the symbol based on the calculated sx/sy
                             draw_x = sx + offset_x - (symbol.get_width() // 2)
                             draw_y = sy + offset_y - (symbol.get_height() // 2)
@@ -416,8 +402,7 @@ def draw_overlay_content(self, surface):
                     if queries.is_constructing_building(province):
                         hammer_sym = symbol_loader.get_symbol(c.ICON_CONSTRUCTION, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
                         if hammer_sym:
-                            if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_STATUS_ICONS:
-                                hammer_sym = pygame.transform.scale(hammer_sym, (hammer_sym.get_width(), int(hammer_sym.get_height() * self.camera.tilt_factor)))
+                            hammer_sym = map_utils.apply_tilt(hammer_sym, self.camera.tilt_factor, c.APPLY_TILT_TO_STATUS_ICONS)
                             hammer_sym.set_alpha(c.OVERLAY_STATUS_ICON_ALPHA)
                             rect = hammer_sym.get_rect(center=(sx, sy))
                             surface.blit(hammer_sym, rect)
@@ -433,8 +418,7 @@ def draw_overlay_content(self, surface):
                             if amount > 0:
                                 sym = symbol_loader.get_symbol(res_type, self.camera.zoom * 0.8)
                                 if sym:
-                                    if self.camera.tilt_factor < 0.99 and c.APPLY_TILT_TO_OVERLAYS:
-                                        sym = pygame.transform.scale(sym, (sym.get_width(), int(sym.get_height() * self.camera.tilt_factor)))
+                                    sym = map_utils.apply_tilt(sym, self.camera.tilt_factor, c.APPLY_TILT_TO_OVERLAYS)
                                     surface.blit(sym, (sx + offset_x, sy))
                                 else:
                                     # Fallback colored square

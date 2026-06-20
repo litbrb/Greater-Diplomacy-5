@@ -186,16 +186,9 @@ class Declare_War_Screen(GameState):
         
         self.map_screen.draw_clean_map_background(surface)
 
-        overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 180))
-        surface.blit(overlay, (0, 0))
-
-        pygame.draw.rect(surface, (40, 30, 30), self.panel_rect)
-        pygame.draw.rect(surface, (255, 50, 50), self.panel_rect, 3)
-
-        font = fonts.get("heading1")
-        title = font.render(f"Declare War: {self.target_nation}", True, (255, 255, 255))
-        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 20))
+        ui_bars.draw_fullscreen_overlay(surface, 180)
+        ui_bars.draw_modal_box(surface, self.panel_rect, bg_color=(40, 30, 30), border_color=(255, 50, 50), border_width=3)
+        ui_bars.draw_centered_title(surface, f"Declare War: {self.target_nation}", self.panel_rect.y + 20)
 
         # Draw UI elements manually to prevent super().draw() from filling the screen with a solid background color
         for el in self.elements:
@@ -822,16 +815,10 @@ class Peace_Screen(GameState):
                         overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], t_color, base_radius=10)
 
         # Draw the Banner
-        panel_surf = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)
-        panel_surf.fill((30, 40, 30, 230))
-        surface.blit(panel_surf, self.panel_rect.topleft)
-        pygame.draw.rect(surface, (50, 255, 50), self.panel_rect, 3)
+        ui_bars.draw_modal_box(surface, self.panel_rect, bg_color=(30, 40, 30, 230), border_color=(50, 255, 50), border_width=3)
+        ui_bars.draw_centered_title(surface, f"Peace Terms: {self.target_nation}", self.panel_rect.y + 15)
 
-        font = fonts.get("heading1")
         small_font = fonts.get("normal")
-        title = font.render(f"Peace Terms: {self.target_nation}", True, (255, 255, 255))
-        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
-
         acc_surf = small_font.render(self.acceptance_text, True, self.acceptance_color)
         surface.blit(acc_surf, (self.panel_rect.centerx - acc_surf.get_width()//2, self.panel_rect.y + 50))
 
@@ -891,11 +878,8 @@ class View_Peace_Treaty_Screen(GameState):
                     elif proj == self.target:
                         overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], t_color, base_radius=10)
 
-        font = fonts.get("heading1")
-        title = font.render(f"Projected Map: Peace Treaty from {self.proposer}", True, (255, 255, 255))
-        bg_rect = title.get_rect(center=(c.SCREEN_WIDTH//2, 30))
-        pygame.draw.rect(surface, (0, 0, 0, 180), bg_rect.inflate(20, 10))
-        surface.blit(title, bg_rect)
+        # Utilize the helper to render the header string over the map preview safely
+        ui_bars.draw_centered_title(surface, f"Projected Map: Peace Treaty from {self.proposer}", 30)
         
         for el in self.elements:
             if el.visible:
@@ -1091,20 +1075,12 @@ class Trade_Screen(GameState):
         
         self.map_screen.draw_clean_map_background(surface)
 
-        overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 180))
-        surface.blit(overlay, (0, 0))
+        ui_bars.draw_fullscreen_overlay(surface, 180)
+        ui_bars.draw_modal_box(surface, self.panel_rect, bg_color=(40, 40, 50), border_color=(100, 200, 100), border_width=3)
+        ui_bars.draw_centered_title(surface, f"Trade Agreement: {self.target_nation}", self.panel_rect.y + 15)
 
-        # Main Panel
-        pygame.draw.rect(surface, (40, 40, 50), self.panel_rect)
-        pygame.draw.rect(surface, (100, 200, 100), self.panel_rect, 3)
-
-        font_large = fonts.get("heading1")
         font_med = fonts.get("heading2")
         font_small = fonts.get("normal")
-
-        title = font_large.render(f"Trade Agreement: {self.target_nation}", True, (255, 255, 255))
-        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
 
         # You Give Section
         surface.blit(font_med.render("You Give:", True, (255, 100, 100)), (self.panel_rect.x + 30, self.panel_rect.y + 60))
@@ -1274,17 +1250,11 @@ class Puppets_Screen(GameState):
         
         self.map_screen.draw_clean_map_background(surface)
         
-        overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 180))
-        surface.blit(overlay, (0, 0))
+        ui_bars.draw_fullscreen_overlay(surface, 180)
+        ui_bars.draw_modal_box(surface, self.panel_rect, bg_color=(40, 40, 50), border_color=(100, 150, 255), border_width=2)
+        ui_bars.draw_centered_title(surface, "Your Subjects", self.panel_rect.y + 15)
 
-        pygame.draw.rect(surface, (40, 40, 50), self.panel_rect)
-        pygame.draw.rect(surface, (100, 150, 255), self.panel_rect, 2)
-        
-        font_title = fonts.get("heading1")
         font_body = fonts.get("heading2")
-        title = font_title.render("Your Subjects", True, (255, 255, 255))
-        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 15))
 
         master = self.map_screen.nation_data.get(self.player, {}).get("master", "")
         if master:
@@ -1479,16 +1449,10 @@ class Create_Integrated_Puppet_Screen(GameState):
                         overlay_renderer.draw_map_highlight(surface, self.map_screen, prov["id"], color_map[qc], base_radius=10)
                         break
 
-        panel_surf = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)
-        panel_surf.fill((30, 30, 50, 230))
-        surface.blit(panel_surf, self.panel_rect.topleft)
-        pygame.draw.rect(surface, (100, 150, 255), self.panel_rect, 2)
+        ui_bars.draw_modal_box(surface, self.panel_rect, bg_color=(30, 30, 50, 230), border_color=(100, 150, 255), border_width=2)
+        ui_bars.draw_centered_title(surface, "Create Integrated Puppet", self.panel_rect.y + 10)
 
-        font = fonts.get("heading1")
         tiny_font = fonts.get("normal")
-
-        title = font.render("Create Integrated Puppet", True, (255, 255, 255))
-        surface.blit(title, (self.panel_rect.centerx - title.get_width()//2, self.panel_rect.y + 10))
 
         clip_rect = pygame.Rect(self.panel_rect.x + 5, self.panel_rect.y + 110, self.panel_rect.width - 10, self.panel_rect.height - 120)
         old_clip = surface.get_clip()

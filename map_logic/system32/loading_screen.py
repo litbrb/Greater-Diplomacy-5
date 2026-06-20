@@ -1,12 +1,11 @@
 import pygame
 import data.constants as c
 from map_logic.rendering.font_manager import fonts
+from ui.bars import ui_bars
 
 def draw_simple_refresh_bar(surface, status_text, completed, total):
     """Unified data refresh overlay to prevent duplication on base menu screens."""
-    overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-    overlay.fill((0, 0, 0, 200))
-    surface.blit(overlay, (0, 0))
+    ui_bars.draw_fullscreen_overlay(surface, 200)
 
     center_x, center_y = c.SCREEN_WIDTH // 2, c.SCREEN_HEIGHT // 2
     
@@ -31,9 +30,7 @@ def draw_simple_refresh_bar(surface, status_text, completed, total):
 
 def draw_turn_loading_screen(map_screen, surface):
     """Draws 4 dynamic progress bars for turn processing and a skip button."""
-    overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-    overlay.fill((0, 0, 0, 200))
-    surface.blit(overlay, (0, 0))
+    ui_bars.draw_fullscreen_overlay(surface, 200)
 
     center_x = c.SCREEN_WIDTH // 2
     center_y = c.SCREEN_HEIGHT // 2

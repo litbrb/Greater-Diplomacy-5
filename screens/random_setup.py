@@ -1,6 +1,7 @@
 import os
 from gameState import GameState
 import data.constants as c
+from ui.bars import ui_bars
 from ui_elements import Button, Slider
 from map_logic.rendering.font_manager import fonts
 from data import queries
@@ -177,12 +178,8 @@ class Random_Setup(GameState):
         self.refresh_ui()
         
     def additional_draw(self, surface):
-        title = fonts.get("heading1").render("RANDOM SCENARIO SETUP", True, (255, 255, 255))
-        surface.blit(title, (c.SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
-        
-        # Adjusted y-position slightly to sit clean right above the map table grid
-        map_title = fonts.get("heading2").render("Select Base Map", True, (200, 200, 200))
-        surface.blit(map_title, (c.SCREEN_WIDTH // 2 - map_title.get_width() // 2, 145))
+        ui_bars.draw_centered_title(surface, "RANDOM SCENARIO SETUP", 40)
+        ui_bars.draw_centered_title(surface, "Select Base Map", 145, font_preset="heading2", color=(200, 200, 200))
 
     def start_game(self):
         if not self.procedural_world and not self.available_maps: return

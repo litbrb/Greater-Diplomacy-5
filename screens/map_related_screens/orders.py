@@ -580,8 +580,7 @@ class Orders_Screen(GameState):
         font = fonts.get("heading1")
         small_font = fonts.get("normal")
         
-        title = font.render(f"Orders: Province {self.target_province['id']}", True, (255, 255, 255))
-        surface.blit(title, (c.SCREEN_WIDTH//2 - title.get_width()//2, c.TOP_BAR_UI_CENTER_Y))
+        ui_bars.draw_centered_title(surface, f"Orders: Province {self.target_province['id']}", c.TOP_BAR_UI_CENTER_Y)
         
         # --- Draw Background Panel for Units ---
         units = self.target_province.get("units", [])

@@ -413,14 +413,12 @@ class Edit_Country_Screen(GameState):
                         self.leader_title, _ = process_text_input(event, self.leader_title, max_length=50)
 
     def _draw_popup(self, surface, title_text, sub_text, yes_text, no_text):
-        overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 180))
-        surface.blit(overlay, (0, 0))
+        from ui.bars import ui_bars
+        ui_bars.draw_fullscreen_overlay(surface, 180)
 
         box_rect = pygame.Rect(0, 0, 450, 200)
         box_rect.center = (c.SCREEN_WIDTH // 2 + x_offset_confirmation, c.SCREEN_HEIGHT // 2)
-        pygame.draw.rect(surface, (60, 20, 20), box_rect)
-        pygame.draw.rect(surface, (255, 50, 50), box_rect, 3)
+        ui_bars.draw_modal_box(surface, box_rect, bg_color=(60, 20, 20), border_color=(255, 50, 50), border_width=3)
 
         msg = fonts.get("heading2").render(title_text, True, (255, 255, 255))
         surface.blit(msg, msg.get_rect(center=(box_rect.centerx, box_rect.y + 50)))

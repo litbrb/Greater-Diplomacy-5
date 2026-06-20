@@ -29,6 +29,11 @@ class Production_Screen(GameState):
         self.target_scroll_y = 0
         self.max_scroll = 0
 
+    def draw(self, surface):
+        super().draw(surface)
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(self.map_screen, surface)
+
     def handle_events(self, events):
         # Override to block all interaction
         if getattr(self.map_screen, 'tactical_mode', False):

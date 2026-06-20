@@ -611,6 +611,9 @@ class Map(GameState):
                 
             return
 
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(self, surface)
+
     def refresh_nation_data(self):
         from data.io import country_io
         new_data = country_io.load_all_country_data()

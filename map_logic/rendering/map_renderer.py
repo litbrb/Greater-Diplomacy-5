@@ -277,8 +277,6 @@ def draw_map_screen(self, surface):
             surface.blit(x_txt, x_txt.get_rect(center=self.cancel_rect.center))
 
     # --- LAYER 6: FEEDBACK & TOOLTIPS ---
-    feedback_text.draw_feedback(self, surface)
-
     # Check flag before drawing the tooltip
     # this is the stuff that makes it so that if you select a province you don't display the tooltip
     if self.hovered_province and not self.selected_province and not self.hide_tooltip: 

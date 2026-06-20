@@ -28,6 +28,11 @@ class Research_Screen(GameState):
 
         self.setup_nodes()
 
+    def draw(self, surface):
+        super().draw(surface)
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(self.map_screen, surface)
+
     def handle_events(self, events):
         for event in events:
             for el in self.elements:

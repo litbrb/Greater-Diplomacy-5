@@ -14,6 +14,11 @@ class Faction_Screen(GameState):
         self.is_renaming = False
         self.new_faction_name = ""
 
+    def draw(self, surface):
+        super().draw(surface)
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(self.map_screen, surface)
+
     def start_faction(self, map_ref):
         self.map_screen = map_ref
         self.is_renaming = False

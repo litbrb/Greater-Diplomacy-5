@@ -26,6 +26,11 @@ class Messages_Screen(GameState):
         
         self.show_all_contacts = False
 
+    def draw(self, surface):
+        super().draw(surface)
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(self.map_screen, surface)
+
     def start_messages(self, map_ref):
         self.map_screen = map_ref
         self.selected_recipient = None

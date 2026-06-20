@@ -11,6 +11,11 @@ class Economy_Screen(GameState):
         self.bg_color = (30, 35, 40)
         self.map_screen = None
 
+    def draw(self, surface):
+        super().draw(surface)
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(self.map_screen, surface)
+
     def start_economy(self, map_ref):
         self.map_screen = map_ref
         self.refresh_ui()

@@ -71,34 +71,13 @@ def process_queues(self):
             item["turns_remaining"] -= 1
             
             if item["turns_remaining"] <= 0:
-                unit_type = item["unit_type"]
-                stats = unit_library.get(unit_type, {})
-                
-                max_health = stats.get("health", c.DEFAULT_UNIT_HP)
-                attack = stats.get("attack", c.DEFAULT_UNIT_ATK)
-                defense = stats.get("defense", c.DEFAULT_UNIT_DEF)
-                speed = stats.get("speed", c.DEFAULT_UNIT_SPD)
-
-                new_unit_data = {
-                    "type": unit_type,
-                    "owner": current_owner,
-                    "health": max_health,
-                    "max_health": max_health,
-                    "speed": speed,
-                    "attack": attack,
-                    "defense": defense,
-                    "level": 0,
-                    "order": {"type": "MOVE", "path": []}
-                }
-                
-                # Apply dynamic custom name
-                new_unit_data["custom_name"] = queries.generate_unit_custom_name(new_unit_data, active_unit_counters)
-                
-                province["units"].append(new_unit_data)
-                if current_owner == self.player_country:
-                    self.show_feedback(f"DEPLOYED: {unit_type}")
+                b_name = item.get("item_name")
+                if b_name:
+                    province.setdefault("buildings", []).append(b_name)
+                    if current_owner == self.player_country:
+                        self.show_feedback(f"CONSTRUCTED: {b_name}")
             
-                u_queue.pop(0)
+                b_queue.pop(0)
 
         # --- UNIT QUEUE ---
         u_queue = province.get("unit_queue", [])

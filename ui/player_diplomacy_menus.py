@@ -26,6 +26,10 @@ def _run_pygame_sub_screen(map_screen, screen_obj):
         
         # The background is safely filled by the map rendering itself.
         screen_obj.draw(surface)
+        
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(map_screen, surface)
+        
         pygame.display.flip()
         
         clock.tick(c.TARGET_FPS)

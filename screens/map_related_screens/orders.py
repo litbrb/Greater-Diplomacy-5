@@ -36,6 +36,11 @@ class Orders_Screen(GameState):
         
         self.unit_library = queries.get_unit_library()
 
+    def draw(self, surface):
+        super().draw(surface)
+        from ui.information import feedback_text
+        feedback_text.draw_feedback(self.map_screen, surface)
+
     def start_with_province(self, province, map_ref):
         self.target_province = province
         self.map_screen = map_ref

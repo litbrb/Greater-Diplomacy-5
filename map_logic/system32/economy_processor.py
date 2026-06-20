@@ -45,8 +45,17 @@ def process_queues(self):
     unit_library = queries.get_unit_library()
     building_library = queries.get_building_library()
 
+    # --- NEW: Check if AI is disabled to freeze their queues ---
+    ai_disabled_raw = self.scenario_settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)
+    ai_disabled = str(ai_disabled_raw).lower() == "true"
+
     for province in self.map_data.values():
         current_owner = province.get("owner", "None")
+        
+        # Freeze AI queues if AI is disabled
+        if ai_disabled and current_owner not in getattr(self, 'active_players', [self.player_country]):
+            continue
+
         in_combat = queries.is_province_in_active_combat(province, self.nation_data)
         
         # --- BUILDING QUEUE ---

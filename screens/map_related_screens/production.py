@@ -40,6 +40,8 @@ class Production_Screen(GameState):
                         self.map_screen.show_feedback("Tactical Mode: Cannot interact with national production.")
             return
 
+        super().handle_events(events)
+
     def start_with_province(self, province, map_ref):
         self.target_province = province
         self.map_screen = map_ref

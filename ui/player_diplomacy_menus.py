@@ -579,19 +579,42 @@ class Claims_Screen(GameState):
                     surface.blit(txt, (self.panel_rect.x + 30, y_off))
                     y_off += 25
         else:
-            surface.blit(sub_font.render("Claims on You:", True, (255, 100, 100)), (self.panel_rect.x + 20, y_off))
+            queued_foreign = [item for item in foreign_claims_list if item["type"] == "QUEUE"]
+            active_foreign = [item for item in foreign_claims_list if item["type"] != "QUEUE"]
+            
+            surface.blit(sub_font.render("Actively Justifying:", True, (150, 200, 255)), (self.panel_rect.x + 20, y_off))
             y_off += 30
             
-            if not foreign_claims_list:
-                surface.blit(tiny_font.render("No foreign claims on your territory.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
+            if not queued_foreign:
+                surface.blit(tiny_font.render("No nations are actively justifying claims on you.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
+                y_off += 25
             else:
-                for item in foreign_claims_list:
+                for item in queued_foreign:
                     nation_name = self.map_screen.nation_data.get(item["nation"], {}).get("name", item["nation"])
                     color = self.map_screen.nation_colors.get(item["nation"], (255, 255, 255))
                     
-                    if item["type"] == "QUEUE":
-                        txt_str = f"- Prov {item['prov_id']} ({nation_name}): Actively Justifying ({item['turns']}t)"
-                    elif item["type"] == "CORE":
+                    txt_str = f"- Prov {item['prov_id']} ({nation_name}): Actively Justifying ({item['turns']}t)"
+                    if item["prov_id"] in return_ids:
+                        txt_str += f" (Returning in 1 turn)"
+                        color = (100, 255, 100)
+                        
+                    txt = tiny_font.render(txt_str, True, color)
+                    surface.blit(txt, (self.panel_rect.x + 30, y_off))
+                    y_off += 25
+                    
+            y_off += 10
+            
+            surface.blit(sub_font.render("Claims on You:", True, (255, 100, 100)), (self.panel_rect.x + 20, y_off))
+            y_off += 30
+            
+            if not active_foreign:
+                surface.blit(tiny_font.render("No foreign claims on your territory.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
+            else:
+                for item in active_foreign:
+                    nation_name = self.map_screen.nation_data.get(item["nation"], {}).get("name", item["nation"])
+                    color = self.map_screen.nation_colors.get(item["nation"], (255, 255, 255))
+                    
+                    if item["type"] == "CORE":
                         txt_str = f"- Prov {item['prov_id']} ({nation_name}): Auto-Claimed Core"
                     else:
                         txt_str = f"- Prov {item['prov_id']} ({nation_name}): Active Claim"

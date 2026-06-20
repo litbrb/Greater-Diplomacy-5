@@ -243,7 +243,12 @@ class Orders_Screen(GameState):
         cost_fuel = int(stats.get("cost_fuel", 0) * missing_pct)
 
         costs = {"cost_materials": cost_mat, "cost_manpower": cost_man, "cost_fuel": cost_fuel}
-        p_data = self.map_screen.nation_data[self.map_screen.player_country]
+        
+        is_tactical = getattr(self.map_screen, 'tactical_mode', False) and unit is getattr(self.map_screen, 'player_unit', None)
+        if is_tactical:
+            p_data = self.map_screen.unit_economy
+        else:
+            p_data = self.map_screen.nation_data[self.map_screen.player_country]
 
         if queries.can_afford(p_data, costs):
             queries.deduct_resources(p_data, costs)
@@ -303,7 +308,12 @@ class Orders_Screen(GameState):
             order = units[index].get("order", {})
             if "order" in units[index]:
                 if isinstance(order, dict) and "refund" in order:
-                    p_data = self.map_screen.nation_data[self.map_screen.player_country]
+                    unit = units[index]
+                    is_tactical = getattr(self.map_screen, 'tactical_mode', False) and unit is getattr(self.map_screen, 'player_unit', None)
+                    if is_tactical:
+                        p_data = self.map_screen.unit_economy
+                    else:
+                        p_data = self.map_screen.nation_data[self.map_screen.player_country]
                     queries.refund_resources(p_data, order["refund"])
                 del units[index]["order"]
                 self.map_screen.show_feedback("Order Cancelled")
@@ -318,7 +328,11 @@ class Orders_Screen(GameState):
                 if "order" in unit:
                     order = unit["order"]
                     if isinstance(order, dict) and "refund" in order:
-                        p_data = self.map_screen.nation_data[self.map_screen.player_country]
+                        is_tactical = getattr(self.map_screen, 'tactical_mode', False) and unit is getattr(self.map_screen, 'player_unit', None)
+                        if is_tactical:
+                            p_data = self.map_screen.unit_economy
+                        else:
+                            p_data = self.map_screen.nation_data[self.map_screen.player_country]
                         queries.refund_resources(p_data, order["refund"])
                     del unit["order"]
                     cleared_any = True

@@ -56,13 +56,24 @@ def process_disbands(self):
                         u_type = unit.get("original_type", unit.get("type"))
                         stats = unit_library.get(u_type, {})
                         queries.refund_resources(p_data, stats)
-                else:
-                    units_to_keep.append(unit)
             else:
                 units_to_keep.append(unit)
                 
         # Overwrite with the surviving units
         province["units"] = units_to_keep
+
+def process_repairs(self):
+    """Processes the 1-turn timer for repairing units to full health."""
+    for province in self.map_data.values():
+        for unit in province.get("units", []):
+            order = unit.get("order")
+            if isinstance(order, dict) and order.get("type") == "REPAIR":
+                order["turns_left"] -= 1
+                
+                if order["turns_left"] <= 0:
+                    unit["health"] = unit.get("max_health", c.DEFAULT_UNIT_HP)
+                    # Reset back to a blank move order so they can be selected again
+                    unit["order"] = {"type": "MOVE", "path": []}
 
 def process_conversions(self):
     """Processes the timer for transferring units into Convoys/Trucks and back."""

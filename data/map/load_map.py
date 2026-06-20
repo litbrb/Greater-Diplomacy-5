@@ -256,11 +256,18 @@ def load_map_assets(self, load_path):
         
         self.map_data[color_tuple] = v
         self.id_to_province[v["id"]] = v
-        
-    # --- NEW: Init Pre-War Maps for Factions starting at war ---
+
+    # Init Pre-War Maps for Factions starting at war
     self.nation_data.setdefault("FACTION_WAR_MAPS", {})
     for c_name, c_data in self.nation_data.items():
         fac = c_data.get("faction", "")
         if fac and queries.is_faction_at_war(fac, self.nation_data):
             if fac not in self.nation_data["FACTION_WAR_MAPS"]:
                 queries.save_faction_pre_war_map(fac, self.map_data, self.nation_data)
+
+    # --- AUTO NAME STARTING UNITS ---
+    unit_counters = {}
+    for prov in self.map_data.values():
+        for unit in prov.get("units", []):
+            if not unit.get("custom_name"):
+                unit["custom_name"] = queries.generate_unit_custom_name(unit, unit_counters)

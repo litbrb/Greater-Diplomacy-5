@@ -102,6 +102,7 @@ class Orders_Screen(GameState):
             is_tactical_other = is_tactical and unit is not self.map_screen.player_unit
                 
             y_pos = self.panel_top + (display_index * self.row_height) + self.scroll_y
+            y_pos = y_pos + 15
             
             if self.panel_top - 10 < y_pos < self.panel_top + self.panel_max_h - self.bottom_vanish_y:
                 color = "blue" if self.selected_unit_index == i or self.selected_unit_index == "ALL" else "grey"
@@ -636,7 +637,7 @@ class Orders_Screen(GameState):
                 
                 name_txt = unit.get("custom_name", unit.get("type", "Unit"))
                 name_surf = small_font.render(name_txt, True, (255, 255, 255))
-                surface.blit(name_surf, (160, y_pos - 5))
+                surface.blit(name_surf, (90, y_pos - 5))
 
                 stats_txt = f"HP: {hp}/{m_hp}"
                 txt_surf = small_font.render(stats_txt, True, (200, 200, 200))

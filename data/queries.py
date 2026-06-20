@@ -1354,6 +1354,60 @@ def is_naval_unit(unit_type):
     stats = get_unit_library().get(unit_type, {})
     return stats.get("naval_unit", False)
 
+def get_ordinal(n):
+    """Returns the ordinal string for an integer."""
+    if 11 <= (n % 100) <= 13:
+        return str(n) + "th"
+    return str(n) + {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+
+def generate_unit_custom_name(unit, unit_counters):
+    """Generates a dynamic custom name for a unit based on its type and country count."""
+    owner = unit.get("owner", "Unclaimed")
+    unit_type = unit.get("type", "Infantry")
+    
+    # Extract year or level for suffix
+    suffix = ""
+    year_match = re.search(r'\b(\d{4})\b', unit_type)
+    if year_match:
+        suffix = f" ({year_match.group(1)})"
+    else:
+        # Match roman numerals at the end of the string
+        numeral_match = re.search(r'\b([IVXLCDM]+)$', unit_type)
+        if numeral_match:
+            suffix = f" ({numeral_match.group(1)})"
+    
+    # Clean up the base name
+    base_name = get_base_unit_name(unit_type).lower()
+    base_name = base_name.replace(" type", "")
+    
+    # Append 'division' if it's not a ship, convoy, or truck
+    if "division" not in base_name and not is_naval_unit(unit_type) and "convoy" not in base_name and "truck" not in base_name:
+        base_name += " division"
+    
+    # Track count per owner per base type
+    count = unit_counters.setdefault(owner, {}).get(base_name, 0) + 1
+    unit_counters[owner][base_name] = count
+    
+    ordinal = get_ordinal(count)
+    return f"{ordinal} {base_name}{suffix}"
+
+def build_active_unit_counters(map_data):
+    """Sweeps the map and returns a dictionary of current unit counts for accurate naming."""
+    unit_counters = {}
+    for prov in map_data.values():
+        for unit in prov.get("units", []):
+            owner = unit.get("owner", "Unclaimed")
+            unit_type = unit.get("type", "Infantry")
+            
+            base_name = get_base_unit_name(unit_type).lower()
+            base_name = base_name.replace(" type", "")
+            
+            if "division" not in base_name and not is_naval_unit(unit_type) and "convoy" not in base_name and "truck" not in base_name:
+                base_name += " division"
+                
+            unit_counters.setdefault(owner, {})[base_name] = unit_counters.setdefault(owner, {}).get(base_name, 0) + 1
+    return unit_counters
+
 # i don't know if this would really count as a query...
 def revert_transport(unit):
     """Reverts a transport (like a Convoy) back to its original unit type."""

@@ -43,6 +43,10 @@ def select_tactical_unit(map_screen, province):
             "order": {"type": "MOVE", "path": []},
             "_is_tactical_ghost": True # Tag it so we can delete it if they cancel
         }
+        
+        active_counters = queries.build_active_unit_counters(map_screen.map_data)
+        new_unit["custom_name"] = queries.generate_unit_custom_name(new_unit, active_counters)
+        
         province.setdefault("units", []).append(new_unit)
         _stage_tactical_selection(map_screen, new_unit, owner, province)
         
@@ -133,3 +137,20 @@ def cancel_selection(map_screen):
     map_screen.pending_selection = None
     map_screen.pending_unit = None
     map_screen.selected_province = None
+
+def start_spectator(map_screen):
+    """Initializes spectator mode, giving the player global vision and no direct control."""
+    map_screen.active_players = ["Spectator"]
+    map_screen.current_player_index = 0
+    map_screen.player_country = "Spectator"
+    map_screen.selection_mode = False
+    map_screen.pending_selection = None
+    map_screen.pending_unit = None
+    map_screen.selected_province = None
+    map_screen.hovered_province = None
+    map_screen.hover_glow_surf = None
+    map_screen.show_feedback("Entered Spectator Mode")
+    
+    from ui import buttons
+    buttons.render_buttons(map_screen)
+    map_screen.refresh_relations_map()

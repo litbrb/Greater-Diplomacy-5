@@ -360,7 +360,17 @@ def draw_overlay_content(self, surface):
 
                 # --- ECONOMY VIEW ---
                 elif self.secondary_mode == "ECONOMY":
-                    if is_partial: continue # Hide economy in partial vision
+                    if is_partial:
+                        # Show an unknown building marker if any infrastructure exists
+                        if province.get("buildings") or province.get("building_queue"):
+                            sym = symbol_loader.get_symbol("Unknown Building", self.camera.zoom * getattr(c, 'BUILDING_ICON_SCALE', 1.0))
+                            if sym:
+                                if self.camera.tilt_factor < 0.99 and getattr(c, 'APPLY_TILT_TO_OVERLAYS', True):
+                                    sym = pygame.transform.scale(sym, (sym.get_width(), int(sym.get_height() * self.camera.tilt_factor)))
+                                draw_x = sx - (sym.get_width() // 2)
+                                draw_y = sy - (sym.get_height() // 2)
+                                surface.blit(sym, (draw_x, draw_y))
+                        continue # Hide specific economy details in partial vision
                     
                     # Draw Buildings
                     buildings = province.get("buildings", []).copy()

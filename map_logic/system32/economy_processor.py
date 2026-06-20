@@ -48,6 +48,9 @@ def process_queues(self):
     # --- NEW: Check if AI is disabled to freeze their queues ---
     ai_disabled_raw = self.scenario_settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)
     ai_disabled = str(ai_disabled_raw).lower() == "true"
+    
+    # --- Build active unit counters once per turn for new deployments ---
+    active_unit_counters = queries.build_active_unit_counters(self.map_data)
 
     for province in self.map_data.values():
         current_owner = province.get("owner", "None")
@@ -68,19 +71,34 @@ def process_queues(self):
             item["turns_remaining"] -= 1
             
             if item["turns_remaining"] <= 0:
-                b_name = item["item_name"]
-                b_data = building_library.get(b_name, {})
+                unit_type = item["unit_type"]
+                stats = unit_library.get(unit_type, {})
                 
-                current_buildings = province.get("buildings", [])
-                updated_buildings = [b for b in current_buildings 
-                                     if building_library.get(b, {}).get("group") != b_data.get("group")]
+                max_health = stats.get("health", c.DEFAULT_UNIT_HP)
+                attack = stats.get("attack", c.DEFAULT_UNIT_ATK)
+                defense = stats.get("defense", c.DEFAULT_UNIT_DEF)
+                speed = stats.get("speed", c.DEFAULT_UNIT_SPD)
+
+                new_unit_data = {
+                    "type": unit_type,
+                    "owner": current_owner,
+                    "health": max_health,
+                    "max_health": max_health,
+                    "speed": speed,
+                    "attack": attack,
+                    "defense": defense,
+                    "level": 0,
+                    "order": {"type": "MOVE", "path": []}
+                }
                 
-                updated_buildings.append(b_name)
-                province["buildings"] = updated_buildings
+                # Apply dynamic custom name
+                new_unit_data["custom_name"] = queries.generate_unit_custom_name(new_unit_data, active_unit_counters)
                 
+                province["units"].append(new_unit_data)
                 if current_owner == self.player_country:
-                    self.show_feedback(f"CONSTRUCTION COMPLETE: {b_name}")
-                b_queue.pop(0)
+                    self.show_feedback(f"DEPLOYED: {unit_type}")
+            
+                u_queue.pop(0)
 
         # --- UNIT QUEUE ---
         u_queue = province.get("unit_queue", [])

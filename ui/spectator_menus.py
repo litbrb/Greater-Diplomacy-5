@@ -45,12 +45,7 @@ def open_spectator_action_menu(map_screen, action_type):
     source_nation = map_screen.selected_province.get("owner")
     if source_nation in c.UNPLAYABLE_NATIONS: return
     
-    import tkinter as tk
-    root = tk.Tk()
-    root.title(f"{action_type} for {source_nation}")
-    root.geometry("300x450")
-    root.attributes("-topmost", True)
-    map_screen.menu_active = True
+    root, close_menu = queries.create_managed_tk_window(map_screen, f"{action_type} for {source_nation}", "300x450")
 
     def on_select(event=None):
         selection = lb.curselection()
@@ -76,11 +71,7 @@ def open_spectator_action_menu(map_screen, action_type):
             map_screen.refresh_factions_map()
         close_menu()
 
-    def close_menu():
-        map_screen.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    import tkinter as tk
     tk.Label(root, text=f"Select Target for {action_type}:", font=("Arial", 12)).pack(pady=10)
     
     frame = tk.Frame(root)
@@ -114,6 +105,8 @@ def open_spectator_action_menu(map_screen, action_type):
     
     tk.Button(root, text="Confirm", command=on_select, bg="#4CAF50", fg="white", pady=10).pack(fill="x", padx=10, pady=10)
     lb.bind('<Double-1>', on_select)
+
+    queries.run_tk_loop(map_screen, root)
 
     import pygame
     while map_screen.menu_active:

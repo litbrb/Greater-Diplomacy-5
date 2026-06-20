@@ -10,10 +10,7 @@ def draw_tooltip(self, surface):
     prov = self.hovered_province
     
     # --- FOG OF WAR VISIBILITY CHECK ---
-    is_visible = True
-    if self.visible_provinces is not None:
-        if prov["id"] not in self.visible_provinces:
-            is_visible = False
+    is_visible = queries.is_province_visible(self, prov["id"])
             
     owner_id = prov.get('owner', 'Unclaimed')
     owner_display = self.nation_data.get(owner_id, {}).get("name", owner_id)

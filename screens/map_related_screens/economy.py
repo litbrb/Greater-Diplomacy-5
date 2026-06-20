@@ -181,24 +181,14 @@ class Economy_Screen(GameState):
         import tkinter as tk
         from tkinter import ttk
         
-        # Initialize a transient Tkinter root using your queries helper
-        root = queries.get_transient_tk_root()
-        win = tk.Toplevel(root)
-        win.title("Military Upkeep Expenses")
-        win.geometry("650x400")
-        win.attributes("-topmost", True)
+        root, close_menu = queries.create_managed_tk_window(self, "Military Upkeep Expenses", "650x400")
 
-        def on_close():
-            win.destroy()
-
-        win.protocol("WM_DELETE_WINDOW", on_close)
-
-        style = ttk.Style(win)
+        style = ttk.Style(root)
         try: style.theme_use("clam")
         except tk.TclError: pass
 
         columns = ("Unit", "Location (Prov ID)", "Manpower", "Materials", "Fuel")
-        tree = ttk.Treeview(win, columns=columns, show="headings")
+        tree = ttk.Treeview(root, columns=columns, show="headings")
         
         # State dictionary to track ascending/descending sort for each column
         sort_dirs = {col: True for col in columns}
@@ -226,7 +216,7 @@ class Economy_Screen(GameState):
             tree.heading(col, text=col, command=lambda c=col: sort_data(c))
             tree.column(col, width=120, anchor="center")
 
-        scrollbar = ttk.Scrollbar(win, orient="vertical", command=tree.yview)
+        scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
         scrollbar.pack(side="right", fill="y")
         tree.pack(fill="both", expand=True)
@@ -240,10 +230,10 @@ class Economy_Screen(GameState):
             u_type = unit.get("original_type", unit.get("type"))
             stats = unit_lib.get(u_type, {})
             
-            # Apply your global upkeep modifiers
-            man_upk = stats.get("cost_manpower", 0) * c.UPKEEP_MODIFIERS["manpower"]
-            mat_upk = stats.get("cost_materials", 0) * c.UPKEEP_MODIFIERS["materials"]
-            fuel_upk = stats.get("cost_fuel", 0) * c.UPKEEP_MODIFIERS["fuel"]
+            upkeep = queries.get_unit_upkeep(stats)
+            man_upk = upkeep["manpower"]
+            mat_upk = upkeep["materials"]
+            fuel_upk = upkeep["fuel"]
 
             tree.insert("", tk.END, values=(
                 unit.get("type"),
@@ -253,14 +243,4 @@ class Economy_Screen(GameState):
                 f"{fuel_upk:.2f}"
             ))
 
-        # Safe loop to keep Pygame alive and ticking while the Tkinter window is active
-        while win.winfo_exists():
-            try:
-                root.update()
-                pygame.event.pump()
-                pygame.time.wait(c.CPU_LIMITER)
-            except (tk.TclError, Exception):
-                break
-                
-        # Destroy the root to prevent phantom inputs or background threads hanging
-        queries.destroy_tk_root(root)
+        queries.run_tk_loop(self, root)

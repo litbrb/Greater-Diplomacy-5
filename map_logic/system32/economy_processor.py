@@ -9,9 +9,8 @@ def process_economy(self):
         u_type = self.player_unit.get("original_type", self.player_unit.get("type"))
         stats = queries.get_unit_library().get(u_type, {})
         
-        inc_man = stats.get("cost_manpower", 0) * c.UPKEEP_MODIFIERS["manpower"]
-        inc_mat = stats.get("cost_materials", 0) * c.UPKEEP_MODIFIERS["materials"]
-        inc_fuel = stats.get("cost_fuel", 0) * c.UPKEEP_MODIFIERS["fuel"]
+        upkeep = queries.get_unit_upkeep(stats)
+        inc_man, inc_mat, inc_fuel = upkeep["manpower"], upkeep["materials"], upkeep["fuel"]
         
         self.unit_economy["fuel_inc"] = inc_fuel # Stored cleanly for movement calcs
         

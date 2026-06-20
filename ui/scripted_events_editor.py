@@ -14,13 +14,7 @@ def open_scripted_events_editor(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = queries.create_tk_window("Scripted Events Editor", "650x550")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Scripted Events Editor", "650x550")
 
     def show_scripted_events_help():
         """Spawns a read-only popup explaining the scripting engine."""

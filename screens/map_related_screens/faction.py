@@ -183,7 +183,6 @@ class Faction_Screen(GameState):
         else:
             self.exit_to_map()
 
-
 class Faction_Territories_Screen(GameState):
     def __init__(self):
         super().__init__()
@@ -212,17 +211,8 @@ class Faction_Territories_Screen(GameState):
         self.map_screen.base_layer = "FACTION_TERRITORIES"
         self.map_screen.active_map = self.map_screen.faction_territories_map
         
-        self.map_screen.hide_raised_rect = True
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
-        
-        self.map_screen.additional_draw(surface)
-        
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
         
         self.map_screen.base_layer = prev_layer
         self.map_screen.active_map = prev_active

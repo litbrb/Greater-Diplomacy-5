@@ -105,6 +105,20 @@ def get_visible_provinces(map_screen):
     
     return visible_set, partial_set
 
+def is_province_visible(map_screen, prov_id):
+    """Standardized check for fog of war visibility."""
+    if map_screen and getattr(map_screen, 'visible_provinces', None) is not None:
+        return prov_id in map_screen.visible_provinces
+    return True
+
+def get_unit_upkeep(stats):
+    """Calculates dynamically modified unit upkeep costs."""
+    return {
+        "manpower": stats.get("cost_manpower", 0) * c.UPKEEP_MODIFIERS["manpower"],
+        "materials": stats.get("cost_materials", 0) * c.UPKEEP_MODIFIERS["materials"],
+        "fuel": stats.get("cost_fuel", 0) * c.UPKEEP_MODIFIERS["fuel"]
+    }
+
 # ==========================================
 # UNIFIED CACHE MANAGER
 # ==========================================
@@ -1973,12 +1987,24 @@ def create_tk_window(title, geometry):
     root.attributes("-topmost", True)
     return root
 
+def create_managed_tk_window(game_state, title, geometry):
+    """Standardizes the creation of floating editor tool windows with automatic menu state management."""
+    root = create_tk_window(title, geometry)
+    game_state.menu_active = True
+    
+    def close_menu():
+        game_state.menu_active = False
+        root.destroy()
+        
+    root.protocol("WM_DELETE_WINDOW", close_menu)
+    return root, close_menu
+
 def run_tk_loop(game_state, root):
     """Standardizes the Pygame-safe Tkinter event loop."""
     import pygame
     import tkinter as tk
     import data.constants as c
-    while getattr(game_state, 'menu_active', True) and not getattr(game_state, 'done', False):
+    while getattr(game_state, 'menu_active', True) and not getattr(game_state, 'done', False) and root.winfo_exists():
         try:
             root.update()
             pygame.event.pump()

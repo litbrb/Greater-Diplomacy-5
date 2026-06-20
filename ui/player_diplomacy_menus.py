@@ -181,24 +181,10 @@ class Declare_War_Screen(GameState):
                 el.handle_event(event)
 
     def additional_draw(self, surface):
-        # Wipe the frame clean to prevent the "Solitaire Effect" smearing through the transparent oceans
         surface.fill(self.map_screen.bg_color)
         
-        temp_prov = self.map_screen.selected_province
-        self.map_screen.selected_province = None
-        self.map_screen.hide_raised_rect = True
-
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
-        
-        self.map_screen.additional_draw(surface)
-        
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
-        self.map_screen.selected_province = temp_prov
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
 
         overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
@@ -392,20 +378,9 @@ class Claims_Screen(GameState):
 
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
-        temp_prov = self.map_screen.selected_province
-        self.map_screen.selected_province = None
-        self.map_screen.hide_raised_rect = True
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
-        
-        self.map_screen.additional_draw(surface)
-        
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
-        self.map_screen.selected_province = temp_prov
+
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
 
         # Draw territorial highlights
         data = self.map_screen.nation_data.get(self.player, {})
@@ -833,21 +808,8 @@ class Peace_Screen(GameState):
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
         
-        temp_prov = self.map_screen.selected_province
-        self.map_screen.selected_province = None
-        self.map_screen.hide_raised_rect = True
-
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
-        
-        self.map_screen.additional_draw(surface)
-        
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
-        self.map_screen.selected_province = temp_prov
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
 
         # --- DRAW MAP PREVIEW HIGHLIGHTS ---
         peace_type = self.terms[self.selected_term_idx]
@@ -921,20 +883,8 @@ class View_Peace_Treaty_Screen(GameState):
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
         
-        temp_prov = self.map_screen.selected_province
-        self.map_screen.selected_province = None
-        self.map_screen.hide_raised_rect = True
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
-        
-        self.map_screen.additional_draw(surface)
-        
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
-        self.map_screen.selected_province = temp_prov
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
 
         p_color = self.map_screen.nation_colors.get(self.proposer, (0, 255, 0))
         t_color = self.map_screen.nation_colors.get(self.target, (255, 0, 0))
@@ -1149,20 +1099,8 @@ class Trade_Screen(GameState):
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
         
-        temp_prov = self.map_screen.selected_province
-        self.map_screen.selected_province = None
-        self.map_screen.hide_raised_rect = True
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
-        
-        self.map_screen.additional_draw(surface)
-        
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
-        self.map_screen.selected_province = temp_prov
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
 
         overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
@@ -1345,15 +1283,8 @@ class Puppets_Screen(GameState):
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
         
-        self.map_screen.hide_raised_rect = True
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
-        self.map_screen.additional_draw(surface)
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
         
         overlay = pygame.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
@@ -1541,20 +1472,9 @@ class Create_Integrated_Puppet_Screen(GameState):
 
     def draw(self, surface):
         surface.fill(self.map_screen.bg_color)
-        temp_prov = self.map_screen.selected_province
-        self.map_screen.selected_province = None
-        self.map_screen.hide_raised_rect = True
-        self.map_screen.hide_tooltip = True
-        self.map_screen.hide_resource_hud = True
-        self.map_screen.hide_minimap = True
         
-        self.map_screen.additional_draw(surface)
-        
-        self.map_screen.hide_raised_rect = False
-        self.map_screen.hide_tooltip = False
-        self.map_screen.hide_resource_hud = False
-        self.map_screen.hide_minimap = False
-        self.map_screen.selected_province = temp_prov
+        # Use our new DRY helper!
+        self.map_screen.draw_clean_map_background(surface)
 
         # Highlight queued core provinces
         queue = self.map_screen.nation_data.get(self.player, {}).get("release_puppet_queue", [])

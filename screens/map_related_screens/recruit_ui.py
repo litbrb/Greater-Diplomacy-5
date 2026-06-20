@@ -1,5 +1,6 @@
 import pygame
 import data.constants as c
+from data import queries
 from map_logic.rendering.font_manager import fonts
 
 def draw_recruitment_overlay(surface, target_province):
@@ -55,10 +56,7 @@ def draw_map_queue_overlay(surface, target_province, map_screen=None):
     u_queue = target_province.get("unit_queue", [])
     
     # --- FOG OF WAR VISIBILITY CHECK ---
-    is_visible = True
-    if map_screen and map_screen.visible_provinces is not None:
-        if target_province["id"] not in map_screen.visible_provinces:
-            is_visible = False
+    is_visible = queries.is_province_visible(map_screen, target_province["id"])
 
     # Removed the early return here so it doesn't vanish when the queue is empty
     # if is_visible and not b_queue and not u_queue: return

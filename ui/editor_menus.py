@@ -1,9 +1,6 @@
-import pygame
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-import json
-import os
-import unicodedata #
+import unicodedata
 import data.constants as c
 from data.map import load_map
 from data import queries
@@ -20,21 +17,13 @@ def editor_load_map(self):
     queries.destroy_tk_root(root)
 
     if path:
-        # Re-run asset loader on this instance
         load_map.load_map_assets(self, path)
         self.refresh_political_map()
         self.show_feedback("Map Loaded into Editor")
 
 def select_brush_nation(self):
     """Opens a Tkinter selection window and sets mode to NATION."""
-    root = queries.create_tk_window("Select Nation", "300x450")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Select Nation", "300x450")
     
     tk.Label(root, text="Select Paint Nation:", font=("Arial", 12)).pack(pady=10)
     
@@ -43,11 +32,9 @@ def select_brush_nation(self):
     scrollbar = tk.Scrollbar(frame)
     scrollbar.pack(side="right", fill="y")
     
-    # Sort and filter out utility 'countries'
     nations = sorted(list(self.nation_data.keys()), key=lambda k: unicodedata.normalize('NFKD', k).encode('ascii', 'ignore').decode('utf-8').lower())
     lb = tk.Listbox(frame, yscrollcommand=scrollbar.set, font=("Arial", 11))
     
-    # Explicitly add the requested elements to the top
     lb.insert(tk.END, "Unclaimed")
     lb.insert(tk.END, "The Rot")
     lb.insert(tk.END, "----------")
@@ -66,7 +53,6 @@ def select_brush_nation(self):
         if selection:
             selected_val = lb.get(selection[0])
             
-            # Prevent the separator line from doing anything
             if selected_val == "----------":
                 lb.selection_clear(selection[0])
                 return
@@ -84,14 +70,7 @@ def select_brush_nation(self):
 
 def select_core_brush(self):
     """Opens a Tkinter selection window and sets mode to CORE."""
-    root = queries.create_tk_window("Select Core Nation", "300x450")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Select Core Nation", "300x450")
     tk.Label(root, text="Select Nation to Add Cores:", font=("Arial", 12)).pack(pady=10)
     
     frame = tk.Frame(root)
@@ -137,14 +116,7 @@ def select_core_brush(self):
 
 def select_claim_brush(self):
     """Opens a Tkinter selection window and sets mode to CLAIM."""
-    root = queries.create_tk_window("Select Claim Nation", "300x450")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Select Claim Nation", "300x450")
     tk.Label(root, text="Select Nation to Add Claims:", font=("Arial", 12)).pack(pady=10)
     
     frame = tk.Frame(root)
@@ -190,14 +162,7 @@ def select_claim_brush(self):
 
 def open_editor_claims(self):
     """Opens a Tkinter window listing every claim on the map."""
-    root = queries.create_tk_window("Global Claims Overview", "600x500")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-        
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Global Claims Overview", "600x500")
 
     style = ttk.Style(root)
     try:
@@ -245,18 +210,11 @@ def open_editor_claims(self):
 
 def select_building_brush(self):
     """Opens a selection window for building types and sets mode to BUILDING."""
-    root = queries.create_tk_window("Select Building", "300x400")
-    self.menu_active = True
+    root, close_menu = queries.create_managed_tk_window(self, "Select Building", "300x400")
 
-    # --- DYNAMIC FETCH ---
     bldg_lib = queries.get_building_library()
     buildings = ["None"] + list(bldg_lib.keys()) if bldg_lib else ["None"]
 
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
     tk.Label(root, text="Select Building to Place:", font=("Arial", 12)).pack(pady=10)
     
     frame = tk.Frame(root)
@@ -291,14 +249,7 @@ def spec_select_edit_country(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = queries.create_tk_window("Select Nation to Edit", "300x450")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Select Nation to Edit", "300x450")
     tk.Label(root, text="Select Nation to Edit:", font=("Arial", 12)).pack(pady=10)
     
     frame = tk.Frame(root)
@@ -327,14 +278,7 @@ def spec_select_edit_country(self):
 
 def open_editor_date(self):
     """Opens a Tkinter window to edit the game's starting date."""
-    root = queries.create_tk_window("Set Start Date", "250x350")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-        
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Set Start Date", "250x350")
 
     tk.Label(root, text="Day (1-30):", font=("Arial", 10)).pack(pady=(10, 2))
     day_ent = tk.Entry(root, justify="center")
@@ -359,7 +303,6 @@ def open_editor_date(self):
 
     def apply_date():
         try:
-            # Pull directly from the Entry widget
             d = int(day_ent.get())
             m = int(month_ent.get()) - 1
             y = int(year_ent.get())
@@ -381,9 +324,7 @@ def open_editor_date(self):
             self.scenario_settings["base_days_per_turn"] = b_dpt
             self.scenario_settings["days_per_turn"] = "Default"
             
-            # Prevents 'Data Refresh' from wiping the custom turn rate
             queries.save_scenario_settings(self.scenario_settings)
-            
             self.show_feedback(f"Date & Turn Rate set!")
             close_menu()
         except ValueError:
@@ -401,16 +342,8 @@ def open_editor_economy(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = queries.create_tk_window("Global Economy Overview", "1200x500")
-    self.menu_active = True
+    root, close_menu = queries.create_managed_tk_window(self, "Global Economy Overview", "1200x500")
 
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-        
-    root.protocol("WM_DELETE_WINDOW", close_menu)
-
-    # --- Styling for Table Look ---
     style = ttk.Style(root)
     try:
         style.theme_use("clam") 
@@ -430,7 +363,6 @@ def open_editor_economy(self):
                     
     all_econ = queries.calculate_all_economies(self.map_data, self.nation_data)
 
-    # --- Treeview UI Setup ---
     columns = (
         "Country", 
         "|1", "P_Cur", "P_Inc", "P_Bld", "P_Upk", "P_Net", 
@@ -440,15 +372,11 @@ def open_editor_economy(self):
     )
     
     tree = ttk.Treeview(root, columns=columns, show="headings")
-    
-    # Zebra striping tags
     tree.tag_configure('evenrow', background='#ffffff')
     tree.tag_configure('oddrow', background='#f2f2f2') 
     
-    # State dictionary to track ascending/descending sort for each column
     sort_dirs = {col: True for col in columns}
 
-    # Sorting Logic
     def sort_data(col):
         reverse = sort_dirs[col]
         sort_dirs[col] = not reverse 
@@ -457,11 +385,8 @@ def open_editor_economy(self):
             if c not in all_econ: return 0
             d = all_econ[c]
             if col == "Country": return c
-            
-            # Don't sort the dividers
             if col.startswith("|"): return 0
             
-            # Map the column ID to the specific resource and stat
             res_key = "manpower" if col.startswith("P_") else ("materials" if col.startswith("M_") else "fuel")
             stat_type = col.split("_")[1]
             bd = d["breakdown"][res_key]
@@ -474,17 +399,13 @@ def open_editor_economy(self):
             
             return 0
 
-        # Sort the countries using the dynamic value generator
         sorted_countries = sorted(active_countries, key=get_val, reverse=reverse)
         
-        # Clear existing rows
         for item in tree.get_children():
             tree.delete(item)
             
-        # Re-populate using the sorted list
         populate_tree(sorted_countries)
 
-    # Column Formatting
     widths = {
         "Country": 130,
         "|1": 20, "P_Cur": 55, "P_Inc": 55, "P_Bld": 55, "P_Upk": 55, "P_Net": 55,
@@ -494,9 +415,7 @@ def open_editor_economy(self):
     }
 
     for col in columns:
-        # Render the display text as "|" for any divider column
         heading_text = "|" if col.startswith("|") else col
-        # Passing col to lambda safely captures its state for the button click
         tree.heading(col, text=heading_text, command=lambda c=col: sort_data(c))
         tree.column(col, width=widths[col], anchor="center")
         
@@ -519,9 +438,7 @@ def open_editor_economy(self):
             m_cur, m_inc, m_bld, m_upk, m_net = get_stats("materials")
             f_cur, f_inc, f_bld, f_upk, f_net = get_stats("fuel")
                         
-            # Apply zebra stripe tags
             tag = 'evenrow' if i % 2 == 0 else 'oddrow'
-            
             tree.insert("", tk.END, values=(
                 c, 
                 "|", p_cur, p_inc, p_bld, p_upk, p_net, 
@@ -530,7 +447,6 @@ def open_editor_economy(self):
                 "|"
             ), tags=(tag,))
 
-    # Initial population (Defaults to alphabetical)
     populate_tree(sorted(active_countries))
 
     scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
@@ -548,16 +464,8 @@ def open_spectator_messages(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = queries.create_tk_window("Global Messages Overview", "1100x500")
-    self.menu_active = True
+    root, close_menu = queries.create_managed_tk_window(self, "Global Messages Overview", "1100x500")
 
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-        
-    root.protocol("WM_DELETE_WINDOW", close_menu)
-
-    # --- Styling for Table Look ---
     style = ttk.Style(root)
     try:
         style.theme_use("clam") 
@@ -578,11 +486,9 @@ def open_spectator_messages(self):
     columns = ("Date", "Sender", "Receiver", "Type", "Message")
     tree = ttk.Treeview(root, columns=columns, show="headings")
     
-    # Zebra striping tags
     tree.tag_configure('evenrow', background='#ffffff')
     tree.tag_configure('oddrow', background='#f2f2f2') 
 
-    # --- Gather Messages ---
     all_msgs = []
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     
@@ -590,16 +496,11 @@ def open_spectator_messages(self):
         if data.get("is_playable"):
             inbox = data.get("inbox", [])
             for msg in inbox:
-                # Mark as read for the spectator so the notification badge clears
                 msg["spectator_read"] = True
-                
                 sender = msg.get("sender", "")
                 
-                # Avoid duplicates (sent messages are stored as "To: Receiver" in sender's inbox)
                 if not sender.startswith("To: "):
                     date_str = msg.get("date", "Unknown")
-                    
-                    # Parse the date string back into a sortable absolute day value
                     sort_val = 0
                     try:
                         if date_str != "Unknown":
@@ -621,7 +522,6 @@ def open_spectator_messages(self):
                         "sort_val": sort_val
                     })
 
-    # --- Sorting Logic ---
     sort_dirs = {col: True for col in columns}
 
     def sort_data(col):
@@ -636,21 +536,14 @@ def open_spectator_messages(self):
             if col == "Message": return m["content"]
             return 0
 
-        # Sort the messages using the dynamic value generator
         sorted_msgs = sorted(all_msgs, key=get_val, reverse=reverse)
-        
-        # Clear existing rows
         for item in tree.get_children():
             tree.delete(item)
-            
-        # Re-populate
         populate_tree(sorted_msgs)
 
-    # Map headings to sort command
     for col in columns:
         tree.heading(col, text=col, command=lambda c=col: sort_data(c))
 
-    # Keep original column formatting
     tree.column("Date", width=130, anchor="center")
     tree.column("Sender", width=120, anchor="center")
     tree.column("Receiver", width=120, anchor="center")
@@ -668,7 +561,6 @@ def open_spectator_messages(self):
                 m["content"]
             ), tags=(tag,))
 
-    # Initial sort: Newest at the top (reverse=True) so most recent dates show up first!
     populate_tree(sorted(all_msgs, key=lambda x: x["sort_val"], reverse=True))
 
     scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
@@ -687,14 +579,12 @@ def open_map_research_editor(self):
         return
 
     def get_default_research():
-        # 1. ALWAYS generate a fresh template from the cached JSON first
         struct = queries.get_tech_tree()
         fresh_template = {tech: (1800 if data["max_lvl"] == 9999 else 0) for tech, data in struct.items()}
             
         if "infantry_type" in fresh_template: fresh_template["infantry_type"] = 1
         if "cavalry" in fresh_template: fresh_template["cavalry"] = 1
 
-        # 2. If the loaded map has an older default_research dict, update it with missing keys
         if getattr(self, "default_research", None) is not None:
             for k, v in fresh_template.items():
                 if k not in self.default_research:
@@ -706,19 +596,12 @@ def open_map_research_editor(self):
                 
             return self.default_research
 
-        # 3. Otherwise, use the fresh template entirely
         return fresh_template
 
     default_res = get_default_research()
 
-    root = queries.create_tk_window("Map Tech Editor", "350x500")
-    self.menu_active = True
+    root, close_menu = queries.create_managed_tk_window(self, "Map Tech Editor", "350x500")
 
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
     tk.Label(root, text="Select Country to Edit:", font=("Arial", 12)).pack(pady=5)
     
     lb = tk.Listbox(root, font=("Arial", 11))
@@ -823,16 +706,10 @@ def open_map_research_editor(self):
 
 def select_unit_brush(self):
     """Opens a selection window for unit types and sets mode to UNIT."""
-    root = queries.create_tk_window("Select Unit", "300x400")
-    self.menu_active = True
+    root, close_menu = queries.create_managed_tk_window(self, "Select Unit", "300x400")
 
     units = list(queries.get_unit_library().keys())
 
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
     tk.Label(root, text="Select Unit to Place:", font=("Arial", 12)).pack(pady=10)
     
     frame = tk.Frame(root)
@@ -861,14 +738,7 @@ def select_unit_brush(self):
 
 def select_resource_brush(self):
     """Opens a selection window for resource types and amounts."""
-    root = queries.create_tk_window("Resource Brush", "300x250")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Resource Brush", "300x250")
 
     tk.Label(root, text="Select Resource Type:", font=("Arial", 12)).pack(pady=10)
     
@@ -909,13 +779,7 @@ def open_diplomacy_editor(self):
         self.show_feedback("No active countries on map!")
         return
 
-    root = queries.create_tk_window("Global Diplomacy & Factions Editor", "550x700")
-    self.menu_active = True
-
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Global Diplomacy & Factions Editor", "550x700")
 
     # UI Layout
     left_frame = tk.Frame(root, width=200)
@@ -1102,14 +966,7 @@ def open_edited_countries(self):
         if changes:
             edited_list.append((c_id, changes))
             
-    root = queries.create_tk_window("Edited Countries Overview", "900x500")
-    self.menu_active = True
-    
-    def close_menu():
-        self.menu_active = False
-        root.destroy()
-        
-    root.protocol("WM_DELETE_WINDOW", close_menu)
+    root, close_menu = queries.create_managed_tk_window(self, "Edited Countries Overview", "900x500")
     
     style = ttk.Style(root)
     try: style.theme_use("clam")

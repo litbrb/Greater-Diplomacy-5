@@ -26,10 +26,7 @@ def draw_sidebar_info(self, surface):
         return
 
     # --- FOG OF WAR VISIBILITY CHECK ---
-    is_visible = True
-    if self.visible_provinces is not None:
-        if province["id"] not in self.visible_provinces:
-            is_visible = False
+    is_visible = queries.is_province_visible(self, province["id"])
             
     owner_id = province.get("owner", "Unclaimed")
     terrain = province.get("terrain", "Unknown")

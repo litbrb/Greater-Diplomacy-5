@@ -62,6 +62,15 @@ def render_buttons(self):
     self.btn_skip_ai = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Skip AI", self.toggle_skip_ai, font_preset="normal")
     self.btn_multi_turn = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X * 2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Multi-Turn", self.trigger_multi_turn)
     
+    def open_declare_independence():
+        from screens.map_related_screens.declare_independence import Declare_Independence_Screen
+        from ui.player_diplomacy_menus import _run_pygame_sub_screen
+        screen = Declare_Independence_Screen()
+        screen.start_screen(self)
+        _run_pygame_sub_screen(self, screen)
+        
+    self.btn_declare_indep = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X * 2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "red", "Declare Indep.", open_declare_independence)
+
     def open_edit_country_action():
         if self.player_country == "Spectator" or self.is_editor:
             editor_menus.spec_select_edit_country(self)
@@ -151,7 +160,7 @@ def render_buttons(self):
         self.btn_ed_load, self.btn_ed_nation,
         self.btn_ed_core, self.btn_ed_claim, self.btn_ed_autocore, self.btn_ed_resource, self.btn_ed_building,
         self.btn_ed_unit, self.btn_ed_refresh, self.btn_ed_edited, self.btn_ed_date, self.btn_ed_diplo, self.btn_ed_scripts,
-        self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
+        self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_declare_indep, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
         self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_gp_claims, self.btn_gp_puppets, self.btn_go_orders, self.btn_go_production,
         self.btn_declare_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
         self.btn_fac_join_req, self.btn_fac_kick, self.btn_fac_create,
@@ -258,6 +267,7 @@ def update_button_states(map_screen):
 
         is_spec = map_screen.player_country == "Spectator"
         map_screen.btn_multi_turn.visible = not is_sel and not is_thinking and is_spec
+        map_screen.btn_declare_indep.visible = getattr(map_screen, 'tactical_mode', False) and not is_sel and not is_thinking
 
         gp_btns = [
             map_screen.btn_gp_edit, map_screen.btn_gp_econ, map_screen.btn_gp_rd,
@@ -285,10 +295,12 @@ def update_button_states(map_screen):
             map_screen.btn_gp_faction.disabled = True
             map_screen.btn_gp_puppets.disabled = True
             map_screen.btn_gp_edit.disabled = True
+            map_screen.btn_gp_msgs.disabled = True
             
             map_screen.btn_gp_faction.color, map_screen.btn_gp_faction.hover_color = c.UI_COLORS["grey"]
             map_screen.btn_gp_puppets.color, map_screen.btn_gp_puppets.hover_color = c.UI_COLORS["grey"]
             map_screen.btn_gp_edit.color, map_screen.btn_gp_edit.hover_color = c.UI_COLORS["grey"]
+            map_screen.btn_gp_msgs.color, map_screen.btn_gp_msgs.hover_color = c.UI_COLORS["grey"]
         else:
             if bool(my_faction):
                 map_screen.btn_gp_faction.color, map_screen.btn_gp_faction.hover_color = c.UI_COLORS["pink"]

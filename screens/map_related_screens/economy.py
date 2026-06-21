@@ -25,7 +25,11 @@ class Economy_Screen(GameState):
         self.elements = [Button(20, 20, "small", "red", "Back", self.exit_to_map)]
         
         # Expenses button positioned in the top right corner
-        self.elements.append(Button(c.SCREEN_WIDTH - 120, 20, "small", "orange", "Expenses", self.open_expenses_table))
+        btn_expenses = Button(c.SCREEN_WIDTH - 120, 20, "small", "orange", "Expenses", self.open_expenses_table)
+        if getattr(self.map_screen, 'tactical_mode', False):
+            btn_expenses.disabled = True
+            btn_expenses.color, btn_expenses.hover_color = c.UI_COLORS["grey"]
+        self.elements.append(btn_expenses)
         
         # Conversion Slider positioned below the resource rows
         p_data = self.map_screen.nation_data[self.map_screen.player_country]

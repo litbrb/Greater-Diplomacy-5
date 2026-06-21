@@ -77,8 +77,8 @@ class Economy_Screen(GameState):
             
             max_res = {
                 "manpower": c.TACTICAL_MAX_MANPOWER,
-                "materials": stats.get("cost_materials", 9999),
-                "fuel": stats.get("cost_fuel", 0)
+                "materials": c.TACTICAL_MAX_MATERIALS,
+                "fuel": c.TACTICAL_MAX_FUEL
             }
         else:
             # Cache the economy to prevent 60 FPS global recalculations

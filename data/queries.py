@@ -909,8 +909,13 @@ def get_resource_hud_strings(map_screen, include_net=False):
         net_str = fmt_net(total_inc.get(res_key, 0), total_upkeep.get(res_key, 0)) if include_net else ""
         
         if is_tactical:
-            stats = get_unit_library().get(map_screen.player_unit.get("original_type", map_screen.player_unit.get("type")), {})
-            max_val = c.TACTICAL_MAX_MANPOWER if res_key == "manpower" else stats.get(f"cost_{res_key}", 9999 if res_key == "materials" else 0)
+            if res_key == "manpower":
+                max_val = c.TACTICAL_MAX_MANPOWER
+            elif res_key == "materials":
+                max_val = c.TACTICAL_MAX_MATERIALS
+            else:
+                max_val = c.TACTICAL_MAX_FUEL
+                
             hud_strings.append((f"{name}: {p_val}/{int(max_val)}{net_str}", color))
         else:
             hud_strings.append((f"{name}: {p_val}{net_str}", color))
@@ -1307,10 +1312,15 @@ def get_base_unit_name(unit_name):
     return re.sub(r'\s+[IVXLCDM]+$', '', base).strip()
 
 def get_formatted_division_name(unit_type):
-    """Standardizes parsing unit names into lower-case division categories."""
-    base_name = get_base_unit_name(unit_type).lower().replace(" type", "")
-    if "division" not in base_name and not is_naval_unit(unit_type) and "convoy" not in base_name and "truck" not in base_name:
-        base_name += " division"
+    """Standardizes parsing unit names into division categories while preserving case."""
+    # Use regex to strip out " type" case-insensitively, without lowercasing the entire string
+    base_name = re.sub(r'(?i)\s+type', '', get_base_unit_name(unit_type))
+    
+    # Use a lowercase check for the logic, but append to the preserved case string
+    check_name = base_name.lower()
+    if "division" not in check_name and not is_naval_unit(unit_type) and "convoy" not in check_name and "truck" not in check_name:
+        base_name += " Division"
+        
     return base_name
 
 def roman_to_int(s):

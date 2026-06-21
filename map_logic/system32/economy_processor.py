@@ -14,8 +14,8 @@ def process_economy(self):
         self.unit_economy["fuel_inc"] = upkeep["fuel"] # Stored cleanly for movement calcs
         
         self.unit_economy["manpower"] = min(self.unit_economy.get("manpower", 0) + upkeep["manpower"], c.TACTICAL_MAX_MANPOWER)
-        self.unit_economy["materials"] = min(self.unit_economy.get("materials", 0) + upkeep["materials"], stats.get("cost_materials", 9999))
-        self.unit_economy["fuel"] = min(self.unit_economy.get("fuel", 0) + upkeep["fuel"], stats.get("cost_fuel", 0))
+        self.unit_economy["materials"] = min(self.unit_economy.get("materials", 0) + upkeep["materials"], c.TACTICAL_MAX_MATERIALS)
+        self.unit_economy["fuel"] = min(self.unit_economy.get("fuel", 0) + upkeep["fuel"], c.TACTICAL_MAX_FUEL)
 
     all_econ = queries.calculate_all_economies(self.map_data, self.nation_data)
 

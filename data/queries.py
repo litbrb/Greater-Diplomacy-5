@@ -19,6 +19,24 @@ def get_imperial_family(nation, nation_data):
     family.update(nation_data.get(top_dog, {}).get("puppets", []))
     return family
 
+def get_all_friendly_nations(nation, nation_data):
+    """Unified query to fetch a nation, its faction, imperial family, and allies."""
+    friendly = set(get_imperial_family(nation, nation_data))
+    faction = nation_data.get(nation, {}).get("faction", "")
+    if faction:
+        friendly.update(get_faction_members(faction, nation_data))
+    friendly.update(nation_data.get(nation, {}).get("allied_with", []))
+    return friendly
+
+def _apply_vision_radius(prov, id_to_province, visible_set, partial_set):
+    """Standardizes FOW radius expansion."""
+    visible_set.add(prov["id"])
+    for n1 in prov.get("neighbors", []):
+        visible_set.add(n1)
+        n1_prov = id_to_province.get(n1)
+        if n1_prov:
+            partial_set.update(n1_prov.get("neighbors", []))
+
 def get_visible_provinces(map_screen):
     """Calculates and returns sets of province IDs currently visible and partially visible to the player."""
     player_country = map_screen.player_country
@@ -29,12 +47,7 @@ def get_visible_provinces(map_screen):
     if player_country in ["Spectator", "Editor", "None"] or player_country not in nation_data:
         return None, None # Returns None to signify "Full Visibility / Ignore Fog"
         
-    friendly_nations = set()
-    friendly_nations.update(get_imperial_family(player_country, nation_data))
-    
-    player_faction = nation_data[player_country].get("faction", "")
-    if player_faction:
-        friendly_nations.update(get_faction_members(player_faction, nation_data))
+    friendly_nations = get_all_friendly_nations(player_country, nation_data)
         
     visible_set = set()
     partial_set = set()
@@ -64,14 +77,8 @@ def get_visible_provinces(map_screen):
         partial_set.clear()
         if tactical_location:
             # 1. Radius around unit
-            visible_set.add(tactical_location["id"])
-            for n1 in tactical_location.get("neighbors", []):
-                visible_set.add(n1)
-                n1_prov = id_to_province.get(n1)
-                if n1_prov:
-                    for n2 in n1_prov.get("neighbors", []):
-                        partial_set.add(n2)
-                        
+            _apply_vision_radius(tactical_location, id_to_province, visible_set, partial_set)
+                    
             # 2. Contiguous landmass check
             if tactical_location.get("terrain") not in c.WATER_TERRAINS:
                 queue = [tactical_location["id"]]
@@ -79,8 +86,6 @@ def get_visible_provinces(map_screen):
                 
                 while queue:
                     curr_id = queue.pop(0)
-                    # partial_visible_provinces
-                    # partial_set.add(curr_id)
                     visible_set.add(curr_id)
                     curr_prov = id_to_province.get(curr_id)
                     if curr_prov:
@@ -94,16 +99,10 @@ def get_visible_provinces(map_screen):
     else:
         # Standard mode radius parsing
         for prov in friendly_unit_locations:
-            visible_set.add(prov["id"])
-            for n1 in prov.get("neighbors", []):
-                visible_set.add(n1)
-                n1_prov = id_to_province.get(n1)
-                if n1_prov:
-                    for n2 in n1_prov.get("neighbors", []):
-                        partial_set.add(n2)
+            _apply_vision_radius(prov, id_to_province, visible_set, partial_set)
                         
     # Filter out anything from partial that is already in the closer full visibility group
-    partial_set = partial_set - visible_set
+    partial_set -= visible_set
     
     return visible_set, partial_set
 
@@ -279,32 +278,7 @@ def get_economic_power(nation, nation_data):
 
 def get_alliance_military_strength(nation, map_data, nation_data):
     """Calculates the combined military strength of a nation and its faction members/allies/subjects."""
-    strength = 0
-    counted = set()
-    
-    # Add faction members
-    faction = nation_data.get(nation, {}).get("faction", "")
-    if faction:
-        for member in get_faction_members(faction, nation_data):
-            if member not in counted:
-                strength += get_military_strength(member, map_data)
-                counted.add(member)
-                
-    # Add Imperial Family (Master & Puppets)
-    family = get_imperial_family(nation, nation_data)
-    for fam_member in family:
-        if fam_member not in counted:
-            strength += get_military_strength(fam_member, map_data)
-            counted.add(fam_member)
-                
-    # Add direct allies if they aren't already counted
-    allies = nation_data.get(nation, {}).get("allied_with", [])
-    for ally in allies:
-        if ally not in counted:
-            strength += get_military_strength(ally, map_data)
-            counted.add(ally)
-            
-    return strength
+    return sum(get_military_strength(member, map_data) for member in get_all_friendly_nations(nation, nation_data))
 
 def get_military_strength(nation, map_data):
     """Calculates rough military strength of a nation based on unit stats."""
@@ -312,8 +286,7 @@ def get_military_strength(nation, map_data):
     for prov in map_data.values():
         for u in prov.get("units", []):
             if u.get("owner") == nation:
-                hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
-                strength += u.get("attack", 0) + u.get("defense", 0) + hp_val
+                strength += calculate_unit_strength(u)
     return strength
 
 def get_nations_holding_our_cores_or_claims(nation, map_data, nation_data):
@@ -345,12 +318,7 @@ def get_border_strength(nation_a, nation_b, map_data, id_to_province, nation_dat
         strength = 0
         
         # Include imperial family (puppets), allies, and faction members defending the border
-        friendly_nations = set([evaluating_nation])
-        faction = nation_data.get(evaluating_nation, {}).get("faction", "")
-        if faction:
-            friendly_nations.update(get_faction_members(faction, nation_data))
-        friendly_nations.update(get_imperial_family(evaluating_nation, nation_data))
-        friendly_nations.update(nation_data.get(evaluating_nation, {}).get("allied_with", []))
+        friendly_nations = get_all_friendly_nations(evaluating_nation, nation_data)
         
         for prov_id in prov_ids:
             prov = id_to_province.get(prov_id)
@@ -359,12 +327,11 @@ def get_border_strength(nation_a, nation_b, map_data, id_to_province, nation_dat
                 friendly_units = [u for u in prov.get("units", []) if u.get("owner") in friendly_nations]
                 
                 # Cap by combat width (MAX_COMBAT_ATTACKERS) prioritizing best units
-                top_units = sorted(friendly_units, key=lambda x: x.get("attack", 0) + x.get("defense", 0), reverse=True)[:c.MAX_COMBAT_ATTACKERS]
+                top_units = sorted(friendly_units, key=calculate_unit_strength, reverse=True)[:c.MAX_COMBAT_ATTACKERS]
                 
                 tile_strength = 0
                 for u in top_units:
-                    hp_val = u.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR
-                    base_str = u.get("attack", 0) + u.get("defense", 0) + hp_val
+                    base_str = calculate_unit_strength(u)
                     
                     # Reduce strength if this unit is actively fighting someone else on this tile
                     in_combat_with_third_party = False
@@ -537,42 +504,21 @@ def is_water_province(province):
 
 def can_ships_enter(moving_nation, target_province, nation_data):
     """Centralized rules for naval movement."""
-    is_water = target_province.get("terrain") in c.WATER_TERRAINS
-    if is_water:
-        return True
-        
-    if not target_province.get("is_coastal", False):
-        return False
+    if target_province.get("terrain") in c.WATER_TERRAINS: return True
+    if not target_province.get("is_coastal", False): return False
         
     target_owner = target_province.get("owner", "Unclaimed")
-    
-    # Ships can only enter friendly or unowned ports
-    is_faction = are_in_same_faction(moving_nation, target_owner, nation_data)
-    is_ally = target_owner in nation_data.get(moving_nation, {}).get("allied_with", [])
-    is_family = target_owner in get_imperial_family(moving_nation, nation_data)
-    
-    return target_owner == moving_nation or is_faction or is_ally or is_family or target_owner == "Unclaimed"
+    return target_owner == "Unclaimed" or target_owner in get_all_friendly_nations(moving_nation, nation_data)
 
 def can_land_units_enter(moving_nation, target_province, nation_data):
     """Centralized rules for land movement."""
-    if target_province.get("terrain") in c.WATER_TERRAINS:
-        return False
+    if target_province.get("terrain") in c.WATER_TERRAINS: return False
 
     target_owner = target_province.get("owner", "Unclaimed")
-
-    # Whitelist neutral water countries so they act as open international waters
-    allowed_owners = ["Unclaimed", "None", moving_nation, "Ocean", "Lakes"]
-
-    if target_owner not in allowed_owners:
-        is_enemy = are_at_war(moving_nation, target_owner, nation_data)
-        is_faction = are_in_same_faction(moving_nation, target_owner, nation_data)
-        is_ally = target_owner in nation_data.get(moving_nation, {}).get("allied_with", [])
-        is_family = target_owner in get_imperial_family(moving_nation, nation_data)
-        
-        if not (is_enemy or is_faction or is_ally or is_family):
-            return False
-
-    return True
+    if target_owner in ["Unclaimed", "None", "Ocean", "Lakes"]: return True
+    if are_at_war(moving_nation, target_owner, nation_data): return True
+    
+    return target_owner in get_all_friendly_nations(moving_nation, nation_data)
 
 def get_tactical_speed(unit, unit_library):
     """Calculates the effective speed of a unit in tactical mode."""
@@ -734,6 +680,10 @@ def is_constructing_building(province):
 # ==========================================
 # UNIFIED COMBAT & RENDERING HELPERS
 # ==========================================
+
+def calculate_unit_strength(unit):
+    """Unified heuristic for a unit's military power."""
+    return unit.get("attack", 0) + unit.get("defense", 0) + (unit.get("health", 0) / c.MILITARY_STRENGTH_HEALTH_DIVISOR)
 
 def get_top_attackers(units, count=None):
     """Returns the highest attack units in a list, capped at the provided limit."""
@@ -1356,6 +1306,13 @@ def get_base_unit_name(unit_name):
     base = re.sub(r'\s+\d{4}$', '', unit_name)
     return re.sub(r'\s+[IVXLCDM]+$', '', base).strip()
 
+def get_formatted_division_name(unit_type):
+    """Standardizes parsing unit names into lower-case division categories."""
+    base_name = get_base_unit_name(unit_type).lower().replace(" type", "")
+    if "division" not in base_name and not is_naval_unit(unit_type) and "convoy" not in base_name and "truck" not in base_name:
+        base_name += " division"
+    return base_name
+
 def roman_to_int(s):
     """Converts a roman numeral string to an integer."""
     if not s: return 0
@@ -1401,13 +1358,8 @@ def generate_unit_custom_name(unit, unit_counters):
         if numeral_match:
             suffix = f" ({numeral_match.group(1)})"
     
-    # Clean up the base name
-    base_name = get_base_unit_name(unit_type).lower()
-    base_name = base_name.replace(" type", "")
-    
-    # Append 'division' if it's not a ship, convoy, or truck
-    if "division" not in base_name and not is_naval_unit(unit_type) and "convoy" not in base_name and "truck" not in base_name:
-        base_name += " division"
+    # Clean up the base name using our new unified string parser
+    base_name = get_formatted_division_name(unit_type)
     
     # Track count per owner per base type
     count = unit_counters.setdefault(owner, {}).get(base_name, 0) + 1
@@ -1422,14 +1374,7 @@ def build_active_unit_counters(map_data):
     for prov in map_data.values():
         for unit in prov.get("units", []):
             owner = unit.get("owner", "Unclaimed")
-            unit_type = unit.get("type", "Infantry")
-            
-            base_name = get_base_unit_name(unit_type).lower()
-            base_name = base_name.replace(" type", "")
-            
-            if "division" not in base_name and not is_naval_unit(unit_type) and "convoy" not in base_name and "truck" not in base_name:
-                base_name += " division"
-                
+            base_name = get_formatted_division_name(unit.get("type", "Infantry"))
             unit_counters.setdefault(owner, {})[base_name] = unit_counters.setdefault(owner, {}).get(base_name, 0) + 1
     return unit_counters
 
@@ -1668,10 +1613,7 @@ def decode_b64_to_surf(b64_str, size, is_portrait=False, country_name=None):
 
 def is_nation_reachable(nation_a, target_nation, map_data, id_to_province, nation_data):
     """Determines if a nation can physically reach another via land borders (including faction borders) or sea."""
-    nation_a_faction = nation_data.get(nation_a, {}).get("faction", "")
-    friendly_nations = {nation_a}
-    if nation_a_faction:
-        friendly_nations.update(get_faction_members(nation_a_faction, nation_data))
+    friendly_nations = get_all_friendly_nations(nation_a, nation_data)
         
     target_faction = nation_data.get(target_nation, {}).get("faction", "")
     enemy_nations = {target_nation}

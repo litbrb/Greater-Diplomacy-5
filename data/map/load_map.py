@@ -99,10 +99,17 @@ def load_map_assets(self, load_path):
             
     # 3. OVERRIDE: If we are loading an existing save file, prefer settings from inside the save
     # Do NOT override if we are in selection mode (starting a new scenario), so player UI choices are respected.
-    if save_meta and "scenario_settings" in save_meta and not getattr(self, 'selection_mode', False):
-        self.scenario_settings = save_meta["scenario_settings"]
-        c.USE_FOG_OF_WAR = str(self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
-        c.CASUS_BELLI_REQUIRED = str(self.scenario_settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
+    if save_meta and "scenario_settings" in save_meta:
+        if not getattr(self, 'selection_mode', False):
+            self.scenario_settings = save_meta["scenario_settings"]
+            c.USE_FOG_OF_WAR = str(self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
+            c.CASUS_BELLI_REQUIRED = str(self.scenario_settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
+        else:
+            # Inject built-in scenario constants that shouldn't be wiped by the user's UI settings
+            if "base_days_per_turn" in save_meta["scenario_settings"]:
+                self.scenario_settings["base_days_per_turn"] = save_meta["scenario_settings"]["base_days_per_turn"]
+            if "use_scripted_events" in save_meta["scenario_settings"]:
+                self.scenario_settings["use_scripted_events"] = save_meta["scenario_settings"]["use_scripted_events"]
 
     if load_path:
         history_path = os.path.join(load_path, "history.json")

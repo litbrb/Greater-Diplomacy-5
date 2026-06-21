@@ -8,6 +8,9 @@ def get_pending_action(nation_data, player_name, target_name):
     return info
 
 def queue_text_message(nation_data, player_name, target_name, content):
+    if player_name not in nation_data:
+        return "Cannot send messages as this entity."
+        
     pending = nation_data[player_name].setdefault("pending_diplomacy", {})
     current_action = get_pending_action(nation_data, player_name, target_name)
     
@@ -22,6 +25,9 @@ def queue_text_message(nation_data, player_name, target_name, content):
 
 def cancel_text_message(nation_data, player_name, target_name):
     """Safely clears a drafted text message if it hasn't been sent yet."""
+    if player_name not in nation_data:
+        return "No drafted message to clear."
+        
     pending = nation_data[player_name].setdefault("pending_diplomacy", {})
     current_action = get_pending_action(nation_data, player_name, target_name)
     

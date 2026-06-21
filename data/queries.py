@@ -1304,6 +1304,8 @@ def get_relation_color(score):
 
 def is_foreign_playable(owner, player_country, nation_data):
     """Returns True if the owner is a valid, playable foreign nation."""
+    if player_country not in nation_data:
+        return False
     return owner != player_country and owner in nation_data and nation_data[owner].get("is_playable", False)
 
 def get_base_unit_name(unit_name):

@@ -527,7 +527,7 @@ def get_tactical_speed(unit, unit_library):
 def get_tactical_fuel_cost_per_tile(unit, fuel_inc, unit_library):
     """Calculates the fuel cost per tile moved in tactical mode."""
     calc_speed = get_tactical_speed(unit, unit_library)
-    return math.ceil(fuel_inc / (calc_speed * 0.66)) if calc_speed > 0 else 0
+    return math.ceil(fuel_inc / (calc_speed * 0.75)) if calc_speed > 0 else 0
 
 # ==========================================
 # PROVINCE & TECH QUERIES
@@ -1772,6 +1772,10 @@ def will_ai_accept_peace(target_nation, proposer_nation, peace_type, map_data, n
         # AI shouldn't accept a surrender unless they gain territory OR if they'll also accept a ceasefire
         if gains_territory:
             return True
+            
+        war_dur = nation_data.get(target_nation, {}).get("war_durations", {}).get(proposer_nation, 0)
+        if war_dur < c.MIN_TURNS_FOR_CEASEFIRE:
+            return False
             
         if map_data:
             if not ai_thinks_it_can_win(target_nation, proposer_nation, map_data, nation_data):

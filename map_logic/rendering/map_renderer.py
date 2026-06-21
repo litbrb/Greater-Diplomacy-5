@@ -129,7 +129,11 @@ def draw_map_screen(self, surface):
                     speed = unit.get("speed", 1)
                     
                     # --- NEW: Tell the renderer to bypass Fog of War if the player owns this specific unit ---
-                    overlay_renderer.draw_split_movement_path(surface, self, province, path, speed, owner_color, force_visible=is_current_player_unit)
+                    # Fix for tactical mode: only force visible if it's the specific tactical unit
+                    is_tactical = getattr(self, 'tactical_mode', False) and getattr(self, 'player_unit', None)
+                    force_vis = (unit is self.player_unit) if is_tactical else is_current_player_unit
+                    
+                    overlay_renderer.draw_split_movement_path(surface, self, province, path, speed, owner_color, force_visible=force_vis)
                             
     # --- LAYER 3.5: COUNTRY NAMES ---
     country_names.draw_country_names(self, surface)

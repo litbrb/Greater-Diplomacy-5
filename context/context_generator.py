@@ -126,9 +126,9 @@ files_to_skip_but_list = [
     #"data\**",
 
     #"ui\**",
-    #"screens\**",
+    "screens\**",
 
-    "map_logic/ai\**",
+    #"map_logic/ai\**",
     "map_logic/camera\**",
     #"map_logic/diplomacy\**",
     "map_logic/random_map\**",

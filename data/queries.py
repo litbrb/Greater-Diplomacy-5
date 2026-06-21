@@ -1737,6 +1737,12 @@ def will_ai_accept_peace(target_nation, proposer_nation, peace_type, map_data, n
         return False
         
     if peace_type.startswith(c.PEACE_WHITE_PEACE):
+        # NEW: Refuse ceasefire for the first X turns
+        war_dur = nation_data.get(target_nation, {}).get("war_durations", {}).get(proposer_nation, 0)
+        if war_dur < c.MIN_TURNS_FOR_CEASEFIRE:
+            return False
+
+        # friendly reminder that ctw means chance to win (kinda dumb acronym but sure whatever)
         if map_data:
             # If CTW is True, the AI thinks it can win, so it refuses the ceasefire.
             if ai_thinks_it_can_win(target_nation, proposer_nation, map_data, nation_data):

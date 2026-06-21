@@ -15,20 +15,15 @@ def handle_declare_war(map_screen):
     t_master = t_data.get("master", "")
     t_type = t_data.get("puppet_type", "")
     
-    # 1. Integrated puppets cannot declare war AT ALL
-    if my_master and my_type == c.PUPPET_TYPE_INTEGRATED:
-        map_screen.show_feedback("Integrated puppets cannot declare wars!")
-        return
-        
-    # 2. Autonomous puppets cannot declare war, UNLESS it's an independence war against their master
-    if my_master and my_type == c.PUPPET_TYPE_AUTONOMOUS and target != my_master:
+    # 1 & 2. Puppets (Integrated and Autonomous) can ONLY declare independence wars
+    if my_master and target != my_master:
         map_screen.show_feedback("Puppets can only declare war on their master!")
         return
         
     # 3. Cannot declare war ON an integrated puppet
     if t_master and t_type == c.PUPPET_TYPE_INTEGRATED:
         if t_master == player:
-            map_screen.show_feedback("Cannot declare war on your own integrated puppet!")
+            map_screen.show_feedback("Cannot declare war on your own integrated puppet! (You can just annex them)")
         else:
             map_screen.show_feedback(f"Integrated puppets cannot be declared war on! Declare on {t_master} instead.")
         return

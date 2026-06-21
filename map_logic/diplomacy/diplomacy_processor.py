@@ -84,6 +84,14 @@ def process_diplomacy_turn(self):
             if truces[target] <= 0:
                 del truces[target]
 
+        # --- INCREMENT WAR DURATIONS ---
+        war_durs = data.setdefault("war_durations", {})
+        for enemy in list(war_durs.keys()):
+            if enemy in data.get("at_war_with", []):
+                war_durs[enemy] += 1
+            else:
+                del war_durs[enemy]
+
     # --- 0. PROCESS QUEUED AI MULTI-TURN ACTIONS ---
         for country_name, data in self.nation_data.items():
             if isinstance(data, dict) and "queued_ai_actions" in data and data["queued_ai_actions"]:

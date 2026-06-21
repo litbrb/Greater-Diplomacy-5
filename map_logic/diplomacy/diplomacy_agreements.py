@@ -215,10 +215,24 @@ def finalize_war(map_data, nation_data, a, b):
     # If they are master and puppet, break the bond and declare independence
     if master_a == b:
         break_puppet_link(nation_data, b, a)
+        
+        # NEW: Master gets claims on all rebel territory
+        master_claims = nation_data.setdefault(b, {}).setdefault("claims", [])
+        for prov in map_data.values():
+            if prov.get("owner") == a and prov["id"] not in master_claims:
+                master_claims.append(prov["id"])
+                
         from map_logic.diplomacy.diplomacy_events import log_global_event
         log_global_event(nation_data, f"{a} has declared a war of independence against {b}!")
     elif master_b == a:
         break_puppet_link(nation_data, a, b)
+        
+        # NEW: Master gets claims on all rebel territory
+        master_claims = nation_data.setdefault(a, {}).setdefault("claims", [])
+        for prov in map_data.values():
+            if prov.get("owner") == b and prov["id"] not in master_claims:
+                master_claims.append(prov["id"])
+                
         from map_logic.diplomacy.diplomacy_events import log_global_event
         log_global_event(nation_data, f"{b} has achieved independence after being attacked by {a}!")
 
@@ -233,6 +247,8 @@ def finalize_war(map_data, nation_data, a, b):
     for country, other in [(a, b), (b, a)]:
         if other not in nation_data[country]["at_war_with"]:
             nation_data[country]["at_war_with"].append(other)
+            # NEW: Track war duration for ceasefire cooldowns
+            nation_data[country].setdefault("war_durations", {})[other] = 0
 
         # Clear faction war cooldowns so allies can be called in
         faction = nation_data[country].get("faction", "")

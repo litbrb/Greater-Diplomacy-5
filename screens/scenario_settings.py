@@ -27,7 +27,7 @@ class Scenario_Settings(GameState):
         ]
         
         # Toggle Button - Fog of War
-        fog_val = self.settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)
+        fog_val = str(self.settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
         fog_color = "green" if fog_val else "red"
         fog_text = "Fog of War: ON" if fog_val else "Fog of War: OFF"
         
@@ -36,7 +36,7 @@ class Scenario_Settings(GameState):
         )
 
         # Toggle Button - Casus Belli Required
-        cb_val = self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)
+        cb_val = str(self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
         cb_color = "green" if cb_val else "red"
         cb_text = "Casus Belli Required: ON" if cb_val else "Casus Belli Required: OFF"
 
@@ -45,7 +45,7 @@ class Scenario_Settings(GameState):
         )
 
         # Toggle Button - AI Off
-        ai_disabled_val = self.settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)
+        ai_disabled_val = str(self.settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)).lower() == "true"
         ai_disabled_color = "red" if ai_disabled_val else "green" 
         ai_disabled_text = "AI: OFF" if ai_disabled_val else "AI: ON"
 
@@ -64,17 +64,20 @@ class Scenario_Settings(GameState):
         )
 
     def toggle_fog(self):
-        self.settings["fog_of_war"] = not self.settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)
+        current = str(self.settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
+        self.settings["fog_of_war"] = not current
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
     def toggle_casus_belli(self):
-        self.settings["casus_belli_required"] = not self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)
+        current = str(self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
+        self.settings["casus_belli_required"] = not current
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
     def toggle_ai_disabled(self):
-        self.settings["ai_disabled"] = not self.settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)
+        current = str(self.settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)).lower() == "true"
+        self.settings["ai_disabled"] = not current
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 

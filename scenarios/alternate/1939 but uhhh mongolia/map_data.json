@@ -432,7 +432,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -636,7 +637,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -1806,7 +1808,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -1918,7 +1921,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -1932,7 +1936,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -1946,7 +1951,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -1960,7 +1966,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -1974,7 +1981,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -2052,7 +2060,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -2066,7 +2075,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -2080,7 +2090,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -2453,7 +2464,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st armored car division (VII)"
             }
         ],
         "orders": [],
@@ -2505,7 +2517,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -2615,7 +2628,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd armored car division (VII)"
             }
         ],
         "orders": [],
@@ -2763,7 +2777,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -3037,7 +3052,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -3051,7 +3067,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -3065,7 +3082,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -3214,7 +3232,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -3228,7 +3247,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "9th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -3242,7 +3262,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "10th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -3256,7 +3277,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "11th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -3270,7 +3292,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "12th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -3386,7 +3409,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -3670,7 +3694,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -3751,7 +3776,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -3863,7 +3889,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd armored car division (VII)"
             }
         ],
         "orders": [],
@@ -3916,7 +3943,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "13th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -3997,7 +4025,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -4211,7 +4240,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -4225,7 +4255,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -4239,7 +4270,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -4455,7 +4487,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -4698,7 +4731,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -4811,7 +4845,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "14th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -4825,7 +4860,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "15th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -4839,7 +4875,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "16th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -4853,7 +4890,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "17th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -4867,7 +4905,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "18th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -5113,7 +5152,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -5533,7 +5573,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -5547,7 +5588,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -5561,7 +5603,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -5812,7 +5855,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -5894,7 +5938,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -5942,7 +5987,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -6187,7 +6233,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "19th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -6201,7 +6248,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "20th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -6215,7 +6263,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "21st infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -6229,7 +6278,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "22nd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -6243,7 +6293,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "23rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -6325,7 +6376,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "24th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -6405,7 +6457,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -6609,7 +6662,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -6657,7 +6711,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -6739,7 +6794,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -6854,7 +6910,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -7462,7 +7519,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st motorized infantry division (1939)"
             }
         ],
         "orders": [],
@@ -7581,7 +7639,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "25th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -7595,7 +7654,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "26th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -7609,7 +7669,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "27th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -7623,7 +7684,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "28th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -7637,7 +7699,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "29th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -7814,7 +7877,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -7931,7 +7995,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -7981,7 +8046,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -7995,7 +8061,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "9th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -8009,7 +8076,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "10th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -8128,7 +8196,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -8179,7 +8248,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -8298,7 +8368,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -8412,7 +8483,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -8461,7 +8533,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "9th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -8514,7 +8587,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -8828,7 +8902,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "30th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -9202,7 +9277,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd motorized infantry division (1939)"
             }
         ],
         "orders": [],
@@ -9321,7 +9397,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "31st infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9335,7 +9412,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "32nd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9349,7 +9427,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "33rd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9363,7 +9442,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "34th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9377,7 +9457,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "35th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -9483,7 +9564,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -9497,7 +9579,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "11th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -9511,7 +9594,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "12th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -9593,7 +9677,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9607,7 +9692,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9621,7 +9707,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9635,7 +9722,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9649,7 +9737,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -9663,7 +9752,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th infantry division (1939)"
             },
             {
                 "type": "Medium Tank II",
@@ -9677,7 +9767,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st medium tank division (II)"
             }
         ],
         "orders": [],
@@ -9727,7 +9818,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd motorized infantry division (1939)"
             }
         ],
         "orders": [],
@@ -9914,7 +10006,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "10th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -10070,7 +10163,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -10150,7 +10244,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -10299,7 +10394,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st light tank division (III)"
             },
             {
                 "type": "Light Tank III",
@@ -10313,7 +10409,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd light tank division (III)"
             },
             {
                 "type": "Light Tank III",
@@ -10327,7 +10424,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd light tank division (III)"
             },
             {
                 "type": "Motorized Infantry Type 1939",
@@ -10341,7 +10439,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th motorized infantry division (1939)"
             },
             {
                 "type": "Motorized Infantry Type 1939",
@@ -10355,7 +10454,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th motorized infantry division (1939)"
             },
             {
                 "type": "Motorized Infantry Type 1939",
@@ -10369,7 +10469,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th motorized infantry division (1939)"
             }
         ],
         "orders": [],
@@ -10554,7 +10655,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "11th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -10772,7 +10874,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -10786,7 +10889,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -10800,7 +10904,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th infantry division (1939)"
             },
             {
                 "type": "Motorized Infantry Type 1939",
@@ -10814,7 +10919,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st motorized infantry division (1939)"
             }
         ],
         "orders": [],
@@ -11059,7 +11165,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "36th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -11073,7 +11180,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "37th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -11087,7 +11195,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "38th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -11101,7 +11210,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "39th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -11115,7 +11225,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "40th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -11230,7 +11341,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "41st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -11506,7 +11618,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "12th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -11794,7 +11907,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "13th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -12115,7 +12229,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -12265,7 +12380,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -12279,7 +12395,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "13th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -12293,7 +12410,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "14th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -12437,7 +12555,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -12590,7 +12709,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th motorized infantry division (1939)"
             }
         ],
         "orders": [],
@@ -12639,7 +12759,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -12960,7 +13081,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -13011,7 +13133,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -13130,7 +13253,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "42nd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13144,7 +13268,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "43rd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13158,7 +13283,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "44th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13172,7 +13298,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "45th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13186,7 +13313,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "46th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -13230,7 +13358,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "14th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -13315,7 +13444,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "47th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -13863,7 +13993,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13877,7 +14008,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13891,7 +14023,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13905,7 +14038,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13919,7 +14053,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13933,7 +14068,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13947,7 +14083,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13961,7 +14098,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -13975,7 +14113,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "9th infantry division (1939)"
             },
             {
                 "type": "Heavy Tank I",
@@ -13989,7 +14128,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st heavy tank division (I)"
             }
         ],
         "orders": [],
@@ -14072,7 +14212,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "48th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -14086,7 +14227,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "49th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -14100,7 +14242,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "50th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -14114,7 +14257,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "51st infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -14128,7 +14272,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "52nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -14175,7 +14320,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "15th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -14260,7 +14406,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "10th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -14274,7 +14421,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "11th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -14288,7 +14436,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "12th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -14508,7 +14657,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "16th armored car division (VII)"
             }
         ],
         "orders": [],
@@ -14593,7 +14743,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -14673,7 +14824,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -14722,7 +14874,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -14840,7 +14993,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -14854,7 +15008,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "15th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -14868,7 +15023,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "16th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -14988,7 +15144,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "13th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -15002,7 +15159,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "14th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -15016,7 +15174,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "15th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -15402,7 +15561,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -15719,7 +15879,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -15870,7 +16031,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "53rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -16021,7 +16183,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -16132,7 +16295,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "9th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -16146,7 +16310,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "17th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -16160,7 +16325,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "18th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -16276,7 +16442,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -16323,7 +16490,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -16402,7 +16570,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -16515,7 +16684,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -16596,7 +16766,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "10th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -16610,7 +16781,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "19th mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -16624,7 +16796,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "20th mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -17043,7 +17216,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -17197,7 +17371,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -17283,7 +17458,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "54th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -17297,7 +17473,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "55th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -17311,7 +17488,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "56th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -17325,7 +17503,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "57th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -17339,7 +17518,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "58th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -17387,7 +17567,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -17500,7 +17681,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "11th main battle tank division (III)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -17514,7 +17696,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "21st mechanized infantry division (1950)"
             },
             {
                 "type": "Mechanized Infantry Type 1950",
@@ -17528,7 +17711,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "22nd mechanized infantry division (1950)"
             }
         ],
         "orders": [],
@@ -17608,7 +17792,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -17656,7 +17841,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -17835,7 +18021,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -18083,7 +18270,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -18166,7 +18354,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -18281,7 +18470,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -18566,7 +18756,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -18642,7 +18833,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "59th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -18656,7 +18848,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "60th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -18670,7 +18863,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "61st infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -18684,7 +18878,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "62nd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -18698,7 +18893,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "63rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -18778,7 +18974,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -18859,7 +19056,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -19070,7 +19268,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "64th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19084,7 +19283,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "65th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19098,7 +19298,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "66th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19112,7 +19313,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "67th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19126,7 +19328,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "68th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -19274,7 +19477,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -19386,7 +19590,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "69th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -19501,7 +19706,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -19615,7 +19821,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -19830,7 +20037,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "70th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19844,7 +20052,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "71st infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19858,7 +20067,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "72nd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19872,7 +20082,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "73rd infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -19886,7 +20097,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "74th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -19934,7 +20146,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -20017,7 +20230,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "16th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -20031,7 +20245,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "17th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -20045,7 +20260,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "18th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -20093,7 +20309,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -20210,7 +20427,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -20257,7 +20475,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -20372,7 +20591,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -20523,7 +20743,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "5th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -20537,7 +20758,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "6th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -20790,7 +21012,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -21394,7 +21617,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -21640,7 +21864,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "75th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -21786,7 +22011,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "19th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -21800,7 +22026,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "20th infantry division (1939)"
             },
             {
                 "type": "Infantry Type 1939",
@@ -21814,7 +22041,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "21st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -21926,7 +22154,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -22173,7 +22402,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -22421,7 +22651,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "76th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -22566,7 +22797,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -22782,7 +23014,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -23030,7 +23263,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -23349,7 +23583,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -23945,7 +24180,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -23993,7 +24229,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -24111,7 +24348,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -24352,7 +24590,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "77th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -24471,7 +24710,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "7th infantry division (1939)"
             },
             {
                 "type": "Light Tank III",
@@ -24485,7 +24725,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st light tank division (III)"
             }
         ],
         "orders": [],
@@ -24832,7 +25073,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -25039,7 +25281,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -25421,7 +25664,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -25896,7 +26140,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -26368,7 +26613,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -27259,7 +27505,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "22nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -27565,7 +27812,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -27943,7 +28191,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -28253,7 +28502,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -28423,7 +28673,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "3rd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -29997,7 +30248,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "23rd infantry division (1939)"
             }
         ],
         "orders": [],
@@ -30238,7 +30490,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -30353,7 +30606,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "8th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -30556,7 +30810,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "9th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -30602,7 +30857,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "24th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -30650,7 +30906,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "2nd destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -30757,7 +31014,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -30907,7 +31165,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -31112,7 +31371,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "10th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -31158,7 +31418,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "9th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -31301,7 +31562,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th destroyer (VIII)"
             }
         ],
         "orders": [],
@@ -32527,7 +32789,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "4th infantry division (1939)"
             }
         ],
         "orders": [],
@@ -32823,7 +33086,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],
@@ -33604,7 +33868,8 @@
                 "order": {
                     "type": "MOVE",
                     "path": []
-                }
+                },
+                "custom_name": "1st infantry division (1939)"
             }
         ],
         "orders": [],

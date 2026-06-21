@@ -525,7 +525,8 @@ def process_basic_proactive_ai(map_screen):
 
 def process_scripted_events(map_screen):
     """Processes scenario-specific scripted events for AI nations."""
-    if not map_screen.scenario_settings.get("use_scripted_events", False):
+    use_events_raw = map_screen.scenario_settings.get("use_scripted_events", False)
+    if str(use_events_raw).lower() == "false" or not use_events_raw:
         return
         
     active_nations = set(queries.get_living_nations(map_screen.map_data))

@@ -27057,7 +27057,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27098,7 +27099,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27156,7 +27158,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -27254,7 +27257,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27284,7 +27288,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27328,7 +27333,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -27342,7 +27348,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -27400,7 +27407,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27452,7 +27460,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -27485,7 +27494,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -27499,7 +27509,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -27513,7 +27524,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27543,7 +27555,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27573,7 +27586,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27618,7 +27632,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "5th infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27648,7 +27663,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd light tank division (IV)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -27662,7 +27678,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd mechanized infantry division (1940)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -27676,7 +27693,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd mechanized infantry division (1940)"
                 },
                 {
                     "type": "Medium Tank II",
@@ -27690,7 +27708,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st medium tank division (II)"
                 }
             ],
             "building_queue": [],
@@ -27766,7 +27785,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27807,7 +27827,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "6th infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27836,7 +27857,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd light tank division (IV)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -27850,7 +27872,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27919,7 +27942,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -27962,7 +27986,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28001,7 +28026,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -28015,7 +28041,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -28029,7 +28056,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 },
                 {
                     "type": "Destroyer VIII",
@@ -28043,7 +28071,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -28076,7 +28105,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -28090,7 +28120,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -28122,7 +28153,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28154,7 +28186,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd light tank division (IV)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -28168,7 +28201,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28200,7 +28234,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28241,7 +28276,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28282,7 +28318,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -28312,7 +28349,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "7th infantry division (1940)"
                 },
                 {
                     "type": "Infantry Type 1940",
@@ -28326,7 +28364,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "8th infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28415,7 +28454,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -28468,7 +28508,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28498,7 +28539,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -28512,7 +28554,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -28526,7 +28569,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28569,7 +28613,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -28632,7 +28677,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -28646,7 +28692,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -28678,7 +28725,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28741,7 +28789,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28773,7 +28822,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VII)"
                 }
             ],
             "building_queue": [],
@@ -28805,7 +28855,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28835,7 +28886,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -28867,7 +28919,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28897,7 +28950,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -28942,7 +28996,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29033,7 +29088,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -29047,7 +29103,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -29088,7 +29145,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29140,7 +29198,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -29154,7 +29213,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -29208,7 +29268,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29260,7 +29321,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -29290,7 +29352,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -29304,7 +29367,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -29347,7 +29411,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -29390,7 +29455,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29420,7 +29486,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -29474,7 +29541,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29504,7 +29572,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29536,7 +29605,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29588,7 +29658,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -29653,7 +29724,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29683,7 +29755,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -29724,7 +29797,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 },
                 {
                     "type": "Mechanized Infantry Type 1940",
@@ -29738,7 +29812,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -29752,7 +29827,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -29828,7 +29904,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -29842,7 +29919,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -29894,7 +29972,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -29957,7 +30036,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30029,7 +30109,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30092,7 +30173,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30124,7 +30206,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30154,7 +30237,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30184,7 +30268,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 },
                 {
                     "type": "Infantry Type 1940",
@@ -30198,7 +30283,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30263,7 +30349,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30390,7 +30477,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st mechanized infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30418,7 +30506,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30448,7 +30537,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30498,7 +30588,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd mechanized infantry division (1940)"
                 },
                 {
                     "type": "Light Tank IV",
@@ -30512,7 +30603,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st light tank division (IV)"
                 }
             ],
             "building_queue": [],
@@ -30540,7 +30632,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30625,7 +30718,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30653,7 +30747,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30683,7 +30778,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30796,7 +30892,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "2nd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30848,7 +30945,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30878,7 +30976,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -30921,7 +31020,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "3rd infantry division (1940)"
                 }
             ],
             "building_queue": [],
@@ -30960,7 +31060,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "1st destroyer (VIII)"
                 }
             ],
             "building_queue": [],
@@ -31045,7 +31146,8 @@
                     "order": {
                         "type": "MOVE",
                         "path": []
-                    }
+                    },
+                    "custom_name": "4th infantry division (1940)"
                 }
             ],
             "building_queue": [],

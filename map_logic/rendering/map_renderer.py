@@ -209,7 +209,8 @@ def draw_map_screen(self, surface):
         cb_font = fonts.get("normal")
 
         if has_events:
-            se_val = self.scenario_settings.get("use_scripted_events", c.DEFAULT_USE_SCRIPTED_EVENTS)
+            se_val_raw = self.scenario_settings.get("use_scripted_events", c.DEFAULT_USE_SCRIPTED_EVENTS)
+            se_val = str(se_val_raw).lower() == "true"
             if se_val:
                 cb_text = "Scripted Events Enabled"
             else:

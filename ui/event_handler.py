@@ -226,7 +226,7 @@ def handle_map_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if hasattr(self, 'se_checkbox_rect') and self.se_checkbox_rect.collidepoint(mx, my):
                 if queries.scenario_has_scripted_events(self.nation_data):
-                    current_val = self.scenario_settings.get("use_scripted_events", c.DEFAULT_USE_SCRIPTED_EVENTS)
+                    current_val = str(self.scenario_settings.get("use_scripted_events", c.DEFAULT_USE_SCRIPTED_EVENTS)).lower() == "true"
                     self.scenario_settings["use_scripted_events"] = not current_val
                     queries.save_scenario_settings(self.scenario_settings)
                     if self.scenario_settings["use_scripted_events"]:

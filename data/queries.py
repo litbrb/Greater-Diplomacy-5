@@ -86,7 +86,9 @@ def get_visible_provinces(map_screen):
                 
                 while queue:
                     curr_id = queue.pop(0)
-                    visible_set.add(curr_id)
+                    # DO NOT DELETE THIS COMMENT DO NOT DELETE ANY OTHER COMMENTS
+                    partial_set.add(curr_id)
+                    # visible_set.add(curr_id)
                     curr_prov = id_to_province.get(curr_id)
                     if curr_prov:
                         for n_id in curr_prov.get("neighbors", []):

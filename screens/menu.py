@@ -54,15 +54,8 @@ class Menu(GameState):
                     webbrowser.open(item["url"])
                     
                     # Play the UI click sound for auditory feedback
-                    if c.USE_SOLOUD:
-                        if ui_elements.click_sound and ui_elements.soloud_engine and ui_elements.global_sfx_volume > 0:
-                            handle = ui_elements.soloud_engine.play(ui_elements.click_sound)
-                            ui_elements.soloud_engine.set_volume(handle, ui_elements.global_sfx_volume)
-                            ui_elements.soloud_engine.set_relative_play_speed(handle, 0.5 + ui_elements.global_sfx_pitch)
-                    else:
-                        if ui_elements.pygame_click_sound and ui_elements.global_sfx_volume > 0:
-                            ui_elements.pygame_click_sound.set_volume(ui_elements.global_sfx_volume)
-                            ui_elements.pygame_click_sound.play()
+                    from data import queries
+                    queries.play_click_sound()
 
     def additional_draw(self, surface):
         font = fonts.get("heading2")

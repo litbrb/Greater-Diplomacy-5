@@ -133,14 +133,7 @@ def handle_events(map_screen, event):
         
         if res == "CLOSE":
             # Hybrid Audio execution for tactile feedback
-            if c.USE_SOLOUD and ui_elements.click_sound and ui_elements.soloud_engine and ui_elements.global_sfx_volume > 0:
-                handle = ui_elements.soloud_engine.play(ui_elements.click_sound)
-                ui_elements.soloud_engine.set_volume(handle, ui_elements.global_sfx_volume)
-                ui_elements.soloud_engine.set_relative_play_speed(handle, 0.5 + (ui_elements.global_sfx_pitch * 1.5))
-            elif not c.USE_SOLOUD and ui_elements.pygame_click_sound and ui_elements.global_sfx_volume > 0:
-                ui_elements.pygame_click_sound.set_volume(ui_elements.global_sfx_volume)
-                ui_elements.pygame_click_sound.play()
-
+            queries.play_click_sound()
             map_screen.diplomatic_popups.pop(i)
             return True
             

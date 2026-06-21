@@ -127,20 +127,9 @@ def draw_map_screen(self, surface):
                     
                     # --- NEW: Split paths to render queued segments differently ---
                     speed = unit.get("speed", 1)
-                    immediate_path = path[:speed]
-                    queued_path = path[speed:]
                     
                     # --- NEW: Tell the renderer to bypass Fog of War if the player owns this specific unit ---
-                    if immediate_path:
-                        overlay_renderer.draw_movement_path(surface, self, province, immediate_path, color=owner_color, force_visible=is_current_player_unit)
-                        
-                    if queued_path:
-                        # Brighten the owner color heavily for the queue overlay
-                        bright_color = (min(255, owner_color[0] + 150), min(255, owner_color[1] + 150), min(255, owner_color[2] + 150))
-                        
-                        # Start the queued line from the end of the immediate path
-                        q_start = self.id_to_province.get(immediate_path[-1]) if immediate_path else province
-                        overlay_renderer.draw_movement_path(surface, self, q_start, queued_path, color=bright_color, alpha=120, force_visible=is_current_player_unit)
+                    overlay_renderer.draw_split_movement_path(surface, self, province, path, speed, owner_color, force_visible=is_current_player_unit)
                             
     # --- LAYER 3.5: COUNTRY NAMES ---
     country_names.draw_country_names(self, surface)

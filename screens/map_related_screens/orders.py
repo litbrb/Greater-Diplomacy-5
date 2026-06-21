@@ -604,23 +604,7 @@ class Orders_Screen(GameState):
             self.scroll_track_rect, self.scroll_handle_rect = ui_bars.draw_standard_scrollbar(
                 surface, self.scroll_y, self.max_scroll_y, 70, self.panel_top, self.panel_max_h, width=10
             )
-        
-        # --- Helper for Split Path Drawing ---
-        def draw_split_path(start_prov, path, speed, base_color):
-            if not path: return
-            
-            immediate_path = path[:speed]
-            queued_path = path[speed:]
-            
-            # Since the player is viewing their own orders panel, force the rendering to bypass fog of war 
-            if immediate_path:
-                overlay_renderer.draw_movement_path(surface, self.map_screen, start_prov, immediate_path, color=base_color, force_visible=True)
-                
-            if queued_path:
-                bright_color = (min(255, base_color[0] + 150), min(255, base_color[1] + 150), min(255, base_color[2] + 150))
-                q_start = self.map_screen.id_to_province.get(immediate_path[-1]) if immediate_path else start_prov
-                overlay_renderer.draw_movement_path(surface, self.map_screen, q_start, queued_path, color=bright_color, alpha=120, force_visible=True)
-        
+
         display_index = 0
         for i, unit in enumerate(units):
             if unit.get("owner") != self.map_screen.player_country:
@@ -663,7 +647,7 @@ class Orders_Screen(GameState):
                     self.cancel_rects.append((cancel_rect, i))
                     
                     # Split draw using the helper function
-                    draw_split_path(self.target_province, path, unit.get("speed", 1), owner_color)
+                    overlay_renderer.draw_split_movement_path(surface, self.map_screen, self.target_province, path, unit.get("speed", 1), owner_color, force_visible=True)
 
             display_index += 1
 

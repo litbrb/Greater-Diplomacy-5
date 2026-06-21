@@ -1952,6 +1952,35 @@ def destroy_tk_root(root):
     root.destroy()
     pygame.event.pump()
 
+def copy_to_clipboard(text):
+    """Headless standard helper to push text to the system clipboard."""
+    import tkinter as tk
+    try:
+        root = tk.Tk()
+        root.withdraw()
+        root.clipboard_clear()
+        root.clipboard_append(text)
+        root.update()
+        root.destroy()
+        return True
+    except Exception as e:
+        print(f"Failed to copy to clipboard: {e}")
+        return False
+
+def play_click_sound():
+    """Unified helper to play the UI click sound with standard volume/pitch."""
+    import ui_elements
+    import data.constants as c
+    if c.USE_SOLOUD:
+        if getattr(ui_elements, 'click_sound', None) and getattr(ui_elements, 'soloud_engine', None) and getattr(ui_elements, 'global_sfx_volume', 0) > 0:
+            handle = ui_elements.soloud_engine.play(ui_elements.click_sound)
+            ui_elements.soloud_engine.set_volume(handle, ui_elements.global_sfx_volume)
+            ui_elements.soloud_engine.set_relative_play_speed(handle, 0.5 + getattr(ui_elements, 'global_sfx_pitch', 0))
+    else:
+        if getattr(ui_elements, 'pygame_click_sound', None) and getattr(ui_elements, 'global_sfx_volume', 0) > 0:
+            ui_elements.pygame_click_sound.set_volume(ui_elements.global_sfx_volume)
+            ui_elements.pygame_click_sound.play()
+
 # ==========================================
 # EDITOR UNDO / REDO LOGIC
 # ==========================================

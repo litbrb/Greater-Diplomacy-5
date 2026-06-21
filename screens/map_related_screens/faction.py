@@ -110,9 +110,7 @@ class Faction_Screen(GameState):
                 self.map_screen.nation_data["FACTION_WAR_MAPS"][new_name] = self.map_screen.nation_data["FACTION_WAR_MAPS"].pop(old_name)
             
             self.map_screen.show_feedback(f"Faction renamed to {new_name}")
-            self.map_screen.refresh_factions_map()
-            if hasattr(self.map_screen, 'refresh_faction_territories_map'):
-                self.map_screen.refresh_faction_territories_map()
+            self.map_screen.refresh_diplomacy_maps()
                 
         self.is_renaming = False
         self.refresh_ui()

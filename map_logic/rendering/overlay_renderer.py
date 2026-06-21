@@ -592,3 +592,18 @@ def draw_unit_icon(self, surface, sx, sy, province):
 
         # Move the offset down for the next owner's box in the stack
         current_sy += scaled_h + gap
+    
+def draw_split_movement_path(surface, map_screen, start_prov, path, speed, base_color, force_visible=False):
+    """Standardized helper to draw multi-segment movement paths with queued opacity."""
+    if not path: return
+    
+    immediate_path = path[:speed]
+    queued_path = path[speed:]
+    
+    if immediate_path:
+        draw_movement_path(surface, map_screen, start_prov, immediate_path, color=base_color, force_visible=force_visible)
+        
+    if queued_path:
+        bright_color = (min(255, base_color[0] + 150), min(255, base_color[1] + 150), min(255, base_color[2] + 150))
+        q_start = map_screen.id_to_province.get(immediate_path[-1]) if immediate_path else start_prov
+        draw_movement_path(surface, map_screen, q_start, queued_path, color=bright_color, alpha=120, force_visible=force_visible)

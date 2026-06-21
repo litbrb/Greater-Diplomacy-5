@@ -170,8 +170,7 @@ def handle_accept_req(map_screen, target=None, custom_msg=None):
         
         map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
-        map_screen.refresh_relations_map()
-        map_screen.refresh_factions_map()
+        map_screen.refresh_diplomacy_maps()
         map_screen.show_feedback(f"Acceptance queued: {action.replace('_', ' ').title()}")
 
 

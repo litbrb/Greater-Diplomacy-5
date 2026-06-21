@@ -744,8 +744,7 @@ def open_diplomacy_editor(self):
             data["master"] = ""
             data["puppet_type"] = ""
 
-        self.refresh_relations_map()
-        self.refresh_factions_map()
+        self.refresh_diplomacy_maps()
         self.show_feedback(f"Diplomacy saved for {target}")
 
     tk.Button(right_frame, text="Save Changes", command=save_changes, bg="#4CAF50", fg="white", font=("Arial", 12, "bold")).pack(pady=10, fill="x")

@@ -416,6 +416,13 @@ class Map(GameState):
     def refresh_faction_territories_map(self): refresh_map.refresh_faction_territories_map(self)
     def refresh_fog_map(self): refresh_map.refresh_fog_map(self)
 
+    def refresh_diplomacy_maps(self):
+        """Unified helper to quickly refresh only diplomacy-related overlays."""
+        self.refresh_relations_map()
+        self.refresh_factions_map()
+        if hasattr(self, 'refresh_faction_territories_map'):
+            self.refresh_faction_territories_map()
+
     def refresh_all_maps(self):
         """Unified method to refresh all visual map layers and text at once."""
         # do note that for larger maps this might take over 1000 ms to complete, this is NOT instant by any means
@@ -475,17 +482,8 @@ class Map(GameState):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 btn_rect = pygame.Rect(c.SCREEN_WIDTH - 240, c.SCREEN_HEIGHT - 80, 220, 60)
                 if btn_rect.collidepoint(event.pos):
-                    try:
-                        import tkinter as tk
-                        root = tk.Tk()
-                        root.withdraw()
-                        root.clipboard_clear()
-                        root.clipboard_append(self.thread_error)
-                        root.update()
-                        root.destroy()
+                    if queries.copy_to_clipboard(self.thread_error):
                         self.error_copied = True
-                    except Exception as e:
-                        print(f"Failed to copy to clipboard: {e}")
             return # Block all other map events!
 
         event_handler.handle_map_events(self, event)

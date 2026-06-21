@@ -13,8 +13,7 @@ def spec_create_faction(map_screen):
     from map_logic.diplomacy import diplomacy_logic
     diplomacy_logic.finalize_create_faction(map_screen.map_data, map_screen.nation_data, source_nation)
     map_screen.show_feedback(f"Created Faction: {source_nation}")
-    map_screen.refresh_relations_map()
-    map_screen.refresh_factions_map()
+    map_screen.refresh_diplomacy_maps()
 
 def spec_leave_faction(map_screen):
     if not map_screen.selected_province: return
@@ -22,8 +21,7 @@ def spec_leave_faction(map_screen):
     from map_logic.diplomacy import diplomacy_logic
     diplomacy_logic.finalize_faction_leave(map_screen.nation_data, source_nation)
     map_screen.show_feedback(f"Left Faction: {source_nation}")
-    map_screen.refresh_relations_map()
-    map_screen.refresh_factions_map()
+    map_screen.refresh_diplomacy_maps()
 
 def spec_disband_faction(map_screen):
     if not map_screen.selected_province: return
@@ -31,8 +29,7 @@ def spec_disband_faction(map_screen):
     from map_logic.diplomacy import diplomacy_logic
     diplomacy_logic.finalize_disband_faction(map_screen.nation_data, source_nation)
     map_screen.show_feedback(f"Disbanded Faction: {source_nation}")
-    map_screen.refresh_relations_map()
-    map_screen.refresh_factions_map()
+    map_screen.refresh_diplomacy_maps()
 
 def spec_join_faction(map_screen):
     open_spectator_action_menu(map_screen, "JOIN_FACTION")
@@ -74,7 +71,6 @@ def open_spectator_action_menu(map_screen, action_type):
             diplomacy_logic.finalize_faction_join(map_screen.map_data, map_screen.nation_data, source_nation, target_nation)
             map_screen.show_feedback(f"Forced Invite: {target_nation} joined {source_nation}")
             
-        map_screen.refresh_relations_map()
-        map_screen.refresh_factions_map()
+        map_screen.refresh_diplomacy_maps()
 
     queries.open_listbox_selector(map_screen, f"{action_type} for {source_nation}", f"Select Target for {action_type}:", items, cb)

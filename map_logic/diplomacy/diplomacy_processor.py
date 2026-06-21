@@ -86,10 +86,14 @@ def process_diplomacy_turn(self):
 
         # --- INCREMENT WAR DURATIONS ---
         war_durs = data.setdefault("war_durations", {})
+        
+        # 1. Safely increment durations for all currently active wars
+        for enemy in data.get("at_war_with", []):
+            war_durs[enemy] = war_durs.get(enemy, 0) + 1
+            
+        # 2. Clean up stale tracking data for ended wars
         for enemy in list(war_durs.keys()):
-            if enemy in data.get("at_war_with", []):
-                war_durs[enemy] += 1
-            else:
+            if enemy not in data.get("at_war_with", []):
                 del war_durs[enemy]
 
     # --- 0. PROCESS QUEUED AI MULTI-TURN ACTIONS ---

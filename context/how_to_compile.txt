@@ -7,6 +7,11 @@ python3 setup.py py2app
 
 ==========
 
+GD5 WINDOWS PROTOTYPE vXX
+GD5 MACOS PROTOTYPE vXX
+
+==========
+
 RESET THESE:
 [assets + base_maps + data + scenarios]
 

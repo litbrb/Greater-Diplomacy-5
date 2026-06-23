@@ -188,8 +188,11 @@ def update_button_states(map_screen):
 
     if map_screen.selection_mode:
         map_screen.btn_exit_to_menu.visible = True
-        map_screen.btn_spectator.visible = True
-        map_screen.btn_tactical.visible = True
+        
+        # Hide spectator and tactical buttons if awaiting confirmation
+        show_mode_buttons = not bool(map_screen.pending_selection)
+        map_screen.btn_spectator.visible = show_mode_buttons
+        map_screen.btn_tactical.visible = show_mode_buttons
 
         is_multiplayer = getattr(map_screen, 'num_players', 1) > 1
 

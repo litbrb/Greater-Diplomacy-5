@@ -14,6 +14,10 @@ def conquer_province(self, province, new_owner):
         # 1. Logic Update
         province["owner"] = new_owner
         
+        # --- BUGFIX: Clear coring progress on capture ---
+        if "building_queue" in province:
+            province["building_queue"] = [q for q in province["building_queue"] if q.get("order_type") != "CORE"]
+        
         # 2. Visual Update
         if not self.viewing_ai_moves and not self.ai_is_thinking:
             nations_dict = country_io.get_nation_colors()

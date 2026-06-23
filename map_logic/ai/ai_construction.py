@@ -364,11 +364,11 @@ def process_ai_economy_decisions(map_screen):
                 cost_man = unit_stats.get("cost_manpower", 0)
                 cost_fuel = unit_stats.get("cost_fuel", 0)
             
-            # Find a province capable of recruiting (Exclude tiles in combat)
+            # Find a province capable of recruiting (Exclude tiles in combat AND non-cores)
             if queries.get_base_unit_name(unit_name_to_build) == "Militia":
-                factory_provs = [p for p in my_provs if queries.has_industry(p) and not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data)]
+                factory_provs = [p for p in my_provs if queries.has_industry(p) and not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data) and ai_name in p.get("cores", [])]
             else:
-                factory_provs = [p for p in my_provs if queries.has_basic_factory(p) and not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data)]
+                factory_provs = [p for p in my_provs if queries.has_basic_factory(p) and not queries.is_nation_in_combat_here(ai_name, p, map_screen.nation_data) and ai_name in p.get("cores", [])]
             
             # --- NEW: Filter to coastal factories only if building a naval unit ---
             is_naval_recruit = queries.is_naval_unit(unit_name_to_build)
@@ -419,7 +419,45 @@ def process_ai_economy_decisions(map_screen):
                 }
                 target_prov.setdefault("unit_queue", []).append(order)
             else:
-                break # Can't afford it or out of valid factories. Exit recruitment loop.
+                    break # Can't afford it or out of valid factories. Exit recruitment loop.
+
+        # --- AI CORING PRIORITY ---
+        surplus_manpower = getattr(c, 'AI_SURPLUS_MANPOWER_FOR_CORING', 2000)
+        if data.get("manpower", 0) > surplus_manpower:
+            uncored_provs = [p for p in my_provs if ai_name not in p.get("cores", []) and not any(q.get("order_type") == "CORE" for q in p.get("building_queue", []))]
+            if uncored_provs:
+                valid_uncored = []
+                has_any_core = any(ai_name in p.get("cores", []) for p in map_screen.map_data.values())
+                for p in uncored_provs:
+                    can_core = False
+                    if not has_any_core:
+                        can_core = True
+                    elif p.get("is_coastal", False):
+                        can_core = True
+                    else:
+                        for n_id in p.get("neighbors", []):
+                            n_prov = map_screen.id_to_province.get(n_id)
+                            if n_prov and ai_name in n_prov.get("cores", []):
+                                can_core = True
+                                break
+                    if can_core:
+                        valid_uncored.append(p)
+                
+                if valid_uncored:
+                    # Prioritize territories with factories
+                    valid_uncored.sort(key=lambda p: (queries.has_industry(p), p.get("is_coastal", False)), reverse=True)
+                    target_core_prov = valid_uncored[0]
+                    core_data = queries.get_core_cost(ai_name, map_screen.map_data)
+                    if queries.can_afford(data, core_data):
+                        queries.deduct_resources(data, core_data)
+                        order = {
+                            "order_type": "CORE",
+                            "item_name": "Core Territory",
+                            "turns_remaining": max(1, core_data.get("time", 24)),
+                            "group": "administration",
+                            "refund": {"cost_materials": core_data.get("cost_materials", 0), "cost_manpower": core_data.get("cost_manpower", 0), "cost_fuel": core_data.get("cost_fuel", 0)}
+                        }
+                        target_core_prov.setdefault("building_queue", []).append(order)
 
         # --- 2. EVALUATE CONSTRUCTION LOGIC ---
         # If the AI has an excess hoard of materials, invest it back into factories
@@ -434,6 +472,10 @@ def process_ai_economy_decisions(map_screen):
             my_provs.sort(key=lambda p: len(p.get("building_queue", [])))
 
             for prov in my_provs:
+                # Ensure AI only builds in its core territories
+                if ai_name not in prov.get("cores", []):
+                    continue
+
                 current_buildings = prov.get("buildings", [])
                 queue = prov.get("building_queue", [])
 

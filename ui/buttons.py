@@ -187,25 +187,36 @@ def update_button_states(map_screen):
     is_sel = bool(map_screen.selected_province)
 
     if map_screen.selection_mode:
-            map_screen.btn_exit_to_menu.visible = True
-            map_screen.btn_spectator.visible = True
-            map_screen.btn_tactical.visible = True
+        map_screen.btn_exit_to_menu.visible = True
+        map_screen.btn_spectator.visible = True
+        map_screen.btn_tactical.visible = True
 
-            is_multiplayer = getattr(map_screen, 'num_players', 1) > 1
+        is_multiplayer = getattr(map_screen, 'num_players', 1) > 1
 
-            if is_multiplayer:
-                map_screen.btn_tactical.disabled = True
-                map_screen.btn_tactical.text = "Tactical mode disabled for multiplayer"
-                map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["grey"]
+        if is_multiplayer:
+            map_screen.btn_tactical.disabled = True
+            map_screen.btn_tactical.text = "Tactical mode disabled for multiplayer"
+            map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["grey"]
+        else:
+            map_screen.btn_tactical.disabled = False
+            if getattr(map_screen, 'tactical_mode', False):
+                map_screen.btn_tactical.text = "TACTICAL"
+                map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["orange"]
             else:
-                map_screen.btn_tactical.disabled = False
-                if getattr(map_screen, 'tactical_mode', False):
-                    map_screen.btn_tactical.text = "TACTICAL"
-                    map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["orange"]
-                else:
-                    map_screen.btn_tactical.text = "STRATEGIC"
-                    map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["green"]
-            return
+                map_screen.btn_tactical.text = "STRATEGIC"
+                map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["green"]
+
+        # --- BUGFIX: Disable Spectator Mode while in Tactical Mode ---
+        if getattr(map_screen, 'tactical_mode', False):
+            map_screen.btn_spectator.disabled = True
+            map_screen.btn_spectator.text = "Disabled in Tactical"
+            map_screen.btn_spectator.color, map_screen.btn_spectator.hover_color = c.UI_COLORS["grey"]
+        else:
+            map_screen.btn_spectator.disabled = False
+            map_screen.btn_spectator.text = "Spectator Mode"
+            map_screen.btn_spectator.color, map_screen.btn_spectator.hover_color = c.UI_COLORS["grey"]
+
+        return
 
     # Helper function to override dynamically updated button values
     def set_btn(btn, visible, enabled, text, color="green"):

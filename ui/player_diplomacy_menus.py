@@ -675,7 +675,7 @@ class Peace_Screen(GameState):
         self.refresh_ui()
 
     def refresh_ui(self):
-        self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Cancel", self.exit_screen)]
+        self.elements = [Button(50, c.TOP_BAR_UI_CENTER_Y, "small", "red", "Cancel", lambda: self.exit_screen())]
         
         term = self.terms[self.selected_term_idx]
         is_human = self.target_nation in getattr(self.map_screen, 'active_players', [])
@@ -770,6 +770,9 @@ class Peace_Screen(GameState):
             "message": term
         }
         self.map_screen.show_feedback("Peace Offer Updated!" if self.is_editing else "Peace Offer Queued!")
+        self.done = True
+
+    def exit_screen(self):
         self.done = True
 
     def handle_back_key(self):

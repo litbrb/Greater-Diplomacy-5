@@ -19,6 +19,9 @@ class Economy_Screen(GameState):
 
     def start_economy(self, map_ref):
         self.map_screen = map_ref
+        # Clear economy cache to prevent old data from persisting
+        self.last_econ_state = None
+        self.last_econ_turn = -1
         self.refresh_ui()
 
     def refresh_ui(self):

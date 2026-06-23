@@ -92,6 +92,22 @@ class Production_Screen(GameState):
         
         is_core = owner_nation in self.target_province.get("cores", [])
         
+        # --- BUGFIX: Coring Restrictions ---
+        can_core = False
+        has_any_core = any(owner_nation in p.get("cores", []) for p in self.map_screen.map_data.values())
+        
+        if not has_any_core:
+            can_core = True
+        elif self.target_province.get("is_coastal", False):
+            can_core = True
+        else:
+            for n_id in self.target_province.get("neighbors", []):
+                n_prov = self.map_screen.id_to_province.get(n_id)
+                if n_prov and owner_nation in n_prov.get("cores", []):
+                    can_core = True
+                    break
+
+        self.admin_start_y = y_offset
         if not is_core:
             is_coring = any(q.get("order_type") == "CORE" for q in building_queue)
             core_data = queries.get_core_cost(owner_nation, self.map_screen.map_data)
@@ -102,6 +118,10 @@ class Production_Screen(GameState):
                 cb = lambda: None
             elif is_spectator and not can_spectator_edit:
                 btn_txt = "Core Territory"
+                btn_color = "grey"
+                cb = lambda: None
+            elif not can_core:
+                btn_txt = "Cannot Core"
                 btn_color = "grey"
                 cb = lambda: None
             else:
@@ -124,6 +144,12 @@ class Production_Screen(GameState):
             }
             self.active_bars.append((bar_rect, mock_stats, y_offset, "BUILDING"))
             y_offset += 60
+
+        self.admin_end_y = y_offset
+
+        y_offset += section_spacing
+        
+        self.other_start_y = y_offset
 
         def process_building_categories(cat_groups):
             nonlocal y_offset
@@ -405,6 +431,14 @@ class Production_Screen(GameState):
         # --- DRAW SCROLLING CONTENT ---
         # Draw category backgrounds mapped to the current scroll y
         scroll = int(self.scroll_y)
+
+        # Administration (Purple)
+        if self.admin_end_y > self.admin_start_y:
+            admin_rect = pygame.Rect(30, self.admin_start_y + scroll - 15, 840, self.admin_end_y - self.admin_start_y + 15)
+            pygame.draw.rect(surface, (40, 20, 60), admin_rect)
+            pygame.draw.rect(surface, (150, 100, 200), admin_rect, 2)
+            lbl = fonts.get("heading2").render("ADMINISTRATION", True, (200, 150, 255))
+            surface.blit(lbl, (40, self.admin_start_y + scroll - 45))
 
         # General Buildings (Orange)
         if self.other_end_y > self.other_start_y:

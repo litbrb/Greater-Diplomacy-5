@@ -28,7 +28,11 @@ def draw_top_text(map_screen, surface):
 
     # 2. Draw "Playing As" Name / Selected Province Owner / Tactical Unit Name
     if getattr(map_screen, 'tactical_mode', False) and getattr(map_screen, 'player_unit', None):
-        player_display = map_screen.player_unit.get("custom_name", map_screen.player_unit.get("type", "Unknown Unit"))
+        if map_screen.selected_province:
+            display_id = map_screen.selected_province.get("owner", "Unclaimed")
+            player_display = map_screen.nation_data.get(display_id, {}).get("name", display_id)
+        else:
+            player_display = map_screen.player_unit.get("custom_name", map_screen.player_unit.get("type", "Unknown Unit"))
     else:
         # Check if we have a province selected first, otherwise default to the player country
         if map_screen.selected_province:

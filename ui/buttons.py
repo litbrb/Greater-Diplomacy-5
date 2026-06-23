@@ -200,11 +200,11 @@ def update_button_states(map_screen):
             else:
                 map_screen.btn_tactical.disabled = False
                 if getattr(map_screen, 'tactical_mode', False):
-                    map_screen.btn_tactical.text = "STRATEGIC"
-                    map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["green"]
-                else:
                     map_screen.btn_tactical.text = "TACTICAL"
                     map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["orange"]
+                else:
+                    map_screen.btn_tactical.text = "STRATEGIC"
+                    map_screen.btn_tactical.color, map_screen.btn_tactical.hover_color = c.UI_COLORS["green"]
             return
 
     # Helper function to override dynamically updated button values

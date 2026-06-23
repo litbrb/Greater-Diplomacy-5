@@ -357,7 +357,7 @@ class Orders_Screen(GameState):
                     self.renaming_unit_index = None
                     self.refresh_ui()
                 else:
-                    self.rename_text, _ = process_text_input(event, self.rename_text, max_length=20)
+                    self.rename_text, _ = process_text_input(event, self.rename_text, max_length=50)
                 return
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:

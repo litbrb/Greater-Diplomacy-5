@@ -192,10 +192,11 @@ class Messages_Screen(GameState):
 
     def additional_events(self, event):
         mx, my = pygame.mouse.get_pos()
+        is_tactical = getattr(self.map_screen, 'tactical_mode', False)
         
         # --- Handle Draft Delete Clicks ---
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if hasattr(self, 'draft_edit_rects'):
+            if hasattr(self, 'draft_edit_rects') and not is_tactical:
                 for del_rect, idx in self.draft_edit_rects:
                     if del_rect.collidepoint(mx, my):
                         
@@ -252,7 +253,7 @@ class Messages_Screen(GameState):
         # --- Text Input Logic ---
         if self.selected_recipient:
             locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
-            if not locked:
+            if not locked and not is_tactical:
                 self.compose_text, status = process_text_input(event, self.compose_text, max_length=c.MAX_MESSAGE_LENGTH)
                 if status == "SUBMIT":
                     self.send_message()
@@ -332,32 +333,40 @@ class Messages_Screen(GameState):
 
         if self.selected_recipient:
             locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
+            is_tactical = getattr(self.map_screen, 'tactical_mode', False)
             btn_x = c.SCREEN_WIDTH - 150
             btn_y = c.SCREEN_HEIGHT - c.MSG_INPUT_H + 15
-            if locked:
+            
+            if is_tactical:
+                self.elements.append(Button(btn_x, btn_y, "small", "grey", "Tactical: Read Only", lambda: None))
+            elif locked:
                 self.elements.append(Button(btn_x, btn_y, "small", "grey", "Diplomat Busy", lambda: None))
             else:
                 self.elements.append(Button(btn_x, btn_y, "small", "blue", "Queue", self.send_message))
                 
-                is_puppet = bool(p_data.get("master", ""))
-                target_is_puppet = bool(self.map_screen.nation_data.get(self.selected_recipient, {}).get("master", ""))
-                
-                my_type = p_data.get("puppet_type", "")
-                target_type = self.map_screen.nation_data.get(self.selected_recipient, {}).get("puppet_type", "")
+            is_puppet = bool(p_data.get("master", ""))
+            target_is_puppet = bool(self.map_screen.nation_data.get(self.selected_recipient, {}).get("master", ""))
+            
+            my_type = p_data.get("puppet_type", "")
+            target_type = self.map_screen.nation_data.get(self.selected_recipient, {}).get("puppet_type", "")
 
-                is_my_integrated = is_puppet and my_type == c.PUPPET_TYPE_INTEGRATED
-                is_target_integrated = target_is_puppet and target_type == c.PUPPET_TYPE_INTEGRATED
+            is_my_integrated = is_puppet and my_type == c.PUPPET_TYPE_INTEGRATED
+            is_target_integrated = target_is_puppet and target_type == c.PUPPET_TYPE_INTEGRATED
 
-                if is_my_integrated:
-                    btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Integrated Can't Trade", lambda: None)
-                    btn_trade.disabled = True
-                    self.elements.append(btn_trade)
-                elif is_target_integrated:
-                    btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Target is Integrated", lambda: None)
-                    btn_trade.disabled = True
-                    self.elements.append(btn_trade)
-                else:
-                    self.elements.append(Button(btn_x - 130, btn_y, "small", "green", "Trade", self.open_trade))
+            if is_my_integrated:
+                btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Integrated Can't Trade", lambda: None)
+                btn_trade.disabled = True
+                self.elements.append(btn_trade)
+            elif is_target_integrated:
+                btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Target is Integrated", lambda: None)
+                btn_trade.disabled = True
+                self.elements.append(btn_trade)
+            elif is_tactical:
+                btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Tactical: Read Only", lambda: None)
+                btn_trade.disabled = True
+                self.elements.append(btn_trade)
+            else:
+                self.elements.append(Button(btn_x - 130, btn_y, "small", "green", "Trade", self.open_trade))
 
             # --- Bilateral Accept/Reject Buttons ---
             incoming_action, incoming_turns = queries.get_diplomatic_status(self.selected_recipient, self.map_screen.player_country, self.map_screen.nation_data)
@@ -369,7 +378,12 @@ class Messages_Screen(GameState):
                 
                 is_peace = incoming_action in ["PEACE_TREATY", "CEASEFIRE"]
                 
-                if pending_action == f"ACCEPT_{incoming_action}":
+                if is_tactical:
+                    self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "grey", "Tactical: Read Only", lambda: None))
+                    self.elements.append(Button(c.MSG_LEFT_PANE_W + 240, btn_y_diplo, "medium", "grey", "Tactical: Read Only", lambda: None))
+                    if is_peace:
+                        self.elements.append(Button(c.MSG_LEFT_PANE_W + 460, btn_y_diplo, "medium", "yellow", "View Peace Treaty", lambda: self.view_peace_treaty(self.selected_recipient)))
+                elif pending_action == f"ACCEPT_{incoming_action}":
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "green", "Undo Accept", lambda: self.accept_proposal(self.selected_recipient)))
                 elif pending_action == f"REJECT_{incoming_action}":
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "red", "Undo Reject", lambda: self.reject_proposal(self.selected_recipient)))
@@ -541,8 +555,9 @@ class Messages_Screen(GameState):
                     del_rect = pygame.Rect(box_x - 35, draw_y + bubble_h//2 - 12, 25, 25)
                     self.draft_edit_rects.append((del_rect, msg['draft_idx']))
                     
-                    pygame.draw.rect(surface, (150, 0, 0), del_rect, border_radius=5)
-                    surface.blit(font_small.render("X", True, (255, 255, 255)), (del_rect.x + 7, del_rect.y + 2))
+                    if not getattr(self.map_screen, 'tactical_mode', False):
+                        pygame.draw.rect(surface, (150, 0, 0), del_rect, border_radius=5)
+                        surface.blit(font_small.render("X", True, (255, 255, 255)), (del_rect.x + 7, del_rect.y + 2))
             else:
                 box_x = c.MSG_LEFT_PANE_W + 30
                 color = c.MSG_BUBBLE_AI_DIPLO if is_diplo else c.MSG_BUBBLE_AI

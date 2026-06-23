@@ -266,26 +266,32 @@ def handle_map_events(self, event):
             # 1. Handle clicking the box to activate/deactivate it
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if mail_rect.collidepoint(event.pos):
-                    self.mail_input_active = True
+                    if getattr(self, 'tactical_mode', False):
+                        self.show_feedback("Tactical Mode: Cannot send messages directly.")
+                        self.mail_input_active = False
+                    else:
+                        self.mail_input_active = True
                 else:
                     self.mail_input_active = False
             
             # 2. Handle typing and sending if the box is active
             elif self.mail_input_active:
-                
-                self.mail_draft_text, status = process_text_input(
-                    event, self.mail_draft_text, max_length=c.MAX_MAIL_DRAFT_LENGTH
-                )
-                
-                if status == "SUBMIT":
-                    draft = self.mail_draft_text.strip()
-                    if draft:
-                        msg = diplomacy_logic.queue_text_message(self.nation_data, self.player_country, owner, draft)
-                        self.show_feedback(msg)
-                    else:
-                        diplomacy_logic.cancel_text_message(self.nation_data, self.player_country, owner)
-                        self.show_feedback("Draft cleared.")
+                if getattr(self, 'tactical_mode', False):
                     self.mail_input_active = False
+                else:
+                    self.mail_draft_text, status = process_text_input(
+                        event, self.mail_draft_text, max_length=c.MAX_MAIL_DRAFT_LENGTH
+                    )
+                    
+                    if status == "SUBMIT":
+                        draft = self.mail_draft_text.strip()
+                        if draft:
+                            msg = diplomacy_logic.queue_text_message(self.nation_data, self.player_country, owner, draft)
+                            self.show_feedback(msg)
+                        else:
+                            diplomacy_logic.cancel_text_message(self.nation_data, self.player_country, owner)
+                            self.show_feedback("Draft cleared.")
+                        self.mail_input_active = False
 
     # 6. STANDARD GAME SELECTION
     # Ignore clicks if a province is already selected, or if we are watching AI moves

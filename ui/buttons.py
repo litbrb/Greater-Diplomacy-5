@@ -324,12 +324,10 @@ def update_button_states(map_screen):
             map_screen.btn_gp_faction.disabled = True
             map_screen.btn_gp_puppets.disabled = True
             map_screen.btn_gp_edit.disabled = True
-            map_screen.btn_gp_msgs.disabled = True
             
             map_screen.btn_gp_faction.color, map_screen.btn_gp_faction.hover_color = c.UI_COLORS["grey"]
             map_screen.btn_gp_puppets.color, map_screen.btn_gp_puppets.hover_color = c.UI_COLORS["grey"]
             map_screen.btn_gp_edit.color, map_screen.btn_gp_edit.hover_color = c.UI_COLORS["grey"]
-            map_screen.btn_gp_msgs.color, map_screen.btn_gp_msgs.hover_color = c.UI_COLORS["grey"]
         else:
             if bool(my_faction):
                 map_screen.btn_gp_faction.color, map_screen.btn_gp_faction.hover_color = c.UI_COLORS["pink"]

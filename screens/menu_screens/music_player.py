@@ -313,10 +313,47 @@ class Music_Player(GameState):
         
         if c.USE_SOLOUD:
             if self.controller.music_handle is not None:
+                was_paused = getattr(self.controller, 'is_paused', False)
+                
+                # WORKAROUND: This SoLoud DLL's seek() has a bug where it
+                # resets mStreamPosition to 0 before the skip loop, so after
+                # seeking, mStreamPosition = skip_distance (not absolute target).
+                # On repeated seeks the audio decoder overshoots the intended
+                # position, eventually running past the end of the stream.
+                #
+                # Fix: stop → reload → play paused → seek from 0 → unpause.
+                # When seeking from position 0, skip_distance == target, so
+                # mStreamPosition ends up correct.
+                self.controller.soloud.stop(self.controller.music_handle)
+                self.controller.music_stream.load(self.controller.now_playing)
+                self.controller.music_handle = self.controller.soloud.play(
+                    self.controller.music_stream, aPaused=1
+                )
+                
+                # Reapply audio settings to the new handle
+                self.controller.soloud.set_volume(
+                    self.controller.music_handle, self.controller.music_volume
+                )
+                speed_mult = 0.5 + self.controller.music_pitch
+                self.controller.soloud.set_relative_play_speed(
+                    self.controller.music_handle, speed_mult
+                )
+                
+                # Seek from position 0 (safe — skip distance == target)
                 self.controller.soloud.seek(self.controller.music_handle, target_time)
-                # Pure UI tracking: ignore SoLoud's internal clock completely
+                
+                # Unpause (unless the user had the music paused)
+                if not was_paused:
+                    self.controller.soloud.set_pause(self.controller.music_handle, False)
+                
                 self.controller._frozen_time = target_time
                 self._last_ticks = pygame.time.get_ticks()
+            # DEBUG: Show what SoLoud reports right after seeking
+            try:
+                pos_after = self.controller.soloud.get_stream_position(self.controller.music_handle)
+                print(f"[SCRUB DEBUG] val={val:.3f}, length={length:.2f}, target={target_time:.2f}, soloud_pos_after_seek={pos_after:.2f}")
+            except Exception as e:
+                print(f"[SCRUB DEBUG] get_stream_position failed: {e}")
         else:
             # Original Pygame logic restored
             if pygame.mixer.music._custom_is_paused:
@@ -342,11 +379,25 @@ class Music_Player(GameState):
         if not track or track == "None": return 0
         
         if track not in self._track_lengths:
-            try:
-                sound = pygame.mixer.Sound(track)
-                self._track_lengths[track] = sound.get_length()
-            except Exception:
-                self._track_lengths[track] = 0
+            length = 0
+            # Use SoLoud's own length when available — pygame.mixer.Sound
+            # can report a different duration for compressed formats (MP3/OGG),
+            # which causes the scrubber to seek past SoLoud's actual stream end.
+            if c.USE_SOLOUD and hasattr(self.controller, 'music_stream'):
+                try:
+                    length = self.controller.music_stream.get_length()
+                except Exception:
+                    pass
+            
+            # Fallback to pygame if SoLoud length is unavailable or zero
+            if length <= 0:
+                try:
+                    sound = pygame.mixer.Sound(track)
+                    length = sound.get_length()
+                except Exception:
+                    pass
+            
+            self._track_lengths[track] = length
                 
         return self._track_lengths[track]
 
@@ -371,42 +422,48 @@ class Music_Player(GameState):
             return current
 
         # ----------------------------------------------------
-        # SOLOUD: Uses Pure Wall-Clock Integrator
+        # SOLOUD: Query backend directly; wall-clock fallback
         # ----------------------------------------------------
         else:
             if self.controller.is_paused or self.controller.music_handle is None:
                 self._last_ticks = pygame.time.get_ticks() # Prevent jumping when unpaused
                 return self.controller._frozen_time
 
-            # Measure real time passed since last frame
+            # If the scrubber is being dragged, freeze — don't advance position
+            if hasattr(self, 'progress_slider') and self.progress_slider.is_dragging:
+                self._last_ticks = pygame.time.get_ticks()
+                return self.controller._frozen_time
+
+            # PRIMARY: Query SoLoud directly for the actual stream position.
+            # The wall-clock integrator drifts after seeks because SoLoud's
+            # internal position and our accumulated delta diverge.
+            try:
+                if hasattr(self.controller.soloud, 'get_stream_position'):
+                    current = self.controller.soloud.get_stream_position(self.controller.music_handle)
+                    self.controller._frozen_time = current
+                    self._last_ticks = pygame.time.get_ticks()
+                    return current
+            except Exception:
+                pass
+            
+            # NOTE: Intentionally NOT using get_stream_time as a fallback.
+            # get_stream_time returns total elapsed play-time (a monotonic clock),
+            # NOT the actual position in the stream. After seeks it keeps counting
+            # from where it left off, which causes the slider to show wrong values.
+
+            # FALLBACK: Wall-clock integrator (only if backend queries fail)
             current_ticks = pygame.time.get_ticks()
             wall_delta = (current_ticks - self._last_ticks) / 1000.0
             self._last_ticks = current_ticks
 
-            # FIX: If delta is huge (e.g. user was on Map screen), sync directly with SoLoud's backend!
-            if wall_delta > 0.5:
-                try:
-                    if hasattr(self.controller.soloud, 'get_stream_position'):
-                        current = self.controller.soloud.get_stream_position(self.controller.music_handle)
-                        self.controller._frozen_time = current
-                        return current
-                    elif hasattr(self.controller.soloud, 'get_stream_time'):
-                        current = self.controller.soloud.get_stream_time(self.controller.music_handle)
-                        self.controller._frozen_time = current
-                        return current
-                except Exception:
-                    pass
-                wall_delta = 0.0 # Fallback if backend query fails
-            elif wall_delta < 0:
+            if wall_delta > 0.5 or wall_delta < 0:
                 wall_delta = 0.0
 
-            # Scale only the pure time delta by the pitch
             speed_mult = 0.5 + self.controller.music_pitch
             
             current = self.controller._frozen_time
             current += (wall_delta * speed_mult)
             
-            # Prevent the visual bar from bleeding past the end
             max_len = self.get_current_track_length()
             if max_len > 0:
                 current = min(current, max_len)
@@ -428,8 +485,6 @@ class Music_Player(GameState):
                 try:
                     if hasattr(self.controller.soloud, 'get_stream_position'):
                         actual_pos = self.controller.soloud.get_stream_position(self.controller.music_handle)
-                    elif hasattr(self.controller.soloud, 'get_stream_time'):
-                        actual_pos = self.controller.soloud.get_stream_time(self.controller.music_handle)
                 except Exception:
                     pass
             elif not c.USE_SOLOUD:

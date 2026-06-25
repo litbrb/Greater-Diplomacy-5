@@ -136,7 +136,7 @@ class Random_Setup(GameState):
         ]
         
         random_map_x = 100
-        random_map_y = 120
+        random_map_y = 70
 
         # 1. Isolated Procedural Options (Placed above the table display)
         if self.procedural_world:
@@ -162,7 +162,7 @@ class Random_Setup(GameState):
         cols = min(5, max(1, total_items))
         grid_width = cols * 220
         start_x = (c.SCREEN_WIDTH - grid_width) // 2 + 10 
-        start_y = 180
+        start_y = 130
         
         for i, map_name in enumerate(self.available_maps):
             grid_idx = i  # Reset to 0 base since Random Map isn't taking slot 0 anymore
@@ -179,7 +179,7 @@ class Random_Setup(GameState):
         
     def additional_draw(self, surface):
         ui_bars.draw_centered_title(surface, "RANDOM SCENARIO SETUP", 40)
-        ui_bars.draw_centered_title(surface, "Select Base Map", 145, font_preset="heading2", color=(200, 200, 200))
+        ui_bars.draw_centered_title(surface, "Select Base Map", 95, font_preset="heading2", color=(200, 200, 200))
 
     def start_game(self):
         if not self.procedural_world and not self.available_maps: return

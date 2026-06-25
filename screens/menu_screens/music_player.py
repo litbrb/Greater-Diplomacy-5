@@ -330,17 +330,22 @@ class Music_Player(GameState):
                     self.controller.music_stream, aPaused=1
                 )
                 
-                # Reapply audio settings to the new handle
+                # Reapply volume to the new handle
                 self.controller.soloud.set_volume(
                     self.controller.music_handle, self.controller.music_volume
                 )
+                
+                # Seek from position 0 BEFORE setting speed — the seek skip
+                # loop internally uses getAudio() which consumes samples at
+                # the current play speed. At 1.5x it would overshoot; at
+                # 0.75x it would undershoot. Seeking at default 1.0x is exact.
+                self.controller.soloud.seek(self.controller.music_handle, target_time)
+                
+                # NOW apply pitch/speed after the seek is complete
                 speed_mult = 0.5 + self.controller.music_pitch
                 self.controller.soloud.set_relative_play_speed(
                     self.controller.music_handle, speed_mult
                 )
-                
-                # Seek from position 0 (safe — skip distance == target)
-                self.controller.soloud.seek(self.controller.music_handle, target_time)
                 
                 # Unpause (unless the user had the music paused)
                 if not was_paused:

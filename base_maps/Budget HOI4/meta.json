@@ -25536,7 +25536,7 @@
         "(3, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25547,7 +25547,7 @@
         "(4, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25569,7 +25569,7 @@
         "(6, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25635,7 +25635,7 @@
         "(12, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25668,7 +25668,7 @@
         "(15, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25690,7 +25690,7 @@
         "(17, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25701,7 +25701,7 @@
         "(18, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25767,7 +25767,7 @@
         "(24, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25778,7 +25778,7 @@
         "(25, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25800,7 +25800,7 @@
         "(27, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25822,7 +25822,7 @@
         "(29, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25844,7 +25844,7 @@
         "(31, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25877,7 +25877,7 @@
         "(34, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25888,7 +25888,7 @@
         "(35, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25910,7 +25910,7 @@
         "(37, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25921,7 +25921,7 @@
         "(38, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25954,7 +25954,7 @@
         "(41, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -25965,7 +25965,7 @@
         "(42, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26042,7 +26042,7 @@
         "(49, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26053,7 +26053,7 @@
         "(50, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26064,7 +26064,7 @@
         "(51, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26086,7 +26086,7 @@
         "(53, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26108,7 +26108,7 @@
         "(55, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26163,7 +26163,7 @@
         "(60, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26174,7 +26174,7 @@
         "(61, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26185,7 +26185,7 @@
         "(62, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26229,7 +26229,7 @@
         "(66, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26240,7 +26240,7 @@
         "(67, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26251,7 +26251,7 @@
         "(68, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26262,7 +26262,7 @@
         "(69, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26306,7 +26306,7 @@
         "(73, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26317,7 +26317,7 @@
         "(74, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26339,7 +26339,7 @@
         "(76, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26350,7 +26350,7 @@
         "(77, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26372,7 +26372,7 @@
         "(79, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26383,7 +26383,7 @@
         "(80, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26405,7 +26405,7 @@
         "(82, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26427,7 +26427,7 @@
         "(84, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26438,7 +26438,7 @@
         "(85, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26449,7 +26449,7 @@
         "(86, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26482,7 +26482,7 @@
         "(89, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26493,7 +26493,7 @@
         "(90, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26504,7 +26504,7 @@
         "(91, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26526,7 +26526,7 @@
         "(93, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26548,7 +26548,7 @@
         "(95, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26592,7 +26592,7 @@
         "(99, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26603,7 +26603,7 @@
         "(100, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26647,7 +26647,7 @@
         "(104, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26658,7 +26658,7 @@
         "(105, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26669,7 +26669,7 @@
         "(106, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26680,7 +26680,7 @@
         "(107, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26702,7 +26702,7 @@
         "(109, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26735,7 +26735,7 @@
         "(112, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26757,7 +26757,7 @@
         "(114, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26768,7 +26768,7 @@
         "(115, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26779,7 +26779,7 @@
         "(116, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26790,7 +26790,7 @@
         "(117, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26801,7 +26801,7 @@
         "(118, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],
@@ -26812,7 +26812,7 @@
         "(119, 0, 0)": {
             "owner": "Unclaimed",
             "cores": [],
-            "is_coastal": false,
+            "is_coastal": true,
             "units": [],
             "building_queue": [],
             "unit_queue": [],

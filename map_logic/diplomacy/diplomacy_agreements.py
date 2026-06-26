@@ -22,6 +22,9 @@ def apply_to_puppets_recursively(master, nation_data, action_func):
 def pull_master_into_war(puppet, target, map_data, nation_data):
     master = nation_data.get(puppet, {}).get("master", "")
     if master and master != target:
+        if queries.are_in_same_faction(master, target, nation_data):
+            return
+            
         if target not in nation_data.get(master, {}).get("at_war_with", []):
             nation_data.setdefault(master, {}).setdefault("at_war_with", []).append(target)
         if master not in nation_data.get(target, {}).get("at_war_with", []):
@@ -67,6 +70,9 @@ def assign_puppet(map_data, nation_data, master, puppet, puppet_type=c.PUPPET_TY
 
 def pull_puppets_into_war(master, target, map_data, nation_data):
     def _add_war(p):
+        if queries.are_in_same_faction(p, target, nation_data):
+            return
+            
         if target not in nation_data.get(p, {}).get("at_war_with", []):
             nation_data.setdefault(p, {}).setdefault("at_war_with", []).append(target)
         if p not in nation_data.get(target, {}).get("at_war_with", []):
@@ -87,6 +93,15 @@ def pull_puppets_into_faction(master, fac, map_data, nation_data):
     def _set_fac(p):
         nation_data[p]["faction"] = fac
         nation_data[p]["is_faction_leader"] = False
+        
+        members = queries.get_faction_members(fac, nation_data)
+        for member in members:
+            if member != p:
+                if queries.are_at_war(p, member, nation_data) or queries.are_at_war(member, p, nation_data):
+                    finalize_neutral(nation_data, p, member)
+                nation_data[p].setdefault("relations", {})[member] = 100
+                nation_data[member].setdefault("relations", {})[p] = 100
+                
     apply_to_puppets_recursively(master, nation_data, _set_fac)
 
 def pull_puppets_out_of_faction(master, nation_data):
@@ -391,6 +406,8 @@ def finalize_faction_join(map_data, nation_data, host, joiner):
         members = queries.get_faction_members(fac, nation_data)
         for member in members:
             if member != joiner:
+                if queries.are_at_war(joiner, member, nation_data) or queries.are_at_war(member, joiner, nation_data):
+                    finalize_neutral(nation_data, joiner, member)
                 nation_data[joiner].setdefault("relations", {})[member] = 100
                 nation_data[member].setdefault("relations", {})[joiner] = 100
 

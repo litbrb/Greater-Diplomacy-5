@@ -7,7 +7,12 @@ from map_logic.rendering.font_manager import fonts
 
 def draw_combat_bubbles(self_map, surface):
     """Draws combat indicators on the map to visualize predicted battles."""
-    predictions = queries.get_combat_predictions(self_map.map_data, self_map.nation_data, self_map.id_to_province)
+    
+    # Hide combat bubbles during the AI moves screen to prevent leaking hotseat moves
+    if getattr(self_map, 'viewing_ai_moves', False):
+        return
+        
+    predictions = queries.get_combat_predictions(self_map)
     cam = self_map.camera
     
     # 1. Compile a list of friendly nations to track involvement

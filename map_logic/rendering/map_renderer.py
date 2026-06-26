@@ -137,15 +137,20 @@ def draw_map_screen(self, surface):
                     
                     # Hide the arrows if it's not the current player's unit, the player isn't spectating,
                     # and the game isn't actively resolving AI/global turns.
-                    if not is_current_player_unit and not is_spectator and not self.viewing_ai_moves:
+                    if not is_current_player_unit and not is_spectator and not getattr(self, 'viewing_ai_moves', False):
                         continue
-                    # ----------------------------
+                        
+                    speed = unit.get("speed", 1)
+                    
+                    # If we are resolving global turns (viewing_ai_moves), hide future queued moves 
+                    # by truncating the path to only what happens this turn to prevent hotseat leaks
+                    if getattr(self, 'viewing_ai_moves', False):
+                        path = path[:speed]
+                        if not path:
+                            continue
 
                     # Dynamically pull the color of the unit's owner (fallback to yellow)
                     owner_color = self.nation_colors.get(unit.get("owner", "Unclaimed"), (255, 255, 0))
-                    
-                    # --- NEW: Split paths to render queued segments differently ---
-                    speed = unit.get("speed", 1)
                     
                     # --- NEW: Tell the renderer to bypass Fog of War if the player owns this specific unit ---
                     # Fix for tactical mode: only force visible if it's the specific tactical unit

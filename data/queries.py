@@ -1534,8 +1534,16 @@ def get_best_unit_by_attack_then_speed(units): return get_best_unit(units, ["att
 # PREDICTION QUERIES (UI & RENDERING)
 # ==========================================
 
-def get_combat_predictions(map_data, nation_data, id_to_province):
+def get_combat_predictions(map_screen):
     """Generates predictions for meeting engagements and province clashes."""
+    map_data = map_screen.map_data
+    nation_data = map_screen.nation_data
+    id_to_province = map_screen.id_to_province
+    
+    player_country = getattr(map_screen, 'player_country', "None")
+    is_spectator = player_country == "Spectator" or getattr(map_screen, 'is_editor', False)
+    friendly_nations = get_all_friendly_nations(player_country, nation_data) if not is_spectator else set()
+    
     predictions = []
     incoming = {} 
     
@@ -1544,6 +1552,13 @@ def get_combat_predictions(map_data, nation_data, id_to_province):
         for u in prov.get("units", []):
             order = u.get("order")
             if order and order.get("type") == "MOVE" and order.get("path"):
+                owner = u.get("owner")
+                
+                # Prevent leaking hotseat moves by hiding combat bubbles for moves
+                # the current player didn't make
+                if not is_spectator and owner not in friendly_nations:
+                    continue
+                    
                 dest_id = order["path"][0]
                 incoming.setdefault(dest_id, []).append((u, prov["id"]))
                 

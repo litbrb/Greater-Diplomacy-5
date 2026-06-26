@@ -152,8 +152,7 @@ class Select_Base_Map(GameState):
             target_dir = os.path.join(c.SCENARIOS_CUSTOM_DIR, save_name)
             if os.path.exists(target_dir): target_dir += "_imported"
             try:
-                with zipfile.ZipFile(file_path, 'r') as zip_ref: 
-                    zip_ref.extractall(target_dir)
+                queries.extract_and_flatten_zip(file_path, target_dir)
                 self.refresh_maps()
                 messagebox.showinfo("Import Success", "Scenario Imported successfully.", parent=root)
             except Exception as e: 

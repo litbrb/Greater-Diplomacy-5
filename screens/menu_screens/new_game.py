@@ -143,7 +143,7 @@ class New_Game(GameState):
         if self.sub_state != "CATEGORY":
             # --- Draw Scrollbar ---
             self.scroll_track_rect, self.scroll_handle_rect = ui_bars.draw_standard_scrollbar(
-                surface, self.scroll_y, self.max_scroll, c.SCREEN_WIDTH - 40, 200, c.SCREEN_HEIGHT - 200
+                surface, self.scroll_y, self.max_scroll, 40, 160, c.SCREEN_HEIGHT - 200
             )
 
         # --- Draw Progress Bar Overlay ---

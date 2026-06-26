@@ -67,30 +67,46 @@ def prepare_turn(self):
 
 def snapshot_history(self):
     queries.scrub_default_images(self.nation_data)
-    import copy
     if not hasattr(self, 'history'):
         self.history = {}
     turn_idx = str(self.time_manager.total_turns)
+    
+    # --- Manual copy of nation_data (avoids slow copy.deepcopy) ---
+    nation_snap = {}
+    for nation, ndata in self.nation_data.items():
+        nd = {}
+        for k, v in ndata.items():
+            if isinstance(v, list):
+                nd[k] = list(v)           # shallow list copy (items are strings/ints)
+            elif isinstance(v, dict):
+                nd[k] = dict(v)           # shallow dict copy
+            else:
+                nd[k] = v                 # immutable scalar
+        nation_snap[nation] = nd
     
     snapshot = {
         "date_str": self.time_manager.get_date_string(),
         "day": self.time_manager.day,
         "month": self.time_manager.month_index,
         "year": self.time_manager.year,
-        "nation_data": copy.deepcopy(self.nation_data),
+        "nation_data": nation_snap,
         "provinces": {}
     }
+    
+    # --- Manual copy of province data (avoids copy.deepcopy per-province) ---
+    _copy_list = lambda lst: [dict(item) if isinstance(item, dict) else item for item in lst]
+    
     for data in self.map_data.values():
         snapshot["provinces"][data["json_key"]] = {
             "owner": data["owner"],
-            "cores": data.get("cores", []),
+            "cores": list(data.get("cores", [])),
             "is_coastal": data.get("is_coastal", False),
-            "units": copy.deepcopy(data.get("units", [])),
-            "building_queue": copy.deepcopy(data.get("building_queue", [])),
-            "unit_queue": copy.deepcopy(data.get("unit_queue", [])),
-            "orders": copy.deepcopy(data.get("orders", [])),
-            "resources": copy.deepcopy(data.get("resources", [])),
-            "buildings": copy.deepcopy(data.get("buildings", []))
+            "units": _copy_list(data.get("units", [])),
+            "building_queue": _copy_list(data.get("building_queue", [])),
+            "unit_queue": _copy_list(data.get("unit_queue", [])),
+            "orders": _copy_list(data.get("orders", [])),
+            "resources": _copy_list(data.get("resources", [])),
+            "buildings": _copy_list(data.get("buildings", []))
         }
     self.history[turn_idx] = snapshot
 

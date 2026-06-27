@@ -18,10 +18,16 @@ song_y = 32
 # ==========================================
 if not hasattr(pygame.mixer.music, '_original_get_busy'):
     pygame.mixer.music._original_get_busy = pygame.mixer.music.get_busy
+    
+    # 1. Initialize the attribute immediately so it always exists
+    pygame.mixer.music._custom_is_paused = False 
+    
     def _patched_get_busy():
-        if pygame.mixer.music._custom_is_paused:
+        # 2. Use getattr() with a default fallback to be completely bulletproof
+        if getattr(pygame.mixer.music, '_custom_is_paused', False):
             return True
         return pygame.mixer.music._original_get_busy()
+        
     pygame.mixer.music.get_busy = _patched_get_busy
 
 

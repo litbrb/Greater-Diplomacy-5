@@ -150,7 +150,7 @@ class Production_Screen(GameState):
         has_unit = any(u.get("owner") == owner_nation for u in self.target_province.get("units", []))
         
         is_removing_cores = any(q.get("order_type") == "REMOVE_CORE" for q in building_queue)
-        remove_data = queries.get_remove_core_cost()
+        remove_data = queries.get_remove_core_cost(owner_nation, self.map_screen.map_data)
         
         if is_removing_cores:
             btn_txt2 = "Removing Cores..."
@@ -162,6 +162,10 @@ class Production_Screen(GameState):
             cb2 = lambda: None
         elif not has_unit:
             btn_txt2 = "Needs Garrison"
+            btn_color2 = "grey"
+            cb2 = lambda: None
+        elif not can_core:
+            btn_txt2 = "Cannot Remove"
             btn_color2 = "grey"
             cb2 = lambda: None
         elif is_spectator and not can_spectator_edit:
@@ -368,7 +372,7 @@ class Production_Screen(GameState):
 
     def start_remove_cores(self):
         owner = self.target_province.get("owner")
-        data = queries.get_remove_core_cost()
+        data = queries.get_remove_core_cost(owner, self.map_screen.map_data)
         p_data = self.map_screen.nation_data.get(owner, {})
 
         if queries.can_afford(p_data, data):

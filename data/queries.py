@@ -779,12 +779,13 @@ def get_core_cost(nation, map_data):
         "group": "administration"
     }
 
-def get_remove_core_cost():
+def get_remove_core_cost(nation, map_data):
     """Returns the cost dictionary for removing foreign cores."""
+    core_cost = get_core_cost(nation, map_data)
     return {
-        "cost_manpower": c.REMOVE_CORE_COST_MANPOWER,
-        "cost_materials": 0,
-        "cost_fuel": 0,
+        "cost_manpower": max(0, core_cost.get("cost_manpower", 0) // 2),
+        "cost_materials": max(0, core_cost.get("cost_materials", 0) // 2),
+        "cost_fuel": max(0, core_cost.get("cost_fuel", 0) // 2),
         "time": c.REMOVE_CORE_TURNS,
         "group": "administration"
     }

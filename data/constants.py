@@ -83,8 +83,7 @@ CORE_SCALING_COST_MANPOWER = 500
 
 CORE_CONSTRUCTION_TURNS = 24
 
-REMOVE_CORE_COST_MANPOWER = 10000
-REMOVE_CORE_TURNS = 1
+REMOVE_CORE_TURNS = 2
 
 CREDITS_DATA = [
     {"main_text": "Lead Developer: ", "link_text": "GitGetGot415", "url": "https://github.com/GitGetGot415"},

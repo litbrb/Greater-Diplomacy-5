@@ -1,0 +1,48 @@
+assets
+    - contains images + audio
+
+base_maps
+    - contains the maps that will be used in game
+
+context
+    - contains a python script that makes a copy of every single file and then outputs it in a text format
+    - also contains random text files that may or may not contain important information (like this one)
+
+data
+    - stores data about the game, as well as the various editors for the data
+    - includes constants.py (gets constant information)
+    - includes queries.py (gets dynamic information)
+
+dist
+    - this is what will be shared to everyone else
+
+map_logic
+    /ai
+        - how the ai for every country works
+    /camera
+        - camera movement (note that this does not handle the camera tilt)
+    /diplomacy
+        - diplomacy!
+    /random_map
+        - random map and scenario stuff
+    /rendering
+        - shows the ui bars, buttons, symbols, etc
+    /setup
+        - handles the starting setup for choosing countries at the beginning of a scenario
+    /system32
+        - handles how the map processes turns
+
+map_tools
+    - tools for making and testing new maps in base_maps
+
+saves
+    - contains saved games
+
+scenarios
+    - various scenarios
+
+screens
+    - handles the screens the user can go to (menu screen, settings screen, map screen, etc)
+
+ui
+    - handles the ui (top ui bar, bottom ui bar, side ui bar, corner ui bar, etc)

@@ -5894,7 +5894,7 @@
     },
     "(192, 0, 0)": {
         "id": 192,
-        "terrain": "mountain",
+        "terrain": "jungle",
         "is_coastal": true,
         "center": [
             226,

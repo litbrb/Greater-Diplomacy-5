@@ -143,7 +143,9 @@ def finalize_take_puppets(map_data, nation_data, master, target_puppet):
         assign_puppet(map_data, nation_data, master, p, p_type)
 
 def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation, map_screen, keep_cores=False):
-    master_name = nation_data.get(master, {}).get("name", master)
+    master_data = nation_data.get(master, {})
+    master_name = master_data.get("name", master)
+    master_adjective = master_data.get("adjective", "")
     
     # Load from active data or from disk if dead
     if core_nation in nation_data:
@@ -154,7 +156,11 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
         base_data = country_io.get_country_stats(core_nation).copy()
         core_name = base_data.get("name", core_nation)
 
-    base_str = f"{master_name}'s Protectorate of {core_name}"
+    if master_adjective:
+        base_str = f"{master_adjective} {core_name}"
+    else:
+        base_str = f"{master_name}'s Protectorate of {core_name}"
+        
     new_id = base_str
     new_name = base_str
     

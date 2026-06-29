@@ -623,11 +623,18 @@ class Map(GameState):
                 self.nation_data[country] = data
                 added_count += 1
             else:
+                # SYNC FIX: Merge any missing top-level keys from the base template
+                for base_key, base_val in data.items():
+                    if base_key not in self.nation_data[country]:
+                        self.nation_data[country][base_key] = base_val
+
                 if "color" in data and self.nation_data[country].get("color") != data["color"]:
                     self.nation_data[country]["color"] = data["color"]
                     updated_count += 1
                 if "name" in data:
                     self.nation_data[country]["name"] = data["name"]
+                if "adjective" in data:
+                    self.nation_data[country]["adjective"] = data["adjective"]
 
                 if "research" in data:
                     current_res = self.nation_data[country].setdefault("research", {})

@@ -162,6 +162,11 @@ def load_map_assets(self, load_path):
                 if "relations" not in self.nation_data[country]:
                     self.nation_data[country]["relations"] = {}
 
+                # SYNC FIX: Merge any missing top-level keys from the base template
+                for base_key, base_val in base_data.items():
+                    if base_key not in self.nation_data[country]:
+                        self.nation_data[country][base_key] = base_val
+
                 if "research" in base_data:
                     current_res = self.nation_data[country].setdefault("research", {})
                     for tech_key, tech_val in base_data["research"].items():

@@ -181,7 +181,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Roman"
     },
     "Carthage": {
         "name": "Carthage",
@@ -365,7 +365,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French"
     },
     "Vichy France": {
         "name": "Vichy France",
@@ -411,7 +411,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French"
     },
     "United States of America": {
         "name": "United States of America",
@@ -963,7 +963,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Romanian"
     },
     "Spain": {
         "name": "Spain",
@@ -1009,7 +1009,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Spanish"
     },
     "Belgium": {
         "name": "Belgium",
@@ -1101,7 +1101,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Dutch"
     },
     "Luxembourg": {
         "name": "Luxembourg",
@@ -1239,7 +1239,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Russian"
     },
     "Sweden": {
         "name": "Sweden",
@@ -1699,7 +1699,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "British"
     },
     "Japan": {
         "name": "Japan",
@@ -1975,7 +1975,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Indian"
     },
     "Nationalist China": {
         "name": "Nationalist China",
@@ -2251,7 +2251,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Finnish"
     },
     "Estonia": {
         "name": "Estonia",
@@ -3309,7 +3309,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Brazilian"
     },
     "Cuba": {
         "name": "Cuba",
@@ -3631,7 +3631,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Colombian"
     },
     "Panama": {
         "name": "Panama",
@@ -3723,7 +3723,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Guatemalan"
     },
     "Honduras": {
         "name": "Honduras",
@@ -4873,7 +4873,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Georgian"
     },
     "Manchukuo": {
         "name": "Manchukuo",
@@ -5103,7 +5103,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Japanese"
     },
     "Brittany": {
         "name": "Brittany",
@@ -5977,7 +5977,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Byzantine"
     },
     "Alabama": {
         "name": "Alabama",
@@ -6023,7 +6023,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Alabamian"
     },
     "Australia-Hungary": {
         "name": "Australia-Hungary",
@@ -6897,7 +6897,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French"
     },
     "Combined Syndicates of America": {
         "name": "Combined Syndicates of America",
@@ -7081,7 +7081,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Malaysian"
     },
     "Senegal": {
         "name": "Senegal",
@@ -7403,7 +7403,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Holy Roman"
     },
     "Iceland": {
         "name": "Iceland",
@@ -7863,7 +7863,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French"
     },
     "French Sudan": {
         "name": "French Sudan",
@@ -8323,7 +8323,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Columbian"
     },
     "Kyrgyzstan": {
         "name": "Kyrgyzstan",
@@ -8829,7 +8829,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French"
     },
     "Kingdom of Lithuania": {
         "name": "Kingdom of Lithuania",
@@ -10485,7 +10485,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Zentralafrikan"
     },
     "Rhodesia": {
         "name": "Rhodesia",
@@ -11543,7 +11543,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Prussian"
     },
     "Ohio": {
         "name": "Ohio",
@@ -12923,7 +12923,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Parthian"
     },
     "Princely Federation": {
         "name": "Princely Federation",
@@ -13337,7 +13337,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Coloradan"
     },
     "Circassia": {
         "name": "Circassia",
@@ -13659,7 +13659,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Aztec"
     },
     "Dutch East India Company": {
         "name": "Dutch East India Company",
@@ -15223,7 +15223,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Scary Russian"
     },
     "Vikramaditya": {
         "name": "Vikramaditya",
@@ -15361,7 +15361,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Russian"
     },
     "New York": {
         "name": "New York",
@@ -16005,7 +16005,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Spanish"
     },
     "Cyprus": {
         "name": "Cyprus",
@@ -16327,7 +16327,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Russian"
     },
     "Kingdom of Portugal": {
         "name": "Kingdom of Portugal",
@@ -16557,7 +16557,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Spanish"
     },
     "Sparta": {
         "name": "Sparta",
@@ -16603,7 +16603,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Spartan"
     },
     "Sulawesi": {
         "name": "Sulawesi",
@@ -17017,7 +17017,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Finnish"
     },
     "Turkmenistan": {
         "name": "Turkmenistan",
@@ -17155,7 +17155,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Kalatian"
     },
     "Saskatchewan": {
         "name": "Saskatchewan",
@@ -17799,7 +17799,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Brazilian"
     },
     "England": {
         "name": "England",
@@ -18305,7 +18305,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Colombian"
     },
     "Dominion of Canada": {
         "name": "Dominion of Canada",
@@ -18581,7 +18581,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "British-Japanese"
     },
     "Batavian Commune": {
         "name": "Batavian Commune",
@@ -18673,7 +18673,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French"
     },
     "League of Eight Provinces": {
         "name": "League of Eight Provinces",
@@ -18949,7 +18949,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Achaemenid"
     },
     "Ural League": {
         "name": "Ural League",
@@ -21157,7 +21157,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French"
     },
     "Croissant Republic": {
         "name": "Croissant Republic",
@@ -21709,7 +21709,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Pakistanian"
     },
     "Myanmar": {
         "name": "Myanmar",
@@ -24561,7 +24561,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Malawian"
     },
     "Shanxi": {
         "name": "Shanxi",
@@ -24929,7 +24929,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "British Malayan"
     },
     "French Indochina": {
         "name": "French Indochina",

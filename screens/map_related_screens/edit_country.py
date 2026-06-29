@@ -54,12 +54,14 @@ class Edit_Country_Screen(GameState):
         self.history_index = -1
         
         self.country_name = ""
+        self.adjective = ""
         self.leader_name = ""
         self.leader_title = ""
         self.new_map_color = [150, 150, 150]
 
         # Original state trackers for unsaved changes popup
         self.orig_country_name = ""
+        self.orig_adjective = ""
         self.orig_leader_name = ""
         self.orig_leader_title = ""
         self.orig_map_color = [150, 150, 150]
@@ -80,12 +82,14 @@ class Edit_Country_Screen(GameState):
         # Load existing data
         p_data = self.map_screen.nation_data[self.editing_country]
         self.country_name = p_data.get("name", self.editing_country)
+        self.adjective = p_data.get("adjective", "")
         self.leader_name = p_data.get("leader_name", "")
         self.leader_title = p_data.get("leader_title", "")
         self.new_map_color = list(p_data.get("color", [150, 150, 150]))
 
         # Track the original baseline to check for unsaved changes on exit
         self.orig_country_name = self.country_name
+        self.orig_adjective = self.adjective
         self.orig_leader_name = self.leader_name
         self.orig_leader_title = self.leader_title
         self.orig_map_color = list(self.new_map_color)
@@ -103,6 +107,7 @@ class Edit_Country_Screen(GameState):
     def has_unsaved_changes(self):
         if self.history_index > 0: return True
         if self.country_name != self.orig_country_name: return True
+        if self.adjective != self.orig_adjective: return True
         if self.leader_name != self.orig_leader_name: return True
         if self.leader_title != self.orig_leader_title: return True
         if self.new_map_color != self.orig_map_color: return True
@@ -245,6 +250,7 @@ class Edit_Country_Screen(GameState):
         def cb(chosen_country):
             src_data = self.map_screen.nation_data[chosen_country]
             self.country_name = src_data.get("name", chosen_country)
+            self.adjective = src_data.get("adjective", "")
             self.leader_name = src_data.get("leader_name", "")
             self.leader_title = src_data.get("leader_title", "")
             self.new_map_color = list(src_data.get("color", [150, 150, 150]))
@@ -259,6 +265,7 @@ class Edit_Country_Screen(GameState):
     def save_and_exit(self):
         p_data = self.map_screen.nation_data[self.editing_country]
         p_data["name"] = self.country_name
+        p_data["adjective"] = self.adjective
         p_data["leader_name"] = self.leader_name
         p_data["leader_title"] = self.leader_title
         p_data["flag_data"] = queries.encode_surf_to_b64(self.flag_surf)
@@ -369,6 +376,8 @@ class Edit_Country_Screen(GameState):
             mx, my = event.pos
             if pygame.Rect(input_box_x, 480, 300, 40).collidepoint(mx, my):
                 self.active_input = "COUNTRY_NAME"
+            elif pygame.Rect(input_box_x, 540, 300, 40).collidepoint(mx, my):
+                self.active_input = "ADJECTIVE"
             elif pygame.Rect(input_box_x, 600, 300, 40).collidepoint(mx, my):
                 self.active_input = "NAME"
             elif pygame.Rect(input_box_x, 660, 300, 40).collidepoint(mx, my):
@@ -404,6 +413,8 @@ class Edit_Country_Screen(GameState):
                     # TODO: constants.py the hardcoded 50 please
                     if self.active_input == "COUNTRY_NAME":
                         self.country_name, _ = process_text_input(event, self.country_name, max_length=c.COUNTRY_NAME_MAX_LENGTH)
+                    elif self.active_input == "ADJECTIVE":
+                        self.adjective, _ = process_text_input(event, self.adjective, max_length=c.COUNTRY_NAME_MAX_LENGTH)
                     elif self.active_input == "NAME":
                         self.leader_name, _ = process_text_input(event, self.leader_name, max_length=c.COUNTRY_NAME_MAX_LENGTH)
                     elif self.active_input == "TITLE":
@@ -494,7 +505,7 @@ class Edit_Country_Screen(GameState):
             surface.blit(normal_font.render(value + ("|" if self.active_input == input_state else ""), True, (255, 255, 255)), (input_box_x + 10, y_pos + 10))
 
         draw_input_box(480, "Country Name:", "COUNTRY_NAME", self.country_name)
-        draw_input_box(540, "Adjective:", "ADJECTIVE", self.leader_title)
+        draw_input_box(540, "Adjective:", "ADJECTIVE", self.adjective)
         draw_input_box(600, "Leader Name:", "NAME", self.leader_name)
         draw_input_box(660, "Leader Title:", "TITLE", self.leader_title)
 

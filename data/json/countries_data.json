@@ -227,7 +227,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Carthaginian"
     },
     "Gaul": {
         "name": "Gaul",
@@ -871,7 +871,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Italian"
     },
     "Bulgaria": {
         "name": "Bulgaria",
@@ -917,7 +917,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Bulgarian"
     },
     "Romania": {
         "name": "Romania",
@@ -1147,7 +1147,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Luxembourgian"
     },
     "Ukraine": {
         "name": "Ukraine",
@@ -1193,7 +1193,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Ukrainian"
     },
     "Russia": {
         "name": "Russia",
@@ -1285,7 +1285,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Swedish"
     },
     "Czechoslovakia": {
         "name": "Czechoslovakia",
@@ -1331,7 +1331,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Czechoslovakian"
     },
     "Czechia": {
         "name": "Czechia",
@@ -1377,7 +1377,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Czechian"
     },
     "Slovakia": {
         "name": "Slovakia",
@@ -1423,7 +1423,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Slovakian"
     },
     "Turkey": {
         "name": "Turkey",
@@ -1607,7 +1607,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Norwegian"
     },
     "Portugal": {
         "name": "Portugal",
@@ -1791,7 +1791,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Mexican"
     },
     "Argentina": {
         "name": "Argentina",
@@ -1883,7 +1883,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Chilean"
     },
     "Yugoslavia": {
         "name": "Yugoslavia",
@@ -2021,7 +2021,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Chinese"
     },
     "Communist China": {
         "name": "Communist China",
@@ -2067,7 +2067,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Chinese"
     },
     "Australia": {
         "name": "Australia",
@@ -2435,7 +2435,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Swiss"
     },
     "Iran": {
         "name": "Iran",
@@ -2849,7 +2849,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Bolivian"
     },
     "Paraguay": {
         "name": "Paraguay",
@@ -3079,7 +3079,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Polish"
     },
     "Belarus": {
         "name": "Belarus",
@@ -3125,7 +3125,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Belarusian"
     },
     "Ireland": {
         "name": "Ireland",
@@ -3171,7 +3171,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Irish"
     },
     "Greece": {
         "name": "Greece",
@@ -3447,7 +3447,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Thai"
     },
     "Nepal": {
         "name": "Nepal",
@@ -4137,7 +4137,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Ethiopian"
     },
     "Liberia": {
         "name": "Liberia",
@@ -4459,7 +4459,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Libyan"
     },
     "Egypt": {
         "name": "Egypt",
@@ -4505,7 +4505,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Egyptian"
     },
     "Jordan": {
         "name": "Jordan",
@@ -4597,7 +4597,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Palestinian"
     },
     "Israel": {
         "name": "Israel",
@@ -4643,7 +4643,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Israeli"
     },
     "Syria": {
         "name": "Syria",
@@ -4689,7 +4689,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Syrian"
     },
     "Lebanon": {
         "name": "Lebanon",
@@ -5011,7 +5011,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Moroccan"
     },
     "Scotland": {
         "name": "Scotland",
@@ -5241,7 +5241,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Somalian"
     },
     "Sudan": {
         "name": "Sudan",
@@ -5287,7 +5287,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Sudanese"
     },
     "Vietnam": {
         "name": "Vietnam",
@@ -5333,7 +5333,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Vietnamese"
     },
     "Gigachad": {
         "name": "Gigachad",
@@ -5517,7 +5517,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Zakytaishchynan"
     },
     "Siberia": {
         "name": "Siberia",
@@ -5655,7 +5655,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Wallachian"
     },
     "Zulu": {
         "name": "Zulu",
@@ -5839,7 +5839,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "South Sudanese"
     },
     "Mozambique": {
         "name": "Mozambique",
@@ -6115,7 +6115,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Polish-Lithuanian"
     },
     "Kosovo": {
         "name": "Kosovo",
@@ -6391,7 +6391,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Rwandan"
     },
     "Qatar": {
         "name": "Qatar",
@@ -6667,7 +6667,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Occitanian"
     },
     "Pocatello": {
         "name": "Pocatello",
@@ -7127,7 +7127,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Senegalese"
     },
     "Naples": {
         "name": "Naples",
@@ -7219,7 +7219,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Papua New Guinean"
     },
     "Omsk": {
         "name": "Omsk",
@@ -7909,7 +7909,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "French Sudanese"
     },
     "Iowa": {
         "name": "Iowa",
@@ -8001,7 +8001,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Malian"
     },
     "Crimea": {
         "name": "Crimea",
@@ -8047,7 +8047,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Crimean"
     },
     "Catalonia": {
         "name": "Catalonia",
@@ -9105,7 +9105,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "New English"
     },
     "Mende": {
         "name": "Mende",
@@ -10117,7 +10117,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "South Korean"
     },
     "North Korea": {
         "name": "North Korea",
@@ -10163,7 +10163,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "North Korean"
     },
     "Northern Territory": {
         "name": "Northern Territory",
@@ -11773,7 +11773,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Solomonish"
     },
     "Maine": {
         "name": "Maine",
@@ -11957,7 +11957,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Valencian"
     },
     "Khiva": {
         "name": "Khiva",
@@ -12279,7 +12279,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "New Mexican"
     },
     "Manitoba": {
         "name": "Manitoba",
@@ -12371,7 +12371,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Laotian"
     },
     "Ontario": {
         "name": "Ontario",
@@ -13061,7 +13061,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Yakutian"
     },
     "Illinois": {
         "name": "Illinois",
@@ -13245,7 +13245,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Cambodian"
     },
     "Bavaria": {
         "name": "Bavaria",
@@ -13475,7 +13475,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Botswanan"
     },
     "Czechochechnyaslovenoslovakia": {
         "name": "Czechochechnyaslovenoslovakia",
@@ -13521,7 +13521,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Czechochechnyaslovenoslovakian"
     },
     "Danubia": {
         "name": "Danubia",
@@ -13797,7 +13797,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Nebraskan"
     },
     "Northwest Territories": {
         "name": "Northwest Territories",
@@ -14395,7 +14395,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Cameroonian"
     },
     "Cossacks": {
         "name": "Cossacks",
@@ -14717,7 +14717,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Karelian"
     },
     "Kaliningrad": {
         "name": "Kaliningrad",
@@ -14809,7 +14809,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Queenish"
     },
     "Ilkhanate": {
         "name": "Ilkhanate",
@@ -15499,7 +15499,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Sri Lankan"
     },
     "Alsace-Lorraine": {
         "name": "Alsace-Lorraine",
@@ -15867,7 +15867,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Chihuahuan"
     },
     "Ordensstaat Burgund": {
         "name": "Ordensstaat Burgund",
@@ -17385,7 +17385,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Rhinish"
     },
     "Commune of Lemuria": {
         "name": "Commune of Lemuria",
@@ -18765,7 +18765,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Argentinian"
     },
     "Toubou": {
         "name": "Toubou",
@@ -18857,7 +18857,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Bohemian"
     },
     "Alash Autonomy": {
         "name": "Alash Autonomy",
@@ -19409,7 +19409,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Aboriginal"
     },
     "Stanistan": {
         "name": "Stanistan",
@@ -19915,7 +19915,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "San Franciscan"
     },
     "Los Angeles": {
         "name": "Los Angeles",
@@ -21065,7 +21065,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Ayumu Kasugan"
     },
     "British America": {
         "name": "British America",
@@ -21617,7 +21617,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Mauritanian"
     },
     "Madagascar": {
         "name": "Madagascar",
@@ -21893,7 +21893,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Malian"
     },
     "United Arab Emirates": {
         "name": "United Arab Emirates",
@@ -22767,7 +22767,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Taiwanese"
     },
     "Java": {
         "name": "Java",
@@ -23089,7 +23089,7 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "South Australian"
     },
     "Tierra del Fuego": {
         "name": "Tierra del Fuego",
@@ -25481,6 +25481,6 @@
         "leader_title": "",
         "flag_data": "",
         "portrait_data": "",
-        "adjective": ""
+        "adjective": "Pomeranian"
     }
 }

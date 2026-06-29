@@ -1531,10 +1531,19 @@ class Create_Integrated_Puppet_Screen(GameState):
             surface.blit(tiny_font.render("No potential subjects available.", True, (150, 150, 150)), (self.panel_rect.x + 30, y_off))
         else:
             for subject in self.valid_subjects:
+                try:
+                    if subject in self.map_screen.nation_data:
+                        subject_name = self.map_screen.nation_data[subject].get("name", subject)
+                    else:
+                        from data.io import country_io
+                        subject_name = country_io.get_country_stats(subject).get("name", subject)
+                except Exception:
+                    subject_name = subject
+
                 is_queued = subject in queued_cores
                 color = (255, 215, 0) if is_queued else (200, 200, 200)
                 status = " (Queued)" if is_queued else ""
-                txt = tiny_font.render(f"- {subject}{status}", True, color)
+                txt = tiny_font.render(f"- {subject_name}{status}", True, color)
                 surface.blit(txt, (self.panel_rect.x + 20, y_off + 15))
                 y_off += 50
 

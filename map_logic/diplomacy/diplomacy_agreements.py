@@ -12,6 +12,8 @@ def break_puppet_link(nation_data, master, puppet):
     if puppet in nation_data:
         nation_data[puppet]["master"] = ""
         nation_data[puppet]["puppet_type"] = ""
+        if "is_created_integrated_puppet" in nation_data[puppet]:
+            del nation_data[puppet]["is_created_integrated_puppet"]
 
 def apply_to_puppets_recursively(master, nation_data, action_func):
     """Generic helper to recursively apply diplomatic states down a puppet hierarchy."""
@@ -116,8 +118,6 @@ def finalize_annexation(map_data, nation_data, master, puppet, map_screen):
         p_type = nation_data.get(child, {}).get("puppet_type", c.PUPPET_TYPE_AUTONOMOUS)
         assign_puppet(map_data, nation_data, master, child, p_type)
         
-    break_puppet_link(nation_data, master, puppet)
-    
     # Transfer all territory and units
     from map_logic.system32 import edit_province_ownership
     for prov in map_data.values():
@@ -127,6 +127,8 @@ def finalize_annexation(map_data, nation_data, master, puppet, map_screen):
             if unit.get("owner") == puppet:
                 unit["owner"] = master
                 
+    break_puppet_link(nation_data, master, puppet)
+    
     from map_logic.diplomacy.diplomacy_events import log_global_event
     log_global_event(nation_data, f"{master} has fully annexed {puppet}.")
 
@@ -161,28 +163,15 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
     else:
         base_str = f"{master_name}'s Protectorate of {core_name}"
         
-    owns_territory = any(prov.get("owner") == core_nation for prov in map_data.values())
-    in_faction = bool(nation_data.get(core_nation, {}).get("faction", ""))
+    new_id = base_str
+    new_name = base_str
     
-    if not owns_territory and not in_faction:
-        new_id = core_nation
-        new_name = base_str
-        
-        # Check name collision (excluding this id)
-        suffix = 1
-        while any(d.get("name") == new_name and k != new_id for k, d in nation_data.items()):
-            suffix += 1
-            new_name = f"{base_str} {suffix}"
-    else:
-        new_id = base_str
-        new_name = base_str
-        
-        # Check collision to avoid overwriting existing subjects
-        suffix = 1
-        while new_id in nation_data or any(d.get("name") == new_name for d in nation_data.values()):
-            suffix += 1
-            new_id = f"{base_str} {suffix}"
-            new_name = f"{base_str} {suffix}"
+    # Check collision to avoid overwriting existing subjects
+    suffix = 1
+    while new_id in nation_data or any(d.get("name") == new_name for d in nation_data.values()):
+        suffix += 1
+        new_id = f"{base_str} {suffix}"
+        new_name = f"{base_str} {suffix}"
     
     new_data = copy.deepcopy(base_data)
     new_data["name"] = new_name
@@ -200,6 +189,7 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
     new_data["research"] = copy.deepcopy(master_research)
     
     new_data["is_playable"] = True
+    new_data["is_created_integrated_puppet"] = True
     new_data["at_war_with"] = []
     new_data["allied_with"] = []
     new_data["pending_diplomacy"] = {}

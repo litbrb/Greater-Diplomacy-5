@@ -47,6 +47,20 @@ def conquer_province(self, province, new_owner):
             if not province.get("cores"):
                 province["cores"] = [new_owner]
 
+        # --- NEW: Check if old owner was a created integrated puppet and lost all territory ---
+        if old_owner != new_owner and old_owner in self.nation_data:
+            if self.nation_data[old_owner].get("is_created_integrated_puppet", False):
+                if not any(p.get("owner") == old_owner for p in self.map_data.values()):
+                    # Remove all cores of this country from the map
+                    for p in self.map_data.values():
+                        if old_owner in p.get("cores", []):
+                            p["cores"].remove(old_owner)
+                            # Visual Update (similar to remove_core)
+                            if not getattr(self, 'viewing_ai_moves', False) and not getattr(self, 'ai_is_thinking', False):
+                                new_color = get_mixed_core_color(p["cores"])
+                                map_utils.update_single_province_surface(self.cores_map, self.id_map, p["map_color"], new_color)
+                                if self.map_mode == "CORES": self.active_map = self.cores_map
+
 def get_mixed_core_color(cores):
     """Helper function to average the colors of all cores on a tile."""
     nations_dict = country_io.get_nation_colors() 

@@ -6,6 +6,8 @@ import data.constants as c
 from ui import buttons
 from data import queries
 from map_logic.rendering.font_manager import fonts
+import tkinter as tk
+from tkinter import filedialog
 
 class Settings(GameState):
     def __init__(self, controller):
@@ -46,6 +48,10 @@ class Settings(GameState):
 
         self.ai_threads = self.controller.ai_threads
         self.show_fps = self.controller.show_fps
+        
+        self.saves_dir = self.controller.saves_dir
+        self.custom_scenarios_dir = self.controller.custom_scenarios_dir
+        
         self.refresh_ui()
 
     def toggle_fps(self):
@@ -145,6 +151,42 @@ class Settings(GameState):
         queries.save_global_settings(self.controller)
         self.refresh_ui()
 
+    def edit_saves_dir(self):
+        root = tk.Tk()
+        root.withdraw()
+        folder_selected = filedialog.askdirectory(initialdir=self.saves_dir, title="Select Saves Directory")
+        if folder_selected:
+            self.saves_dir = folder_selected
+            self.controller.saves_dir = folder_selected
+            c.SAVES_DIR = folder_selected
+            queries.save_global_settings(self.controller)
+            self.refresh_ui()
+
+    def edit_custom_scenarios_dir(self):
+        root = tk.Tk()
+        root.withdraw()
+        folder_selected = filedialog.askdirectory(initialdir=self.custom_scenarios_dir, title="Select Custom Scenarios Directory")
+        if folder_selected:
+            self.custom_scenarios_dir = folder_selected
+            self.controller.custom_scenarios_dir = folder_selected
+            c.SCENARIOS_CUSTOM_DIR = folder_selected
+            queries.save_global_settings(self.controller)
+            self.refresh_ui()
+
+    def reset_saves_dir(self):
+        self.saves_dir = "saves"
+        self.controller.saves_dir = "saves"
+        c.SAVES_DIR = "saves"
+        queries.save_global_settings(self.controller)
+        self.refresh_ui()
+
+    def reset_custom_scenarios_dir(self):
+        self.custom_scenarios_dir = "scenarios/map_editor"
+        self.controller.custom_scenarios_dir = "scenarios/map_editor"
+        c.SCENARIOS_CUSTOM_DIR = "scenarios/map_editor"
+        queries.save_global_settings(self.controller)
+        self.refresh_ui()
+
     def set_fps(self, val):
         fps = int(20 + (val * 40)) # Scale 0.0-1.0 to 20-60
         self.controller.target_fps = fps
@@ -234,6 +276,31 @@ class Settings(GameState):
 
     def additional_draw(self, surface):
         font = fonts.get("normal")
+
+        # --- DRAW DIRECTORY TEXTBOXES (Middle Top) ---
+        dir_box_w = 400
+        dir_box_h = 35
+        dir_box_x = c.SCREEN_WIDTH // 2 - dir_box_w // 2 + 50
+        
+        # Saves Dir Box
+        saves_y = 60
+        surface.blit(font.render("Saves Path:", True, (100, 100, 100)), (dir_box_x, saves_y - 25))
+        saves_rect = pygame.Rect(dir_box_x, saves_y, dir_box_w, dir_box_h)
+        pygame.draw.rect(surface, (20, 20, 30), saves_rect)
+        pygame.draw.rect(surface, (150, 150, 150), saves_rect, 1)
+        surface.set_clip(saves_rect.inflate(-10, -10))
+        surface.blit(font.render(self.saves_dir, True, (255, 255, 255)), (saves_rect.x + 5, saves_rect.y + 10))
+        surface.set_clip(None)
+
+        # Scenarios Dir Box
+        scen_y = 120
+        surface.blit(font.render("Custom Maps Path:", True, (100, 100, 100)), (dir_box_x, scen_y - 25))
+        scen_rect = pygame.Rect(dir_box_x, scen_y, dir_box_w, dir_box_h)
+        pygame.draw.rect(surface, (20, 20, 30), scen_rect)
+        pygame.draw.rect(surface, (150, 150, 150), scen_rect, 1)
+        surface.set_clip(scen_rect.inflate(-10, -10))
+        surface.blit(font.render(self.custom_scenarios_dir, True, (255, 255, 255)), (scen_rect.x + 5, scen_rect.y + 10))
+        surface.set_clip(None)
         
         if self.ai_mode in ["GEMINI", "CHATGPT", "CLAUDE", "OLLAMA"]:
             if self.ai_mode == "GEMINI":

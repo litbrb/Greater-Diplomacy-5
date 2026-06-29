@@ -115,7 +115,7 @@ class Load_Game(GameState):
     def additional_draw(self, surface):
         # --- Draw Rename Input Box ---
         if self.renaming_folder:
-            save_folders = os.listdir("saves")
+            save_folders = os.listdir(c.SAVES_DIR)
             idx = save_folders.index(self.renaming_folder) if self.renaming_folder in save_folders else 0
             box_y = 120 + (idx * 40)
             
@@ -239,7 +239,7 @@ class Load_Game(GameState):
     # --- File System Methods (Unchanged logic, just used by UI) ---
     def export_save_zip(self, folder_name):
         try:
-            source_path = os.path.join("saves", folder_name)
+            source_path = os.path.join(c.SAVES_DIR, folder_name)
             zip_filename = os.path.join(str(Path.home() / "Downloads"), f"{folder_name}.zip")
             with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
                 for root, dirs, files in os.walk(source_path):
@@ -259,7 +259,7 @@ class Load_Game(GameState):
         
         if file_path:
             save_name = Path(file_path).stem
-            target_dir = os.path.join("saves", save_name)
+            target_dir = os.path.join(c.SAVES_DIR, save_name)
             if os.path.exists(target_dir): target_dir += "_imported"
             try:
                 queries.extract_and_flatten_zip(file_path, target_dir)
@@ -274,14 +274,14 @@ class Load_Game(GameState):
 
     def finish_rename(self):
         if self.new_name_text.strip() != "" and self.new_name_text != self.renaming_folder:
-            old_path = os.path.join("saves", self.renaming_folder)
-            new_path = os.path.join("saves", self.new_name_text.strip())
+            old_path = os.path.join(c.SAVES_DIR, self.renaming_folder)
+            new_path = os.path.join(c.SAVES_DIR, self.new_name_text.strip())
             if not os.path.exists(new_path): os.rename(old_path, new_path)
         self.renaming_folder = None
         self.refresh_save_list()
 
     def load_specific_save(self, folder_name):
-        self.selected_save_path = os.path.join("saves", folder_name)
+        self.selected_save_path = os.path.join(c.SAVES_DIR, folder_name)
         self.next_state = "MAP"
         self.done = True
 

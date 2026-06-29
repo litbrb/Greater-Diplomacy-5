@@ -241,7 +241,9 @@ def save_global_settings(controller):
         controller.target_fps,
         controller.ai_threads,
         controller.show_fps,
-        controller.drag_mouse_button_toggle
+        controller.drag_mouse_button_toggle,
+        controller.saves_dir,
+        controller.custom_scenarios_dir
     )
 
 def get_ai_threads():

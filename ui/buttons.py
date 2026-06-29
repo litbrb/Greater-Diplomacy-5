@@ -620,10 +620,15 @@ def render_settings_buttons(settings_screen):
     
     settings_screen.elements.append(settings_screen.ai_thread_slider)
 
+    dir_box_x = c.SCREEN_WIDTH // 2 - 150
     settings_screen.elements.extend([
         settings_screen.player_slider,
         settings_screen.fps_slider,
         Button(keybind_x, 530, "medium", "grey", back_btn_text, lambda: settings_screen.start_listening("BACK")),
         Button(keybind_x, 590, "medium", "grey", orders_btn_text, lambda: settings_screen.start_listening("ORDERS")),
-        Button(keybind_x, 650, "medium", "red", "Reset Defaults", settings_screen.reset_defaults)
+        Button(keybind_x, 650, "medium", "red", "Reset Defaults", settings_screen.reset_defaults),
+        Button(dir_box_x - 220, 60, "small", "blue", "Edit", settings_screen.edit_saves_dir),
+        Button(dir_box_x - 110, 60, "small", "red", "Reset", settings_screen.reset_saves_dir),
+        Button(dir_box_x - 220, 120, "small", "blue", "Edit", settings_screen.edit_custom_scenarios_dir),
+        Button(dir_box_x - 110, 120, "small", "red", "Reset", settings_screen.reset_custom_scenarios_dir)
     ])

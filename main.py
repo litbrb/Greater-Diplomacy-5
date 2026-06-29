@@ -197,6 +197,12 @@ class Controller:
         self.drag_mouse_button_toggle = loaded_data[19] if len(loaded_data) > 19 else c.DRAG_MOUSE_BUTTON_TOGGLE
         c.DRAG_MOUSE_BUTTON_TOGGLE = self.drag_mouse_button_toggle
 
+        self.saves_dir = loaded_data[20] if len(loaded_data) > 20 else c.SAVES_DIR
+        c.SAVES_DIR = self.saves_dir
+        
+        self.custom_scenarios_dir = loaded_data[21] if len(loaded_data) > 21 else c.SCENARIOS_CUSTOM_DIR
+        c.SCENARIOS_CUSTOM_DIR = self.custom_scenarios_dir
+
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.sfx_volume
         ui_elements.global_sfx_pitch = self.sfx_pitch

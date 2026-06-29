@@ -147,29 +147,42 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
     master_name = master_data.get("name", master)
     master_adjective = master_data.get("adjective", "")
     
+    core_name = core_nation
+    
     # Load from active data or from disk if dead
     if core_nation in nation_data:
-        core_name = nation_data[core_nation].get("name", core_nation)
         base_data = nation_data[core_nation].copy()
     else:
         from data.io import country_io
         base_data = country_io.get_country_stats(core_nation).copy()
-        core_name = base_data.get("name", core_nation)
 
     if master_adjective:
         base_str = f"{master_adjective} {core_name}"
     else:
         base_str = f"{master_name}'s Protectorate of {core_name}"
         
-    new_id = base_str
-    new_name = base_str
+    owns_territory = any(prov.get("owner") == core_nation for prov in map_data.values())
+    in_faction = bool(nation_data.get(core_nation, {}).get("faction", ""))
     
-    # Check collision to avoid overwriting existing subjects
-    suffix = 1
-    while new_id in nation_data or any(d.get("name") == new_name for d in nation_data.values()):
-        suffix += 1
-        new_id = f"{base_str} {suffix}"
-        new_name = f"{base_str} {suffix}"
+    if not owns_territory and not in_faction:
+        new_id = core_nation
+        new_name = base_str
+        
+        # Check name collision (excluding this id)
+        suffix = 1
+        while any(d.get("name") == new_name and k != new_id for k, d in nation_data.items()):
+            suffix += 1
+            new_name = f"{base_str} {suffix}"
+    else:
+        new_id = base_str
+        new_name = base_str
+        
+        # Check collision to avoid overwriting existing subjects
+        suffix = 1
+        while new_id in nation_data or any(d.get("name") == new_name for d in nation_data.values()):
+            suffix += 1
+            new_id = f"{base_str} {suffix}"
+            new_name = f"{base_str} {suffix}"
     
     new_data = copy.deepcopy(base_data)
     new_data["name"] = new_name

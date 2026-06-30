@@ -226,7 +226,7 @@ def update_country_centers(map_screen):
                 W = (c_xx + c_yy) / 2.0
                 D = math.sqrt(((c_xx - c_yy) / 2.0)**2 + c_xy**2)
                 
-                major_variance = W + D
+                major_variance = max(W + D, 1.0)
                 minor_variance = max(W - D, 1.0)
                 
                 # Convert variance to spatial distance. 
@@ -234,21 +234,10 @@ def update_country_centers(map_screen):
                 country_length = math.sqrt(major_variance) * 3.0
                 country_thickness = math.sqrt(minor_variance) * 3.0
                 
-                # Snap to the closest actual province in this component using unwrapped distance
-                best_idx = 0
-                best_dist = float('inf')
-                for i, (cx, cy) in enumerate(unwrapped_centers):
-                    dist = (cx - avg_x)**2 + (cy - avg_y)**2
-                    if dist < best_dist:
-                        best_dist = dist
-                        best_idx = i
-                
-                closest_prov = comp[best_idx]
-                
                 blobs.append({
                     "owner": group_val, # Reusing "owner" key so the renderer accepts it generically
-                    "cx": closest_prov["center"][0],
-                    "cy": closest_prov["center"][1],
+                    "cx": avg_x % map_screen.map_w if map_screen.loop_map else avg_x,
+                    "cy": avg_y,
                     "length": country_length,
                     "thickness": country_thickness,
                     "spread": math.sqrt(c_xx + c_yy),

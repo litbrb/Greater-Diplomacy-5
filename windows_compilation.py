@@ -1,0 +1,87 @@
+import os
+import subprocess
+import shutil
+import sys
+
+def main():
+    # 1. Run pyinstaller
+    print("Running PyInstaller...")
+    cmd = 'pyinstaller --clean --onefile --add-binary "win64-libsoloud.dll;." --add-binary "mac64-libsoloud.dylib;." --add-binary "lin64-libsoloud.so;." main.py'
+    
+    result = subprocess.run(cmd, shell=True)
+    if result.returncode != 0:
+        print("PyInstaller failed.")
+        sys.exit(result.returncode)
+        
+    print("PyInstaller finished successfully.")
+
+    dist_dir = "dist"
+    
+    # Ensure dist exists
+    os.makedirs(dist_dir, exist_ok=True)
+    
+    # 2. Copy directories
+    dirs_to_copy = ["assets", "base_maps", "data", "saves", "scenarios"]
+    
+    def data_ignore_func(dir_name, contents):
+        ignored = []
+        for c in contents:
+            path = os.path.join(dir_name, c)
+            if os.path.isfile(path) and not c.endswith('.json'):
+                ignored.append(c)
+        return ignored
+
+    def assets_ignore_func(dir_name, contents):
+        ignored = []
+        for c in contents:
+            path = os.path.join(dir_name, c)
+            try:
+                # git check-ignore returns 0 if ignored, 1 if not ignored
+                res = subprocess.run(["git", "check-ignore", "-q", path])
+                if res.returncode == 0:
+                    ignored.append(c)
+            except Exception as e:
+                print(f"Error checking git ignore for {path}: {e}")
+        return ignored
+
+    def saves_ignore_func(dir_name, contents):
+        return contents
+
+    def scenarios_ignore_func(dir_name, contents):
+        parts = os.path.normpath(dir_name).split(os.sep)
+        if "map_editor" in parts:
+            return contents
+        return []
+
+    for d in dirs_to_copy:
+        src = d
+        dst = os.path.join(dist_dir, d)
+        
+        if not os.path.exists(src):
+            print(f"Source directory {src} does not exist, skipping.")
+            continue
+            
+        print(f"Copying {src} to {dst}...")
+        
+        # Remove destination if it exists so copytree doesn't fail
+        if os.path.exists(dst):
+            shutil.rmtree(dst)
+            
+        if d == "data":
+            shutil.copytree(src, dst, ignore=data_ignore_func)
+            for dirpath, dirnames, filenames in os.walk(dst, topdown=False):
+                if not os.listdir(dirpath) and dirpath != dst:
+                    os.rmdir(dirpath)
+        elif d == "assets":
+            shutil.copytree(src, dst, ignore=assets_ignore_func)
+        elif d == "saves":
+            shutil.copytree(src, dst, ignore=saves_ignore_func)
+        elif d == "scenarios":
+            shutil.copytree(src, dst, ignore=scenarios_ignore_func)
+        else:
+            shutil.copytree(src, dst)
+
+    print("Compilation and copying finished successfully.")
+
+if __name__ == "__main__":
+    main()

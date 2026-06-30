@@ -550,12 +550,93 @@ def open_map_research_editor(self):
 
 def select_unit_brush(self):
     """Opens a selection window for unit types and sets mode to UNIT."""
-    items = ["None"] + list(queries.get_unit_library().keys())
+    items = ["None", "Convoy", "----------"] + list(queries.get_unit_library().keys())
     def cb(val):
         self.brush_unit = val
         self.editor_mode = "UNIT"
         self.show_feedback(f"Brush: {self.brush_unit}")
     queries.open_listbox_selector(self, "Select Unit", "Select Unit to Place:", items, cb)
+
+def open_convoy_converter(self, province):
+    """Opens a Tkinter window to select which units on a tile should be converted to convoys/trucks."""
+    units = province.get("units", [])
+    if not units:
+        self.show_feedback("No units on tile to convert!")
+        return
+
+    root, close_menu = queries.create_managed_tk_window(self, "Convert Units", "600x600")
+
+    tk.Label(root, text="Select Units to Convert:", font=("Arial", 12, "bold")).pack(pady=10)
+    
+    canvas = tk.Canvas(root)
+    scrollbar = ttk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    scroll_frame = tk.Frame(canvas)
+    
+    scroll_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+    canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+    
+    canvas.pack(side="left", fill="both", expand=True, padx=10, pady=5)
+    scrollbar.pack(side="right", fill="y")
+
+    vars_list = []
+    unit_lib = queries.get_unit_library()
+    
+    for i, unit in enumerate(units):
+        is_convoyed = "original_type" in unit
+        var = tk.BooleanVar(value=is_convoyed)
+        vars_list.append((unit, var))
+        
+        # Display the real underlying unit name
+        name = unit.get("original_type", unit.get("type", "Unknown"))
+        health = unit.get("health", 100)
+        
+        # Check if it's a naval unit
+        is_naval = unit_lib.get(name, {}).get("naval_unit", False)
+        label_text = f"{name} (Convoy)" if not is_naval else f"{name} (Truck)"
+        
+        cb = tk.Checkbutton(scroll_frame, text=label_text, variable=var, font=("Arial", 10))
+        cb.grid(row=i, column=0, sticky="w", pady=2)
+        
+    def save_changes():
+        for unit, var in vars_list:
+            if var.get() and "original_type" not in unit:
+                # Need to convert to Convoy/Truck
+                name = unit.get("type", "Unknown")
+                is_naval = unit_lib.get(name, {}).get("naval_unit", False)
+                target = "Convoy" if not is_naval else "Truck"
+                
+                unit["original_type"] = unit["type"]
+                unit["original_speed"] = unit.get("speed", 1)
+                unit["original_max_health"] = unit.get("max_health", c.DEFAULT_UNIT_HP)
+                unit["original_attack"] = unit.get("attack", c.DEFAULT_UNIT_ATK)
+                
+                pct = unit.get("health", 1) / max(1, unit.get("max_health", 1))
+                
+                unit["type"] = f"{target} ({unit['type']})"
+                unit["speed"] = 1
+                
+                if target == "Convoy":
+                    unit["naval_unit"] = True
+                    unit["max_health"] = c.CONVOY_MAX_HP
+                    unit["attack"] = c.CONVOY_ATK
+                else:
+                    unit["naval_unit"] = False
+                    unit["max_health"] = c.TRUCK_MAX_HP
+                    unit["attack"] = c.TRUCK_ATK
+                    
+                unit["health"] = unit["max_health"] * pct
+                
+            elif not var.get() and "original_type" in unit:
+                # Need to revert
+                queries.revert_transport(unit)
+                
+        self.show_feedback("Unit transport status updated!")
+        close_menu()
+        
+    tk.Button(root, text="Save Changes", command=save_changes, bg="#4CAF50", fg="white", font=("Arial", 11, "bold")).pack(side="bottom", fill="x", pady=10, padx=20)
+
+    queries.run_tk_loop(self, root)
 
 def select_resource_brush(self):
     """Opens a selection window for resource types and amounts."""

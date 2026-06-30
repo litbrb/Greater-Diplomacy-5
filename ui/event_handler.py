@@ -209,6 +209,11 @@ def handle_map_events(self, event):
                 if self.brush_unit == "None":
                     self.hovered_province["units"] = []
                     self.show_feedback("Units cleared from province")
+                elif self.brush_unit == "Convoy":
+                    from ui.editor_menus import open_convoy_converter
+                    open_convoy_converter(self, self.hovered_province)
+                elif self.brush_unit == "----------":
+                    pass
                 else:
                     owner = self.hovered_province.get("owner", "Unclaimed")
                     if owner in c.UNPLAYABLE_NATIONS:

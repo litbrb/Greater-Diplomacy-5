@@ -521,7 +521,7 @@ NAME_FADE_START = 4.0
 NAME_FADE_WINDOW = 1.5
 
 NAME_MIN_TILES_TO_SHOW = 3      # when to ignore showing islands
-NAME_ABS_MIN_TILES_TO_SHOW = 2  # if a country only has this many tiles
+NAME_ABS_MIN_TILES_TO_SHOW = 1  # if a country only has this many tiles
 
 # Added from minimap.py
 MINIMAP_WIDTH = 240

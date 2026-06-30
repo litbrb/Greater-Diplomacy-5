@@ -39,6 +39,7 @@ def load_map_assets(self, load_path):
     }
     c.USE_FOG_OF_WAR = str(self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
     c.CASUS_BELLI_REQUIRED = str(self.scenario_settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
+    c.BATTLE_ROYALE_MODE = str(self.scenario_settings.get("battle_royale", c.DEFAULT_BATTLE_ROYALE)).lower() == "true"
     print(f"[SYSTEM] Fog of War set to: {c.USE_FOG_OF_WAR}")
 
     # --- PROCEDURAL INTERCEPT ---
@@ -110,6 +111,7 @@ def load_map_assets(self, load_path):
             self.scenario_settings = save_meta["scenario_settings"]
             c.USE_FOG_OF_WAR = str(self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
             c.CASUS_BELLI_REQUIRED = str(self.scenario_settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
+            c.BATTLE_ROYALE_MODE = str(self.scenario_settings.get("battle_royale", c.DEFAULT_BATTLE_ROYALE)).lower() == "true"
         else:
             # Inject built-in scenario constants that shouldn't be wiped by the user's UI settings
             if "base_days_per_turn" in save_meta["scenario_settings"]:
@@ -177,15 +179,29 @@ def load_map_assets(self, load_path):
         self.nation_data = base_nation_data
 
     # INITIALIZE RELATIONS FOR STARTING WARS & FACTIONS
-    for c_name, c_data in self.nation_data.items():
-        for enemy in c_data.get("at_war_with", []):
-            c_data.setdefault("relations", {})[enemy] = -100
-        
-        fac = c_data.get("faction", "")
-        if fac:
-            for other_c, other_d in self.nation_data.items():
-                if other_c != c_name and other_d.get("faction", "") == fac:
-                    c_data.setdefault("relations", {})[other_c] = 100
+    if c.BATTLE_ROYALE_MODE:
+        playable_nations = [n for n in self.nation_data.keys() if queries.is_playable(n, self.nation_data)]
+        for c_name in playable_nations:
+            c_data = self.nation_data[c_name]
+            c_data["faction"] = ""
+            c_data["allied_with"] = []
+            if "master" in c_data:
+                c_data["master"] = ""
+            c_data["puppets"] = []
+            c_data.setdefault("relations", {})
+            c_data["at_war_with"] = [other for other in playable_nations if other != c_name]
+            for other in c_data["at_war_with"]:
+                c_data["relations"][other] = -100
+    else:
+        for c_name, c_data in self.nation_data.items():
+            for enemy in c_data.get("at_war_with", []):
+                c_data.setdefault("relations", {})[enemy] = -100
+            
+            fac = c_data.get("faction", "")
+            if fac:
+                for other_c, other_d in self.nation_data.items():
+                    if other_c != c_name and other_d.get("faction", "") == fac:
+                        c_data.setdefault("relations", {})[other_c] = 100
 
     if self.random_settings and "base_days_per_turn" in self.random_settings:
         self.scenario_settings["base_days_per_turn"] = self.random_settings["base_days_per_turn"]

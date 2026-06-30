@@ -318,6 +318,11 @@ def update_button_states(map_screen):
         # GREY OUT THE FACTION BUTTON
         my_faction = map_screen.nation_data.get(map_screen.player_country, {}).get("faction", "")
         map_screen.btn_gp_faction.disabled = not bool(my_faction)
+
+        # DISABLE BUTTONS FOR BATTLE ROYALE
+        if c.BATTLE_ROYALE_MODE:
+            map_screen.btn_gp_faction.disabled = True
+            map_screen.btn_gp_claims.disabled = True
         
         # --- TACTICAL MODE LOCKDOWNS ---
         if getattr(map_screen, 'tactical_mode', False):
@@ -445,7 +450,11 @@ def update_button_states(map_screen):
                         dw_text = f"Truce Active ({truce_turns})"
                     else:
                         if at_war:
-                            dw_text = "Ceasefire / Peace"
+                            if c.BATTLE_ROYALE_MODE:
+                                dw_text = "Battle Royale (No Peace)"
+                                dw_enabled = False
+                            else:
+                                dw_text = "Ceasefire / Peace"
                         elif my_master == owner:
                             dw_text = "Independence war"
                         elif t_master == map_screen.player_country:
@@ -480,6 +489,15 @@ def update_button_states(map_screen):
                 can_create_fac = bool(not my_faction and not target_faction and not at_war)
                 create_text = get_status_text("CREATE") if pending_action == "CREATE_FACTION" else "Create Faction"
                 set_btn(map_screen.btn_fac_create, True, can_create_fac or pending_action == "CREATE_FACTION", create_text, "blue")
+
+                # HIDE ALLIANCE/FACTION BUTTONS IN BATTLE ROYALE
+                if c.BATTLE_ROYALE_MODE:
+                    map_screen.btn_join_wars.visible = False
+                    map_screen.btn_call_to_arms.visible = False
+                    map_screen.btn_fac_invite.visible = False
+                    map_screen.btn_fac_join_req.visible = False
+                    map_screen.btn_fac_kick.visible = False
+                    map_screen.btn_fac_create.visible = False
 
             else:
                 set_btn(map_screen.btn_go_orders, True, has_player_units, "Give Orders", "blue")

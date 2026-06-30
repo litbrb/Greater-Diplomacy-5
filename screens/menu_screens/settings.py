@@ -284,7 +284,7 @@ class Settings(GameState):
         
         # Saves Dir Box
         saves_y = 60
-        surface.blit(font.render("Saves Path:", True, (100, 100, 100)), (dir_box_x, saves_y - 25))
+        surface.blit(font.render("Saves Path:", True, (100, 100, 100)), (dir_box_x, saves_y - 20))
         saves_rect = pygame.Rect(dir_box_x, saves_y, dir_box_w, dir_box_h)
         pygame.draw.rect(surface, (20, 20, 30), saves_rect)
         pygame.draw.rect(surface, (150, 150, 150), saves_rect, 1)
@@ -294,7 +294,7 @@ class Settings(GameState):
 
         # Scenarios Dir Box
         scen_y = 120
-        surface.blit(font.render("Custom Maps Path:", True, (100, 100, 100)), (dir_box_x, scen_y - 25))
+        surface.blit(font.render("Custom Maps Path:", True, (100, 100, 100)), (dir_box_x, scen_y - 20))
         scen_rect = pygame.Rect(dir_box_x, scen_y, dir_box_w, dir_box_h)
         pygame.draw.rect(surface, (20, 20, 30), scen_rect)
         pygame.draw.rect(surface, (150, 150, 150), scen_rect, 1)

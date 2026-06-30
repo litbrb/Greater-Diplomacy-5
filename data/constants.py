@@ -116,6 +116,10 @@ DEFAULT_CASUS_BELLI = True
 DEFAULT_USE_SCRIPTED_EVENTS = True
 DEFAULT_AI_DISABLED = False
 
+# --- BATTLE ROYALE ---
+BATTLE_ROYALE_MODE = False
+DEFAULT_BATTLE_ROYALE = False
+
 # ==========================================
 # DIPLOMATIC POPUPS
 # ==========================================

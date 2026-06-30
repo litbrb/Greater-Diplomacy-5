@@ -160,6 +160,9 @@ def process_basic_proactive_ai(map_screen):
                 if not actions:
                     del data["diplo_cooldowns"][target]
 
+        if c.BATTLE_ROYALE_MODE:
+            return
+
         is_already_at_war = len(my_enemies) > 0
         
         # --- 1. Unreachable Ceasefire Logic ---

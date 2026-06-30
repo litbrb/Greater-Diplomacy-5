@@ -1,3 +1,4 @@
+from tkinter import ttk
 import os
 import pygame
 from gameState import GameState
@@ -194,6 +195,9 @@ class New_Game(GameState):
         tk.Checkbutton(dialog, text="Leader Names & Titles", variable=var_leader, font=("Arial", 11)).pack(anchor="w", padx=40)
         tk.Checkbutton(dialog, text="Flags & Portraits", variable=var_flags, font=("Arial", 11)).pack(anchor="w", padx=40)
         tk.Checkbutton(dialog, text="Include Scenarios in Custom/Editor Dir", variable=var_custom, font=("Arial", 11)).pack(anchor="w", padx=40)
+        
+        tk.Label(dialog, text="", font=("Arial", 8)).pack()
+        tk.Label(dialog, text="If you don't know what you're doing, this might ruin your saved maps!", font=("Arial", 8)).pack()
         
         def on_confirm():
             options = {

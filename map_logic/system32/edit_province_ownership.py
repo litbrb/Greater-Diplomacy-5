@@ -6,6 +6,15 @@ from map_logic.rendering import map_utils
 def conquer_province(self, province, new_owner):
     """Annexes a specific province to a specific country and updates visuals."""
     if province:
+        # --- NEW: Integrated Puppet Capture Reroute ---
+        if new_owner in self.nation_data:
+            nd = self.nation_data[new_owner]
+            if nd.get("puppet_type") == c.PUPPET_TYPE_INTEGRATED:
+                if province["id"] not in nd.get("spawned_territories", []):
+                    master = nd.get("master")
+                    if master and master in self.nation_data:
+                        new_owner = master
+
         # --- NEW: If you ever lose a territory, you immediately get a claim on it ---
         old_owner = province.get("owner", "Unclaimed")
         if old_owner not in c.UNPLAYABLE_NATIONS and old_owner != new_owner and not self.is_editor:

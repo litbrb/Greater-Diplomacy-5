@@ -284,6 +284,15 @@ def load_map_assets(self, load_path):
             if fac not in self.nation_data["FACTION_WAR_MAPS"]:
                 queries.save_faction_pre_war_map(fac, self.map_data, self.nation_data)
 
+    # --- INITIALIZE SPAWNED TERRITORIES FOR INTEGRATED PUPPETS ---
+    for c_name, c_data in self.nation_data.items():
+        if c_data.get("puppet_type") == getattr(c, 'PUPPET_TYPE_INTEGRATED', 'INTEGRATED'):
+            if "spawned_territories" not in c_data:
+                c_data["spawned_territories"] = []
+                for prov in self.map_data.values():
+                    if prov.get("owner") == c_name:
+                        c_data["spawned_territories"].append(prov["id"])
+
     # --- AUTO NAME STARTING UNITS ---
     unit_counters = {}
     for prov in self.map_data.values():

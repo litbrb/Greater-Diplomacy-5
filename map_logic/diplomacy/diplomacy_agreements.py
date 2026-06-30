@@ -50,6 +50,13 @@ def assign_puppet(map_data, nation_data, master, puppet, puppet_type=c.PUPPET_TY
     p_data["master"] = master
     p_data["puppet_type"] = puppet_type
     
+    if puppet_type == c.PUPPET_TYPE_INTEGRATED:
+        if "spawned_territories" not in p_data:
+            p_data["spawned_territories"] = []
+            for prov in map_data.values():
+                if prov.get("owner") == puppet:
+                    p_data["spawned_territories"].append(prov["id"])
+    
     if puppet not in m_data.get("puppets", []):
         m_data.setdefault("puppets", []).append(puppet)
 
@@ -206,6 +213,7 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
     new_data["puppet_type"] = ""
     new_data["faction"] = ""
     new_data["is_faction_leader"] = False
+    new_data["spawned_territories"] = []
     
     nation_data[new_id] = new_data
     
@@ -222,6 +230,7 @@ def finalize_create_integrated_puppet(map_data, nation_data, master, core_nation
                 # --- NEW: Keep Cores Check ---
                 if keep_cores and master in prov.get("cores", []):
                     continue
+                nation_data[new_id]["spawned_territories"].append(prov["id"])
                 edit_province_ownership.conquer_province(map_screen, prov, new_id)
             
     log_global_event(nation_data, f"{master_name} has formed {new_name}.")

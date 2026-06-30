@@ -169,18 +169,54 @@ class New_Game(GameState):
         import tkinter as tk
         from tkinter import messagebox
         from data import queries
+        import data.constants as c
         
-        root = queries.get_transient_tk_root()
-        confirm = messagebox.askyesno(
-            "Confirm Data Refresh",
-            "Are you sure you want to refresh all scenarios?\nThis process may take a while.",
-            parent=root
-        )
-        queries.destroy_tk_root(root)
+        dialog, close_menu = queries.create_managed_tk_window(self, "Refresh Options", "400x320")
         
-        if confirm:
-            dirs_to_check = [c.SCENARIOS_HISTORICAL_DIR, c.SCENARIOS_ALTERNATE_DIR, c.SCENARIOS_CUSTOM_DIR]
-            queries.refresh_map_directories(self, dirs_to_check, success_message="Synced scenarios successfully.")
+        # Center the window
+        dialog.update_idletasks()
+        width = dialog.winfo_width()
+        height = dialog.winfo_height()
+        x = (dialog.winfo_screenwidth() // 2) - (width // 2)
+        y = (dialog.winfo_screenheight() // 2) - (height // 2)
+        dialog.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+        
+        var_names = tk.BooleanVar(value=True)
+        var_adj = tk.BooleanVar(value=True)
+        var_leader = tk.BooleanVar(value=True)
+        var_flags = tk.BooleanVar(value=True)
+        var_custom = tk.BooleanVar(value=True)
+        
+        tk.Label(dialog, text="Select what to forcefully reset:", font=("Arial", 12, "bold")).pack(pady=10)
+        
+        tk.Checkbutton(dialog, text="Country Names", variable=var_names, font=("Arial", 11)).pack(anchor="w", padx=40)
+        tk.Checkbutton(dialog, text="Adjectives", variable=var_adj, font=("Arial", 11)).pack(anchor="w", padx=40)
+        tk.Checkbutton(dialog, text="Leader Names & Titles", variable=var_leader, font=("Arial", 11)).pack(anchor="w", padx=40)
+        tk.Checkbutton(dialog, text="Flags & Portraits", variable=var_flags, font=("Arial", 11)).pack(anchor="w", padx=40)
+        tk.Checkbutton(dialog, text="Include Scenarios in Custom/Editor Dir", variable=var_custom, font=("Arial", 11)).pack(anchor="w", padx=40)
+        
+        def on_confirm():
+            options = {
+                "reset_names": var_names.get(),
+                "reset_adjectives": var_adj.get(),
+                "reset_leaders": var_leader.get(),
+                "reset_flags": var_flags.get(),
+                "include_custom": var_custom.get(),
+            }
+            close_menu()
+            
+            dirs_to_check = [c.SCENARIOS_HISTORICAL_DIR, c.SCENARIOS_ALTERNATE_DIR]
+            if options["include_custom"]:
+                dirs_to_check.append(c.SCENARIOS_CUSTOM_DIR)
+                
+            queries.refresh_map_directories(self, dirs_to_check, success_message="Synced scenarios successfully.", options=options)
+            
+        btn_frame = tk.Frame(dialog)
+        btn_frame.pack(pady=20)
+        tk.Button(btn_frame, text="Confirm", command=on_confirm, width=12, bg="#4CAF50", fg="white", font=("Arial", 10, "bold")).pack(side="left", padx=15)
+        tk.Button(btn_frame, text="Cancel", command=close_menu, width=12, bg="#f44336", fg="white", font=("Arial", 10, "bold")).pack(side="left", padx=15)
+        
+        queries.run_tk_loop(self, dialog)
 
     def map_selected(self):
         self.next_state = "MAP"

@@ -612,7 +612,15 @@ class Map(GameState):
         from ui.information import feedback_text
         feedback_text.draw_feedback(self, surface)
 
-    def refresh_nation_data(self):
+    def refresh_nation_data(self, options=None):
+        if options is None:
+            options = {
+                "reset_names": True,
+                "reset_adjectives": True,
+                "reset_leaders": True,
+                "reset_flags": True,
+            }
+            
         from data.io import country_io
         new_data = country_io.load_all_country_data()
         added_count = 0
@@ -631,10 +639,14 @@ class Map(GameState):
                 if "color" in data and self.nation_data[country].get("color") != data["color"]:
                     self.nation_data[country]["color"] = data["color"]
                     updated_count += 1
-                if "name" in data:
+                if "name" in data and options.get("reset_names", True):
                     self.nation_data[country]["name"] = data["name"]
-                if "adjective" in data:
+                if "adjective" in data and options.get("reset_adjectives", True):
                     self.nation_data[country]["adjective"] = data["adjective"]
+                if "leader" in data and options.get("reset_leaders", True):
+                    self.nation_data[country]["leader"] = data["leader"]
+                if "leader_title" in data and options.get("reset_leaders", True):
+                    self.nation_data[country]["leader_title"] = data["leader_title"]
 
                 if "research" in data:
                     current_res = self.nation_data[country].setdefault("research", {})
@@ -644,6 +656,7 @@ class Map(GameState):
                             updated_count += 1
 
         # --- NEW: AUTO-RESET ASSETS TO DISK DEFAULTS ---
+        if options.get("reset_flags", True):
             # By setting to DEFAULT, we force the rendering engine to search the disk again.
             queries.clear_image_cache()
             for c_name, n_data in self.nation_data.items():

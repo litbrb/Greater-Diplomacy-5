@@ -1908,7 +1908,7 @@ def will_ai_accept_peace(target_nation, proposer_nation, peace_type, map_data, n
 # ==========================================
 import threading
 
-def refresh_map_directories(screen, dirs_to_check, success_message="Data refreshed successfully!"):
+def refresh_map_directories(screen, dirs_to_check, success_message="Data refreshed successfully!", options=None):
     """Headlessly instantiates maps on a background thread to prevent UI freezing."""
     # Count total maps first
     total_maps = 0
@@ -1960,7 +1960,7 @@ def refresh_map_directories(screen, dirs_to_check, success_message="Data refresh
                 # ------------------------------------------------------------------
 
                 # 2. Execute the official resync pipeline
-                temp_map_context.refresh_nation_data()
+                temp_map_context.refresh_nation_data(options=options)
                 print(f"refreshed {name}")
 
                 # Set all playable country resources to 0 before compounding income calculations

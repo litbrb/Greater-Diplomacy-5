@@ -8035,7 +8035,7 @@
             "at_war_with": [],
             "allied_with": [],
             "leader_name": "",
-            "leader_title": "",
+            "leader_title": "Gigachad",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
             "relations": {},
@@ -29154,7 +29154,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         }
     },
     "provinces": {

@@ -139,7 +139,7 @@ def refresh_relations_map(self):
         elif owner == self.player_country:
             color = (0, 0, 255)
         else:
-            relation = queries.get_relation_score(self.player_country, owner, self.nation_data, self.id_to_province)
+            relation = queries.get_relation_score(owner, self.player_country, self.nation_data, self.id_to_province)
             color = queries.get_relation_color(relation)
         return owner, color
         

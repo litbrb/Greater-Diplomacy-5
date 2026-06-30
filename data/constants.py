@@ -757,6 +757,24 @@ PROCEDURAL_MAP_HEIGHT = 400
 PROCEDURAL_PROVINCE_COUNT = 600
 
 # ==========================================
+# REBELLION SETTINGS
+# ==========================================
+
+REBELLION_MIN_MILITIA = 4
+REBELLION_MAX_MILITIA = 8
+REBELLION_SECONDARY_MILITIA = 2
+REBELLION_TERTIARY_MILITIA = 1
+REBELLION_MAX_SPREAD_DISTANCE = 6
+
+REBELLION_TERMS = [
+    "Rebellion", "Uprising", "Revolt", "Unrest", "Riot",
+    "Radicals", "Dissenters", "Revolutionaries", "Insurrection",
+    "Mutiny", "Insurgency", "Resistance", "Liberation Front",
+    "Movement", "Defiance", "Sedition", "Agitation",
+    "Partisans", "Guerrillas", "Separatists", "Outcry",
+]
+
+# ==========================================
 # FILE PATHS
 # ==========================================
 

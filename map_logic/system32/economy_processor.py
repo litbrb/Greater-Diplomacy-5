@@ -79,43 +79,19 @@ def process_queues(self):
                         self.show_feedback(f"CORED: Province {province.get('id')}")
                         
                 elif item.get("order_type") == "REMOVE_CORE":
+                    import random
+                    from map_logic.system32 import edit_province_ownership
+                    from data.io import country_io
+                    
+                    # Save foreign cores before removal for naming/flag/spread
+                    foreign_cores = [core for core in province.get("cores", []) if core != current_owner]
+                    
                     # Remove all foreign cores, solidify player core
                     province["cores"] = [current_owner]
                     
-                    # Create the new rebellion tag
-                    r_idx = 1
-                    while f"rebellion {r_idx}" in self.nation_data:
-                        r_idx += 1
-                    reb_id = f"rebellion {r_idx}"
+                    # Use the first foreign core for flag/color inheritance
+                    primary_core = foreign_cores[0] if foreign_cores else None
                     
-                    reb_data = {
-                        "name": f"Rebellion {r_idx}",
-                        "color": [200, 30, 30],
-                        "is_playable": True,
-                        "research": {},
-                        "at_war_with": [current_owner],
-                        "allied_with": [],
-                        "pending_diplomacy": {},
-                        "claims": [],
-                        "claim_queue": [],
-                        "revoke_queue": [],
-                        "return_queue": [],
-                        "puppets": [],
-                        "master": "",
-                        "puppet_type": "",
-                        "faction": "",
-                        "is_faction_leader": False,
-                        "manpower": 0,
-                        "materials": 0,
-                        "fuel": 0
-                    }
-                    self.nation_data[reb_id] = reb_data
-                    if reb_id not in self.nation_data[current_owner].get("at_war_with", []):
-                        self.nation_data[current_owner].setdefault("at_war_with", []).append(reb_id)
-                        
-                    if hasattr(self, 'nation_colors'):
-                        self.nation_colors[reb_id] = (200, 30, 30)
-
                     # Determine Militia Level natively
                     current_year = self.time_manager.year
                     tech_tree = queries.get_tech_tree()
@@ -126,34 +102,105 @@ def process_queues(self):
                         if current_year >= y:
                             militia_lvl = i + 1
                     
-                    reb_data["research"]["militia"] = militia_lvl
-                    militia_name = queries.get_best_preferred_unit(reb_data["research"], unit_library, ["Militia"]) or "Militia I"
+                    # Resolve flag and color from the primary core owner
+                    reb_color = [200, 30, 30]
+                    reb_flag_data = "DEFAULT"
+                    if primary_core:
+                        core_data = self.nation_data.get(primary_core, {})
+                        if not core_data:
+                            core_data = country_io.get_country_stats(primary_core)
+                        if core_data.get("color"):
+                            reb_color = list(core_data["color"])
+                        if core_data.get("flag_data"):
+                            reb_flag_data = core_data["flag_data"]
                     
-                    # Transfer ownership
-                    from map_logic.system32 import edit_province_ownership
-                    edit_province_ownership.conquer_province(self, province, reb_id)
-                    
-                    # CRITICAL FIX: Override the turn start owner so it doesn't instantly auto-revert to the player!
-                    province["_turn_start_owner"] = reb_id
-                    
-                    # Spawn 5 Militia
-                    for _ in range(5):
-                        u_dict = queries.create_unit_dict(militia_name, reb_id, unit_library)
-                        u_dict["custom_name"] = queries.generate_unit_custom_name(u_dict, active_unit_counters)
-                        province.setdefault("units", []).append(u_dict)
+                    # --- Helper to create a rebellion country and spawn militia ---
+                    def _spawn_rebellion(target_prov, cores_for_naming, militia_count):
+                        reb_id, reb_name = queries.generate_rebellion_name(cores_for_naming, self.nation_data)
                         
-                    # Queue a core for the rebellion so they solidify the tile if not crushed
-                    core_order = {
-                        "order_type": "CORE",
-                        "item_name": "Core Territory",
-                        "turns_remaining": 1,
-                        "group": "administration",
-                        "refund": {"cost_materials": 0, "cost_manpower": 0, "cost_fuel": 0}
-                    }
-                    province.setdefault("building_queue", []).append(core_order)
+                        reb_data = {
+                            "name": reb_name,
+                            "color": list(reb_color),
+                            "flag_data": reb_flag_data,
+                            "is_playable": True,
+                            "is_rebellion": True,
+                            "research": {"militia": militia_lvl},
+                            "at_war_with": [current_owner],
+                            "allied_with": [],
+                            "pending_diplomacy": {},
+                            "claims": [],
+                            "claim_queue": [],
+                            "revoke_queue": [],
+                            "return_queue": [],
+                            "puppets": [],
+                            "master": "",
+                            "puppet_type": "",
+                            "faction": "",
+                            "is_faction_leader": False,
+                            "manpower": 0,
+                            "materials": 0,
+                            "fuel": 0
+                        }
+                        self.nation_data[reb_id] = reb_data
+                        
+                        if reb_id not in self.nation_data[current_owner].get("at_war_with", []):
+                            self.nation_data[current_owner].setdefault("at_war_with", []).append(reb_id)
+                        
+                        if hasattr(self, 'nation_colors'):
+                            self.nation_colors[reb_id] = tuple(reb_color)
+                        
+                        militia_name = queries.get_best_preferred_unit(reb_data["research"], unit_library, ["Militia"]) or "Militia I"
+                        
+                        # Transfer ownership
+                        edit_province_ownership.conquer_province(self, target_prov, reb_id)
+                        target_prov["_turn_start_owner"] = reb_id
+                        
+                        # Spawn militia
+                        for _ in range(militia_count):
+                            u_dict = queries.create_unit_dict(militia_name, reb_id, unit_library)
+                            u_dict["custom_name"] = queries.generate_unit_custom_name(u_dict, active_unit_counters)
+                            target_prov.setdefault("units", []).append(u_dict)
+                        
+                        # Queue a core so they solidify the tile if not crushed
+                        core_order = {
+                            "order_type": "CORE",
+                            "item_name": "Core Territory",
+                            "turns_remaining": 1,
+                            "group": "administration",
+                            "refund": {"cost_materials": 0, "cost_manpower": 0, "cost_fuel": 0}
+                        }
+                        target_prov.setdefault("building_queue", []).append(core_order)
+                        
+                        return reb_id
+                    
+                    # --- PRIMARY REBELLION (on the tile where cores were removed) ---
+                    primary_militia = random.randint(c.REBELLION_MIN_MILITIA, c.REBELLION_MAX_MILITIA)
+                    primary_reb_id = _spawn_rebellion(province, foreign_cores, primary_militia)
+                    
+                    # --- SECONDARY/TERTIARY REBELLIONS (nearby tiles with matching cores) ---
+                    if primary_core and hasattr(self, 'id_to_province'):
+                        spread_candidates = queries.find_nearby_matching_core_tiles(
+                            province["id"], primary_core, current_owner,
+                            self.map_data, self.id_to_province, c.REBELLION_MAX_SPREAD_DISTANCE
+                        )
+                        
+                        # Secondary rebellion
+                        if len(spread_candidates) >= 1:
+                            sec_prov = spread_candidates[0]
+                            sec_cores = [core for core in sec_prov.get("cores", []) if core != current_owner]
+                            if sec_cores:
+                                _spawn_rebellion(sec_prov, sec_cores, c.REBELLION_SECONDARY_MILITIA)
+                        
+                        # Tertiary rebellion
+                        if len(spread_candidates) >= 2:
+                            ter_prov = spread_candidates[1]
+                            ter_cores = [core for core in ter_prov.get("cores", []) if core != current_owner]
+                            if ter_cores:
+                                _spawn_rebellion(ter_prov, ter_cores, c.REBELLION_TERTIARY_MILITIA)
                     
                     if current_owner == self.player_country:
                         self.show_feedback(f"CORES REMOVED: Rebellion Sparked in {province.get('id')}!")
+                        
                         
                 else:
                     b_name = item.get("item_name")

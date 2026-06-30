@@ -784,13 +784,105 @@ def get_core_cost(nation, map_data):
 def get_remove_core_cost(nation, map_data):
     """Returns the cost dictionary for removing foreign cores."""
     core_cost = get_core_cost(nation, map_data)
+    manpower_cost = max(0, core_cost.get("cost_manpower", 0) // 2)
     return {
-        "cost_manpower": max(0, core_cost.get("cost_manpower", 0) // 2),
-        "cost_materials": max(0, core_cost.get("cost_materials", 0) // 2),
+        "cost_manpower": manpower_cost,
+        "cost_materials": max(0, manpower_cost // 2),
         "cost_fuel": max(0, core_cost.get("cost_fuel", 0) // 2),
         "time": c.REMOVE_CORE_TURNS,
         "group": "administration"
     }
+
+def find_nearby_matching_core_tiles(origin_id, core_nation, current_owner, map_data, id_to_province, max_distance):
+    """BFS from origin province to find tiles within max_distance that have core_nation as a core and are owned by current_owner."""
+    import random
+    candidates = []
+    visited = {origin_id}
+    queue = [(origin_id, 0)]
+    
+    while queue:
+        current_id, dist = queue.pop(0)
+        if dist >= max_distance:
+            continue
+            
+        current_prov = id_to_province.get(current_id)
+        if not current_prov:
+            continue
+            
+        for n_id in current_prov.get("neighbors", []):
+            if n_id in visited:
+                continue
+            visited.add(n_id)
+            
+            n_prov = id_to_province.get(n_id)
+            if not n_prov:
+                continue
+            
+            # Skip water tiles
+            if n_prov.get("terrain") in c.WATER_TERRAINS:
+                continue
+                
+            next_dist = dist + 1
+            
+            # Check if this tile qualifies as a rebellion spread target
+            if (n_id != origin_id 
+                and core_nation in n_prov.get("cores", []) 
+                and n_prov.get("owner") == current_owner
+                and not n_prov.get("units", [])):
+                candidates.append(n_prov)
+            
+            if next_dist < max_distance:
+                queue.append((n_id, next_dist))
+    
+    random.shuffle(candidates)
+    return candidates
+
+def generate_rebellion_name(cores_on_tile, nation_data):
+    """Generates a thematic rebellion name from core adjectives and a random term.
+    Returns (rebel_id, rebel_display_name)."""
+    import random
+    
+    # Build combined adjective from all cores on the tile
+    adjectives = []
+    for core in cores_on_tile:
+        core_data = nation_data.get(core, {})
+        adj = core_data.get("adjective", "")
+        if not adj:
+            # Fallback: try loading from disk
+            from data.io import country_io
+            disk_data = country_io.get_country_stats(core)
+            adj = disk_data.get("adjective", core)
+        if adj:
+            adjectives.append(adj)
+    
+    combined_adj = "-".join(adjectives) if adjectives else "Unknown"
+    
+    # Pick a random term
+    term = random.choice(c.REBELLION_TERMS)
+    
+    base_name = f"{combined_adj} {term}"
+    
+    # Check for name collisions — only add number if needed, starting at 2
+    existing_names = {d.get("name", "") for d in nation_data.values() if isinstance(d, dict)}
+    
+    if base_name not in existing_names:
+        final_name = base_name
+    else:
+        suffix = 2
+        while f"{base_name} {suffix}" in existing_names:
+            suffix += 1
+        final_name = f"{base_name} {suffix}"
+    
+    # Generate a safe ID (lowercase)
+    rebel_id = final_name.lower()
+    # Ensure ID uniqueness too
+    if rebel_id in nation_data:
+        suffix = 2
+        while f"{rebel_id} {suffix}" in nation_data:
+            suffix += 1
+        rebel_id = f"{rebel_id} {suffix}"
+    
+    return rebel_id, final_name
 
 def get_building_cost(b_name, nation, map_data, bldg_lib):
     """Dynamically scales the building cost, bypassing the JSON for Basic Factories."""

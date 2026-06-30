@@ -191,7 +191,7 @@ def get_custom_message_system_prompt():
         "- Relations < -50: Be hostile, dismissive, or threatening.\n"
         "- Relations 0 to 50: Be neutral, transactional, and cautious.\n"
         "- Relations > 50: Be warm, brotherly, and highly cooperative.\n"
-        "If you are at war (Relations -100 or lower), do not agree to anything friendly unless it's a 'CEASEFIRE'. "
+        "If you are at war, do not agree to anything friendly unless it's a 'CEASEFIRE'. "
         "You may also take a diplomatic action if the sender's reasoning is convincing or offensive. " 
         "Valid actions: 'WAR_DECLARATION', 'JOIN_WARS', 'LEAVE_FACTION', 'JOIN_FACTION_REQ', 'CEASEFIRE', 'CALL_TO_ARMS', 'CREATE_FACTION', 'KICK_FACTION_MEMBER', 'DISBAND_FACTION' or 'NONE'.\n"
         "RULES FOR ACTIONS:\n"

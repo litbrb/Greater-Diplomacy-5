@@ -86,6 +86,14 @@ def process_queues(self):
                     # Save foreign cores before removal for naming/flag/spread
                     foreign_cores = [core for core in province.get("cores", []) if core != current_owner]
                     
+                    # Apply relation penalty to the countries whose cores were removed
+                    for fc in foreign_cores:
+                        if fc in self.nation_data:
+                            existing_mods = self.nation_data[fc].get("temp_modifiers", {}).get(current_owner, {})
+                            current_penalty = existing_mods.get("removed_cores", 0)
+                            new_penalty = max(c.REL_MOD_MAX_REMOVE_CORE_PENALTY, current_penalty + c.REL_MOD_REMOVE_CORE)
+                            queries.add_temporary_modifier(fc, current_owner, "removed_cores", new_penalty, self.nation_data)
+                    
                     # Remove all foreign cores, solidify player core
                     province["cores"] = [current_owner]
                     

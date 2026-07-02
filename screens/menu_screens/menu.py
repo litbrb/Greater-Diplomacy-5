@@ -75,18 +75,32 @@ class Menu(GameState):
 
     def check_version(self):
         try:
-            # Bypass GitHub Raw caching (Fastly CDN) by appending a dynamic timestamp query parameter
-            import time
-            bust_url = f"{c.VERSION_CHECK_URL}?t={int(time.time())}"
+            # We use the GitHub API directly instead of the raw content URL because 
+            # raw.githubusercontent.com aggressively caches files for 5 minutes via Fastly CDN,
+            # and ignores query parameters. The API serves the exact real-time content.
+            api_url = "https://api.github.com/repos/GitGetGot415/Greater-Diplomacy-5/contents/version.txt"
             req = urllib.request.Request(
-                bust_url, 
+                api_url, 
                 headers={
-                    'User-Agent': 'Mozilla/5.0',
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache'
+                    'User-Agent': 'Greater-Diplomacy-5-Game',
+                    'Accept': 'application/vnd.github.v3.raw',
+                    'Cache-Control': 'no-cache'
                 }
             )
-            response = urllib.request.urlopen(req, timeout=3)
+            
+            try:
+                response = urllib.request.urlopen(req, timeout=3)
+            except urllib.error.HTTPError as e:
+                # If we hit the GitHub API rate limit (60 requests/hr for unauthenticated),
+                # fallback to the raw CDN URL which might be delayed but won't crash
+                if e.code == 403 or e.code == 429:
+                    import time
+                    bust_url = f"{c.VERSION_CHECK_URL}?t={int(time.time())}"
+                    req = urllib.request.Request(bust_url, headers={'User-Agent': 'Greater-Diplomacy-5-Game'})
+                    response = urllib.request.urlopen(req, timeout=3)
+                else:
+                    raise e
+
             fetched_version = response.read().decode('utf-8').strip()
             
             if fetched_version == c.GAME_VERSION:

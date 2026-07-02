@@ -47,7 +47,7 @@ from screens.menu_screens.select_base_map import Select_Base_Map
 from screens.menu_screens.random_setup import Random_Setup
 from screens.menu_screens.scenario_settings import Scenario_Settings
 
-pygame.display.set_caption("Greater Diplomacy 5 Prototype")
+pygame.display.set_caption("Greater Diplomacy 5")
 
 class Controller:
     def __init__(self):

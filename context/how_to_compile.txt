@@ -11,8 +11,8 @@ Test from Terminal first
 
 ==========
 
-GD5 WINDOWS PROTOTYPE vXX
-GD5 MACOS PROTOTYPE vXX
+GD5 WINDOWS vXX
+GD5 MACOS vXX
 
 ==========
 

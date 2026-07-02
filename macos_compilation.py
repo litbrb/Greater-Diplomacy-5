@@ -8,6 +8,9 @@ def main():
     build_dir = "build"
     dist_dir = "dist"
     
+    # TODO: there seems to be a bit of an issue where this has to be run twice for some reason
+    # not game breaking by any means, could probably be easily fixed by just running the remove command twice 
+
     # 1. Clean old build
     if os.path.exists(build_dir):
         print(f"Cleaning {build_dir} folder...")
@@ -16,7 +19,7 @@ def main():
     if os.path.exists(dist_dir):
         print(f"Cleaning {dist_dir} folder...")
         shutil.rmtree(dist_dir)
-
+    
     # 2. Rebuild
     print("Running py2app...")
     cmd = "python3 setup.py py2app"

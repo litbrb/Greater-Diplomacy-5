@@ -3,6 +3,7 @@ import webbrowser
 import threading
 import urllib.request
 import urllib.error
+import ssl
 import ui_elements
 from gameState import GameState
 from ui_elements import Button
@@ -88,8 +89,13 @@ class Menu(GameState):
                 }
             )
             
+            # Disable SSL verification for macOS (where root certificates may not be installed in Python)
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+
             try:
-                response = urllib.request.urlopen(req, timeout=3)
+                response = urllib.request.urlopen(req, timeout=3, context=ctx)
             except urllib.error.HTTPError as e:
                 # If we hit the GitHub API rate limit (60 requests/hr for unauthenticated),
                 # fallback to the raw CDN URL which might be delayed but won't crash
@@ -97,7 +103,7 @@ class Menu(GameState):
                     import time
                     bust_url = f"{c.VERSION_CHECK_URL}?t={int(time.time())}"
                     req = urllib.request.Request(bust_url, headers={'User-Agent': 'Greater-Diplomacy-5-Game'})
-                    response = urllib.request.urlopen(req, timeout=3)
+                    response = urllib.request.urlopen(req, timeout=3, context=ctx)
                 else:
                     raise e
 

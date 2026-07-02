@@ -6,8 +6,9 @@ Clean old build
     rm -rf build dist
 Rebuild
     python3 setup.py py2app
-Test from Terminal first
+Test from Terminal to confirm it works
     ./dist/main.app/Contents/MacOS/main
+Turn into zip file with name GD5 MACOS vXX where vXX is the version number
 
 ==========
 

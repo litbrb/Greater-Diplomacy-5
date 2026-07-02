@@ -1,5 +1,8 @@
 import pygame
 import webbrowser
+import threading
+import urllib.request
+import urllib.error
 import ui_elements
 from gameState import GameState
 from ui_elements import Button
@@ -46,6 +49,32 @@ class Menu(GameState):
             })
             current_y += c.MENU_BOTTOM_TEXT_STEP_Y
 
+        self.version_status = "Checking version..."
+        self.version_color = (150, 150, 150) # Grey
+
+        # Start version check in background so it doesn't freeze the menu
+        threading.Thread(target=self.check_version, daemon=True).start()
+
+    def check_version(self):
+        try:
+            # Set a timeout so it doesn't hang indefinitely
+            req = urllib.request.Request(c.VERSION_CHECK_URL, headers={'User-Agent': 'Mozilla/5.0'})
+            response = urllib.request.urlopen(req, timeout=3)
+            fetched_version = response.read().decode('utf-8').strip()
+            
+            if fetched_version == c.GAME_VERSION:
+                self.version_status = f"Version: {c.GAME_VERSION} (Up to date)"
+                self.version_color = (100, 255, 100) # Green
+            else:
+                self.version_status = f"Outdated! Latest: {fetched_version} (Current: {c.GAME_VERSION})"
+                self.version_color = (255, 100, 100) # Red
+        except urllib.error.URLError:
+            self.version_status = f"Version: {c.GAME_VERSION} (Offline)"
+            self.version_color = (255, 200, 100) # Orange
+        except Exception:
+            self.version_status = f"Version: {c.GAME_VERSION} (Error checking)"
+            self.version_color = (255, 100, 100) # Red
+
     def additional_events(self, event):
         # We hook into mouse clicks here to make the hyperlinks functional
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -76,6 +105,13 @@ class Menu(GameState):
                 # Dynamic Underline for hovered active links
                 if is_hovered:
                     pygame.draw.line(surface, link_color, (item["link_rect"].left, item["link_rect"].bottom - 2), (item["link_rect"].right, item["link_rect"].bottom - 2), 2)
+
+        # --- Draw Version Text (Bottom Right) ---
+        version_font = fonts.get("heading2")
+        v_width = version_font.size(self.version_status)[0]
+        v_x = c.SCREEN_WIDTH - v_width - 20
+        v_y = c.SCREEN_HEIGHT - version_font.get_height() - 10
+        fonts.draw_text_with_shadow(surface, self.version_status, v_x, v_y, "heading2", self.version_color)
 
     def new_game(self):
         self.next_state = "NEW_GAME"

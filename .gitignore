@@ -8,6 +8,7 @@ __pycache__/
 !base_maps/**
 !scenarios/**
 !context/**
+!version.txt
 
 assets/music/*
 !assets/music/Greater Diplomacy 1/
@@ -28,4 +29,3 @@ main.spec
 !unit_data.json
 !research_template.json
 !building_data.json
-

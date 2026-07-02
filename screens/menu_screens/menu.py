@@ -52,13 +52,40 @@ class Menu(GameState):
         self.version_status = "Checking version..."
         self.version_color = (150, 150, 150) # Grey
 
+        # Add refresh button in bottom right, above the text status
+        self.refresh_btn = Button(
+            c.SCREEN_WIDTH - 120,
+            c.SCREEN_HEIGHT - 90,
+            "small",
+            "grey",
+            "Refresh",
+            self.trigger_version_check,
+            font_preset="small"
+        )
+        self.elements.append(self.refresh_btn)
+
         # Start version check in background so it doesn't freeze the menu
         threading.Thread(target=self.check_version, daemon=True).start()
 
+    def trigger_version_check(self):
+        if self.version_status != "Checking version...":
+            self.version_status = "Checking version..."
+            self.version_color = (150, 150, 150)
+            threading.Thread(target=self.check_version, daemon=True).start()
+
     def check_version(self):
         try:
-            # Set a timeout so it doesn't hang indefinitely
-            req = urllib.request.Request(c.VERSION_CHECK_URL, headers={'User-Agent': 'Mozilla/5.0'})
+            # Bypass GitHub Raw caching (Fastly CDN) by appending a dynamic timestamp query parameter
+            import time
+            bust_url = f"{c.VERSION_CHECK_URL}?t={int(time.time())}"
+            req = urllib.request.Request(
+                bust_url, 
+                headers={
+                    'User-Agent': 'Mozilla/5.0',
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            )
             response = urllib.request.urlopen(req, timeout=3)
             fetched_version = response.read().decode('utf-8').strip()
             

@@ -1,0 +1,60 @@
+import os
+import subprocess
+import shutil
+import sys
+import data.constants as c
+
+def main():
+    build_dir = "build"
+    dist_dir = "dist"
+    
+    # 1. Clean old build
+    if os.path.exists(build_dir):
+        print(f"Cleaning {build_dir} folder...")
+        shutil.rmtree(build_dir)
+        
+    if os.path.exists(dist_dir):
+        print(f"Cleaning {dist_dir} folder...")
+        shutil.rmtree(dist_dir)
+
+    # 2. Rebuild
+    print("Running py2app...")
+    cmd = "python3 setup.py py2app"
+    
+    result = subprocess.run(cmd, shell=True)
+    if result.returncode != 0:
+        print("py2app failed.")
+        sys.exit(result.returncode)
+        
+    print("py2app finished successfully.")
+    
+    # Overwrite active_albums.json with [] so the build doesn't carry over local settings
+    active_albums_path = os.path.join(dist_dir, "main.app", "Contents", "Resources", "data", "json", "active_albums.json")
+    if os.path.exists(os.path.dirname(active_albums_path)):
+        with open(active_albums_path, "w") as f:
+            f.write("[]")
+
+    # 3. Zipping the app
+    zip_name = f"GD5 MACOS {c.GAME_VERSION}"
+    print(f"Zipping {dist_dir} into {zip_name}.zip...")
+    
+    # Zip the contents of dist (which is main.app)
+    shutil.make_archive(zip_name, 'zip', dist_dir)
+    
+    zip_filename = f"{zip_name}.zip"
+    dst_zip_path = os.path.join(dist_dir, zip_filename)
+    
+    # If there's an existing zip in dist, remove it before moving the new one
+    if os.path.exists(dst_zip_path):
+        os.remove(dst_zip_path)
+        
+    # Move the zip into the dist directory
+    shutil.move(zip_filename, dst_zip_path)
+    print(f"Moved {zip_filename} into {dist_dir}/.")
+    
+    print("\nCompilation and zipping finished successfully.")
+    print("To test the application, you can run the following command in terminal:")
+    print("    ./dist/main.app/Contents/MacOS/main\n")
+
+if __name__ == "__main__":
+    main()

@@ -2,8 +2,14 @@ import os
 import subprocess
 import shutil
 import sys
+import data.constants as c
 
 def main():
+    dist_dir = "dist"
+    if os.path.exists(dist_dir):
+        print("Cleaning dist folder...")
+        shutil.rmtree(dist_dir)
+
     # 1. Run pyinstaller
     print("Running PyInstaller...")
     cmd = 'pyinstaller --clean --onefile --add-binary "win64-libsoloud.dll;." --add-binary "mac64-libsoloud.dylib;." --add-binary "lin64-libsoloud.so;." main.py'
@@ -15,8 +21,6 @@ def main():
         
     print("PyInstaller finished successfully.")
 
-    dist_dir = "dist"
-    
     # Ensure dist exists
     os.makedirs(dist_dir, exist_ok=True)
     
@@ -81,7 +85,24 @@ def main():
         else:
             shutil.copytree(src, dst)
 
+    # Overwrite active_albums.json with [] so the build doesn't carry over local settings
+    active_albums_path = os.path.join(dist_dir, "data", "json", "active_albums.json")
+    if os.path.exists(os.path.dirname(active_albums_path)):
+        with open(active_albums_path, "w") as f:
+            f.write("[]")
+
     print("Compilation and copying finished successfully.")
+
+    zip_name = f"GD5 WINDOWS {c.GAME_VERSION}"
+    print(f"Zipping {dist_dir} into {zip_name}.zip...")
+    shutil.make_archive(zip_name, 'zip', dist_dir)
+    
+    zip_filename = f"{zip_name}.zip"
+    dst_zip_path = os.path.join(dist_dir, zip_filename)
+    if os.path.exists(dst_zip_path):
+        os.remove(dst_zip_path)
+    shutil.move(zip_filename, dst_zip_path)
+    print(f"Moved {zip_filename} into {dist_dir}/.")
 
 if __name__ == "__main__":
     main()

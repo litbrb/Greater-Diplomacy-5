@@ -1,9 +1,14 @@
 import os
 import sys
 
-# py2app bundle fix: set working directory to Resources folder
+# py2app / PyInstaller bundle fix: set working directory
 if getattr(sys, 'frozen', False):
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller: assets are alongside the executable
+        os.chdir(os.path.dirname(sys.executable))
+    else:
+        # py2app / other
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 import pygame
 

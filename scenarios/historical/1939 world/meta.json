@@ -1624,7 +1624,12 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Slovakian"
+            "adjective": "Slovakian",
+            "spawned_territories": [
+                544,
+                548,
+                561
+            ]
         },
         "Turkey": {
             "name": "Turkey",
@@ -4891,7 +4896,10 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Tannu Tuvan"
+            "adjective": "Tannu Tuvan",
+            "spawned_territories": [
+                617
+            ]
         },
         "British Raj": {
             "name": "British Raj",
@@ -5534,7 +5542,34 @@
             "puppets": [
                 "Mengjiang"
             ],
-            "adjective": "Manchukan"
+            "adjective": "Manchukan",
+            "spawned_territories": [
+                469,
+                552,
+                574,
+                586,
+                630,
+                662,
+                700,
+                771,
+                789,
+                797,
+                835,
+                854,
+                875,
+                880,
+                887,
+                920,
+                921,
+                945,
+                947,
+                967,
+                982,
+                985,
+                992,
+                998,
+                1020
+            ]
         },
         "Afghanistan": {
             "name": "Afghanistan",
@@ -5965,7 +6000,28 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Sudanese"
+            "adjective": "Sudanese",
+            "spawned_territories": [
+                1640,
+                1647,
+                1656,
+                1695,
+                1703,
+                1704,
+                1706,
+                1740,
+                1752,
+                1755,
+                1770,
+                1786,
+                1797,
+                1816,
+                1843,
+                1852,
+                1912,
+                1915,
+                1949
+            ]
         },
         "Vietnam": {
             "name": "Vietnam",
@@ -8326,7 +8382,23 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Philippinian"
+            "adjective": "Philippinian",
+            "spawned_territories": [
+                1675,
+                1719,
+                1724,
+                1784,
+                1792,
+                1824,
+                1845,
+                1847,
+                1872,
+                1896,
+                1918,
+                1936,
+                1937,
+                1945
+            ]
         },
         "White Kaganate": {
             "name": "White Kaganate",
@@ -10513,7 +10585,14 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Mengjiangian"
+            "adjective": "Mengjiangian",
+            "spawned_territories": [
+                820,
+                879,
+                936,
+                974,
+                994
+            ]
         },
         "Merina": {
             "name": "Merina",
@@ -26774,7 +26853,17 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "British Malayan"
+            "adjective": "British Malayan",
+            "spawned_territories": [
+                1965,
+                1979,
+                1980,
+                1996,
+                2006,
+                2024,
+                2029,
+                2036
+            ]
         },
         "French Indochina": {
             "name": "French Indochina",
@@ -26844,7 +26933,32 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Indochinese"
+            "adjective": "Indochinese",
+            "spawned_territories": [
+                1617,
+                1632,
+                1645,
+                1661,
+                1684,
+                1693,
+                1694,
+                1709,
+                1710,
+                1723,
+                1756,
+                1769,
+                1780,
+                1788,
+                1789,
+                1799,
+                1805,
+                1827,
+                1835,
+                1840,
+                1853,
+                1871,
+                1878
+            ]
         },
         "French Madagascar": {
             "name": "French Madagascar",
@@ -26914,7 +27028,18 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Madagascarian"
+            "adjective": "Madagascarian",
+            "spawned_territories": [
+                2257,
+                2303,
+                2312,
+                2325,
+                2333,
+                2355,
+                2356,
+                2367,
+                2376
+            ]
         },
         "Italian East Africa": {
             "name": "Italian East Africa",
@@ -26976,7 +27101,32 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Italian East African"
+            "adjective": "Italian East African",
+            "spawned_territories": [
+                1729,
+                1768,
+                1777,
+                1798,
+                1833,
+                1846,
+                1859,
+                1883,
+                1887,
+                1909,
+                1910,
+                1922,
+                1940,
+                1942,
+                1957,
+                1958,
+                1959,
+                1963,
+                1972,
+                1986,
+                2000,
+                2003,
+                2023
+            ]
         },
         "Malagasy Protectorate": {
             "name": "Malagasy Protectorate",
@@ -27086,7 +27236,13 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Bohemian and Moravian"
+            "adjective": "Bohemian and Moravian",
+            "spawned_territories": [
+                486,
+                490,
+                526,
+                547
+            ]
         },
         "Belgian Congo": {
             "name": "Belgian Congo",
@@ -27143,7 +27299,34 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Congolese"
+            "adjective": "Congolese",
+            "spawned_territories": [
+                1989,
+                1994,
+                1999,
+                2005,
+                2007,
+                2033,
+                2037,
+                2060,
+                2062,
+                2085,
+                2094,
+                2105,
+                2106,
+                2130,
+                2152,
+                2159,
+                2164,
+                2168,
+                2172,
+                2173,
+                2181,
+                2210,
+                2215,
+                2234,
+                2278
+            ]
         },
         "Dutch East Indies": {
             "name": "Dutch East Indies",
@@ -27200,7 +27383,60 @@
                 "materials": 0.0,
                 "fuel": 0.0
             },
-            "adjective": "Dutch East Indian"
+            "adjective": "Dutch East Indian",
+            "spawned_territories": [
+                1992,
+                2012,
+                2021,
+                2038,
+                2040,
+                2042,
+                2047,
+                2048,
+                2050,
+                2053,
+                2054,
+                2055,
+                2063,
+                2065,
+                2070,
+                2080,
+                2086,
+                2088,
+                2089,
+                2090,
+                2091,
+                2097,
+                2102,
+                2107,
+                2109,
+                2112,
+                2113,
+                2117,
+                2118,
+                2122,
+                2125,
+                2132,
+                2135,
+                2138,
+                2146,
+                2148,
+                2153,
+                2165,
+                2179,
+                2182,
+                2184,
+                2185,
+                2186,
+                2193,
+                2202,
+                2204,
+                2205,
+                2209,
+                2224,
+                2225,
+                2239
+            ]
         },
         "European Union": {
             "name": "European Union",
@@ -27489,6 +27725,241 @@
             "portrait_data": "DEFAULT",
             "pending_diplomacy": {},
             "relations": {}
+        },
+        "Lviv": {
+            "name": "Lviv",
+            "color": [
+                128,
+                128,
+                255
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "adjective": "Lvivian",
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "Minnesota": {
+            "name": "Minnesota",
+            "color": [
+                128,
+                128,
+                255
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "adjective": "Minnesotan",
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "North Carolina": {
+            "name": "North Carolina",
+            "color": [
+                0,
+                64,
+                200
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "adjective": "North Carolinian",
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "South Carolina": {
+            "name": "South Carolina",
+            "color": [
+                0,
+                0,
+                160
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "adjective": "South Carolinian",
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
+        },
+        "Hamburg": {
+            "name": "Hamburg",
+            "color": [
+                200,
+                64,
+                128
+            ],
+            "research": {
+                "infantry_type": 1,
+                "cavalry": 1,
+                "militia": 0,
+                "motorized_infantry": 0,
+                "mechanized_infantry": 0,
+                "civilian_car": 0,
+                "ww1_armored_car": 0,
+                "armored_car": 0,
+                "ww1_tank": 0,
+                "light_tank": 0,
+                "medium_tank": 0,
+                "heavy_tank": 0,
+                "main_battle_tank": 0,
+                "dreadnought": 0,
+                "battleship": 0,
+                "destroyer": 0,
+                "aircraft_carrier": 0,
+                "submarine": 0,
+                "basic_factory": 0,
+                "factory": 0,
+                "bergius_process": 0,
+                "fuel_refining": 0,
+                "basic_recruitment": 0,
+                "recruitment_buildings": 0,
+                "general_recruitment": 0
+            },
+            "manpower": 0,
+            "materials": 0,
+            "fuel": 0,
+            "is_playable": true,
+            "at_war_with": [],
+            "allied_with": [],
+            "adjective": "Hamburgian",
+            "leader_name": "",
+            "leader_title": "",
+            "flag_data": "DEFAULT",
+            "portrait_data": "DEFAULT",
+            "pending_diplomacy": {}
         }
     },
     "provinces": {

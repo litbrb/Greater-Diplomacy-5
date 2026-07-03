@@ -25578,9 +25578,9 @@
     "North Carolina": {
         "name": "North Carolina",
         "color": [
-            80,
-            160,
-            255
+            0,
+            64,
+            200
         ],
         "research": {
             "infantry_type": 1,

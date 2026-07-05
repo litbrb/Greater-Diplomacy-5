@@ -1,0 +1,83 @@
+Immediate concerns:
+- opinion modifier should maybe do more than just affect ai attitudes? (more likely to declare war, less likely to accept peace for example?)
+- levels to fog of war (on or off, and if it's on show a slider that says: lite, normal, extreme)
+- setting to edit water color
+- if ai has integrated puppets automatically siphon as many resources off them as possible???
+- new scenario option, instead of making the ai have a 50% chance to declare war if it can declare war make that a 100% chance
+- find out why saving sometimes goes into the temp folder instead of the folder the game comes in
+
+Comprehension:
+- what is all the data associated with a country?
+max_length=(insert number here) (vscode search)
+
+idk:
+- FOR SOME REASON UNITS THAT ARE FAST CAN BE QUEUED TO MOVE SLOW?????
+- GROUP UP UNITS IF YOU ZOOM OUT!!! (make this a togglable setting please)
+- refresh issues need to be fixed (WHAT REFRESH ISSUES???)
+- 55815440+GitGetGot415@users.noreply.github.com
+
+Vague content ideas NOT THAT IMPORTANT BUT COULD PROBABLY BE LOOKED AT:
+- resource income multiplier should be a thing
+
+for random scenarios:
+add how valuable the resources are (rn this is between 20 - 80)
+so there could be 1 slider for minimum and 1 slider for maximum
+
+- make terrain ACTUALLY DO STUFF when in combat / moving troops across
+
+- make the combat zone look less awful
+
+- add in a setting for how to show country names on the map (when does it start? end? should it be capitalized?)
+
+- allow for ai prompts to be edited from settings
+
+- territory trade mechanics (offer x territory for y thing)
+- ai should be able to sign non-agression pacts that prevent wars
+
+- destroyers, dreadnoughts, battleships, and aircraft carriers should be able to give a bonus to invasions (perhaps a % increase to damage or something)
+- forts (if country holds territory they keeo forts) (this might make core removal on fortified territory... difficult)
+
+- oh interesting, if 2 players attempt to send each other a request of some kind it just doesn't work
+it says the diplomat is busy so you're unable to accept or decline the offer nor can you send a message
+- maybe factions could have no leader by default and you have to vote on who becomes the leader (this would fix the issue where if 2 countries propose something simultaneously it just doesn't work)
+
+- for some reason skipping multiple turns in spectator mode seems to make scripted events not happen correctly
+- countries that should've accepted certain requests don't accept them
+- what might be causing this and how can it be fixed
+
+- add a way to put this all on html
+
+- oh my god what if you made a way to actually edit the physical map itself but in such a way as to keep the nations and everything intact
+- come up with a prompt for this
+
+- example: splitting a province in 2 should make those 2 new provinces keep the info of the old one
+- merging
+
+- refreshing data for each country should edit their metadata so it only shows countries that exist
+- add in a way to put in custom unit_data.json
+
+- when in non-ai mode (ie using fallbacks) maybe make there multiple things that can be said in certain circumstances
+
+- add in a maximum amount of resources a country can store (say 100k manpower and materials and fuel)
+
+- make ai realize that if a unit queued that's out of date (not being produced), it can refund it then requeue it
+
+- peacedeals with factions should include all faction members claims and your faction members claims
+- however, only the leader of a faction should be able to make a deal with the leader of another faction
+- if you're not the leader of a faction and try to negotiate a peace it should say "nuh uh"
+
+- allow for countries to assume leadership of a faction
+
+- countries can choose to just give up the claims immediately to avoid a war (surrender)
+
+- should changing your country appearance to yourself set you to the default of what the country looks like?
+
+Difficult to implement content ideas:
+- EUROPA UNIVERSALLIS ESQUE TIMELIME 1910 - 1950
+- Ability to add the following to units and put them on a frontline like how it works for hoi4:
+    - Divisional Commanders (Officers)
+    - Generals
+    - Field Marshals
+- Implementation of actual tank battles for tactical mode (highfleet esque)
+- Tournaments (yknow, the stuff from GD4)
+- make political power a thing? (ok what would you even use it for)

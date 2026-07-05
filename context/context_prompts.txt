@@ -1,0 +1,25 @@
+==================================================
+
+INTRO.TXT:
+
+so i have this pygame project that's essentially a turn based map game (DO NOT HARD CODE THINGS, TRY TO USE CONSTANTS.PY / QUERIES.PY WHERE APPLICABLE) (DO NOT REMOVE COMMENTS WHEN TRYING TO EDIT FILES) (DO NOT SHOW A GITHUB CHANGE LOG OR THE ENTIRE FILE, ONLY SHOW THE PARTS OF THE FILE YOU CHANGED)
+
+==================================================
+
+could you check constants.py and queries.py and also search through the entire code to see if everything looks good / if there's something that might be better off added into either one of those two files? (this is basically just me asking for you to check the code to see if anything can be optimized, for example any repeated functions that would be good in queries.py, unnecessary functions that can just be removed, unorganized imports, etc)
+
+ensure nothing is broken, especially with saving / loading settings
+
+anything relating to replacing disk i/o with caching would be useful (if it can be improved, that is)
+
+any hardcoded ai responses should be moved to ai_prompts
+
+an example of how to implement these changes (like an example of what the file would have to look like with the changes implemented) would be extremely useful
+
+- remove getattr
+i've noticed that there's a lot of getattr() being used, but im
+wondering what parts are actually nessecary and what parts are just
+going to cause problems later if i ever change any of the variable names
+and forget to edit it there?
+
+I need you to aggressively consolidate duplicate functions / code into single unified functions / helpers to make making edits significantly easier

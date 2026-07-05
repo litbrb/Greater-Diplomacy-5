@@ -410,7 +410,6 @@ class Edit_Country_Screen(GameState):
                 self.redo()
             else:
                 if self.active_input:
-                    # TODO: constants.py the hardcoded 50 please
                     if self.active_input == "COUNTRY_NAME":
                         self.country_name, _ = process_text_input(event, self.country_name, max_length=c.COUNTRY_NAME_MAX_LENGTH)
                     elif self.active_input == "ADJECTIVE":

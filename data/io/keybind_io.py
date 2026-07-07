@@ -10,7 +10,8 @@ def save_settings(keybind_dict, sfx_volume, music_volume, num_players=1, ai_mode
                   gemini_model="", chatgpt_model="", claude_model="", ollama_model="",
                   ai_immersion_level="LITE", music_pitch=0.5, sfx_pitch=0.5, target_fps=60,
                   ai_threads=1, show_fps=True, drag_mouse_toggle="RIGHT",
-                  saves_dir="saves", custom_scenarios_dir="scenarios/map_editor"):
+                  saves_dir="saves", custom_scenarios_dir="scenarios/map_editor",
+                  ocean_light_color=c.DEFAULT_OCEAN_LIGHT_BLUE, ocean_dark_color=c.DEFAULT_OCEAN_DARK_BLUE):
     """Converts key codes to strings and saves all config data to JSON."""
     readable_binds = {}
     for action, key_code in keybind_dict.items():
@@ -38,7 +39,9 @@ def save_settings(keybind_dict, sfx_volume, music_volume, num_players=1, ai_mode
         "show_fps": show_fps,
         "drag_mouse_toggle": drag_mouse_toggle,
         "saves_dir": saves_dir,
-        "custom_scenarios_dir": custom_scenarios_dir
+        "custom_scenarios_dir": custom_scenarios_dir,
+        "ocean_light_color": ocean_light_color,
+        "ocean_dark_color": ocean_dark_color
     }
     queries.save_cached_json("settings", data_to_save)
 
@@ -55,7 +58,8 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
                 c.DEFAULT_CLAUDE_MODEL, 
                 c.DEFAULT_OLLAMA_MODEL, 
                 "LITE", default_pitch, default_pitch, c.TARGET_FPS, c.DEFAULT_AI_THREADS, True,
-                c.DRAG_MOUSE_BUTTON_TOGGLE, "saves", "scenarios/map_editor")
+                c.DRAG_MOUSE_BUTTON_TOGGLE, "saves", "scenarios/map_editor",
+                c.DEFAULT_OCEAN_LIGHT_BLUE, c.DEFAULT_OCEAN_DARK_BLUE)
     
     try:
         # Utilize the caching manager
@@ -105,7 +109,9 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
             s.get("show_fps", c.SHOW_FPS),
             s.get("drag_mouse_toggle", c.DRAG_MOUSE_BUTTON_TOGGLE),
             s.get("saves_dir", "saves"),
-            s.get("custom_scenarios_dir", "scenarios/map_editor")
+            s.get("custom_scenarios_dir", "scenarios/map_editor"),
+            tuple(s.get("ocean_light_color", c.DEFAULT_OCEAN_LIGHT_BLUE)),
+            tuple(s.get("ocean_dark_color", c.DEFAULT_OCEAN_DARK_BLUE))
         )
     except Exception as e:
         print(f"Error loading settings: {e}")
@@ -116,4 +122,5 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
                 c.DEFAULT_CLAUDE_MODEL, 
                 c.DEFAULT_OLLAMA_MODEL, 
                 "LITE", default_pitch, default_pitch, c.TARGET_FPS, c.DEFAULT_AI_THREADS, True,
-                c.DRAG_MOUSE_BUTTON_TOGGLE, "saves", "scenarios/map_editor")
+                c.DRAG_MOUSE_BUTTON_TOGGLE, "saves", "scenarios/map_editor",
+                c.DEFAULT_OCEAN_LIGHT_BLUE, c.DEFAULT_OCEAN_DARK_BLUE)

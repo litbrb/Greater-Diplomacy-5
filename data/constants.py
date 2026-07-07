@@ -522,6 +522,9 @@ OCEAN_DARK_BLUE = (10, 20, 40)
 OCEAN_LIGHT_BLUE = (40, 100, 180)
 # OCEAN_LIGHT_BLUE = (20, 40, 80)
 
+DEFAULT_OCEAN_DARK_BLUE = (10, 20, 40)
+DEFAULT_OCEAN_LIGHT_BLUE = (40, 100, 180)
+
 # Toggle this to False if you want to strictly hide names on areas <= 3 provinces
 SHOW_SMALL_TERRITORY_NAMES = False
 NAME_FADE_START = 4.0

@@ -648,5 +648,9 @@ def render_settings_buttons(settings_screen):
         Button(dir_box_x - 220, 60, "small", "blue", "Edit", settings_screen.edit_saves_dir),
         Button(dir_box_x - 110, 60, "small", "red", "Reset", settings_screen.reset_saves_dir),
         Button(dir_box_x - 220, 120, "small", "blue", "Edit", settings_screen.edit_custom_scenarios_dir),
-        Button(dir_box_x - 110, 120, "small", "red", "Reset", settings_screen.reset_custom_scenarios_dir)
+        Button(dir_box_x - 110, 120, "small", "red", "Reset", settings_screen.reset_custom_scenarios_dir),
+        Button(dir_box_x - 220, 175, "small", "blue", "Edit", settings_screen.edit_ocean_light_color),
+        Button(dir_box_x - 110, 175, "small", "red", "Reset", settings_screen.reset_ocean_light_color),
+        Button(dir_box_x - 220, 230, "small", "blue", "Edit", settings_screen.edit_ocean_dark_color),
+        Button(dir_box_x - 110, 230, "small", "red", "Reset", settings_screen.reset_ocean_dark_color)
     ])

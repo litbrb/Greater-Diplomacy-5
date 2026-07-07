@@ -243,7 +243,9 @@ def save_global_settings(controller):
         controller.show_fps,
         controller.drag_mouse_button_toggle,
         controller.saves_dir,
-        controller.custom_scenarios_dir
+        controller.custom_scenarios_dir,
+        controller.ocean_light_color,
+        controller.ocean_dark_color
     )
 
 def get_ai_threads():

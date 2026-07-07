@@ -217,6 +217,12 @@ class Controller:
         self.custom_scenarios_dir = loaded_data[21] if len(loaded_data) > 21 else c.SCENARIOS_CUSTOM_DIR
         c.SCENARIOS_CUSTOM_DIR = self.custom_scenarios_dir
 
+        self.ocean_light_color = loaded_data[22] if len(loaded_data) > 22 else c.DEFAULT_OCEAN_LIGHT_BLUE
+        c.OCEAN_LIGHT_BLUE = self.ocean_light_color
+
+        self.ocean_dark_color = loaded_data[23] if len(loaded_data) > 23 else c.DEFAULT_OCEAN_DARK_BLUE
+        c.OCEAN_DARK_BLUE = self.ocean_dark_color
+
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.sfx_volume
         ui_elements.global_sfx_pitch = self.sfx_pitch

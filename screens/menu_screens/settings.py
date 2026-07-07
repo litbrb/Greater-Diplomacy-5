@@ -8,6 +8,7 @@ from data import queries
 from map_logic.rendering.font_manager import fonts
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import colorchooser
 
 class Settings(GameState):
     def __init__(self, controller):
@@ -51,6 +52,9 @@ class Settings(GameState):
         
         self.saves_dir = self.controller.saves_dir
         self.custom_scenarios_dir = self.controller.custom_scenarios_dir
+        
+        self.ocean_light_color = self.controller.ocean_light_color
+        self.ocean_dark_color = self.controller.ocean_dark_color
         
         self.refresh_ui()
 
@@ -148,6 +152,9 @@ class Settings(GameState):
         c.DRAG_MOUSE_BUTTON_TOGGLE = c.DEFAULT_MOUSE_BUTTON_TOGGLE
         self.controller.drag_mouse_button_toggle = c.DEFAULT_MOUSE_BUTTON_TOGGLE
         
+        self.reset_ocean_light_color(refresh=False)
+        self.reset_ocean_dark_color(refresh=False)
+        
         queries.save_global_settings(self.controller)
         self.refresh_ui()
 
@@ -186,6 +193,44 @@ class Settings(GameState):
         c.SCENARIOS_CUSTOM_DIR = "scenarios/map_editor"
         queries.save_global_settings(self.controller)
         self.refresh_ui()
+
+    def edit_ocean_light_color(self):
+        root = tk.Tk()
+        root.withdraw()
+        color = colorchooser.askcolor(title="Select Zoom-In Water Color", color=self.ocean_light_color)
+        if color[0]:
+            self.ocean_light_color = tuple(map(int, color[0]))
+            self.controller.ocean_light_color = self.ocean_light_color
+            c.OCEAN_LIGHT_BLUE = self.ocean_light_color
+            queries.save_global_settings(self.controller)
+            self.refresh_ui()
+
+    def edit_ocean_dark_color(self):
+        root = tk.Tk()
+        root.withdraw()
+        color = colorchooser.askcolor(title="Select Zoom-Out Water Color", color=self.ocean_dark_color)
+        if color[0]:
+            self.ocean_dark_color = tuple(map(int, color[0]))
+            self.controller.ocean_dark_color = self.ocean_dark_color
+            c.OCEAN_DARK_BLUE = self.ocean_dark_color
+            queries.save_global_settings(self.controller)
+            self.refresh_ui()
+
+    def reset_ocean_light_color(self, refresh=True):
+        self.ocean_light_color = c.DEFAULT_OCEAN_LIGHT_BLUE
+        self.controller.ocean_light_color = self.ocean_light_color
+        c.OCEAN_LIGHT_BLUE = self.ocean_light_color
+        queries.save_global_settings(self.controller)
+        if refresh:
+            self.refresh_ui()
+
+    def reset_ocean_dark_color(self, refresh=True):
+        self.ocean_dark_color = c.DEFAULT_OCEAN_DARK_BLUE
+        self.controller.ocean_dark_color = self.ocean_dark_color
+        c.OCEAN_DARK_BLUE = self.ocean_dark_color
+        queries.save_global_settings(self.controller)
+        if refresh:
+            self.refresh_ui()
 
     def set_fps(self, val):
         fps = int(20 + (val * 40)) # Scale 0.0-1.0 to 20-60
@@ -301,6 +346,24 @@ class Settings(GameState):
         surface.set_clip(scen_rect.inflate(-10, -10))
         surface.blit(font.render(self.custom_scenarios_dir, True, (255, 255, 255)), (scen_rect.x + 5, scen_rect.y + 10))
         surface.set_clip(None)
+
+        # Draw current water colors
+        color_box_w = 40
+        color_box_h = 35
+        
+        # Light Water Color
+        light_color_y = 175
+        surface.blit(font.render("Zoom-In Water Color:", True, (100, 100, 100)), (dir_box_x, light_color_y + 10))
+        light_rect = pygame.Rect(dir_box_x + dir_box_w - color_box_w, light_color_y, color_box_w, color_box_h)
+        pygame.draw.rect(surface, self.ocean_light_color, light_rect)
+        pygame.draw.rect(surface, (150, 150, 150), light_rect, 1)
+
+        # Dark Water Color
+        dark_color_y = 230
+        surface.blit(font.render("Zoom-Out Water Color:", True, (100, 100, 100)), (dir_box_x, dark_color_y + 10))
+        dark_rect = pygame.Rect(dir_box_x + dir_box_w - color_box_w, dark_color_y, color_box_w, color_box_h)
+        pygame.draw.rect(surface, self.ocean_dark_color, dark_rect)
+        pygame.draw.rect(surface, (150, 150, 150), dark_rect, 1)
         
         if self.ai_mode in ["GEMINI", "CHATGPT", "CLAUDE", "OLLAMA"]:
             if self.ai_mode == "GEMINI":

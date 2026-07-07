@@ -1,5 +1,4 @@
 Immediate concerns:
-- implement the sign in the menu
 
 Comprehension:
 - what is all the data associated with a country?

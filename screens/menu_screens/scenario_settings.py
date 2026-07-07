@@ -1,6 +1,6 @@
 import os
 from gameState import GameState
-from ui_elements import Button
+from ui_elements import Button, Slider
 import data.constants as c
 from data import queries
 
@@ -33,8 +33,36 @@ class Scenario_Settings(GameState):
         fog_text = "Fog of War: ON" if fog_val else "Fog of War: OFF"
         
         self.elements.append(
-            Button("centered", 160, "medium", fog_color, fog_text, self.toggle_fog)
+            Button("centered-120", 160, "medium", fog_color, fog_text, self.toggle_fog)
         )
+
+        fog_strength = self.settings.get("fog_of_war_strength", "normal")
+        if fog_strength == "lite":
+            s_val = 0.0
+            s_text = "Intensity: Lite"
+        elif fog_strength == "extreme":
+            s_val = 2.0
+            s_text = "Intensity: Extreme"
+        else:
+            s_val = 1.0
+            s_text = "Intensity: Normal"
+
+        def fog_slider_cb(val):
+            if val < 0.66:
+                self.settings["fog_of_war_strength"] = "lite"
+                self.fog_slider.text = "Intensity: Lite"
+            elif val > 1.33:
+                self.settings["fog_of_war_strength"] = "extreme"
+                self.fog_slider.text = "Intensity: Extreme"
+            else:
+                self.settings["fog_of_war_strength"] = "normal"
+                self.fog_slider.text = "Intensity: Normal"
+            queries.save_scenario_settings(self.settings)
+
+        from ui_elements import parse_pos
+        slider_x = parse_pos("centered+120", c.SCREEN_WIDTH, 180)
+        self.fog_slider = Slider(slider_x, 175, 180, s_text, s_val, fog_slider_cb, visual_max=2.0, allowed_max=2.0)
+        self.elements.append(self.fog_slider)
 
         # Toggle Button - Casus Belli Required
         cb_val = str(self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"

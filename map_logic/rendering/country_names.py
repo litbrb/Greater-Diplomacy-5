@@ -169,6 +169,9 @@ def update_country_centers(map_screen):
         
         # Iterate through every province by ID
         for prov_id, prov in map_screen.id_to_province.items():
+            if hasattr(map_screen, 'extreme_hidden_provinces') and prov_id in map_screen.extreme_hidden_provinces:
+                continue
+                
             group_val = grouping_key_func(prov)
             if not group_val or group_val in c.UNPLAYABLE_NATIONS:
                 continue

@@ -306,7 +306,12 @@ def draw_overlay_content(self, surface):
                 is_vis = False
                 is_partial = True
             else:
-                continue # Completely hidden
+                fog_strength = getattr(self, 'scenario_settings', {}).get("fog_of_war_strength", "normal")
+                if fog_strength == "lite":
+                    is_vis = False
+                    is_partial = True
+                else:
+                    continue # Completely hidden
             
         cx, cy = province["center"]
         
@@ -323,7 +328,7 @@ def draw_overlay_content(self, surface):
                 # --- UNIT VIEW ---
                 if self.secondary_mode == "UNITS":
                     if province["units"]:
-                        draw_unit_icon(self, surface, sx, sy, province)
+                        draw_unit_icon(self, surface, sx, sy, province, is_partial)
                         
                     if not is_partial and queries.is_training_troops(province):
                         training_sym = symbol_loader.get_symbol(c.ICON_TRAINING, self.camera.zoom * c.OVERLAY_STATUS_ICON_SCALE)
@@ -437,15 +442,10 @@ def draw_overlay_content(self, surface):
                                 # Shift right so multiple icons stack side-by-side
                                 offset_x += 20 * self.camera.zoom
 
-def draw_unit_icon(self, surface, sx, sy, province):
+def draw_unit_icon(self, surface, sx, sy, province, is_partial=False):
     units = province.get("units", [])
     if not units:
         return
-
-    is_partial = False
-    if getattr(self, 'partial_visible_provinces', None) is not None:
-        if province["id"] in self.partial_visible_provinces and province["id"] not in self.visible_provinces:
-            is_partial = True
 
     if is_partial:
         internal_w = c.UNIT_BOX_WIDTH

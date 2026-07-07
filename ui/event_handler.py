@@ -85,6 +85,11 @@ def handle_map_events(self, event):
         # FIX: Pass the pre-calculated (mx, my) tuple instead of event.pos!
         self.hovered_province = queries.get_clicked_province((mx, my), self)
         
+        # Block interaction with extreme hidden tiles
+        if self.hovered_province and hasattr(self, 'extreme_hidden_provinces'):
+            if self.hovered_province["id"] in self.extreme_hidden_provinces:
+                self.hovered_province = None
+        
         if self.hovered_province:
             curr_id = self.hovered_province["id"]
             if curr_id != self.last_hovered_id:

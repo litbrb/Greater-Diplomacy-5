@@ -1,5 +1,4 @@
 Immediate concerns:
-- levels to fog of war (on or off, and if it's on show a slider that says: lite, normal, extreme)
 - find out why saving sometimes goes into the temp folder instead of the folder the game comes in
 - implement the sign in the menu
 

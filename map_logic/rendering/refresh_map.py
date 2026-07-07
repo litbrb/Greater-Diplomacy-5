@@ -269,7 +269,7 @@ def refresh_fog_map(self):
         self.visible_provinces = set() # Return an empty set so nothing is visible
         self.partial_visible_provinces = set()
     else:
-        # Dynamically fetch get_visible_provinces from queries
+    # Dynamically fetch get_visible_provinces from queries
         vis_result = queries.get_visible_provinces(self)
         if vis_result[0] is None:
             self.fog_map = None
@@ -279,15 +279,40 @@ def refresh_fog_map(self):
             
         self.visible_provinces, self.partial_visible_provinces = vis_result
 
+    fog_strength = self.scenario_settings.get("fog_of_war_strength", "normal") if hasattr(self, 'scenario_settings') else "normal"
+    extreme_hidden = set()
+    
+    if fog_strength == "extreme":
+        for p_id, p_data in self.id_to_province.items():
+            if p_id not in self.visible_provinces and p_id not in self.partial_visible_provinces:
+                # check neighbors
+                neighbors = p_data.get("neighbors", [])
+                is_extreme = True
+                for n in neighbors:
+                    if n in self.visible_provinces or n in self.partial_visible_provinces:
+                        is_extreme = False
+                        break
+                if is_extreme:
+                    extreme_hidden.add(p_id)
+    self.extreme_hidden_provinces = extreme_hidden
+
     id_array, id_2d = get_id_2d_array(self.id_map)
     lut = np.full(16777216, c.FOG_OF_WAR_ALPHA, dtype=np.uint8)
 
     for color_key, data in self.map_data.items():
         packed_key = (color_key[0] << 16) | (color_key[1] << 8) | color_key[2]
-        if data["id"] in self.visible_provinces:
+        p_id = data["id"]
+        
+        if p_id in self.visible_provinces:
             lut[packed_key] = 0 # 0 Alpha = Completely visible
-        elif data["id"] in self.partial_visible_provinces:
+        elif p_id in self.partial_visible_provinces:
             lut[packed_key] = c.FOG_OF_WAR_ALPHA // 2 # Slightly darker for radius 2
+        else:
+            if fog_strength == "lite":
+                lut[packed_key] = c.FOG_OF_WAR_ALPHA // 2
+            elif fog_strength == "extreme" and p_id in extreme_hidden:
+                lut[packed_key] = 255
+            # else remains c.FOG_OF_WAR_ALPHA
             
     alpha_2d = lut[id_2d]
 

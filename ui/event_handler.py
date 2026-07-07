@@ -251,6 +251,7 @@ def handle_map_events(self, event):
                     player_setup.confirm_player_country(self)
                     # Refresh the fog map as soon as the player officially takes control of the country
                     self.refresh_fog_map()
+                    self.update_country_centers()
                 elif hasattr(self, 'cancel_rect') and self.cancel_rect.collidepoint(mx, my):
                     player_setup.cancel_selection(self)
                 return  # <--- CRITICAL FIX: Stops any clicks on the map behind the popup

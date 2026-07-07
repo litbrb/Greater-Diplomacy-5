@@ -16,6 +16,19 @@ class Menu(GameState):
         self.bg_color = (10, 10, 40) # Midnight Blue
         self.bg_image_path = c.MENU_BG_FILE 
 
+        try:
+            raw_image = pygame.image.load("assets/images/The Sign.png").convert_alpha()
+            
+            # --- EDIT THIS NUMBER TO CHANGE THE SIZE ---
+            # 1.0 is normal size. 0.5 is half size. 2.0 is double size.
+            scale_factor = 2
+            
+            new_size = (int(raw_image.get_width() * scale_factor), int(raw_image.get_height() * scale_factor))
+            self.sign_image = pygame.transform.scale(raw_image, new_size)
+        except Exception as e:
+            print(f"Failed to load the sign image: {e}")
+            self.sign_image = None
+
         self.elements = [
             Button("centered", "centered - 120", "medium", "green", "New Game", self.new_game, image=ui_elements.UI_ICONS.get("new_game")),
             Button("centered", "centered - 60", "medium", "green", "Load Game", self.load_game, image=ui_elements.UI_ICONS.get("load_game")),
@@ -134,6 +147,12 @@ class Menu(GameState):
                     queries.play_click_sound()
 
     def additional_draw(self, surface):
+        if getattr(self, "sign_image", None):
+            img_rect = self.sign_image.get_rect()
+            img_rect.right = c.SCREEN_WIDTH - 40
+            img_rect.centery = c.SCREEN_HEIGHT // 2
+            surface.blit(self.sign_image, img_rect)
+
         font = fonts.get("heading2")
         mouse_pos = pygame.mouse.get_pos()
         

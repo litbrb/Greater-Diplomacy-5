@@ -15,9 +15,8 @@ def save_map_data(self, save_name=None):
     
     # --- CONDITIONAL PATH LOGIC ---
     if self.is_editor:
-        # Save to User's Downloads Folder
-        downloads_path = Path(__file__).resolve().parents[2]
-        save_path = os.path.join(downloads_path, "scenarios", "map_editor", f"MapExport_{save_name}")
+        # Standardize Map Editor Exports to the custom scenarios directory
+        save_path = os.path.join(c.SCENARIOS_CUSTOM_DIR, f"MapExport_{save_name}")
     else:
         # Standard Game Save
         save_path = os.path.join(c.SAVES_DIR, save_name)

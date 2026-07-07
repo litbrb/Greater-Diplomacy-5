@@ -1,5 +1,4 @@
 Immediate concerns:
-- find out why saving sometimes goes into the temp folder instead of the folder the game comes in
 - implement the sign in the menu
 
 Comprehension:

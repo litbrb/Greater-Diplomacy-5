@@ -483,17 +483,23 @@ class Controller:
 if __name__ == "__main__":
     try:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        
-        # Mod Handler
-        for filename in os.listdir(os.getcwd()):
+
+        for filename in os.listdir(BASE_DIR):
             if filename.endswith(".GD5MOD"):
                 with open(os.path.join(BASE_DIR, filename), "r") as mod:
                     lines = mod.readlines()
-                    target = os.path.join(BASE_DIR, lines[0].strip())
-                    content = "".join(lines[1:])
+                    
+                    target = os.path.join(BASE_DIR, lines[0].strip()) # Get the first line (target file)
+                    content = "".join(lines[1:]) # Get everything after the first line (content to be inserted)
+                    
+                    target = os.path.join(BASE_DIR, os.path.basename(target)) # Make it safe (So it stays in the gd5 directory)
+                    
+                    if not os.path.isfile(target):
+                        print(f".GD5MOD file {target} not found; continuing")
+                        continue
 
-                    with open(target, "w") as target_file: # Cut off the last character from the file name (\n)
-                        target_file.write(content) # We only want everything after the first line (filename)
+                    with open(target, "w") as target_file:
+                        target_file.write(content)
 
         game = Controller()
         game.run()

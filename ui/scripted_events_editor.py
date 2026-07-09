@@ -14,13 +14,16 @@ def open_scripted_events_editor(self):
         self.show_feedback("No active countries on map!")
         return
 
+    if "script_variables" not in self.scenario_settings:
+        self.scenario_settings["script_variables"] = []
+
     root, close_menu = queries.create_managed_tk_window(self, "Scripted Events Editor", "650x550")
 
     def show_scripted_events_help():
         """Spawns a read-only popup explaining the scripting engine."""
         help_win = tk.Toplevel(root)
         help_win.title("Scripted Events Help")
-        help_win.geometry("700x800")
+        help_win.geometry("800x900")
         help_win.attributes("-topmost", True)
         
         text_widget = tk.Text(help_win, wrap="word", font=("Arial", 10))
@@ -54,6 +57,7 @@ def open_scripted_events_editor(self):
 - Is AI Controlled: Checks if the target nation (or self if blank) is controlled by AI
 - Is Player Controlled: Checks if the target nation (or self if blank) is controlled by a human
 - Bordering / Not Bordering: Checks physical adjacency to the target
+- Variable: Compares a selected global variable against a static value (supports math operators for numerical variables)
 
 === ACTIONS ===
 - Declare War: Declares war on the target
@@ -68,6 +72,7 @@ def open_scripted_events_editor(self):
 - Edit Color / Flag / Portrait: Modifies cosmetic visual aspects
 - Give Territory: Transfers the specified Province IDs (comma-separated) to the target nation. Check 'Must Control' if they must currently control the tiles to transfer them.
 - Spawn Unit: Spawns the specified unit type for the target nation on the specified Province IDs (comma-separated). Check 'Must Control' if they must currently control the tiles to spawn the unit on them.
+- Set Variable: Modifies a selected global variable by setting, adding, subtracting, multiplying, or dividing it by a static value.
 
 The AI Msg Checkbox means that you can allow the ai to generate custom text for that message
 It will fallback to whatever you manually entered if the llm ai is turned off or otherwise fails"""
@@ -128,6 +133,8 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 prefix = "" if idx == 0 else f" {c_dict.get('chain', 'AND')} "
                 if c_dict.get("type") == "Turn Number":
                     cond_strs.append(f"{prefix}Turn {c_dict.get('operator', '==')} {c_dict.get('value')}")
+                elif c_dict.get("type") == "Variable":
+                    cond_strs.append(f"{prefix}Var {c_dict.get('variable', '')} {c_dict.get('operator', '==')} {c_dict.get('value')}")
                 else:
                     cond_strs.append(f"{prefix}{c_dict.get('type')} {c_dict.get('value')}")
             
@@ -156,6 +163,8 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     act_strs.append(f"Give Territory to '{a.get('target')}'")
                 elif a_type == "Spawn Unit":
                     act_strs.append(f"Spawn {a.get('unit_type', 'Unit')} for '{a.get('target')}'")
+                elif a_type == "Set Variable":
+                    act_strs.append(f"Set Var '{a.get('target')}' {a.get('unit_type', '')} {a.get('message')}")
                 else:
                     act_strs.append(f"{a_type} '{a.get('target')}'")
                     
@@ -289,11 +298,14 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 tk.Label(row_frame, text=" IF ", width=5).pack(side="left", padx=2)
                 
             type_var = tk.StringVar(value=c_data.get("type", "Turn Number"))
+            var_name_var = tk.StringVar(value=c_data.get("variable", ""))
             op_var = tk.StringVar(value=c_data.get("operator", "=="))
             val_var = tk.StringVar(value=c_data.get("value", ""))
             
-            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "At War With", "Is At War", "In Faction With", "Not In Faction With", "Is In Faction", "Is Faction Leader", "Has Truce With", "At Peace With", "Is At Peace", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Claims Of", "Occupying All Claims", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering", "Not Bordering", "True", "False"], width=18, state="readonly")
+            type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=["Turn Number", "Variable", "At War With", "Is At War", "In Faction With", "Not In Faction With", "Is In Faction", "Is Faction Leader", "Has Truce With", "At Peace With", "Is At Peace", "Random (0.00 - 1.00)", "Received Action", "Country Exists", "Country Doesn't Exist", "Occupying Core Of", "Occupying All Cores Of", "Occupying Claims Of", "Occupying All Claims", "Occupying Tile", "Is AI Controlled", "Is Player Controlled", "Bordering", "Not Bordering", "True", "False"], width=18, state="readonly")
             type_cb.pack(side="left", padx=2)
+            
+            var_name_cb = ttk.Combobox(row_frame, textvariable=var_name_var, width=15, state="readonly")
             
             op_cb = ttk.Combobox(row_frame, textvariable=op_var, width=19, state="readonly")
             op_cb.pack(side="left", padx=2)
@@ -306,7 +318,25 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             
             def update_row(*args):
                 ctype = type_var.get()
-                if ctype in ["Turn Number", "Random (0.00 - 1.00)"]:
+                var_name_cb.pack_forget()
+                if ctype == "Variable":
+                    var_name_cb.config(values=[v["name"] for v in self.scenario_settings.get("script_variables", [])])
+                    var_name_cb.pack(side="left", padx=2, before=op_cb)
+                    
+                    var_type = "string"
+                    for v in self.scenario_settings.get("script_variables", []):
+                        if v["name"] == var_name_var.get():
+                            var_type = v["type"]
+                            break
+                            
+                    if var_type in ["int", "double"]:
+                        op_cb.config(values=["==", "!=", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"])
+                        if op_var.get() not in ["==", "!=", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"]: op_var.set("==")
+                    else:
+                        op_cb.config(values=["==", "!="])
+                        if op_var.get() not in ["==", "!="]: op_var.set("==")
+                    date_lbl.config(text="")
+                elif ctype in ["Turn Number", "Random (0.00 - 1.00)"]:
                     op_cb.config(values=["==", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"])
                     if op_var.get() not in ["==", ">", "<", ">=", "<=", "BETWEEN (INC)", "BETWEEN (EXC)"]:
                         op_var.set("==")
@@ -350,6 +380,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     date_lbl.config(text="(Target Nation ID, comma separated)")
             
             type_var.trace_add("write", update_row)
+            var_name_var.trace_add("write", update_row)
             val_var.trace_add("write", update_row)
             update_row()
             
@@ -357,6 +388,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 "frame": row_frame,
                 "chain_var": chain_var,
                 "type_var": type_var,
+                "var_name_var": var_name_var,
                 "op_var": op_var,
                 "val_var": val_var
             }
@@ -426,7 +458,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             unit_type_var = tk.StringVar(value=a_data.get("unit_type", "Infantry Type 1910"))
             
             edit_options = ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]
-            all_options = ["Declare War", "Join Faction", "Create Faction", "Invite to Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims", "Give Territory", "Spawn Unit"] + edit_options
+            all_options = ["Declare War", "Join Faction", "Create Faction", "Invite to Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims", "Give Territory", "Spawn Unit", "Set Variable"] + edit_options
             
             type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=all_options, width=18, state="readonly")
             type_cb.pack(side="left", padx=5)
@@ -484,7 +516,26 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 pick_img_btn.pack_forget()
                 preview_lbl.pack_forget()
 
-                if t == "Send Custom Message":
+                if t == "Set Variable":
+                    target_cb.config(values=[v["name"] for v in self.scenario_settings.get("script_variables", [])])
+                    target_cb.pack(side="left", padx=5)
+                    
+                    var_type = "string"
+                    for v in self.scenario_settings.get("script_variables", []):
+                        if v["name"] == target_var.get():
+                            var_type = v["type"]
+                            break
+                            
+                    if var_type in ["int", "double"]:
+                        unit_type_cb.config(values=["Set", "Add", "Subtract", "Multiply", "Divide"])
+                    else:
+                        unit_type_cb.config(values=["Set"])
+                        if unit_type_var.get() != "Set": unit_type_var.set("Set")
+                        
+                    unit_type_cb.pack(side="left", padx=5)
+                    msg_ent.pack(side="left", padx=5)
+                elif t == "Send Custom Message":
+                    target_cb.config(values=["None"] + sorted(active_countries))
                     target_cb.pack(side="left", padx=5)
                     msg_ent.pack(side="left", padx=5)
                     ai_cb.pack(side="left", padx=5)
@@ -533,25 +584,31 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     target_var.set("None")
                     msg_ent.pack(side="left", padx=5)
                 elif t == "Revoke All Claims":
+                    target_cb.config(values=["None"] + sorted(active_countries))
                     target_cb.pack(side="left", padx=5)
                 elif t == "Give Territory":
+                    target_cb.config(values=["None"] + sorted(active_countries))
                     target_cb.pack(side="left", padx=5)
                     msg_ent.pack(side="left", padx=5)
                     ai_cb.config(text="Must Control")
                     ai_cb.pack(side="left", padx=5)
                 elif t == "Spawn Unit":
+                    target_cb.config(values=["None"] + sorted(active_countries))
                     target_cb.pack(side="left", padx=5)
+                    unit_type_cb.config(values=unit_types)
                     unit_type_cb.pack(side="left", padx=5)
                     msg_ent.pack(side="left", padx=5)
                     ai_cb.config(text="Must Control")
                     ai_cb.pack(side="left", padx=5)
                 else:
+                    target_cb.config(values=["None"] + sorted(active_countries))
                     target_cb.pack(side="left", padx=5)
                     msg_ent.pack(side="left", padx=5)
                     ai_cb.config(text="AI Msg")
                     ai_cb.pack(side="left", padx=5)
                     
             type_var.trace_add("write", update_act_row)
+            target_var.trace_add("write", update_act_row)
             update_act_row()
             
             def remove_self():
@@ -572,6 +629,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 final_conds.append({
                     "chain": ro["chain_var"].get(),
                     "type": ro["type_var"].get(),
+                    "variable": ro["var_name_var"].get(),
                     "operator": ro["op_var"].get(),
                     "value": ro["val_var"].get()
                 })
@@ -649,6 +707,192 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             events.insert(idx + 1, events.pop(idx))
             refresh_events_list()
             events_listbox.selection_set(idx + 1)
+            
+    def open_variables_editor():
+        var_win = tk.Toplevel(root)
+        var_win.title("Variables Editor")
+        var_win.geometry("500x400")
+        var_win.attributes("-topmost", True)
+        
+        left = tk.Frame(var_win)
+        left.pack(side="left", fill="y", padx=10, pady=10)
+        right = tk.Frame(var_win)
+        right.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+        
+        tk.Label(left, text="Variables:", font=("Arial", 10, "bold")).pack()
+        v_scroll = tk.Scrollbar(left)
+        v_scroll.pack(side="right", fill="y")
+        v_list = tk.Listbox(left, yscrollcommand=v_scroll.set, exportselection=False)
+        v_list.pack(fill="both", expand=True)
+        v_scroll.config(command=v_list.yview)
+        
+        name_var = tk.StringVar()
+        type_var = tk.StringVar(value="int")
+        val_var = tk.StringVar(value="0")
+        
+        def refresh_vlist():
+            v_list.delete(0, tk.END)
+            for v in self.scenario_settings.get("script_variables", []):
+                v_list.insert(tk.END, f"{v['name']} ({v['type']}) = {v['value']}")
+                
+        refresh_vlist()
+        
+        tk.Label(right, text="Name:").pack(anchor="w")
+        tk.Entry(right, textvariable=name_var).pack(fill="x", pady=2)
+        
+        tk.Label(right, text="Type:").pack(anchor="w")
+        ttk.Combobox(right, textvariable=type_var, values=["int", "double", "string"], state="readonly").pack(fill="x", pady=2)
+        
+        tk.Label(right, text="Starting Value:").pack(anchor="w")
+        tk.Entry(right, textvariable=val_var).pack(fill="x", pady=2)
+        
+        def on_vselect(event):
+            sel = v_list.curselection()
+            if not sel: return
+            v = self.scenario_settings["script_variables"][sel[0]]
+            name_var.set(v["name"])
+            type_var.set(v["type"])
+            val_var.set(v["value"])
+            
+        v_list.bind("<<ListboxSelect>>", on_vselect)
+        
+        def get_usage(var_name):
+            usage = []
+            for nat, ndata in self.nation_data.items():
+                for idx, ev in enumerate(ndata.get("scripted_events", [])):
+                    used = False
+                    for c in ev.get("conditions", []):
+                        if c.get("type") == "Variable" and c.get("variable") == var_name: used = True
+                    for a in ev.get("actions", []):
+                        if a.get("type") == "Set Variable" and a.get("target") == var_name: used = True
+                    if used: usage.append((nat, ev))
+            return usage
+
+        def get_nations_used(usage):
+            return list(set([u[0] for u in usage]))
+            
+        def add_var():
+            n = name_var.get().strip()
+            if not n: return
+            for v in self.scenario_settings.get("script_variables", []):
+                if v["name"] == n:
+                    messagebox.showerror("Error", "Variable name must be unique.")
+                    return
+            self.scenario_settings.setdefault("script_variables", []).append({
+                "name": n, "type": type_var.get(), "value": val_var.get()
+            })
+            refresh_vlist()
+
+        def update_var():
+            sel = v_list.curselection()
+            if not sel: return
+            idx = sel[0]
+            old_v = self.scenario_settings["script_variables"][idx]
+            new_n = name_var.get().strip()
+            new_t = type_var.get()
+            
+            if not new_n: return
+            if old_v["name"] != new_n:
+                for i, v in enumerate(self.scenario_settings["script_variables"]):
+                    if v["name"] == new_n and i != idx:
+                        messagebox.showerror("Error", "Variable name must be unique.")
+                        return
+                        
+            usage = get_usage(old_v["name"])
+            
+            if old_v["type"] in ["int", "double"] and new_t == "string" and usage:
+                nations = get_nations_used(usage)
+                msg = f"Changing to string will force all non-equals conditionals to '==' and non-set actions to 'Set'.\nCountries using: {', '.join(nations)}\nEvents affected: {len(usage)}\nProceed?"
+                if not messagebox.askyesno("Warning", msg): return
+                for nat, ev in usage:
+                    for c in ev.get("conditions", []):
+                        if c.get("type") == "Variable" and c.get("variable") == old_v["name"]:
+                            if c.get("operator") not in ["==", "!="]: c["operator"] = "=="
+                    for a in ev.get("actions", []):
+                        if a.get("type") == "Set Variable" and a.get("target") == old_v["name"]:
+                            if a.get("unit_type") != "Set": a["unit_type"] = "Set"
+                            
+            if old_v["type"] == "string" and new_t in ["int", "double"] and usage:
+                nations = get_nations_used(usage)
+                msg = f"Changing to int/double will reset non-numerical condition/action values to '0'.\nCountries using: {', '.join(nations)}\nEvents affected: {len(usage)}\nProceed?"
+                if not messagebox.askyesno("Warning", msg): return
+                for nat, ev in usage:
+                    for c in ev.get("conditions", []):
+                        if c.get("type") == "Variable" and c.get("variable") == old_v["name"]:
+                            try:
+                                float(c.get("value", "0"))
+                            except ValueError:
+                                c["value"] = "0"
+                    for a in ev.get("actions", []):
+                        if a.get("type") == "Set Variable" and a.get("target") == old_v["name"]:
+                            try:
+                                float(a.get("message", "0"))
+                            except ValueError:
+                                a["message"] = "0"
+                                
+            if old_v["name"] != new_n and usage:
+                for nat, ev in usage:
+                    for c in ev.get("conditions", []):
+                        if c.get("type") == "Variable" and c.get("variable") == old_v["name"]:
+                            c["variable"] = new_n
+                    for a in ev.get("actions", []):
+                        if a.get("type") == "Set Variable" and a.get("target") == old_v["name"]:
+                            a["target"] = new_n
+
+            self.scenario_settings["script_variables"][idx] = {"name": new_n, "type": new_t, "value": val_var.get()}
+            refresh_vlist()
+            refresh_events_list()
+
+        def delete_var():
+            sel = v_list.curselection()
+            if not sel: return
+            idx = sel[0]
+            v = self.scenario_settings["script_variables"][idx]
+            usage = get_usage(v["name"])
+            if usage:
+                nations = get_nations_used(usage)
+                msg = f"Deleting this variable will delete {len(usage)} events across countries: {', '.join(nations)}.\nProceed?"
+                if not messagebox.askyesno("Warning", msg): return
+                for nat, ev in usage:
+                    if ev in self.nation_data[nat]["scripted_events"]:
+                        self.nation_data[nat]["scripted_events"].remove(ev)
+                        
+            self.scenario_settings["script_variables"].pop(idx)
+            refresh_vlist()
+            refresh_events_list()
+            
+        def move_v_up():
+            sel = v_list.curselection()
+            if not sel: return
+            idx = sel[0]
+            if idx > 0:
+                vs = self.scenario_settings["script_variables"]
+                vs.insert(idx - 1, vs.pop(idx))
+                refresh_vlist()
+                v_list.selection_set(idx - 1)
+
+        def move_v_down():
+            sel = v_list.curselection()
+            if not sel: return
+            idx = sel[0]
+            vs = self.scenario_settings["script_variables"]
+            if idx < len(vs) - 1:
+                vs.insert(idx + 1, vs.pop(idx))
+                refresh_vlist()
+                v_list.selection_set(idx + 1)
+                
+        btn_f = tk.Frame(right)
+        btn_f.pack(fill="x", pady=10)
+        tk.Button(btn_f, text="Add", command=add_var, bg="#2196F3", fg="white").pack(side="left", padx=2, expand=True, fill="x")
+        tk.Button(btn_f, text="Update", command=update_var, bg="#FF9800", fg="black").pack(side="left", padx=2, expand=True, fill="x")
+        tk.Button(btn_f, text="Delete", command=delete_var, bg="#f44336", fg="white").pack(side="left", padx=2, expand=True, fill="x")
+        
+        mv_f = tk.Frame(right)
+        mv_f.pack(fill="x", pady=2)
+        tk.Button(mv_f, text="Move Up ^", command=move_v_up).pack(side="left", expand=True, fill="x", padx=2)
+        tk.Button(mv_f, text="Move Down v", command=move_v_down).pack(side="left", expand=True, fill="x", padx=2)
+
+    tk.Button(left_frame, text="Variables", command=open_variables_editor, bg="#4CAF50", fg="white").pack(fill="x", pady=(5,0))
 
     btn_frame = tk.Frame(right_frame)
     btn_frame.pack(fill="x", pady=5)

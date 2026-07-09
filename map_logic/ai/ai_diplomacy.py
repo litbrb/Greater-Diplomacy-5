@@ -621,6 +621,44 @@ def process_scripted_events(map_screen):
                     except ValueError:
                         pass
                         
+                elif c_type == "Variable":
+                    var_name = cond.get("variable", "")
+                    var_type = "string"
+                    var_val = "0"
+                    for v in map_screen.scenario_settings.get("script_variables", []):
+                        if v["name"] == var_name:
+                            var_type = v["type"]
+                            var_val = v["value"]
+                            break
+                            
+                    if var_type in ["int", "double"]:
+                        try:
+                            # Int truncates internally for execution
+                            current_v = int(float(var_val)) if var_type == "int" else float(var_val)
+                            check_v = int(float(c_val.strip())) if var_type == "int" else float(c_val.strip())
+                            
+                            if "BETWEEN" in c_op:
+                                parts = c_val.split(",")
+                                if len(parts) >= 2:
+                                    v1 = int(float(parts[0].strip())) if var_type == "int" else float(parts[0].strip())
+                                    v2 = int(float(parts[1].strip())) if var_type == "int" else float(parts[1].strip())
+                                    if c_op == "BETWEEN (INC)":
+                                        res = (v1 <= current_v <= v2)
+                                    else:
+                                        res = (v1 < current_v < v2)
+                            else:
+                                if c_op == "==": res = (current_v == check_v)
+                                elif c_op == "!=": res = (current_v != check_v)
+                                elif c_op == ">": res = (current_v > check_v)
+                                elif c_op == "<": res = (current_v < check_v)
+                                elif c_op == ">=": res = (current_v >= check_v)
+                                elif c_op == "<=": res = (current_v <= check_v)
+                        except ValueError:
+                            res = False
+                    else:
+                        if c_op == "==": res = (str(var_val) == str(c_val))
+                        elif c_op == "!=": res = (str(var_val) != str(c_val))
+                        
                 elif c_type in ["At War With", "In Faction With", "Not In Faction With", "Has Truce With", "At Peace With", "Country Exists", "Country Doesn't Exist", "Occupying Claims Of", "Occupying All Claims"]:
                     targets = [t.strip() for t in str(c_val).split(",") if t.strip()]
                     if not targets:
@@ -784,6 +822,42 @@ def process_scripted_events(map_screen):
                                         continue
                                     new_unit = queries.create_unit_dict(unit_type, a_target, queries.get_unit_library())
                                     prov.setdefault("units", []).append(new_unit)
+                        continue
+                    
+                    if a_type == "Set Variable":
+                        var_name = act.get("target")
+                        op = act.get("unit_type", "Set")
+                        msg_val = act.get("message", "0")
+                        
+                        for v in map_screen.scenario_settings.get("script_variables", []):
+                            if v["name"] == var_name:
+                                var_type = v["type"]
+                                if var_type in ["int", "double"]:
+                                    try:
+                                        current_v = float(v["value"])
+                                        change_v = float(msg_val)
+                                        
+                                        if op == "Set":
+                                            current_v = change_v
+                                        elif op == "Add":
+                                            current_v += change_v
+                                        elif op == "Subtract":
+                                            current_v -= change_v
+                                        elif op == "Multiply":
+                                            current_v *= change_v
+                                        elif op == "Divide" and change_v != 0:
+                                            current_v /= change_v
+                                            
+                                        if var_type == "int":
+                                            v["value"] = str(int(current_v))
+                                        else:
+                                            v["value"] = str(current_v)
+                                    except ValueError:
+                                        pass
+                                else:
+                                    if op == "Set":
+                                        v["value"] = str(msg_val)
+                                break
                         continue
                     
                     # Supports comma-separated targets for simultaneous multi-country actions

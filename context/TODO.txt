@@ -1,9 +1,19 @@
 Immediate concerns:
-- add in the ability to transfer territory for scripted events
-- this should appear as an action named give territory, with a dropdown for the country to give territory to and an input box to the right where you can specify the province id's that should be transferred, and a checkbox further to the right that asks if this country has to control that territory for it to be transferred (so for example if it says to transfer territories 1 2 3 4 5 but they only control 3 4 5 and that option is checked then only transfer 3 4 and 5)
-- add in the ability to spawn troops belonging to a certain country on certain tiles for scripted events
-- this should appear as an action named spawn unit, with a dropdown for the country that will own this unit, another dropdown to the right to specify the unit type, an input box to the right to specify on what tiles the unit should spawn on (if 2 tiles are specified spawn them on those 2 tiles) and a checkbox further to the right that asks if this country has to control that territory for the unit to spawn (so for example if it says to spawn troops on territories 1 2 3 4 5 but they only control 3 4 5 and that option is checked then only spawn on 3 4 and 5)
-- add in global scripted events
+- add in variables to the scripted events editor
+- when making scripted events there should be a green button below the nations list and to the right of the add new event button called variables
+- clicking this opens up a new tkinter screen that shows a list of variables and the ability to add a new variable, rename an existing variable, delete an existing variable, move them up or down the list (^ and v buttons), the ability to set their starting value, if they're an int, a double, or a string variable
+- variables should all have different names
+- if a variable is renamed, it shouldn't be allowed to be renamed to an already existing variable, also all instances of said variable should be automatically renamed as well
+- if a variable is being deleted but it's currently being used, show a warning screen that also shows what countries are using it, how many events are using it, and some text that says deleting this variable will also delete those events
+- if the user continues on anyways simply delete those events as was forewarned
+- new conditional: if variable equals
+- if it's an int or a double variable it can also include greater than, less than, between inclusive, between exclusive, etc...
+- new action: Set Variable
+- if it's an int or a double variable it can also include add, subtract, multiply, divide, etc
+- if trying to edit a variable so it changes from an int/double to a string, show a warning that every conditional that isn't an equals and every action that isn't a set will be changed to that, also show what countries are using it, how many events are using it, and how many events will be edited should this change commence  as well as the countries that contain events that will be edited
+- if trying to edit a variable so it changes from a string to an int/double, show a warning that every non numerical value will be turned into a 0, also show what countries are using it, how many events are using it, and how many events will be edited should this change commence as well as the countries that contain events that will be edited
+- int and double should be functionally the same but int just truncates any value it gets so it has no decimals (you can set an int to 2.5 if you want as a value in the scenario editor but it will be turned into a 2 when actually playing the scenario)
+- changing a variable from int to double and vice versa should be really easy to do because of that
 
 Comprehension:
 - what is all the data associated with a country?

@@ -752,6 +752,39 @@ def process_scripted_events(map_screen):
                                 if not any(rq["prov_id"] == pid for rq in revoke_queue):
                                     revoke_queue.append({"prov_id": pid, "turns_left": 1})
                         continue
+
+                    if a_type == "Give Territory":
+                        target_list = [t.strip() for t in str(raw_targets).split(",") if t.strip()]
+                        tiles = [t.strip() for t in str(act.get("message", "")).split(",") if t.strip()]
+                        must_control = act.get("ai_generate", False)
+                        from map_logic.system32 import edit_province_ownership
+                        for a_target in target_list:
+                            if a_target == "None": continue
+                            for tile_id in tiles:
+                                if not tile_id.isdigit(): continue
+                                prov = map_screen.id_to_province.get(int(tile_id))
+                                if prov:
+                                    if must_control and prov.get("owner") != nation_name:
+                                        continue
+                                    edit_province_ownership.conquer_province(map_screen, prov, a_target)
+                        continue
+
+                    if a_type == "Spawn Unit":
+                        target_list = [t.strip() for t in str(raw_targets).split(",") if t.strip()]
+                        unit_type = act.get("unit_type", "Infantry")
+                        tiles = [t.strip() for t in str(act.get("message", "")).split(",") if t.strip()]
+                        must_control = act.get("ai_generate", False)
+                        for a_target in target_list:
+                            if a_target == "None": continue
+                            for tile_id in tiles:
+                                if not tile_id.isdigit(): continue
+                                prov = map_screen.id_to_province.get(int(tile_id))
+                                if prov:
+                                    if must_control and prov.get("owner") != nation_name:
+                                        continue
+                                    new_unit = queries.create_unit_dict(unit_type, a_target, queries.get_unit_library())
+                                    prov.setdefault("units", []).append(new_unit)
+                        continue
                     
                     # Supports comma-separated targets for simultaneous multi-country actions
                     target_list = [t.strip() for t in str(raw_targets).split(",") if t.strip()]

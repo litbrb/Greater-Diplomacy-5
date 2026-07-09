@@ -66,6 +66,8 @@ def open_scripted_events_editor(self):
 - Revoke All Claims: Removes ALL claims held by the target nation
 - Edit Name / Leader / Title: Changes cosmetic names for the event owner
 - Edit Color / Flag / Portrait: Modifies cosmetic visual aspects
+- Give Territory: Transfers the specified Province IDs (comma-separated) to the target nation. Check 'Must Control' if they must currently control the tiles to transfer them.
+- Spawn Unit: Spawns the specified unit type for the target nation on the specified Province IDs (comma-separated). Check 'Must Control' if they must currently control the tiles to spawn the unit on them.
 
 The AI Msg Checkbox means that you can allow the ai to generate custom text for that message
 It will fallback to whatever you manually entered if the llm ai is turned off or otherwise fails"""
@@ -150,6 +152,10 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     act_strs.append(f"Revoke Claims on Provs: '{a.get('message')}'")
                 elif a_type == "Revoke All Claims":
                     act_strs.append(f"Revoke All Claims for '{a.get('target')}'")
+                elif a_type == "Give Territory":
+                    act_strs.append(f"Give Territory to '{a.get('target')}'")
+                elif a_type == "Spawn Unit":
+                    act_strs.append(f"Spawn {a.get('unit_type', 'Unit')} for '{a.get('target')}'")
                 else:
                     act_strs.append(f"{a_type} '{a.get('target')}'")
                     
@@ -417,14 +423,19 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             target_var = tk.StringVar(value=a_data.get("target", "None"))
             msg_var = tk.StringVar(value=a_data.get("message", ""))
             ai_var = tk.BooleanVar(value=a_data.get("ai_generate", False))
+            unit_type_var = tk.StringVar(value=a_data.get("unit_type", "Infantry"))
             
             edit_options = ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]
-            all_options = ["Declare War", "Join Faction", "Create Faction", "Invite to Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims"] + edit_options
+            all_options = ["Declare War", "Join Faction", "Create Faction", "Invite to Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims", "Give Territory", "Spawn Unit"] + edit_options
             
             type_cb = ttk.Combobox(row_frame, textvariable=type_var, values=all_options, width=18, state="readonly")
             type_cb.pack(side="left", padx=5)
             
             target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
+            
+            unit_types = ["Militia", "Infantry", "Cavalry", "Motorized Infantry", "Mechanized Infantry", "WW1 Armored Car", "WW1 Tank", "Light Tank", "Medium Tank", "Heavy Tank", "Main Battle Tank", "Destroyer", "Cruiser", "Battleship", "Dreadnought", "Aircraft Carrier", "Submarine"]
+            unit_type_cb = ttk.Combobox(row_frame, textvariable=unit_type_var, values=unit_types, width=15, state="readonly")
+            
             msg_ent = tk.Entry(row_frame, textvariable=msg_var, width=20)
             ai_cb = tk.Checkbutton(row_frame, text="AI Msg", variable=ai_var)
             
@@ -456,6 +467,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 "frame": row_frame,
                 "type_var": type_var,
                 "target_var": target_var,
+                "unit_type_var": unit_type_var,
                 "msg_var": msg_var,
                 "ai_var": ai_var
             }
@@ -465,6 +477,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 
                 # Unpack everything first to clear the slate
                 target_cb.pack_forget()
+                unit_type_cb.pack_forget()
                 msg_ent.pack_forget()
                 ai_cb.pack_forget()
                 pick_color_btn.pack_forget()
@@ -521,9 +534,21 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     msg_ent.pack(side="left", padx=5)
                 elif t == "Revoke All Claims":
                     target_cb.pack(side="left", padx=5)
+                elif t == "Give Territory":
+                    target_cb.pack(side="left", padx=5)
+                    msg_ent.pack(side="left", padx=5)
+                    ai_cb.config(text="Must Control")
+                    ai_cb.pack(side="left", padx=5)
+                elif t == "Spawn Unit":
+                    target_cb.pack(side="left", padx=5)
+                    unit_type_cb.pack(side="left", padx=5)
+                    msg_ent.pack(side="left", padx=5)
+                    ai_cb.config(text="Must Control")
+                    ai_cb.pack(side="left", padx=5)
                 else:
                     target_cb.pack(side="left", padx=5)
                     msg_ent.pack(side="left", padx=5)
+                    ai_cb.config(text="AI Msg")
                     ai_cb.pack(side="left", padx=5)
                     
             type_var.trace_add("write", update_act_row)
@@ -556,6 +581,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 final_acts.append({
                     "type": ro["type_var"].get(),
                     "target": ro["target_var"].get(),
+                    "unit_type": ro.get("unit_type_var").get() if "unit_type_var" in ro else "Infantry",
                     "message": ro["msg_var"].get(),
                     "ai_generate": ro["ai_var"].get()
                 })

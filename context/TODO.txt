@@ -1,7 +1,9 @@
 Immediate concerns:
 - add in the ability to transfer territory for scripted events
-- add in global scripted events
+- this should appear as an action named give territory, with a dropdown for the country to give territory to and an input box to the right where you can specify the province id's that should be transferred, and a checkbox further to the right that asks if this country has to control that territory for it to be transferred (so for example if it says to transfer territories 1 2 3 4 5 but they only control 3 4 5 and that option is checked then only transfer 3 4 and 5)
 - add in the ability to spawn troops belonging to a certain country on certain tiles for scripted events
+- this should appear as an action named spawn unit, with a dropdown for the country that will own this unit, another dropdown to the right to specify the unit type, an input box to the right to specify on what tiles the unit should spawn on (if 2 tiles are specified spawn them on those 2 tiles) and a checkbox further to the right that asks if this country has to control that territory for the unit to spawn (so for example if it says to spawn troops on territories 1 2 3 4 5 but they only control 3 4 5 and that option is checked then only spawn on 3 4 and 5)
+- add in global scripted events
 
 Comprehension:
 - what is all the data associated with a country?

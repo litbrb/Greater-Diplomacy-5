@@ -13,10 +13,7 @@ def prepare_turn(self):
     ai_disabled_raw = self.scenario_settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)
     ai_disabled = str(ai_disabled_raw).lower() == "true"
     
-    # --- Process Scripted Events ---
-    print("[SYSTEM] Running Scripted Events...")
-    ai_diplomacy.process_scripted_events(self)
-    
+
     if not ai_disabled:
         # --- TACTICAL HIDE ---
         # Mask the player unit so the AI handler doesn't touch it during ANY phase
@@ -57,6 +54,12 @@ def prepare_turn(self):
         self.proactive_tasks_completed = 0
         self.proactive_llm_tasks_total = 0
         self.proactive_llm_tasks_completed = 0
+        
+    # --- Process Scripted Events ---
+    # Moved here so AI can't immediately issue orders to units spawned by events this turn
+    self.loading_status_text = "Running Scripted Events..."
+    print("[SYSTEM] Running Scripted Events...")
+    ai_diplomacy.process_scripted_events(self)
     
     # MOVED: Diplomacy is now processed AFTER AI movement generation.
     self.loading_status_text = "Processing Pending Diplomacy..."

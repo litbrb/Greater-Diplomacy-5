@@ -433,7 +433,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             
             target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
             
-            unit_types = ["Militia", "Infantry", "Cavalry", "Motorized Infantry", "Mechanized Infantry", "WW1 Armored Car", "WW1 Tank", "Light Tank", "Medium Tank", "Heavy Tank", "Main Battle Tank", "Destroyer", "Cruiser", "Battleship", "Dreadnought", "Aircraft Carrier", "Submarine"]
+            unit_types = list(queries.get_unit_library().keys())
             unit_type_cb = ttk.Combobox(row_frame, textvariable=unit_type_var, values=unit_types, width=15, state="readonly")
             
             msg_ent = tk.Entry(row_frame, textvariable=msg_var, width=20)

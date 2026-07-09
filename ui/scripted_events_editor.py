@@ -423,7 +423,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             target_var = tk.StringVar(value=a_data.get("target", "None"))
             msg_var = tk.StringVar(value=a_data.get("message", ""))
             ai_var = tk.BooleanVar(value=a_data.get("ai_generate", False))
-            unit_type_var = tk.StringVar(value=a_data.get("unit_type", "Infantry"))
+            unit_type_var = tk.StringVar(value=a_data.get("unit_type", "Infantry Type 1910"))
             
             edit_options = ["Edit Name", "Edit Leader Name", "Edit Leader Title", "Edit Color", "Edit Flag", "Edit Portrait"]
             all_options = ["Declare War", "Join Faction", "Create Faction", "Invite to Faction", "Accept Proposal", "Reject Proposal", "Send Ceasefire", "Send Custom Message", "Queue Claims", "Revoke Claims", "Revoke All Claims", "Give Territory", "Spawn Unit"] + edit_options
@@ -434,7 +434,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
             
             unit_types = list(queries.get_unit_library().keys())
-            unit_type_cb = ttk.Combobox(row_frame, textvariable=unit_type_var, values=unit_types, width=15, state="readonly")
+            unit_type_cb = ttk.Combobox(row_frame, textvariable=unit_type_var, values=unit_types, width=25, state="readonly")
             
             msg_ent = tk.Entry(row_frame, textvariable=msg_var, width=20)
             ai_cb = tk.Checkbutton(row_frame, text="AI Msg", variable=ai_var)
@@ -581,7 +581,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 final_acts.append({
                     "type": ro["type_var"].get(),
                     "target": ro["target_var"].get(),
-                    "unit_type": ro.get("unit_type_var").get() if "unit_type_var" in ro else "Infantry",
+                    "unit_type": ro.get("unit_type_var").get() if "unit_type_var" in ro else "Infantry Type 1910",
                     "message": ro["msg_var"].get(),
                     "ai_generate": ro["ai_var"].get()
                 })

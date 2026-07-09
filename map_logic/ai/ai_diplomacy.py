@@ -771,7 +771,7 @@ def process_scripted_events(map_screen):
 
                     if a_type == "Spawn Unit":
                         target_list = [t.strip() for t in str(raw_targets).split(",") if t.strip()]
-                        unit_type = act.get("unit_type", "Infantry")
+                        unit_type = act.get("unit_type", "Infantry Type 1910")
                         tiles = [t.strip() for t in str(act.get("message", "")).split(",") if t.strip()]
                         must_control = act.get("ai_generate", False)
                         for a_target in target_list:

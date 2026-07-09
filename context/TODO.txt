@@ -1,4 +1,5 @@
 Immediate concerns:
+- allow for the credits tab to show more than just 1 person for contributors
 
 Comprehension:
 - what is all the data associated with a country?

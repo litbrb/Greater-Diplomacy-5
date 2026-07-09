@@ -434,7 +434,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             target_cb = ttk.Combobox(row_frame, textvariable=target_var, values=["None"] + sorted(active_countries), width=18)
             
             unit_types = list(queries.get_unit_library().keys())
-            unit_type_cb = ttk.Combobox(row_frame, textvariable=unit_type_var, values=unit_types, width=25, state="readonly")
+            unit_type_cb = ttk.Combobox(row_frame, textvariable=unit_type_var, values=unit_types, width=30, state="readonly")
             
             msg_ent = tk.Entry(row_frame, textvariable=msg_var, width=20)
             ai_cb = tk.Checkbutton(row_frame, text="AI Msg", variable=ai_var)

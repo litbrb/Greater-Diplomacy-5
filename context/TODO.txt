@@ -1,4 +1,7 @@
 Immediate concerns:
+- add in the ability to transfer territory for scripted events
+- add in global scripted events
+- add in the ability to spawn troops belonging to a certain country on certain tiles for scripted events
 
 Comprehension:
 - what is all the data associated with a country?

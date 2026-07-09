@@ -14,7 +14,7 @@ def open_scripted_events_editor(self):
         self.show_feedback("No active countries on map!")
         return
 
-    if "script_variables" not in self.scenario_settings:
+    if not hasattr(self, 'script_variables'):
         self.script_variables = []
 
     root, close_menu = queries.create_managed_tk_window(self, "Scripted Events Editor", "650x550")

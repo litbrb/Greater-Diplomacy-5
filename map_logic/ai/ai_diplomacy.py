@@ -625,7 +625,7 @@ def process_scripted_events(map_screen):
                     var_name = cond.get("variable", "")
                     var_type = "string"
                     var_val = "0"
-                    for v in map_screen.scenario_settings.get("script_variables", []):
+                    for v in getattr(map_screen, "script_variables", []):
                         if v["name"] == var_name:
                             var_type = v["type"]
                             var_val = v["value"]
@@ -829,7 +829,7 @@ def process_scripted_events(map_screen):
                         op = act.get("unit_type", "Set")
                         msg_val = act.get("message", "0")
                         
-                        for v in map_screen.scenario_settings.get("script_variables", []):
+                        for v in getattr(map_screen, "script_variables", []):
                             if v["name"] == var_name:
                                 var_type = v["type"]
                                 if var_type in ["int", "double"]:

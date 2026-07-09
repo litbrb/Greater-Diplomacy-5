@@ -1160,6 +1160,7 @@ def build_save_dict(map_screen):
         "active_players": getattr(map_screen, 'active_players', []),
         "current_player_index": getattr(map_screen, 'current_player_index', 0),
         "scenario_settings": getattr(map_screen, 'scenario_settings', {}),
+        "script_variables": getattr(map_screen, 'script_variables', []),
         "default_research": getattr(map_screen, 'default_research', None),
         "nation_data": map_screen.nation_data,
         "provinces": {}

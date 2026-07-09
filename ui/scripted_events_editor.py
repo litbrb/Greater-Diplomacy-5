@@ -15,7 +15,7 @@ def open_scripted_events_editor(self):
         return
 
     if "script_variables" not in self.scenario_settings:
-        self.scenario_settings["script_variables"] = []
+        self.script_variables = []
 
     root, close_menu = queries.create_managed_tk_window(self, "Scripted Events Editor", "650x550")
 
@@ -320,11 +320,11 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 ctype = type_var.get()
                 var_name_cb.pack_forget()
                 if ctype == "Variable":
-                    var_name_cb.config(values=[v["name"] for v in self.scenario_settings.get("script_variables", [])])
+                    var_name_cb.config(values=[v["name"] for v in self.script_variables])
                     var_name_cb.pack(side="left", padx=2, before=op_cb)
                     
                     var_type = "string"
-                    for v in self.scenario_settings.get("script_variables", []):
+                    for v in self.script_variables:
                         if v["name"] == var_name_var.get():
                             var_type = v["type"]
                             break
@@ -517,11 +517,11 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                 preview_lbl.pack_forget()
 
                 if t == "Set Variable":
-                    target_cb.config(values=[v["name"] for v in self.scenario_settings.get("script_variables", [])])
+                    target_cb.config(values=[v["name"] for v in self.script_variables])
                     target_cb.pack(side="left", padx=5)
                     
                     var_type = "string"
-                    for v in self.scenario_settings.get("script_variables", []):
+                    for v in self.script_variables:
                         if v["name"] == target_var.get():
                             var_type = v["type"]
                             break
@@ -732,7 +732,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
         
         def refresh_vlist():
             v_list.delete(0, tk.END)
-            for v in self.scenario_settings.get("script_variables", []):
+            for v in self.script_variables:
                 v_list.insert(tk.END, f"{v['name']} ({v['type']}) = {v['value']}")
                 
         refresh_vlist()
@@ -749,7 +749,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
         def on_vselect(event):
             sel = v_list.curselection()
             if not sel: return
-            v = self.scenario_settings["script_variables"][sel[0]]
+            v = self.script_variables[sel[0]]
             name_var.set(v["name"])
             type_var.set(v["type"])
             val_var.set(v["value"])
@@ -774,11 +774,11 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
         def add_var():
             n = name_var.get().strip()
             if not n: return
-            for v in self.scenario_settings.get("script_variables", []):
+            for v in self.script_variables:
                 if v["name"] == n:
                     messagebox.showerror("Error", "Variable name must be unique.")
                     return
-            self.scenario_settings.setdefault("script_variables", []).append({
+            self.script_variables.append({
                 "name": n, "type": type_var.get(), "value": val_var.get()
             })
             refresh_vlist()
@@ -787,13 +787,13 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             sel = v_list.curselection()
             if not sel: return
             idx = sel[0]
-            old_v = self.scenario_settings["script_variables"][idx]
+            old_v = self.script_variables[idx]
             new_n = name_var.get().strip()
             new_t = type_var.get()
             
             if not new_n: return
             if old_v["name"] != new_n:
-                for i, v in enumerate(self.scenario_settings["script_variables"]):
+                for i, v in enumerate(self.script_variables):
                     if v["name"] == new_n and i != idx:
                         messagebox.showerror("Error", "Variable name must be unique.")
                         return
@@ -839,7 +839,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                         if a.get("type") == "Set Variable" and a.get("target") == old_v["name"]:
                             a["target"] = new_n
 
-            self.scenario_settings["script_variables"][idx] = {"name": new_n, "type": new_t, "value": val_var.get()}
+            self.script_variables[idx] = {"name": new_n, "type": new_t, "value": val_var.get()}
             refresh_vlist()
             refresh_events_list()
 
@@ -847,7 +847,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             sel = v_list.curselection()
             if not sel: return
             idx = sel[0]
-            v = self.scenario_settings["script_variables"][idx]
+            v = self.script_variables[idx]
             usage = get_usage(v["name"])
             if usage:
                 nations = get_nations_used(usage)
@@ -857,7 +857,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
                     if ev in self.nation_data[nat]["scripted_events"]:
                         self.nation_data[nat]["scripted_events"].remove(ev)
                         
-            self.scenario_settings["script_variables"].pop(idx)
+            self.script_variables.pop(idx)
             refresh_vlist()
             refresh_events_list()
             
@@ -866,7 +866,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             if not sel: return
             idx = sel[0]
             if idx > 0:
-                vs = self.scenario_settings["script_variables"]
+                vs = self.script_variables
                 vs.insert(idx - 1, vs.pop(idx))
                 refresh_vlist()
                 v_list.selection_set(idx - 1)
@@ -875,7 +875,7 @@ It will fallback to whatever you manually entered if the llm ai is turned off or
             sel = v_list.curselection()
             if not sel: return
             idx = sel[0]
-            vs = self.scenario_settings["script_variables"]
+            vs = self.script_variables
             if idx < len(vs) - 1:
                 vs.insert(idx + 1, vs.pop(idx))
                 refresh_vlist()

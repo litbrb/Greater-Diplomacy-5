@@ -1,5 +1,7 @@
 Immediate concerns:
 - allow for the credits tab to show more than just 1 person for contributors
+- newspaper events???
+- set newspaper events in seperate screen and then fire them from country actions???
 
 Comprehension:
 - what is all the data associated with a country?

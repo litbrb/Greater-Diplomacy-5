@@ -903,3 +903,153 @@ def open_edited_countries(self):
     tree.pack(fill="both", expand=True)
     
     queries.run_tk_loop(self, root)
+
+
+def open_clear_menu(self):
+    """Opens a Tkinter window to clear items from the map based on various criteria."""
+    root, close_menu = queries.create_managed_tk_window(self, "Clear Map Items", "450x350")
+    
+    options = [
+        "all units",
+        "all buildings",
+        "all resources",
+        "all units from (x) country",
+        "all buildings on (x) countries territory",
+        "all resources on (x) countries territory",
+        "all (x) units",
+        "all (x) resources",
+        "all (x) units from country (x)",
+        "all (x) resources on (x) countries territory"
+    ]
+    
+    tk.Label(root, text="Select what to clear:", font=("Arial", 12, "bold")).pack(pady=5)
+    
+    option_var = tk.StringVar(value=options[0])
+    option_menu = ttk.Combobox(root, textvariable=option_var, values=options, state="readonly", width=45)
+    option_menu.pack(pady=5)
+    
+    country_var = tk.StringVar()
+    unit_type_var = tk.StringVar()
+    resource_type_var = tk.StringVar()
+    
+    param_frame = tk.Frame(root)
+    param_frame.pack(fill="x", padx=20, pady=10)
+    
+    country_lbl = tk.Label(param_frame, text="Country:")
+    
+    existing_owners = {p.get("owner") for p in self.map_data.values()}
+    active_countries = sorted([n for n in existing_owners if n and n not in ["Unclaimed", "The Rot"]])
+    
+    country_cb = ttk.Combobox(param_frame, textvariable=country_var, values=active_countries, state="readonly", width=25)
+    
+    unit_lbl = tk.Label(param_frame, text="Unit Type:")
+    
+    existing_unit_types = set()
+    for prov in self.map_data.values():
+        for unit in prov.get("units", []):
+            if "type" in unit:
+                existing_unit_types.add(unit["type"])
+    unit_types = sorted(list(existing_unit_types))
+    
+    unit_cb = ttk.Combobox(param_frame, textvariable=unit_type_var, values=unit_types, state="readonly", width=25)
+    
+    resource_lbl = tk.Label(param_frame, text="Resource:")
+    resource_types = ["Iron", "Coal", "Oil"]
+    resource_cb = ttk.Combobox(param_frame, textvariable=resource_type_var, values=resource_types, state="readonly", width=25)
+    
+    def update_visibility(*args):
+        opt = option_var.get()
+        
+        country_lbl.grid_forget()
+        country_cb.grid_forget()
+        unit_lbl.grid_forget()
+        unit_cb.grid_forget()
+        resource_lbl.grid_forget()
+        resource_cb.grid_forget()
+        
+        row = 0
+        if "country" in opt or "countries" in opt:
+            country_lbl.grid(row=row, column=0, sticky="e", pady=2, padx=5)
+            country_cb.grid(row=row, column=1, sticky="w", pady=2)
+            if not country_var.get() and active_countries:
+                country_cb.set(active_countries[0])
+            row += 1
+            
+        if "unit" in opt and "(x)" in opt:
+            if opt in ["all (x) units", "all (x) units from country (x)"]:
+                unit_lbl.grid(row=row, column=0, sticky="e", pady=2, padx=5)
+                unit_cb.grid(row=row, column=1, sticky="w", pady=2)
+                if not unit_type_var.get() and unit_types:
+                    unit_cb.set(unit_types[0])
+                row += 1
+                
+        if "resource" in opt and "(x)" in opt:
+            if opt in ["all (x) resources", "all (x) resources on (x) countries territory"]:
+                resource_lbl.grid(row=row, column=0, sticky="e", pady=2, padx=5)
+                resource_cb.grid(row=row, column=1, sticky="w", pady=2)
+                if not resource_type_var.get() and resource_types:
+                    resource_cb.set(resource_types[0])
+                row += 1
+
+    option_var.trace_add("write", update_visibility)
+    update_visibility()
+    
+    def confirm_clear():
+        opt = option_var.get()
+        c_val = country_var.get()
+        u_val = unit_type_var.get()
+        r_val = resource_type_var.get()
+        
+        if ("country" in opt or "countries" in opt) and not c_val:
+            messagebox.showerror("Error", "Please select a country.")
+            return
+        if opt in ["all (x) units", "all (x) units from country (x)"] and not u_val:
+            messagebox.showerror("Error", "Please select a unit type.")
+            return
+        if opt in ["all (x) resources", "all (x) resources on (x) countries territory"] and not r_val:
+            messagebox.showerror("Error", "Please select a resource type.")
+            return
+            
+        msg = f"Are you sure you want to clear:\n{opt}"
+        if c_val and ("country" in opt or "countries" in opt): msg += f"\nCountry: {c_val}"
+        if u_val and opt in ["all (x) units", "all (x) units from country (x)"]: msg += f"\nUnit: {u_val}"
+        if r_val and opt in ["all (x) resources", "all (x) resources on (x) countries territory"]: msg += f"\nResource: {r_val}"
+            
+        if not messagebox.askyesno("Confirm Clear", msg):
+            return
+            
+        for prov_id, prov_data in self.map_data.items():
+            owner = prov_data.get("owner", "Unclaimed")
+            
+            if "countries territory" in opt and owner != c_val:
+                continue
+                
+            if "units" in opt:
+                if opt in ["all units", "all units from (x) country"]:
+                    if opt == "all units from (x) country":
+                        prov_data["units"] = [u for u in prov_data.get("units", []) if u.get("owner") != c_val]
+                    else:
+                        prov_data["units"] = []
+                elif opt == "all (x) units":
+                    prov_data["units"] = [u for u in prov_data.get("units", []) if u.get("type") != u_val]
+                elif opt == "all (x) units from country (x)":
+                    prov_data["units"] = [u for u in prov_data.get("units", []) if not (u.get("type") == u_val and u.get("owner") == c_val)]
+                    
+            if "buildings" in opt:
+                prov_data["buildings"] = []
+                
+            if "resources" in opt:
+                if opt in ["all resources", "all resources on (x) countries territory"]:
+                    if "resource" in prov_data:
+                        del prov_data["resource"]
+                elif opt in ["all (x) resources", "all (x) resources on (x) countries territory"]:
+                    if prov_data.get("resource", {}).get("type") == r_val:
+                        del prov_data["resource"]
+                        
+        self.refresh_all_maps()
+        self.show_feedback("Map cleared according to criteria.")
+        close_menu()
+
+    tk.Button(root, text="Confirm Clear", command=confirm_clear, bg="#f44336", fg="white", font=("Arial", 11, "bold")).pack(side="bottom", fill="x", pady=20, padx=20)
+    
+    queries.run_tk_loop(self, root)

@@ -295,8 +295,8 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         sender_type = nation_data.get(sender_nation, {}).get("puppet_type", "")
         my_type = ai_stats.get("puppet_type", "")
         
-        is_sender_integrated = bool(sender_master and sender_type == c.PUPPET_TYPE_INTEGRATED)
-        is_my_integrated = bool(my_master and my_type == c.PUPPET_TYPE_INTEGRATED)
+        is_sender_integrated = bool(sender_master and sender_type == c.PUPPET_TYPE_INTEGRATED and sender_master != ai_nation)
+        is_my_integrated = bool(my_master and my_type == c.PUPPET_TYPE_INTEGRATED and my_master != sender_nation)
         
         # We are the AI (Receiving). Therefore we "Take" what they "Give", and we "Give" what they "Take".
         ai_takes_mats = params.get("give_materials", 0)

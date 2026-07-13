@@ -350,8 +350,11 @@ class Messages_Screen(GameState):
             my_type = p_data.get("puppet_type", "")
             target_type = self.map_screen.nation_data.get(self.selected_recipient, {}).get("puppet_type", "")
 
-            is_my_integrated = is_puppet and my_type == c.PUPPET_TYPE_INTEGRATED
-            is_target_integrated = target_is_puppet and target_type == c.PUPPET_TYPE_INTEGRATED
+            my_master = p_data.get("master", "")
+            target_master = self.map_screen.nation_data.get(self.selected_recipient, {}).get("master", "")
+
+            is_my_integrated = is_puppet and my_type == c.PUPPET_TYPE_INTEGRATED and my_master != self.selected_recipient
+            is_target_integrated = target_is_puppet and target_type == c.PUPPET_TYPE_INTEGRATED and target_master != self.map_screen.player_country
 
             if is_my_integrated:
                 btn_trade = Button(btn_x - 130, btn_y, "small", "grey", "Integrated Can't Trade", lambda: None)

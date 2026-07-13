@@ -103,12 +103,12 @@ def process_ai_economy_decisions(map_screen):
         # --- DYNAMIC AI CONSCRIPTION LOGIC ---
         # If AI has excess manpower but needs materials, convert manpower to materials
         # 1.0 = keep all, 0.0 = convert all
-        if force_tank and data.get("materials", 0) < tank_cost_mat:
-            data["conscription_slider"] = 0.0 # Emergency: Convert 100% to save for tanks
+        if force_tank and data.get("materials", 0) < tank_cost_mat and data.get("manpower", 0) > c.AI_CONSCRIPTION_MIN_MANPOWER:
+            data["conscription_slider"] = 0.5 # Convert 50% to save for tanks
         elif ratio_mat > target_mat and ratio_man < target_man and data.get("manpower", 0) > c.AI_CONSCRIPTION_MIN_MANPOWER:
             data["conscription_slider"] = 0.5 # Convert 50%
         elif (data.get("manpower", 0) > c.AI_CONSCRIPTION_PANIC_MANPOWER and data.get("materials", 0) < c.AI_CONSCRIPTION_PANIC_MATERIALS) or data.get("manpower", 0) > c.AI_CONSCRIPTION_EMERGENCY_MANPOWER:
-            data["conscription_slider"] = 0.0 # Emergency: Convert 100%
+            data["conscription_slider"] = 0.25 # Emergency: Convert 75%
         else:
             data["conscription_slider"] = 1.0 # Normal (keep 100%)
 

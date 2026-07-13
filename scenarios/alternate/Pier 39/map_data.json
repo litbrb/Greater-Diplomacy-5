@@ -662,7 +662,7 @@
             20,
             24
         ],
-        "owner": "Pier 39 Marina Dock 1",
+        "owner": "Pier 39 Marina Dock 5",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -670,7 +670,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 1"
+            "Pier 39 Marina Dock 5"
         ],
         "json_key": "(22, 0, 0)",
         "map_color": [
@@ -1022,7 +1022,7 @@
             22,
             30
         ],
-        "owner": "Pier 39 Marina Dock 1",
+        "owner": "Pier 39 Marina Dock 5",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -1032,7 +1032,7 @@
         ],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 1"
+            "Pier 39 Marina Dock 5"
         ],
         "json_key": "(33, 0, 0)",
         "map_color": [
@@ -2858,7 +2858,7 @@
             78,
             47
         ],
-        "owner": "Pier 39 Marina Dock 2",
+        "owner": "Pier 39 Marina Dock 4",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -2866,7 +2866,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 2"
+            "Pier 39 Marina Dock 4"
         ],
         "json_key": "(88, 0, 0)",
         "map_color": [
@@ -3218,7 +3218,7 @@
             58,
             91
         ],
-        "owner": "Pier 39 Marina Dock 2",
+        "owner": "Pier 39 Marina Dock 4",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -3226,7 +3226,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 2"
+            "Pier 39 Marina Dock 4"
         ],
         "json_key": "(99, 0, 0)",
         "map_color": [
@@ -3284,7 +3284,7 @@
             112,
             58
         ],
-        "owner": "Pier 39 Marina Dock 2",
+        "owner": "Pier 39 Marina Dock 4",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -3294,7 +3294,7 @@
         ],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 2"
+            "Pier 39 Marina Dock 4"
         ],
         "json_key": "(101, 0, 0)",
         "map_color": [
@@ -3556,7 +3556,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 7"
         ],
         "json_key": "(109, 0, 0)",
         "map_color": [
@@ -3646,7 +3646,7 @@
             99,
             101
         ],
-        "owner": "Pier 39 Marina Dock 2",
+        "owner": "Pier 39 Marina Dock 4",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -3654,7 +3654,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 2"
+            "Pier 39 Marina Dock 4"
         ],
         "json_key": "(112, 0, 0)",
         "map_color": [
@@ -3719,7 +3719,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 7"
         ],
         "json_key": "(114, 0, 0)",
         "map_color": [
@@ -4428,7 +4428,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 8"
         ],
         "json_key": "(135, 0, 0)",
         "map_color": [
@@ -5569,7 +5569,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 8"
         ],
         "json_key": "(170, 0, 0)",
         "map_color": [
@@ -5935,7 +5935,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 8"
         ],
         "json_key": "(181, 0, 0)",
         "map_color": [
@@ -7078,7 +7078,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 9"
         ],
         "json_key": "(216, 0, 0)",
         "map_color": [
@@ -7693,7 +7693,7 @@
             202,
             236
         ],
-        "owner": "Pier 39 Marina Dock 4",
+        "owner": "Pier 39 Marina Dock 2",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -7701,7 +7701,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 4"
+            "Pier 39 Marina Dock 2"
         ],
         "json_key": "(235, 0, 0)",
         "map_color": [
@@ -7726,7 +7726,7 @@
             246,
             249
         ],
-        "owner": "Pier 39 Marina Dock 4",
+        "owner": "Pier 39 Marina Dock 2",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -7734,7 +7734,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 4"
+            "Pier 39 Marina Dock 2"
         ],
         "json_key": "(236, 0, 0)",
         "map_color": [
@@ -7964,7 +7964,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 9"
         ],
         "json_key": "(243, 0, 0)",
         "map_color": [
@@ -8147,7 +8147,7 @@
             214,
             246
         ],
-        "owner": "Pier 39 Marina Dock 4",
+        "owner": "Pier 39 Marina Dock 2",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -8155,7 +8155,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 4"
+            "Pier 39 Marina Dock 2"
         ],
         "json_key": "(249, 0, 0)",
         "map_color": [
@@ -8248,7 +8248,7 @@
             265,
             208
         ],
-        "owner": "Pier 39 Marina Dock 4",
+        "owner": "Pier 39 Marina Dock 2",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -8258,7 +8258,7 @@
         ],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 4"
+            "Pier 39 Marina Dock 2"
         ],
         "json_key": "(252, 0, 0)",
         "map_color": [
@@ -8613,7 +8613,7 @@
             260,
             249
         ],
-        "owner": "Pier 39 Marina Dock 4",
+        "owner": "Pier 39 Marina Dock 2",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -8621,7 +8621,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 4"
+            "Pier 39 Marina Dock 2"
         ],
         "json_key": "(7, 1, 0)",
         "map_color": [
@@ -9084,7 +9084,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 9"
         ],
         "json_key": "(21, 1, 0)",
         "map_color": [
@@ -9404,7 +9404,7 @@
             315,
             311
         ],
-        "owner": "Pier 39 Marina Dock 5",
+        "owner": "Pier 39 Marina Dock 1",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -9412,7 +9412,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 5"
+            "Pier 39 Marina Dock 1"
         ],
         "json_key": "(31, 1, 0)",
         "map_color": [
@@ -10002,7 +10002,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 9"
         ],
         "json_key": "(49, 1, 0)",
         "map_color": [
@@ -10182,7 +10182,7 @@
             315,
             319
         ],
-        "owner": "Pier 39 Marina Dock 5",
+        "owner": "Pier 39 Marina Dock 1",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -10190,7 +10190,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 5"
+            "Pier 39 Marina Dock 1"
         ],
         "json_key": "(55, 1, 0)",
         "map_color": [
@@ -10474,7 +10474,7 @@
             311,
             319
         ],
-        "owner": "Pier 39 Marina Dock 5",
+        "owner": "Pier 39 Marina Dock 1",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -10482,7 +10482,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 5"
+            "Pier 39 Marina Dock 1"
         ],
         "json_key": "(64, 1, 0)",
         "map_color": [
@@ -10818,7 +10818,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Sidewalk 4"
+            "Sidewalk 9"
         ],
         "json_key": "(74, 1, 0)",
         "map_color": [
@@ -10842,7 +10842,7 @@
             335,
             337
         ],
-        "owner": "Pier 39 Marina Dock 5",
+        "owner": "Pier 39 Marina Dock 1",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -10852,7 +10852,7 @@
         ],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 5"
+            "Pier 39 Marina Dock 1"
         ],
         "json_key": "(75, 1, 0)",
         "map_color": [
@@ -11043,7 +11043,7 @@
             331,
             335
         ],
-        "owner": "Pier 39 Marina Dock 5",
+        "owner": "Pier 39 Marina Dock 1",
         "units": [],
         "building_queue": [],
         "unit_queue": [],
@@ -11051,7 +11051,7 @@
         "buildings": [],
         "resources": {},
         "cores": [
-            "Pier 39 Marina Dock 5"
+            "Pier 39 Marina Dock 1"
         ],
         "json_key": "(81, 1, 0)",
         "map_color": [

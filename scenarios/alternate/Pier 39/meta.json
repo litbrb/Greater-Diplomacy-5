@@ -30349,10 +30349,10 @@
             },
             "puppets": [
                 "Pier 39 Marina Dock 1",
+                "Pier 39 Marina Dock 2",
                 "Pier 39 Marina Dock 3",
                 "Pier 39 Marina Dock 4",
-                "Pier 39 Marina Dock 5",
-                "Pier 39 Marina Dock 2"
+                "Pier 39 Marina Dock 5"
             ],
             "faction": "Grand Marina",
             "is_faction_leader": true,
@@ -36684,9 +36684,9 @@
             "buildings": []
         },
         "(22, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 1",
+            "owner": "Pier 39 Marina Dock 5",
             "cores": [
-                "Pier 39 Marina Dock 1"
+                "Pier 39 Marina Dock 5"
             ],
             "is_coastal": true,
             "units": [],
@@ -36825,9 +36825,9 @@
             "buildings": []
         },
         "(33, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 1",
+            "owner": "Pier 39 Marina Dock 5",
             "cores": [
-                "Pier 39 Marina Dock 1"
+                "Pier 39 Marina Dock 5"
             ],
             "is_coastal": true,
             "units": [],
@@ -37560,9 +37560,9 @@
             ]
         },
         "(88, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 2",
+            "owner": "Pier 39 Marina Dock 4",
             "cores": [
-                "Pier 39 Marina Dock 2"
+                "Pier 39 Marina Dock 4"
             ],
             "is_coastal": true,
             "units": [],
@@ -37697,9 +37697,9 @@
             "buildings": []
         },
         "(99, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 2",
+            "owner": "Pier 39 Marina Dock 4",
             "cores": [
-                "Pier 39 Marina Dock 2"
+                "Pier 39 Marina Dock 4"
             ],
             "is_coastal": true,
             "units": [],
@@ -37721,9 +37721,9 @@
             "buildings": []
         },
         "(101, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 2",
+            "owner": "Pier 39 Marina Dock 4",
             "cores": [
-                "Pier 39 Marina Dock 2"
+                "Pier 39 Marina Dock 4"
             ],
             "is_coastal": true,
             "units": [],
@@ -37827,7 +37827,7 @@
         "(109, 0, 0)": {
             "owner": "Sidewalk 7",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 7"
             ],
             "is_coastal": true,
             "units": [],
@@ -37868,9 +37868,9 @@
             ]
         },
         "(112, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 2",
+            "owner": "Pier 39 Marina Dock 4",
             "cores": [
-                "Pier 39 Marina Dock 2"
+                "Pier 39 Marina Dock 4"
             ],
             "is_coastal": true,
             "units": [],
@@ -37896,7 +37896,7 @@
         "(114, 0, 0)": {
             "owner": "Sidewalk 7",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 7"
             ],
             "is_coastal": false,
             "units": [],
@@ -38179,7 +38179,7 @@
         "(135, 0, 0)": {
             "owner": "Sidewalk 8",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 8"
             ],
             "is_coastal": true,
             "units": [],
@@ -38626,7 +38626,7 @@
         "(170, 0, 0)": {
             "owner": "Sidewalk 8",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 8"
             ],
             "is_coastal": true,
             "units": [],
@@ -38769,7 +38769,7 @@
         "(181, 0, 0)": {
             "owner": "Sidewalk 8",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 8"
             ],
             "is_coastal": true,
             "units": [],
@@ -39212,7 +39212,7 @@
         "(216, 0, 0)": {
             "owner": "Sidewalk 9",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 9"
             ],
             "is_coastal": true,
             "units": [],
@@ -39459,9 +39459,9 @@
             "buildings": []
         },
         "(235, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 4",
+            "owner": "Pier 39 Marina Dock 2",
             "cores": [
-                "Pier 39 Marina Dock 4"
+                "Pier 39 Marina Dock 2"
             ],
             "is_coastal": true,
             "units": [],
@@ -39472,9 +39472,9 @@
             "buildings": []
         },
         "(236, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 4",
+            "owner": "Pier 39 Marina Dock 2",
             "cores": [
-                "Pier 39 Marina Dock 4"
+                "Pier 39 Marina Dock 2"
             ],
             "is_coastal": true,
             "units": [],
@@ -39559,7 +39559,7 @@
         "(243, 0, 0)": {
             "owner": "Sidewalk 9",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 9"
             ],
             "is_coastal": true,
             "units": [],
@@ -39631,9 +39631,9 @@
             "buildings": []
         },
         "(249, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 4",
+            "owner": "Pier 39 Marina Dock 2",
             "cores": [
-                "Pier 39 Marina Dock 4"
+                "Pier 39 Marina Dock 2"
             ],
             "is_coastal": true,
             "units": [],
@@ -39672,9 +39672,9 @@
             ]
         },
         "(252, 0, 0)": {
-            "owner": "Pier 39 Marina Dock 4",
+            "owner": "Pier 39 Marina Dock 2",
             "cores": [
-                "Pier 39 Marina Dock 4"
+                "Pier 39 Marina Dock 2"
             ],
             "is_coastal": true,
             "units": [],
@@ -39813,9 +39813,9 @@
             "buildings": []
         },
         "(7, 1, 0)": {
-            "owner": "Pier 39 Marina Dock 4",
+            "owner": "Pier 39 Marina Dock 2",
             "cores": [
-                "Pier 39 Marina Dock 4"
+                "Pier 39 Marina Dock 2"
             ],
             "is_coastal": true,
             "units": [],
@@ -39991,7 +39991,7 @@
         "(21, 1, 0)": {
             "owner": "Sidewalk 9",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 9"
             ],
             "is_coastal": true,
             "units": [],
@@ -40121,9 +40121,9 @@
             "buildings": []
         },
         "(31, 1, 0)": {
-            "owner": "Pier 39 Marina Dock 5",
+            "owner": "Pier 39 Marina Dock 1",
             "cores": [
-                "Pier 39 Marina Dock 5"
+                "Pier 39 Marina Dock 1"
             ],
             "is_coastal": true,
             "units": [],
@@ -40351,7 +40351,7 @@
         "(49, 1, 0)": {
             "owner": "Sidewalk 9",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 9"
             ],
             "is_coastal": true,
             "units": [],
@@ -40421,9 +40421,9 @@
             "buildings": []
         },
         "(55, 1, 0)": {
-            "owner": "Pier 39 Marina Dock 5",
+            "owner": "Pier 39 Marina Dock 1",
             "cores": [
-                "Pier 39 Marina Dock 5"
+                "Pier 39 Marina Dock 1"
             ],
             "is_coastal": true,
             "units": [],
@@ -40538,9 +40538,9 @@
             "buildings": []
         },
         "(64, 1, 0)": {
-            "owner": "Pier 39 Marina Dock 5",
+            "owner": "Pier 39 Marina Dock 1",
             "cores": [
-                "Pier 39 Marina Dock 5"
+                "Pier 39 Marina Dock 1"
             ],
             "is_coastal": true,
             "units": [],
@@ -40672,7 +40672,7 @@
         "(74, 1, 0)": {
             "owner": "Sidewalk 9",
             "cores": [
-                "Sidewalk 4"
+                "Sidewalk 9"
             ],
             "is_coastal": true,
             "units": [],
@@ -40683,9 +40683,9 @@
             "buildings": []
         },
         "(75, 1, 0)": {
-            "owner": "Pier 39 Marina Dock 5",
+            "owner": "Pier 39 Marina Dock 1",
             "cores": [
-                "Pier 39 Marina Dock 5"
+                "Pier 39 Marina Dock 1"
             ],
             "is_coastal": true,
             "units": [],
@@ -40763,9 +40763,9 @@
             "buildings": []
         },
         "(81, 1, 0)": {
-            "owner": "Pier 39 Marina Dock 5",
+            "owner": "Pier 39 Marina Dock 1",
             "cores": [
-                "Pier 39 Marina Dock 5"
+                "Pier 39 Marina Dock 1"
             ],
             "is_coastal": true,
             "units": [],

@@ -2,6 +2,8 @@ Immediate concerns:
 - allow for the credits tab to show more than just 1 person for contributors
 - newspaper events???
 - set newspaper events in seperate screen and then fire them from country actions???
+- in what order are puppets that you control shown when viewed through the puppets screen? could you make it so you can rearrange the order they're displayed in?
+- when viewing claims you're unable to scroll down by clicking the scroll bar, you have you scroll using the mouse wheel, could this be fixed so you can click to scroll in that situation
 
 Comprehension:
 - what is all the data associated with a country?

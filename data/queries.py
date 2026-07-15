@@ -1618,6 +1618,8 @@ def get_active_ai_nations(map_screen):
     living_nations = get_living_nations(map_screen.map_data)
     
     for name, data in map_screen.nation_data.items():
+        if getattr(map_screen, 'multiplayer_protected_countries', None) and name in map_screen.multiplayer_protected_countries:
+            continue
         if name in living_nations and name not in human_players and name not in c.UNPLAYABLE_NATIONS and data.get("is_playable"):
             ai_nations.append(name)
             

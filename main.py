@@ -51,6 +51,10 @@ from screens.map_related_screens.faction import Faction_Screen, Faction_Territor
 from screens.menu_screens.select_base_map import Select_Base_Map
 from screens.menu_screens.random_setup import Random_Setup
 from screens.menu_screens.scenario_settings import Scenario_Settings
+from screens.menu_screens.multiplayer_hub import Multiplayer_Hub
+from screens.menu_screens.multiplayer_host import Multiplayer_Host
+from screens.menu_screens.multiplayer_join import Multiplayer_Join
+from screens.menu_screens.multiplayer_new import Multiplayer_New
 
 pygame.display.set_caption("Greater Diplomacy 5")
 
@@ -223,6 +227,9 @@ class Controller:
         self.ocean_dark_color = loaded_data[23] if len(loaded_data) > 23 else c.DEFAULT_OCEAN_DARK_BLUE
         c.OCEAN_DARK_BLUE = self.ocean_dark_color
 
+        self.multiplayer_saves_dir = loaded_data[24] if len(loaded_data) > 24 else c.MULTIPLAYER_SAVES_DIR
+        c.MULTIPLAYER_SAVES_DIR = self.multiplayer_saves_dir
+
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.sfx_volume
         ui_elements.global_sfx_pitch = self.sfx_pitch
@@ -254,7 +261,11 @@ class Controller:
             "MESSAGES": Messages_Screen(),
             "FACTION": Faction_Screen(),
             "FACTION_TERRITORIES": Faction_Territories_Screen(),
-            "SCENARIO_SETTINGS": Scenario_Settings()
+            "SCENARIO_SETTINGS": Scenario_Settings(),
+            "MULTIPLAYER_HUB": Multiplayer_Hub(),
+            "MULTIPLAYER_HOST": Multiplayer_Host(),
+            "MULTIPLAYER_JOIN": Multiplayer_Join(),
+            "MULTIPLAYER_NEW": Multiplayer_New()
         }
         self.active_state = self.states["MENU"]
 
@@ -294,6 +305,41 @@ class Controller:
         if next_state_name == "MAP":
             if previous_state == self.states["RANDOM_SETUP"]:
                 self.states["MAP"] = Map(is_scenario=True, is_random=True, random_settings=previous_state.random_settings, num_players=self.num_players)
+            
+            elif hasattr(previous_state, 'selected_tournament_path'):
+                path = previous_state.selected_tournament_path
+                key = previous_state.selected_tournament_key
+                
+                from data.io import multiplayer_io
+                success, role, cid, temp_dir, keys_dict, msg = multiplayer_io.load_tournament(path, key)
+                if success:
+                    self.states["MAP"] = Map(load_path=temp_dir, is_scenario=False, force_editor=False, num_players=self.num_players)
+                    if role == "HOST":
+                        self.states["MAP"].multiplayer_host_mode = True
+                        self.states["MAP"].player_country = "Spectator"
+                        self.states["MAP"].multiplayer_master_key = key
+                        self.states["MAP"].multiplayer_keys_dict = keys_dict
+                    elif role == "PLAYER":
+                        self.states["MAP"].multiplayer_player_key = key
+                        multiplayer_io.strip_sensitive_data_for_player(self.states["MAP"], cid)
+                        
+                    import ui.buttons as buttons
+                    buttons.render_buttons(self.states["MAP"])
+                else:
+                    print(f"Failed to load tournament: {msg}")
+                    
+                    # Show popup to user
+                    import tkinter as tk
+                    from tkinter import messagebox
+                    root = tk.Tk()
+                    root.withdraw()
+                    messagebox.showerror("Load Failed", msg)
+                    root.destroy()
+                    
+                    # Abort transition
+                    self.active_state.done = False
+                    self.active_state.next_state = "MULTIPLAYER_HUB"
+                    return
             
             elif hasattr(previous_state, 'selected_save_path'):
                 path = previous_state.selected_save_path

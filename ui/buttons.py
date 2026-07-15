@@ -61,7 +61,21 @@ def render_buttons(self):
     self.btn_ed_scripts = Button(c.LEFT_UI_BAR_X, start_y_val + c.LEFT_UI_BAR_STEP_Y * 10, "left_ui_button", "red", "Scripted Events", lambda: scripted_events_editor.open_scripted_events_editor(self), font_preset="normal")
 
     # Gameplay Buttons
-    self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Next Turn", lambda: turn_manager.advance_time(self))
+    if getattr(self, 'multiplayer_mode', False):
+        def m_export():
+            from data.io.multiplayer_io import export_move_file
+            import os
+            turn = self.time_manager.total_turns if hasattr(self, 'time_manager') else 1
+            cid = getattr(self, 'player_country', 'Unknown')
+            save_name = f"Turn_{turn}_{cid}.gd5move"
+            export_path = os.path.join(c.MULTIPLAYER_SAVES_DIR, save_name)
+            player_key = getattr(self, 'multiplayer_player_key', '')
+            export_move_file(self, export_path, player_key)
+            self.show_feedback(f"Move exported to {export_path}")
+            
+        self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Export Turn", m_export)
+    else:
+        self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Next Turn", lambda: turn_manager.advance_time(self))
     self.btn_skip_ai = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Skip AI", self.toggle_skip_ai, font_preset="normal")
     self.btn_multi_turn = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X * 2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Multi-Turn", self.trigger_multi_turn)
     
@@ -133,6 +147,22 @@ def render_buttons(self):
     self.btn_spec_invite_fac = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 2, "diplomatic", "blue", "Invite to Faction", lambda: spectator_menus.spec_invite_faction(self))
     self.btn_spec_leave_fac = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "orange", "Leave Faction", lambda: spectator_menus.spec_leave_faction(self))
     self.btn_spec_disband_fac = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "red", "Disband Faction", lambda: spectator_menus.spec_disband_faction(self))
+    
+    def host_load_moves():
+        from ui.multiplayer_host_panel import load_multiplayer_moves
+        load_multiplayer_moves(self)
+        
+    def host_export_turn():
+        from ui.multiplayer_host_panel import export_next_turn
+        export_next_turn(self)
+        
+    def host_skip_player():
+        from ui.multiplayer_host_panel import force_skip_player
+        force_skip_player(self)
+        
+    self.btn_spec_mp_load = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 4, "diplomatic", "blue", "Load Moves", host_load_moves)
+    self.btn_spec_mp_export = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 5, "diplomatic", "green", "Export Turn", host_export_turn)
+    self.btn_spec_mp_skip = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 6, "diplomatic", "red", "Skip Player", host_skip_player)
 
     # General Controls
     def start_spectator_action():
@@ -170,6 +200,7 @@ def render_buttons(self):
         self.btn_accept_req, self.btn_reject_req, self.btn_force_war, self.btn_force_peace,
         self.btn_spec_create_fac, self.btn_spec_join_fac, self.btn_spec_invite_fac, self.btn_spec_leave_fac,
         self.btn_spec_disband_fac, self.btn_spectator, self.btn_tactical, self.btn_close_info, self.btn_exit_to_menu,
+        self.btn_spec_mp_load, self.btn_spec_mp_export, self.btn_spec_mp_skip,
         self.slider_camera_tilt
     ])
 
@@ -288,7 +319,11 @@ def update_button_states(map_screen):
 
         # Hide/disable the button if we are thinking
         map_screen.btn_next_turn.visible = not is_sel and not is_thinking
-        map_screen.btn_next_turn.text = "Resolve Turn" if viewing_ai else "Next Turn"
+        if getattr(map_screen, 'multiplayer_mode', False):
+            map_screen.btn_next_turn.text = "Export Turn"
+        else:
+            map_screen.btn_next_turn.text = "Resolve Turn" if viewing_ai else "Next Turn"
+            
         map_screen.btn_next_turn.color, map_screen.btn_next_turn.hover_color = c.UI_COLORS["red" if viewing_ai else "purple"]
 
         # Visibility and active color swapping for the skip toggle
@@ -299,6 +334,11 @@ def update_button_states(map_screen):
 
         is_spec = map_screen.player_country == "Spectator"
         map_screen.btn_multi_turn.visible = not is_sel and not is_thinking and is_spec
+        
+        if is_spec:
+            map_screen.btn_spec_mp_load.visible = getattr(map_screen, 'multiplayer_host_mode', False) and not is_sel and not is_thinking
+            map_screen.btn_spec_mp_export.visible = getattr(map_screen, 'multiplayer_host_mode', False) and not is_sel and not is_thinking
+            map_screen.btn_spec_mp_skip.visible = getattr(map_screen, 'multiplayer_host_mode', False) and not is_sel and not is_thinking
         map_screen.btn_declare_indep.visible = getattr(map_screen, 'tactical_mode', False) and not is_sel and not is_thinking
 
         gp_btns = [
@@ -655,5 +695,7 @@ def render_settings_buttons(settings_screen):
         Button(dir_box_x - 220, 175, "small", "blue", "Edit", settings_screen.edit_ocean_light_color),
         Button(dir_box_x - 110, 175, "small", "red", "Reset", settings_screen.reset_ocean_light_color),
         Button(dir_box_x - 220, 230, "small", "blue", "Edit", settings_screen.edit_ocean_dark_color),
-        Button(dir_box_x - 110, 230, "small", "red", "Reset", settings_screen.reset_ocean_dark_color)
+        Button(dir_box_x - 110, 230, "small", "red", "Reset", settings_screen.reset_ocean_dark_color),
+        Button(dir_box_x - 220, 285, "small", "blue", "Edit", settings_screen.edit_multiplayer_saves_dir),
+        Button(dir_box_x - 110, 285, "small", "red", "Reset", settings_screen.reset_multiplayer_saves_dir)
     ])

@@ -1,0 +1,244 @@
+import os
+import json
+import hashlib
+import base64
+import secrets
+from cryptography.fernet import Fernet
+import data.constants as c
+from data import queries
+
+def hash_key(key):
+    return hashlib.sha256(key.encode('utf-8')).hexdigest()
+
+def generate_fernet_key_from_password(password):
+    hasher = hashlib.sha256(password.encode('utf-8'))
+    return base64.urlsafe_b64encode(hasher.digest())
+
+def encrypt_dict(data_dict, password):
+    key = generate_fernet_key_from_password(password)
+    f = Fernet(key)
+    json_bytes = json.dumps(data_dict).encode('utf-8')
+    return f.encrypt(json_bytes).decode('utf-8')
+
+def decrypt_dict(encrypted_str, password):
+    key = generate_fernet_key_from_password(password)
+    f = Fernet(key)
+    try:
+        json_bytes = f.decrypt(encrypted_str.encode('utf-8'))
+        return json.loads(json_bytes.decode('utf-8'))
+    except Exception:
+        return None
+
+def strip_sensitive_data_for_player(map_ref, country_id):
+    """
+    Modifies the active map_ref in place to hide information that the player should not see.
+    """
+    map_ref.multiplayer_mode = True
+    map_ref.player_country = country_id
+    map_ref.active_players = [country_id]
+    map_ref.current_player_index = 0
+
+    for cid, country in map_ref.nation_data.items():
+        if cid != country_id:
+            # Hide production queues
+            country["production_queue"] = []
+            country["manpower_pool"] = 0
+            country["materials_pool"] = 0
+            country["fuel_pool"] = 0
+            
+            # Hide orders
+            country["orders"] = []
+            
+            # Hide research
+            country["current_research"] = None
+            country["research_queue"] = []
+
+def export_tournament(map_ref, file_path, master_key, keys_dict):
+    """
+    keys_dict maps Country_ID -> Country_Key
+    """
+    from data import queries
+    queries.scrub_default_images(map_ref.nation_data)
+    save_dict = queries.build_save_dict(map_ref)
+    
+    # Embed the raw geometry so the tournament file is self-contained
+    if hasattr(map_ref, 'raw_json_data'):
+        save_dict["_raw_map_data"] = map_ref.raw_json_data
+        
+    import pygame
+    temp_img_dir = os.path.join(c.MULTIPLAYER_SAVES_DIR, "temp_img_export")
+    os.makedirs(temp_img_dir, exist_ok=True)
+    images = {}
+    
+    img_names = {
+        "terrain.png": getattr(map_ref, 'terrain_map', None),
+        "id_map.png": getattr(map_ref, 'id_map', None),
+        "political.png": getattr(map_ref, 'political_map', None),
+        "cores.png": getattr(map_ref, 'cores_map', None)
+    }
+    
+    for name, surf in img_names.items():
+        if surf:
+            img_path = os.path.join(temp_img_dir, name)
+            pygame.image.save(surf, img_path)
+            with open(img_path, "rb") as f:
+                images[name] = base64.b64encode(f.read()).decode('utf-8')
+    
+    save_dict["_images"] = images
+    
+    session_key = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8')
+    
+    verification_table = {}
+    
+    # Master key hash
+    m_hash = hash_key(master_key)
+    verification_table[m_hash] = {
+        "role": "HOST",
+        "enc_session": encrypt_dict({"sk": session_key, "keys_dict": keys_dict}, master_key)
+    }
+    
+    for cid, ckey in keys_dict.items():
+        if ckey:
+            c_hash = hash_key(ckey)
+            verification_table[c_hash] = {
+                "role": "PLAYER",
+                "country_id": cid,
+                "enc_session": encrypt_dict({"sk": session_key}, ckey)
+            }
+            
+    game_data_enc = encrypt_dict(save_dict, session_key)
+    history_enc = encrypt_dict(map_ref.history, session_key) if c.RECORD_HISTORY else None
+    
+    payload = {
+        "verification_table": verification_table,
+        "game_data": game_data_enc,
+        "history": history_enc
+    }
+    
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, 'w') as f:
+        json.dump(payload, f, indent=4)
+        
+    print(f"Tournament file exported to {file_path}")
+
+def load_tournament(file_path, key):
+    """
+    Loads a tournament file, authenticates with input_key, and applies it to map_ref.
+    Returns (Success: bool, Role: str, Country_ID: int/None, ErrorMsg: str)
+    """
+    if not os.path.exists(file_path):
+        return False, None, None, None, None, "File not found"
+        
+    with open(file_path, 'r') as f:
+        try:
+            payload = json.load(f)
+        except Exception:
+            return False, None, None, None, None, "Invalid file format"
+            
+    ver_table = payload.get("verification_table", {})
+    i_hash = hash_key(key)
+    
+    if i_hash not in ver_table:
+        return False, None, None, None, None, "Invalid key"
+        
+    entry = ver_table[i_hash]
+    decrypted_session = decrypt_dict(entry["enc_session"], key)
+    
+    if not decrypted_session or "sk" not in decrypted_session:
+        return False, None, None, None, None, "Decryption failed (corrupt key payload)"
+        
+    session_key = decrypted_session["sk"]
+    
+    game_data = decrypt_dict(payload["game_data"], session_key)
+    history = decrypt_dict(payload["history"], session_key) if payload.get("history") else []
+    
+    if not game_data:
+        return False, None, None, None, None, "Failed to decrypt game data"
+        
+    temp_dir = os.path.join(c.MULTIPLAYER_SAVES_DIR, "temp_load")
+    os.makedirs(temp_dir, exist_ok=True)
+    
+    # Extract raw geometry if present
+    raw_map_data = game_data.pop("_raw_map_data", None)
+    if raw_map_data:
+        with open(os.path.join(temp_dir, "map_data.json"), 'w') as f:
+            json.dump(raw_map_data, f)
+            
+    # Extract images if present
+    images = game_data.pop("_images", {})
+    for name, b64_str in images.items():
+        img_path = os.path.join(temp_dir, name)
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(b64_str))
+            
+    with open(os.path.join(temp_dir, "meta.json"), 'w') as f:
+        json.dump(game_data, f)
+        
+    if history:
+        with open(os.path.join(temp_dir, "history.json"), 'w') as f:
+            json.dump(history, f)
+    
+    role = entry.get("role")
+    cid = entry.get("country_id")
+    keys_dict = decrypted_session.get("keys_dict", {})
+    
+    return True, role, cid, temp_dir, keys_dict, "Loaded successfully"
+
+def export_move_file(map_ref, file_path, player_key):
+    """
+    Exports a .gd5move file containing ONLY the orders for the current turn.
+    """
+    save_dict = queries.build_save_dict(map_ref)
+    cid = getattr(map_ref, 'player_country', 'Unknown')
+    
+    player_data = save_dict.get("nation_data", {}).get(cid, {})
+    
+    payload = {
+        "country_id": cid,
+        "hash": hash_key(player_key),
+        "data": encrypt_dict(player_data, player_key)
+    }
+    
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, 'w') as f:
+        json.dump(payload, f, indent=4)
+
+def load_move_files(map_ref, move_file_paths, keys_dict):
+    """
+    Loads a list of .gd5move files and applies their orders to the host's map_ref.
+    keys_dict maps Country_ID -> Country_Key
+    """
+    for file_path in move_file_paths:
+        if not os.path.exists(file_path):
+            continue
+        with open(file_path, 'r') as f:
+            try:
+                payload = json.load(f)
+            except Exception:
+                continue
+        
+        cid = payload.get("country_id")
+        p_hash = payload.get("hash")
+        
+        if cid not in keys_dict:
+            continue
+            
+        player_key = keys_dict[cid]
+        if hash_key(player_key) != p_hash:
+            continue
+            
+        player_data = decrypt_dict(payload.get("data"), player_key)
+        if not player_data:
+            continue
+            
+        if cid in map_ref.nation_data:
+            map_ref.nation_data[cid] = player_data
+            
+        # Also mark this country as having submitted a move
+        if not hasattr(map_ref, 'submitted_moves'):
+            map_ref.submitted_moves = set()
+        map_ref.submitted_moves.add(cid)
+        
+        if not hasattr(map_ref, 'multiplayer_protected_countries'):
+            map_ref.multiplayer_protected_countries = set()
+        map_ref.multiplayer_protected_countries.add(cid)

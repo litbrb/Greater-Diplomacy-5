@@ -21,6 +21,7 @@ context/combined_scripts.txt
 
 build
 dist
+multiplayer_saves
 context/stuff
 scenarios/map_editor
 main.spec

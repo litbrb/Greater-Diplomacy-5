@@ -160,9 +160,9 @@ def render_buttons(self):
         from ui.multiplayer_host_panel import force_skip_player
         force_skip_player(self)
         
-    self.btn_spec_mp_load = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 4, "diplomatic", "blue", "Load Moves", host_load_moves)
-    self.btn_spec_mp_export = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 5, "diplomatic", "green", "Export Turn", host_export_turn)
-    self.btn_spec_mp_skip = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 6, "diplomatic", "red", "Skip Player", host_skip_player)
+    self.btn_spec_mp_load = Button(380, 15, "diplomatic", "blue", "Load Moves", host_load_moves)
+    self.btn_spec_mp_export = Button(600, 15, "diplomatic", "green", "Export Turn", host_export_turn)
+    self.btn_spec_mp_skip = Button(820, 15, "diplomatic", "red", "Skip Player", host_skip_player)
 
     # General Controls
     def start_spectator_action():

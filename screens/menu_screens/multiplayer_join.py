@@ -10,8 +10,13 @@ class Multiplayer_Join(GameState):
         self.bg_color = (10, 10, 40)
         self.elements = [
             Button("centered", "centered", "medium", "blue", "Load Tournament File", self.load_tour_file),
-            Button("centered", "centered + 100", "medium", "red", "Back", self.go_back)
+            Button(20, 20, "small", "red", "Back", self.go_back)
         ]
+
+    def additional_events(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.go_back()
+
 
     def load_tour_file(self):
         import tkinter as tk

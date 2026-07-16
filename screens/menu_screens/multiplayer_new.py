@@ -53,7 +53,7 @@ class Multiplayer_New(GameState):
         self.next_state = "SCENARIO_SETTINGS"
         self.done = True
 
-    def start_scenario(self, scenario_name, directory):
+    def start_host_setup(self, scenario_name, directory=c.SCENARIOS_CUSTOM_DIR):
         import tkinter as tk
         from tkinter import simpledialog, messagebox
         import secrets
@@ -63,6 +63,7 @@ class Multiplayer_New(GameState):
         
         root = tk.Tk()
         root.withdraw()
+        
         master_key = simpledialog.askstring("Host Key", "Enter a Master Key for this tournament:", parent=root)
         if not master_key: return
         
@@ -89,8 +90,11 @@ class Multiplayer_New(GameState):
         
         messagebox.showinfo("Success", f"Tournament created!\nKeys saved to:\n{keys_path}\n\nFile saved to:\n{export_path}\n\nSend the .gd5tour file and the keys to your players. When they send you their .gd5move files, use 'Load Existing Tournament' to play.")
         
-        # Don't switch to MAP, return to MULTIPLAYER_HOST
         self.next_state = "MULTIPLAYER_HOST"
+        self.done = True
+
+    def scenario_settings(self):
+        self.next_state = "SCENARIO_SETTINGS"
         self.done = True
         
     def exit_to_host_menu(self):
@@ -98,14 +102,15 @@ class Multiplayer_New(GameState):
         self.done = True
 
     def additional_events(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 4: # Scroll Up
-                self.scroll_y = min(0, self.scroll_y + 40)
-                self.refresh_scenarios()
-            elif event.button == 5: # Scroll Down
-                self.scroll_y = max(self.max_scroll, self.scroll_y - 40)
-                self.refresh_scenarios()
-            elif event.button == 1:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.exit_to_host_menu()
+            
+        if event.type == pygame.MOUSEWHEEL:
+            self.scroll_y = max(self.max_scroll, min(0, self.scroll_y + event.y * c.SCROLL_SPEED))
+            self.refresh_scenarios()
+            
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
                 if self.scroll_handle_rect and self.scroll_handle_rect.collidepoint(event.pos):
                     self.is_dragging_scrollbar = True
                 elif self.scroll_track_rect and self.scroll_track_rect.collidepoint(event.pos):
@@ -126,11 +131,6 @@ class Multiplayer_New(GameState):
         scroll_fraction = rel_y / track_h
         self.scroll_y = int(self.max_scroll * scroll_fraction)
         self.refresh_scenarios()
-
-    def handle_events(self, events):
-        for event in events:
-            super().handle_events([event])
-            self.additional_events(event)
 
     def draw(self, surface):
         surface.fill(self.bg_color)

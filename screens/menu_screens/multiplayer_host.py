@@ -11,8 +11,13 @@ class Multiplayer_Host(GameState):
         self.elements = [
             Button("centered", "centered - 50", "medium", "green", "Start New Multiplayer Game", self.start_new),
             Button("centered", "centered + 50", "medium", "green", "Load Existing Tournament", self.load_existing),
-            Button("centered", "centered + 150", "medium", "red", "Back", self.go_back)
+            Button(20, 20, "small", "red", "Back", self.go_back)
         ]
+
+    def additional_events(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.go_back()
+
 
     def start_new(self):
         self.next_state = "MULTIPLAYER_NEW"

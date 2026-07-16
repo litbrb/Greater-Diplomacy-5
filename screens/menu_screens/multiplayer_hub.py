@@ -11,8 +11,13 @@ class Multiplayer_Hub(GameState):
         self.elements = [
             Button("centered", 250, "medium", "green", "Host Game", self.host_game),
             Button("centered", 350, "medium", "blue", "Join Game", self.join_game),
-            Button("centered", 450, "medium", "red", "Back", self.go_back)
+            Button(20, 20, "small", "red", "Back", self.go_back)
         ]
+
+    def additional_events(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.go_back()
+
 
     def host_game(self):
         self.next_state = "MULTIPLAYER_HOST"

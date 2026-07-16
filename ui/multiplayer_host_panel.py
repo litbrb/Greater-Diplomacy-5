@@ -35,20 +35,41 @@ def export_next_turn(map_ref):
     
     # Reset protected countries for next turn
     map_ref.multiplayer_protected_countries = set()
+    map_ref.submitted_moves = set()
     map_ref.show_feedback(f"Tournament exported to {export_path}")
 
-def force_skip_player(map_ref):
+def manage_players_panel(map_ref):
     root = tk.Tk()
-    root.title("Select Countries to Skip")
-    root.geometry("400x500")
+    root.title("Manage Players & Moves")
+    root.geometry("450x600")
     root.attributes("-topmost", True)
     root.focus_force()
 
     if not hasattr(map_ref, 'multiplayer_protected_countries'):
         map_ref.multiplayer_protected_countries = set()
+    if not hasattr(map_ref, 'submitted_moves'):
+        map_ref.submitted_moves = set()
 
-    lbl = tk.Label(root, text="Select countries to skip (they will not take action this turn):", wraplength=380)
-    lbl.pack(pady=(10, 5))
+    top_frame = tk.Frame(root)
+    top_frame.pack(fill=tk.X, padx=10, pady=10)
+
+    lbl = tk.Label(top_frame, text="Load player moves, and select countries to skip (skipped countries will have AI disabled):", wraplength=430)
+    lbl.pack(pady=(0, 10))
+
+    def on_load_moves():
+        files = filedialog.askopenfilenames(
+            parent=root,
+            initialdir=c.MULTIPLAYER_SAVES_DIR,
+            title="Select Move Files",
+            filetypes=[("Move Files", "*.gd5move")]
+        )
+        if files:
+            multiplayer_io.load_move_files(map_ref, files, getattr(map_ref, 'multiplayer_keys_dict', {}))
+            map_ref.show_feedback(f"Loaded {len(files)} move files.")
+            refresh_list()
+
+    load_btn = tk.Button(top_frame, text="Load .gd5move Files", command=on_load_moves, width=20, bg="#add8e6")
+    load_btn.pack()
 
     frame = tk.Frame(root)
     frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
@@ -80,15 +101,34 @@ def force_skip_player(map_ref):
     
     check_vars = {}
     
-    countries = [cid for cid, data in map_ref.nation_data.items() if data.get("is_playable")]
-    countries.sort(key=lambda c: map_ref.nation_data[c].get("name", c))
-    
-    for cid in countries:
-        var = tk.BooleanVar(value=(cid in map_ref.multiplayer_protected_countries))
-        check_vars[cid] = var
-        name = map_ref.nation_data[cid].get("name", cid)
-        cb = tk.Checkbutton(scrollable_frame, text=f"{name} ({cid})", variable=var)
-        cb.pack(anchor="w", padx=5)
+    def refresh_list():
+        for widget in scrollable_frame.winfo_children():
+            widget.destroy()
+        check_vars.clear()
+        
+        active_owners = set(p.get("owner") for p in map_ref.map_data.values())
+        countries = [cid for cid, data in map_ref.nation_data.items() if data.get("is_playable") and cid in active_owners]
+        countries.sort(key=lambda c: map_ref.nation_data[c].get("name", c))
+        
+        for cid in countries:
+            var = tk.BooleanVar(master=root, value=(cid in map_ref.multiplayer_protected_countries))
+            check_vars[cid] = var
+            name = map_ref.nation_data[cid].get("name", cid)
+            
+            has_move = cid in map_ref.submitted_moves
+            status = "[SUBMITTED]" if has_move else "[WAITING]"
+            color = "green" if has_move else "black"
+            
+            row_frame = tk.Frame(scrollable_frame)
+            row_frame.pack(fill=tk.X, anchor="w", pady=2)
+            
+            cb = tk.Checkbutton(row_frame, text=f"{name} ({cid})", variable=var)
+            cb.pack(side=tk.LEFT, padx=5)
+            
+            lbl_status = tk.Label(row_frame, text=status, fg=color, font=("Arial", 9, "bold"))
+            lbl_status.pack(side=tk.RIGHT, padx=10)
+            
+    refresh_list()
         
     def on_confirm():
         map_ref.multiplayer_protected_countries.clear()
@@ -118,7 +158,5 @@ def force_skip_player(map_ref):
     cancel_btn.pack(side=tk.RIGHT, padx=30)
     
     root.protocol("WM_DELETE_WINDOW", on_closing)
-    
     root.eval('tk::PlaceWindow . center')
-    
     root.mainloop()

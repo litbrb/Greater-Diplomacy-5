@@ -148,21 +148,16 @@ def render_buttons(self):
     self.btn_spec_leave_fac = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "orange", "Leave Faction", lambda: spectator_menus.spec_leave_faction(self))
     self.btn_spec_disband_fac = Button(c.ACTION_BTN_X, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 3, "diplomatic", "red", "Disband Faction", lambda: spectator_menus.spec_disband_faction(self))
     
-    def host_load_moves():
-        from ui.multiplayer_host_panel import load_multiplayer_moves
-        load_multiplayer_moves(self)
+    def host_manage_players():
+        from ui.multiplayer_host_panel import manage_players_panel
+        manage_players_panel(self)
         
     def host_export_turn():
         from ui.multiplayer_host_panel import export_next_turn
         export_next_turn(self)
         
-    def host_skip_player():
-        from ui.multiplayer_host_panel import force_skip_player
-        force_skip_player(self)
-        
-    self.btn_spec_mp_load = Button(380, 15, "diplomatic", "blue", "Load Moves", host_load_moves)
+    self.btn_spec_mp_manage = Button(380, 15, "diplomatic", "blue", "Manage Players", host_manage_players)
     self.btn_spec_mp_export = Button(600, 15, "diplomatic", "green", "Export Turn", host_export_turn)
-    self.btn_spec_mp_skip = Button(820, 15, "diplomatic", "red", "Skip Player", host_skip_player)
 
     # General Controls
     def start_spectator_action():
@@ -200,7 +195,7 @@ def render_buttons(self):
         self.btn_accept_req, self.btn_reject_req, self.btn_force_war, self.btn_force_peace,
         self.btn_spec_create_fac, self.btn_spec_join_fac, self.btn_spec_invite_fac, self.btn_spec_leave_fac,
         self.btn_spec_disband_fac, self.btn_spectator, self.btn_tactical, self.btn_close_info, self.btn_exit_to_menu,
-        self.btn_spec_mp_load, self.btn_spec_mp_export, self.btn_spec_mp_skip,
+        self.btn_spec_mp_manage, self.btn_spec_mp_export,
         self.slider_camera_tilt
     ])
 
@@ -336,9 +331,8 @@ def update_button_states(map_screen):
         map_screen.btn_multi_turn.visible = not is_sel and not is_thinking and is_spec
         
         if is_spec:
-            map_screen.btn_spec_mp_load.visible = getattr(map_screen, 'multiplayer_host_mode', False) and not is_sel and not is_thinking
+            map_screen.btn_spec_mp_manage.visible = getattr(map_screen, 'multiplayer_host_mode', False) and not is_sel and not is_thinking
             map_screen.btn_spec_mp_export.visible = getattr(map_screen, 'multiplayer_host_mode', False) and not is_sel and not is_thinking
-            map_screen.btn_spec_mp_skip.visible = getattr(map_screen, 'multiplayer_host_mode', False) and not is_sel and not is_thinking
         map_screen.btn_declare_indep.visible = getattr(map_screen, 'tactical_mode', False) and not is_sel and not is_thinking
 
         gp_btns = [

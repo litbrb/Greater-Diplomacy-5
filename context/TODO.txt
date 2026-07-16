@@ -14,6 +14,8 @@ Immediate concerns:
 - port building to make naval units take less time to build
 - add in a way to make a timelapse of a saved game from the history
 
+disable saving for inputing tournament moves
+
 - review various TODO's
 
 - hoi4 entrenchment mechanic??? defense forts?

@@ -191,8 +191,26 @@ def export_move_file(map_ref, file_path, player_key):
     save_dict = queries.build_save_dict(map_ref)
     cid = getattr(map_ref, 'player_country', 'Unknown')
     
-    player_data = save_dict.get("nation_data", {}).get(cid, {})
+    player_data = {
+        "nation_data": save_dict.get("nation_data", {}).get(cid, {}),
+        "provinces": {}
+    }
     
+    for prov_key, prov_data in save_dict.get("provinces", {}).items():
+        prov_updates = {}
+        if prov_data.get("owner") == cid:
+            if "building_queue" in prov_data:
+                prov_updates["building_queue"] = prov_data["building_queue"]
+            if "unit_queue" in prov_data:
+                prov_updates["unit_queue"] = prov_data["unit_queue"]
+                
+        player_units = [u for u in prov_data.get("units", []) if u.get("owner") == cid]
+        if player_units:
+            prov_updates["units"] = player_units
+            
+        if prov_updates:
+            player_data["provinces"][prov_key] = prov_updates
+            
     payload = {
         "country_id": cid,
         "hash": hash_key(player_key),
@@ -208,6 +226,8 @@ def load_move_files(map_ref, move_file_paths, keys_dict):
     Loads a list of .gd5move files and applies their orders to the host's map_ref.
     keys_dict maps Country_ID -> Country_Key
     """
+    processed_cids = set()
+    
     for file_path in move_file_paths:
         if not os.path.exists(file_path):
             continue
@@ -231,8 +251,40 @@ def load_move_files(map_ref, move_file_paths, keys_dict):
         if not player_data:
             continue
             
+        if "nation_data" in player_data and "provinces" in player_data:
+            nd = player_data["nation_data"]
+            provs = player_data["provinces"]
+        else:
+            nd = player_data
+            provs = {}
+            
         if cid in map_ref.nation_data:
-            map_ref.nation_data[cid] = player_data
+            map_ref.nation_data[cid] = nd
+            
+        if provs:
+            if cid not in processed_cids:
+                for target_prov in map_ref.map_data.values():
+                    target_prov["units"] = [u for u in target_prov.get("units", []) if u.get("owner") != cid]
+                processed_cids.add(cid)
+                
+            # Create a lookup for json_key -> tuple key
+            json_key_map = {v.get("json_key"): k for k, v in map_ref.map_data.items()}
+                
+            for prov_key, updates in provs.items():
+                real_key = json_key_map.get(prov_key)
+                if real_key not in map_ref.map_data:
+                    continue
+                target_prov = map_ref.map_data[real_key]
+                
+                if "building_queue" in updates:
+                    target_prov["building_queue"] = updates["building_queue"]
+                if "unit_queue" in updates:
+                    target_prov["unit_queue"] = updates["unit_queue"]
+                    
+                if "units" in updates:
+                    if "units" not in target_prov:
+                        target_prov["units"] = []
+                    target_prov["units"].extend(updates["units"])
             
         # Also mark this country as having submitted a move
         if not hasattr(map_ref, 'submitted_moves'):
@@ -242,3 +294,6 @@ def load_move_files(map_ref, move_file_paths, keys_dict):
         if not hasattr(map_ref, 'multiplayer_protected_countries'):
             map_ref.multiplayer_protected_countries = set()
         map_ref.multiplayer_protected_countries.add(cid)
+        
+    if move_file_paths and hasattr(map_ref, 'sync_units_to_data'):
+        map_ref.sync_units_to_data()

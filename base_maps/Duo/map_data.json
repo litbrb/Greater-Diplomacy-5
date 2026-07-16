@@ -1,0 +1,4658 @@
+{
+    "(1, 0, 0)": {
+        "id": 1,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            19,
+            19
+        ],
+        "neighbors": [
+            10,
+            2
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(2, 0, 0)": {
+        "id": 2,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            46,
+            41
+        ],
+        "neighbors": [
+            1,
+            33,
+            3,
+            9,
+            41,
+            15,
+            28
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(3, 0, 0)": {
+        "id": 3,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            210,
+            9
+        ],
+        "neighbors": [
+            2,
+            4,
+            11,
+            12,
+            15,
+            16
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(4, 0, 0)": {
+        "id": 4,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            395,
+            29
+        ],
+        "neighbors": [
+            3,
+            5,
+            7,
+            12,
+            16,
+            25,
+            26
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(5, 0, 0)": {
+        "id": 5,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            442,
+            19
+        ],
+        "neighbors": [
+            4,
+            6
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(6, 0, 0)": {
+        "id": 6,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            481,
+            19
+        ],
+        "neighbors": [
+            5,
+            7
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(7, 0, 0)": {
+        "id": 7,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            508,
+            41
+        ],
+        "neighbors": [
+            4,
+            37,
+            6,
+            8,
+            42,
+            17,
+            26
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(8, 0, 0)": {
+        "id": 8,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            672,
+            9
+        ],
+        "neighbors": [
+            7,
+            9,
+            13,
+            14,
+            17,
+            18
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(9, 0, 0)": {
+        "id": 9,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            857,
+            29
+        ],
+        "neighbors": [
+            2,
+            8,
+            10,
+            14,
+            18,
+            27,
+            28
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(10, 0, 0)": {
+        "id": 10,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            904,
+            19
+        ],
+        "neighbors": [
+            9,
+            1
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(11, 0, 0)": {
+        "id": 11,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            318,
+            23
+        ],
+        "neighbors": [
+            16,
+            3,
+            12
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(12, 0, 0)": {
+        "id": 12,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            352,
+            23
+        ],
+        "neighbors": [
+            11,
+            16,
+            3,
+            4
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(13, 0, 0)": {
+        "id": 13,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            780,
+            23
+        ],
+        "neighbors": [
+            8,
+            18,
+            14
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(14, 0, 0)": {
+        "id": 14,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            814,
+            23
+        ],
+        "neighbors": [
+            8,
+            9,
+            18,
+            13
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(15, 0, 0)": {
+        "id": 15,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            110,
+            55
+        ],
+        "neighbors": [
+            33,
+            2,
+            3,
+            16,
+            49,
+            19,
+            23,
+            31
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(16, 0, 0)": {
+        "id": 16,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            260,
+            38
+        ],
+        "neighbors": [
+            3,
+            4,
+            11,
+            12,
+            15,
+            19,
+            20,
+            25
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(17, 0, 0)": {
+        "id": 17,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            572,
+            55
+        ],
+        "neighbors": [
+            32,
+            37,
+            7,
+            8,
+            18,
+            51,
+            21,
+            24
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(18, 0, 0)": {
+        "id": 18,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            722,
+            38
+        ],
+        "neighbors": [
+            8,
+            9,
+            13,
+            14,
+            17,
+            21,
+            22,
+            27
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(19, 0, 0)": {
+        "id": 19,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            193,
+            61
+        ],
+        "neighbors": [
+            34,
+            15,
+            16,
+            20,
+            23
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(20, 0, 0)": {
+        "id": 20,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            266,
+            63
+        ],
+        "neighbors": [
+            34,
+            35,
+            36,
+            16,
+            19,
+            25,
+            29
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(21, 0, 0)": {
+        "id": 21,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            655,
+            61
+        ],
+        "neighbors": [
+            38,
+            17,
+            18,
+            22,
+            24
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(22, 0, 0)": {
+        "id": 22,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            728,
+            63
+        ],
+        "neighbors": [
+            38,
+            39,
+            40,
+            18,
+            21,
+            27,
+            30
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(23, 0, 0)": {
+        "id": 23,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            147,
+            73
+        ],
+        "neighbors": [
+            34,
+            19,
+            31,
+            15
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(24, 0, 0)": {
+        "id": 24,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            609,
+            73
+        ],
+        "neighbors": [
+            32,
+            17,
+            21,
+            38
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(25, 0, 0)": {
+        "id": 25,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            383,
+            75
+        ],
+        "neighbors": [
+            4,
+            43,
+            16,
+            50,
+            20,
+            26,
+            29
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(26, 0, 0)": {
+        "id": 26,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            437,
+            73
+        ],
+        "neighbors": [
+            4,
+            7,
+            42,
+            50,
+            25
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(27, 0, 0)": {
+        "id": 27,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            845,
+            75
+        ],
+        "neighbors": [
+            9,
+            44,
+            18,
+            52,
+            22,
+            28,
+            30
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(28, 0, 0)": {
+        "id": 28,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            899,
+            73
+        ],
+        "neighbors": [
+            2,
+            9,
+            41,
+            52,
+            27
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(29, 0, 0)": {
+        "id": 29,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            335,
+            81
+        ],
+        "neighbors": [
+            36,
+            43,
+            47,
+            20,
+            25
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(30, 0, 0)": {
+        "id": 30,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            797,
+            81
+        ],
+        "neighbors": [
+            40,
+            44,
+            48,
+            22,
+            27
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(31, 0, 0)": {
+        "id": 31,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            117,
+            103
+        ],
+        "neighbors": [
+            34,
+            45,
+            15,
+            49,
+            23,
+            63
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(32, 0, 0)": {
+        "id": 32,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            579,
+            103
+        ],
+        "neighbors": [
+            64,
+            38,
+            46,
+            17,
+            51,
+            24
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(33, 0, 0)": {
+        "id": 33,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            44,
+            113
+        ],
+        "neighbors": [
+            2,
+            67,
+            41,
+            75,
+            15,
+            49,
+            57
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(34, 0, 0)": {
+        "id": 34,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            185,
+            89
+        ],
+        "neighbors": [
+            35,
+            45,
+            19,
+            20,
+            23,
+            31
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(35, 0, 0)": {
+        "id": 35,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            257,
+            89
+        ],
+        "neighbors": [
+            34,
+            36,
+            45,
+            20,
+            53,
+            54
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(36, 0, 0)": {
+        "id": 36,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            300,
+            99
+        ],
+        "neighbors": [
+            35,
+            47,
+            20,
+            54,
+            59,
+            29
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(37, 0, 0)": {
+        "id": 37,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            506,
+            113
+        ],
+        "neighbors": [
+            68,
+            7,
+            42,
+            78,
+            17,
+            51,
+            58
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(38, 0, 0)": {
+        "id": 38,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            647,
+            89
+        ],
+        "neighbors": [
+            32,
+            39,
+            46,
+            21,
+            22,
+            24
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(39, 0, 0)": {
+        "id": 39,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            719,
+            89
+        ],
+        "neighbors": [
+            38,
+            40,
+            46,
+            22,
+            55,
+            56
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(40, 0, 0)": {
+        "id": 40,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            762,
+            99
+        ],
+        "neighbors": [
+            39,
+            48,
+            22,
+            56,
+            60,
+            30
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(41, 0, 0)": {
+        "id": 41,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            9,
+            145
+        ],
+        "neighbors": [
+            33,
+            2,
+            67,
+            104,
+            107,
+            52,
+            86,
+            28
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(42, 0, 0)": {
+        "id": 42,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            471,
+            145
+        ],
+        "neighbors": [
+            68,
+            37,
+            101,
+            7,
+            108,
+            50,
+            85,
+            26
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(43, 0, 0)": {
+        "id": 43,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            371,
+            112
+        ],
+        "neighbors": [
+            69,
+            47,
+            50,
+            25,
+            29
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(44, 0, 0)": {
+        "id": 44,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            833,
+            112
+        ],
+        "neighbors": [
+            70,
+            48,
+            52,
+            27,
+            30
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(45, 0, 0)": {
+        "id": 45,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            188,
+            113
+        ],
+        "neighbors": [
+            65,
+            34,
+            35,
+            53,
+            63,
+            31
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(46, 0, 0)": {
+        "id": 46,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            650,
+            113
+        ],
+        "neighbors": [
+            32,
+            64,
+            66,
+            38,
+            39,
+            55
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(47, 0, 0)": {
+        "id": 47,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            340,
+            128
+        ],
+        "neighbors": [
+            36,
+            69,
+            71,
+            72,
+            43,
+            59,
+            29
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(48, 0, 0)": {
+        "id": 48,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            802,
+            128
+        ],
+        "neighbors": [
+            70,
+            40,
+            73,
+            74,
+            44,
+            60,
+            30
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(49, 0, 0)": {
+        "id": 49,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            86,
+            135
+        ],
+        "neighbors": [
+            33,
+            15,
+            83,
+            57,
+            63,
+            31
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(50, 0, 0)": {
+        "id": 50,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            432,
+            129
+        ],
+        "neighbors": [
+            69,
+            42,
+            43,
+            85,
+            25,
+            26
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(51, 0, 0)": {
+        "id": 51,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            548,
+            135
+        ],
+        "neighbors": [
+            32,
+            64,
+            37,
+            17,
+            84,
+            58
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(52, 0, 0)": {
+        "id": 52,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            894,
+            129
+        ],
+        "neighbors": [
+            70,
+            41,
+            44,
+            86,
+            27,
+            28
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(53, 0, 0)": {
+        "id": 53,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            234,
+            120
+        ],
+        "neighbors": [
+            65,
+            35,
+            45,
+            54,
+            61
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(54, 0, 0)": {
+        "id": 54,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            277,
+            117
+        ],
+        "neighbors": [
+            35,
+            36,
+            53,
+            59,
+            61
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(55, 0, 0)": {
+        "id": 55,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            696,
+            120
+        ],
+        "neighbors": [
+            66,
+            39,
+            46,
+            56,
+            62
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(56, 0, 0)": {
+        "id": 56,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            739,
+            117
+        ],
+        "neighbors": [
+            39,
+            40,
+            55,
+            60,
+            62
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(57, 0, 0)": {
+        "id": 57,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            68,
+            143
+        ],
+        "neighbors": [
+            33,
+            83,
+            75,
+            49
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(58, 0, 0)": {
+        "id": 58,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            530,
+            143
+        ],
+        "neighbors": [
+            51,
+            84,
+            37,
+            78
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(59, 0, 0)": {
+        "id": 59,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            301,
+            139
+        ],
+        "neighbors": [
+            36,
+            71,
+            77,
+            47,
+            81,
+            54,
+            61
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(60, 0, 0)": {
+        "id": 60,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            763,
+            139
+        ],
+        "neighbors": [
+            40,
+            73,
+            48,
+            80,
+            82,
+            56,
+            62
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(61, 0, 0)": {
+        "id": 61,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            248,
+            138
+        ],
+        "neighbors": [
+            65,
+            76,
+            77,
+            53,
+            54,
+            59
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(62, 0, 0)": {
+        "id": 62,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            710,
+            138
+        ],
+        "neighbors": [
+            66,
+            79,
+            80,
+            55,
+            56,
+            60
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(63, 0, 0)": {
+        "id": 63,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            120,
+            143
+        ],
+        "neighbors": [
+            65,
+            76,
+            45,
+            49,
+            83,
+            89,
+            31
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(64, 0, 0)": {
+        "id": 64,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            582,
+            143
+        ],
+        "neighbors": [
+            32,
+            66,
+            46,
+            79,
+            51,
+            84,
+            91
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(65, 0, 0)": {
+        "id": 65,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            174,
+            138
+        ],
+        "neighbors": [
+            76,
+            45,
+            53,
+            61,
+            63
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(66, 0, 0)": {
+        "id": 66,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            636,
+            138
+        ],
+        "neighbors": [
+            64,
+            46,
+            79,
+            55,
+            62
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(67, 0, 0)": {
+        "id": 67,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            33,
+            168
+        ],
+        "neighbors": [
+            33,
+            105,
+            41,
+            107,
+            75
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(68, 0, 0)": {
+        "id": 68,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            495,
+            168
+        ],
+        "neighbors": [
+            37,
+            42,
+            106,
+            108,
+            78
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(69, 0, 0)": {
+        "id": 69,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            395,
+            154
+        ],
+        "neighbors": [
+            72,
+            43,
+            47,
+            50,
+            85,
+            93
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(70, 0, 0)": {
+        "id": 70,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            857,
+            154
+        ],
+        "neighbors": [
+            74,
+            44,
+            48,
+            52,
+            86,
+            94
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(71, 0, 0)": {
+        "id": 71,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            335,
+            161
+        ],
+        "neighbors": [
+            97,
+            72,
+            47,
+            81,
+            87,
+            59
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(72, 0, 0)": {
+        "id": 72,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            373,
+            168
+        ],
+        "neighbors": [
+            97,
+            69,
+            71,
+            47,
+            93
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(73, 0, 0)": {
+        "id": 73,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            797,
+            161
+        ],
+        "neighbors": [
+            98,
+            74,
+            48,
+            82,
+            88,
+            60
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(74, 0, 0)": {
+        "id": 74,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            835,
+            168
+        ],
+        "neighbors": [
+            98,
+            70,
+            73,
+            48,
+            94
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(75, 0, 0)": {
+        "id": 75,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            62,
+            173
+        ],
+        "neighbors": [
+            33,
+            67,
+            105,
+            83,
+            57
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(76, 0, 0)": {
+        "id": 76,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            179,
+            157
+        ],
+        "neighbors": [
+            65,
+            77,
+            89,
+            61,
+            63
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(77, 0, 0)": {
+        "id": 77,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            249,
+            157
+        ],
+        "neighbors": [
+            76,
+            81,
+            89,
+            90,
+            59,
+            61
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(78, 0, 0)": {
+        "id": 78,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            524,
+            173
+        ],
+        "neighbors": [
+            68,
+            37,
+            106,
+            84,
+            58
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(79, 0, 0)": {
+        "id": 79,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            641,
+            157
+        ],
+        "neighbors": [
+            64,
+            66,
+            80,
+            91,
+            62
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(80, 0, 0)": {
+        "id": 80,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            711,
+            157
+        ],
+        "neighbors": [
+            60,
+            79,
+            82,
+            91,
+            92,
+            62
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(81, 0, 0)": {
+        "id": 81,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            298,
+            167
+        ],
+        "neighbors": [
+            71,
+            77,
+            87,
+            90,
+            59
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(82, 0, 0)": {
+        "id": 82,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            760,
+            167
+        ],
+        "neighbors": [
+            73,
+            92,
+            80,
+            88,
+            60
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(83, 0, 0)": {
+        "id": 83,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            100,
+            190
+        ],
+        "neighbors": [
+            105,
+            75,
+            127,
+            111,
+            49,
+            113,
+            89,
+            57,
+            63
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(84, 0, 0)": {
+        "id": 84,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            562,
+            190
+        ],
+        "neighbors": [
+            64,
+            128,
+            106,
+            78,
+            112,
+            51,
+            115,
+            58,
+            91
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(85, 0, 0)": {
+        "id": 85,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            436,
+            179
+        ],
+        "neighbors": [
+            69,
+            101,
+            42,
+            50,
+            114,
+            93
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(86, 0, 0)": {
+        "id": 86,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            898,
+            179
+        ],
+        "neighbors": [
+            70,
+            104,
+            41,
+            116,
+            52,
+            94
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(87, 0, 0)": {
+        "id": 87,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            313,
+            185
+        ],
+        "neighbors": [
+            97,
+            100,
+            71,
+            109,
+            81,
+            90
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(88, 0, 0)": {
+        "id": 88,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            775,
+            185
+        ],
+        "neighbors": [
+            98,
+            103,
+            73,
+            110,
+            82,
+            92
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(89, 0, 0)": {
+        "id": 89,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            155,
+            180
+        ],
+        "neighbors": [
+            99,
+            76,
+            77,
+            111,
+            83,
+            90,
+            95,
+            63
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(90, 0, 0)": {
+        "id": 90,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            254,
+            175
+        ],
+        "neighbors": [
+            100,
+            77,
+            81,
+            87,
+            89,
+            95
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(91, 0, 0)": {
+        "id": 91,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            617,
+            180
+        ],
+        "neighbors": [
+            64,
+            96,
+            102,
+            79,
+            112,
+            80,
+            84,
+            92
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(92, 0, 0)": {
+        "id": 92,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            716,
+            175
+        ],
+        "neighbors": [
+            96,
+            103,
+            80,
+            82,
+            88,
+            91
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(93, 0, 0)": {
+        "id": 93,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            397,
+            195
+        ],
+        "neighbors": [
+            97,
+            69,
+            72,
+            114,
+            85,
+            119
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(94, 0, 0)": {
+        "id": 94,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            859,
+            195
+        ],
+        "neighbors": [
+            98,
+            70,
+            74,
+            116,
+            86,
+            120
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(95, 0, 0)": {
+        "id": 95,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            216,
+            183
+        ],
+        "neighbors": [
+            89,
+            90,
+            99,
+            100
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(96, 0, 0)": {
+        "id": 96,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            678,
+            183
+        ],
+        "neighbors": [
+            91,
+            92,
+            102,
+            103
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(97, 0, 0)": {
+        "id": 97,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            361,
+            208
+        ],
+        "neighbors": [
+            129,
+            133,
+            71,
+            72,
+            139,
+            109,
+            119,
+            87,
+            93
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(98, 0, 0)": {
+        "id": 98,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            823,
+            208
+        ],
+        "neighbors": [
+            130,
+            136,
+            73,
+            74,
+            140,
+            110,
+            88,
+            120,
+            94
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(99, 0, 0)": {
+        "id": 99,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            202,
+            201
+        ],
+        "neighbors": [
+            121,
+            100,
+            111,
+            117,
+            89,
+            95
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(100, 0, 0)": {
+        "id": 100,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            259,
+            197
+        ],
+        "neighbors": [
+            99,
+            109,
+            117,
+            87,
+            90,
+            95
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(101, 0, 0)": {
+        "id": 101,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            452,
+            254
+        ],
+        "neighbors": [
+            42,
+            138,
+            108,
+            171,
+            143,
+            177,
+            114,
+            85
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(102, 0, 0)": {
+        "id": 102,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            664,
+            201
+        ],
+        "neighbors": [
+            96,
+            103,
+            112,
+            118,
+            122,
+            91
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(103, 0, 0)": {
+        "id": 103,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            721,
+            197
+        ],
+        "neighbors": [
+            96,
+            102,
+            110,
+            118,
+            88,
+            92
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(104, 0, 0)": {
+        "id": 104,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            914,
+            254
+        ],
+        "neighbors": [
+            41,
+            137,
+            107,
+            169,
+            146,
+            178,
+            116,
+            86
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(105, 0, 0)": {
+        "id": 105,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            64,
+            203
+        ],
+        "neighbors": [
+            67,
+            107,
+            75,
+            113,
+            83,
+            125
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(106, 0, 0)": {
+        "id": 106,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            526,
+            203
+        ],
+        "neighbors": [
+            68,
+            108,
+            78,
+            115,
+            84,
+            126
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(107, 0, 0)": {
+        "id": 107,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            25,
+            219
+        ],
+        "neighbors": [
+            67,
+            104,
+            41,
+            137,
+            105,
+            125
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(108, 0, 0)": {
+        "id": 108,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            487,
+            219
+        ],
+        "neighbors": [
+            68,
+            101,
+            42,
+            106,
+            138,
+            126
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(109, 0, 0)": {
+        "id": 109,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            306,
+            218
+        ],
+        "neighbors": [
+            97,
+            131,
+            132,
+            100,
+            133,
+            117,
+            87,
+            121
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(110, 0, 0)": {
+        "id": 110,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            768,
+            218
+        ],
+        "neighbors": [
+            98,
+            134,
+            135,
+            103,
+            136,
+            118,
+            88,
+            122
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(111, 0, 0)": {
+        "id": 111,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            148,
+            213
+        ],
+        "neighbors": [
+            121,
+            99,
+            83,
+            89,
+            123,
+            127
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(112, 0, 0)": {
+        "id": 112,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            610,
+            213
+        ],
+        "neighbors": [
+            128,
+            102,
+            84,
+            122,
+            91,
+            124
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(113, 0, 0)": {
+        "id": 113,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            88,
+            230
+        ],
+        "neighbors": [
+            105,
+            141,
+            83,
+            125,
+            127
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(114, 0, 0)": {
+        "id": 114,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            428,
+            230
+        ],
+        "neighbors": [
+            101,
+            143,
+            85,
+            119,
+            93
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(115, 0, 0)": {
+        "id": 115,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            550,
+            230
+        ],
+        "neighbors": [
+            128,
+            106,
+            144,
+            84,
+            126
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(116, 0, 0)": {
+        "id": 116,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            890,
+            230
+        ],
+        "neighbors": [
+            104,
+            146,
+            86,
+            120,
+            94
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(117, 0, 0)": {
+        "id": 117,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            245,
+            215
+        ],
+        "neighbors": [
+            121,
+            99,
+            100,
+            109
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(118, 0, 0)": {
+        "id": 118,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            707,
+            215
+        ],
+        "neighbors": [
+            122,
+            110,
+            102,
+            103
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(119, 0, 0)": {
+        "id": 119,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            399,
+            225
+        ],
+        "neighbors": [
+            97,
+            129,
+            143,
+            114,
+            93
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(120, 0, 0)": {
+        "id": 120,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            861,
+            225
+        ],
+        "neighbors": [
+            98,
+            130,
+            146,
+            116,
+            94
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(121, 0, 0)": {
+        "id": 121,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            207,
+            223
+        ],
+        "neighbors": [
+            99,
+            131,
+            109,
+            111,
+            117,
+            123
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(122, 0, 0)": {
+        "id": 122,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            669,
+            223
+        ],
+        "neighbors": [
+            134,
+            102,
+            110,
+            112,
+            118,
+            124
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(123, 0, 0)": {
+        "id": 123,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            163,
+            231
+        ],
+        "neighbors": [
+            131,
+            142,
+            111,
+            121,
+            127
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(124, 0, 0)": {
+        "id": 124,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            625,
+            231
+        ],
+        "neighbors": [
+            128,
+            134,
+            112,
+            145,
+            122
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(125, 0, 0)": {
+        "id": 125,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            66,
+            244
+        ],
+        "neighbors": [
+            105,
+            137,
+            107,
+            141,
+            113,
+            155
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(126, 0, 0)": {
+        "id": 126,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            528,
+            244
+        ],
+        "neighbors": [
+            106,
+            138,
+            108,
+            144,
+            115,
+            156
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(127, 0, 0)": {
+        "id": 127,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            126,
+            237
+        ],
+        "neighbors": [
+            141,
+            142,
+            111,
+            113,
+            83,
+            123
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(128, 0, 0)": {
+        "id": 128,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            588,
+            237
+        ],
+        "neighbors": [
+            112,
+            144,
+            145,
+            115,
+            84,
+            124
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(129, 0, 0)": {
+        "id": 129,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            393,
+            255
+        ],
+        "neighbors": [
+            143,
+            97,
+            139,
+            119
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(130, 0, 0)": {
+        "id": 130,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            855,
+            255
+        ],
+        "neighbors": [
+            120,
+            98,
+            140,
+            146
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(131, 0, 0)": {
+        "id": 131,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            213,
+            242
+        ],
+        "neighbors": [
+            132,
+            109,
+            142,
+            147,
+            121,
+            123
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(132, 0, 0)": {
+        "id": 132,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            283,
+            242
+        ],
+        "neighbors": [
+            131,
+            133,
+            109,
+            147,
+            148
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(133, 0, 0)": {
+        "id": 133,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            341,
+            255
+        ],
+        "neighbors": [
+            97,
+            132,
+            139,
+            109,
+            148,
+            157,
+            159
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(134, 0, 0)": {
+        "id": 134,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            675,
+            242
+        ],
+        "neighbors": [
+            135,
+            110,
+            145,
+            149,
+            122,
+            124
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(135, 0, 0)": {
+        "id": 135,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            745,
+            242
+        ],
+        "neighbors": [
+            134,
+            136,
+            110,
+            149,
+            150
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(136, 0, 0)": {
+        "id": 136,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            803,
+            255
+        ],
+        "neighbors": [
+            160,
+            98,
+            135,
+            140,
+            110,
+            150,
+            158
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(137, 0, 0)": {
+        "id": 137,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            29,
+            269
+        ],
+        "neighbors": [
+            104,
+            169,
+            170,
+            107,
+            155,
+            125
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(138, 0, 0)": {
+        "id": 138,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            491,
+            269
+        ],
+        "neighbors": [
+            101,
+            171,
+            172,
+            108,
+            156,
+            126
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(139, 0, 0)": {
+        "id": 139,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            375,
+            263
+        ],
+        "neighbors": [
+            97,
+            129,
+            165,
+            133,
+            143,
+            159
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(140, 0, 0)": {
+        "id": 140,
+        "terrain": "inland_sea",
+        "is_coastal": false,
+        "center": [
+            837,
+            263
+        ],
+        "neighbors": [
+            160,
+            98,
+            130,
+            166,
+            136,
+            146
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(141, 0, 0)": {
+        "id": 141,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            121,
+            270
+        ],
+        "neighbors": [
+            161,
+            173,
+            142,
+            113,
+            155,
+            125,
+            127
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(142, 0, 0)": {
+        "id": 142,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            160,
+            259
+        ],
+        "neighbors": [
+            161,
+            131,
+            141,
+            147,
+            153,
+            123,
+            127
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(143, 0, 0)": {
+        "id": 143,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            417,
+            285
+        ],
+        "neighbors": [
+            129,
+            101,
+            165,
+            139,
+            177,
+            114,
+            119
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(144, 0, 0)": {
+        "id": 144,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            583,
+            270
+        ],
+        "neighbors": [
+            128,
+            162,
+            174,
+            145,
+            115,
+            156,
+            126
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(145, 0, 0)": {
+        "id": 145,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            622,
+            259
+        ],
+        "neighbors": [
+            128,
+            162,
+            134,
+            144,
+            149,
+            154,
+            124
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(146, 0, 0)": {
+        "id": 146,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            879,
+            285
+        ],
+        "neighbors": [
+            130,
+            166,
+            104,
+            140,
+            178,
+            116,
+            120
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(147, 0, 0)": {
+        "id": 147,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            213,
+            260
+        ],
+        "neighbors": [
+            131,
+            132,
+            142,
+            148,
+            151,
+            153
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(148, 0, 0)": {
+        "id": 148,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            287,
+            260
+        ],
+        "neighbors": [
+            132,
+            133,
+            147,
+            151,
+            157
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(149, 0, 0)": {
+        "id": 149,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            675,
+            260
+        ],
+        "neighbors": [
+            134,
+            135,
+            145,
+            150,
+            152,
+            154
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(150, 0, 0)": {
+        "id": 150,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            749,
+            260
+        ],
+        "neighbors": [
+            135,
+            136,
+            149,
+            152,
+            158
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(151, 0, 0)": {
+        "id": 151,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            227,
+            278
+        ],
+        "neighbors": [
+            167,
+            147,
+            148,
+            153,
+            157
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(152, 0, 0)": {
+        "id": 152,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            689,
+            278
+        ],
+        "neighbors": [
+            168,
+            149,
+            150,
+            154,
+            158
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(153, 0, 0)": {
+        "id": 153,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            184,
+            281
+        ],
+        "neighbors": [
+            161,
+            167,
+            142,
+            147,
+            151
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(154, 0, 0)": {
+        "id": 154,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            646,
+            281
+        ],
+        "neighbors": [
+            162,
+            168,
+            145,
+            149,
+            152
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(155, 0, 0)": {
+        "id": 155,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            90,
+            286
+        ],
+        "neighbors": [
+            137,
+            170,
+            141,
+            173,
+            125
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(156, 0, 0)": {
+        "id": 156,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            552,
+            286
+        ],
+        "neighbors": [
+            138,
+            172,
+            174,
+            144,
+            126
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(157, 0, 0)": {
+        "id": 157,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            273,
+            285
+        ],
+        "neighbors": [
+            163,
+            133,
+            167,
+            148,
+            151,
+            159
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(158, 0, 0)": {
+        "id": 158,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            735,
+            285
+        ],
+        "neighbors": [
+            160,
+            164,
+            136,
+            168,
+            150,
+            152
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(159, 0, 0)": {
+        "id": 159,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            344,
+            295
+        ],
+        "neighbors": [
+            163,
+            133,
+            165,
+            139,
+            175,
+            157
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(160, 0, 0)": {
+        "id": 160,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            806,
+            295
+        ],
+        "neighbors": [
+            164,
+            166,
+            136,
+            140,
+            176,
+            158
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(161, 0, 0)": {
+        "id": 161,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            161,
+            299
+        ],
+        "neighbors": [
+            167,
+            141,
+            142,
+            173,
+            179,
+            153
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(162, 0, 0)": {
+        "id": 162,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            623,
+            299
+        ],
+        "neighbors": [
+            168,
+            174,
+            144,
+            145,
+            180,
+            154
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(163, 0, 0)": {
+        "id": 163,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            276,
+            309
+        ],
+        "neighbors": [
+            167,
+            175,
+            179,
+            181,
+            157,
+            159
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(164, 0, 0)": {
+        "id": 164,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            738,
+            309
+        ],
+        "neighbors": [
+            160,
+            168,
+            176,
+            180,
+            182,
+            158
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(165, 0, 0)": {
+        "id": 165,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            351,
+            343
+        ],
+        "neighbors": [
+            195,
+            139,
+            175,
+            143,
+            177,
+            181,
+            183,
+            159
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(166, 0, 0)": {
+        "id": 166,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            813,
+            343
+        ],
+        "neighbors": [
+            160,
+            196,
+            140,
+            176,
+            178,
+            146,
+            182,
+            184
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(167, 0, 0)": {
+        "id": 167,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            205,
+            309
+        ],
+        "neighbors": [
+            161,
+            163,
+            179,
+            151,
+            153,
+            157
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(168, 0, 0)": {
+        "id": 168,
+        "terrain": "plains",
+        "is_coastal": false,
+        "center": [
+            667,
+            309
+        ],
+        "neighbors": [
+            162,
+            164,
+            180,
+            152,
+            154,
+            158
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(169, 0, 0)": {
+        "id": 169,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            24,
+            325
+        ],
+        "neighbors": [
+            104,
+            137,
+            170,
+            178,
+            185
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(170, 0, 0)": {
+        "id": 170,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            78,
+            323
+        ],
+        "neighbors": [
+            169,
+            137,
+            173,
+            179,
+            183,
+            185,
+            155
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(171, 0, 0)": {
+        "id": 171,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            486,
+            325
+        ],
+        "neighbors": [
+            101,
+            138,
+            172,
+            177,
+            186
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(172, 0, 0)": {
+        "id": 172,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            540,
+            323
+        ],
+        "neighbors": [
+            138,
+            171,
+            174,
+            180,
+            184,
+            186,
+            156
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(173, 0, 0)": {
+        "id": 173,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            126,
+            317
+        ],
+        "neighbors": [
+            161,
+            170,
+            141,
+            179,
+            155
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(174, 0, 0)": {
+        "id": 174,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            588,
+            317
+        ],
+        "neighbors": [
+            162,
+            172,
+            144,
+            180,
+            156
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(175, 0, 0)": {
+        "id": 175,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            314,
+            325
+        ],
+        "neighbors": [
+            163,
+            181,
+            165,
+            159
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(176, 0, 0)": {
+        "id": 176,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            776,
+            325
+        ],
+        "neighbors": [
+            160,
+            164,
+            182,
+            166
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(177, 0, 0)": {
+        "id": 177,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            415,
+            357
+        ],
+        "neighbors": [
+            195,
+            165,
+            101,
+            171,
+            143,
+            186,
+            188
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(178, 0, 0)": {
+        "id": 178,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            877,
+            357
+        ],
+        "neighbors": [
+            196,
+            166,
+            104,
+            169,
+            146,
+            185,
+            190
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(179, 0, 0)": {
+        "id": 179,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            195,
+            335
+        ],
+        "neighbors": [
+            161,
+            163,
+            167,
+            170,
+            173,
+            181,
+            183
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(180, 0, 0)": {
+        "id": 180,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            657,
+            335
+        ],
+        "neighbors": [
+            162,
+            164,
+            168,
+            172,
+            174,
+            182,
+            184
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(181, 0, 0)": {
+        "id": 181,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            268,
+            337
+        ],
+        "neighbors": [
+            163,
+            165,
+            175,
+            179,
+            183
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(182, 0, 0)": {
+        "id": 182,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            730,
+            337
+        ],
+        "neighbors": [
+            164,
+            166,
+            176,
+            180,
+            184
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(183, 0, 0)": {
+        "id": 183,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            201,
+            360
+        ],
+        "neighbors": [
+            192,
+            195,
+            165,
+            170,
+            179,
+            181,
+            185,
+            191
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(184, 0, 0)": {
+        "id": 184,
+        "terrain": "coastal_sea",
+        "is_coastal": false,
+        "center": [
+            663,
+            360
+        ],
+        "neighbors": [
+            193,
+            194,
+            196,
+            166,
+            172,
+            180,
+            182,
+            186
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(185, 0, 0)": {
+        "id": 185,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            66,
+            369
+        ],
+        "neighbors": [
+            195,
+            169,
+            170,
+            178,
+            183,
+            187,
+            191
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(186, 0, 0)": {
+        "id": 186,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            528,
+            369
+        ],
+        "neighbors": [
+            193,
+            196,
+            171,
+            172,
+            177,
+            184,
+            189
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(187, 0, 0)": {
+        "id": 187,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            19,
+            379
+        ],
+        "neighbors": [
+            185,
+            190
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(188, 0, 0)": {
+        "id": 188,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            442,
+            379
+        ],
+        "neighbors": [
+            177,
+            189
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(189, 0, 0)": {
+        "id": 189,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            481,
+            379
+        ],
+        "neighbors": [
+            186,
+            188
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(190, 0, 0)": {
+        "id": 190,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            904,
+            379
+        ],
+        "neighbors": [
+            178,
+            187
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(191, 0, 0)": {
+        "id": 191,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            109,
+            375
+        ],
+        "neighbors": [
+            192,
+            185,
+            195,
+            183
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(192, 0, 0)": {
+        "id": 192,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            144,
+            375
+        ],
+        "neighbors": [
+            191,
+            195,
+            183
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(193, 0, 0)": {
+        "id": 193,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            571,
+            375
+        ],
+        "neighbors": [
+            184,
+            194,
+            186,
+            196
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(194, 0, 0)": {
+        "id": 194,
+        "terrain": "plains",
+        "is_coastal": true,
+        "center": [
+            606,
+            375
+        ],
+        "neighbors": [
+            184,
+            193,
+            196
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(195, 0, 0)": {
+        "id": 195,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            251,
+            389
+        ],
+        "neighbors": [
+            192,
+            165,
+            177,
+            183,
+            185,
+            191
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    },
+    "(196, 0, 0)": {
+        "id": 196,
+        "terrain": "ocean",
+        "is_coastal": false,
+        "center": [
+            713,
+            389
+        ],
+        "neighbors": [
+            193,
+            194,
+            166,
+            178,
+            184,
+            186
+        ],
+        "owner": "Unclaimed",
+        "units": [],
+        "building_queue": [],
+        "unit_queue": [],
+        "orders": [],
+        "buildings": [],
+        "resources": []
+    }
+}

@@ -123,7 +123,7 @@ class Random_Setup(GameState):
             Button("centered", 630, "large", "green", "START GAME", self.start_game),
         ]
         
-        random_map_x = 100
+        random_map_x = 20
         random_map_y = 70
 
         # 1. Isolated Procedural Options (Placed above the table display)
@@ -138,7 +138,7 @@ class Random_Setup(GameState):
             
             map_type_str = self.procedural_types[self.proc_type_index]
             self.elements.append(
-                Button(random_map_x + 220, random_map_y, "medium", "red", f"Type: {map_type_str}", self.toggle_procedural_type)
+                Button(random_map_x + 210, random_map_y, "medium", "red", f"Type: {map_type_str}", self.toggle_procedural_type)
             )
         else:
             # Perfectly centered when it's the lone option
@@ -147,8 +147,8 @@ class Random_Setup(GameState):
         
         # 2. Base Maps Table Layout
         total_items = len(self.available_maps)
-        cols = min(5, max(1, total_items))
-        grid_width = cols * 220
+        cols = min(6, max(1, total_items))
+        grid_width = cols * 210
         start_x = (c.SCREEN_WIDTH - grid_width) // 2 + 10 
         start_y = 130
         
@@ -156,7 +156,7 @@ class Random_Setup(GameState):
             grid_idx = i  # Reset to 0 base since Random Map isn't taking slot 0 anymore
             col = grid_idx % cols
             row = grid_idx // cols
-            btn = Button(start_x + (col * 220), start_y + (row * 60), "medium", "blue", map_name, lambda idx=i: self.select_map(idx))
+            btn = Button(start_x + (col * 210), start_y + (row * 60), "medium", "blue", map_name, lambda idx=i: self.select_map(idx))
             if not self.procedural_world and i == self.map_index:
                 btn.is_selected = True 
             self.elements.append(btn)

@@ -9,6 +9,8 @@ Immediate concerns:
 
 - add in a seperate queue for naval units specifically
 
+- check if countries having custom names is implemented correctly, especially for puppet names
+
 - setting to make the ai more difficult
 
 - add in help button for tournaments

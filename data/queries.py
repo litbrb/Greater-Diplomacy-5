@@ -519,7 +519,7 @@ def can_ships_enter(moving_nation, target_province, nation_data):
     if target_owner == "Unclaimed": return True
     
     scenario_settings = get_scenario_settings()
-    if str(scenario_settings.get("instant_betrayal", c.DEFAULT_INSTANT_BETRAYAL)).lower() == "true":
+    if str(scenario_settings.get("surprise_attack", c.DEFAULT_SURPRISE_ATTACK)).lower() == "true":
         pending = nation_data.get(moving_nation, {}).get("pending_diplomacy", {})
         info = pending.get(target_owner, {})
         if isinstance(info, dict) and info.get("action") == "WAR_DECLARATION":
@@ -541,7 +541,7 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
     if are_at_war(moving_nation, target_owner, nation_data): return True
     
     scenario_settings = get_scenario_settings()
-    if str(scenario_settings.get("instant_betrayal", c.DEFAULT_INSTANT_BETRAYAL)).lower() == "true":
+    if str(scenario_settings.get("surprise_attack", c.DEFAULT_SURPRISE_ATTACK)).lower() == "true":
         pending = nation_data.get(moving_nation, {}).get("pending_diplomacy", {})
         info = pending.get(target_owner, {})
         if isinstance(info, dict) and info.get("action") == "WAR_DECLARATION":

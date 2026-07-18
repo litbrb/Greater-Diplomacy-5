@@ -73,13 +73,9 @@ class Scenario_Settings(GameState):
             Button("centered", 240, "medium", cb_color, cb_text, self.toggle_casus_belli)
         )
 
-        # Toggle Button - AI Off
-        ai_disabled_val = str(self.settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)).lower() == "true"
-        ai_disabled_color = "red" if ai_disabled_val else "green" 
-        ai_disabled_text = "AI: OFF" if ai_disabled_val else "AI: ON"
-
+        # Button to open AI Settings
         self.elements.append(
-            Button("centered", 320, "medium", ai_disabled_color, ai_disabled_text, self.toggle_ai_disabled)
+            Button(80, 320, "medium", "blue", "AI Specific Settings", self.open_ai_settings)
         )
 
         # Toggle Button - Battle Royale
@@ -113,11 +109,9 @@ class Scenario_Settings(GameState):
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
-    def toggle_ai_disabled(self):
-        current = str(self.settings.get("ai_disabled", c.DEFAULT_AI_DISABLED)).lower() == "true"
-        self.settings["ai_disabled"] = not current
-        queries.save_scenario_settings(self.settings)
-        self.refresh_ui()
+    def open_ai_settings(self):
+        self.next_state = "AI_SETTINGS"
+        self.done = True
 
     def toggle_battle_royale(self):
         current = str(self.settings.get("battle_royale", c.DEFAULT_BATTLE_ROYALE)).lower() == "true"
@@ -138,14 +132,11 @@ class Scenario_Settings(GameState):
         self.refresh_ui()
 
     def reset_defaults(self):
-        self.settings = {
-            "fog_of_war": c.DEFAULT_FOG_OF_WAR,
-            "casus_belli_required": c.DEFAULT_CASUS_BELLI,
-            "days_per_turn": "Default",
-            "use_scripted_events": c.DEFAULT_USE_SCRIPTED_EVENTS,
-            "ai_disabled": c.DEFAULT_AI_DISABLED,
-            "battle_royale": c.DEFAULT_BATTLE_ROYALE
-        }
+        self.settings["fog_of_war"] = c.DEFAULT_FOG_OF_WAR
+        self.settings["casus_belli_required"] = c.DEFAULT_CASUS_BELLI
+        self.settings["days_per_turn"] = "Default"
+        self.settings["use_scripted_events"] = c.DEFAULT_USE_SCRIPTED_EVENTS
+        self.settings["battle_royale"] = c.DEFAULT_BATTLE_ROYALE
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 

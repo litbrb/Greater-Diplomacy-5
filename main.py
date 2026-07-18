@@ -55,6 +55,7 @@ from screens.menu_screens.multiplayer_hub import Multiplayer_Hub
 from screens.menu_screens.multiplayer_host import Multiplayer_Host
 from screens.menu_screens.multiplayer_join import Multiplayer_Join
 from screens.menu_screens.multiplayer_new import Multiplayer_New
+from screens.menu_screens.ai_settings import AI_Settings
 
 pygame.display.set_caption("Greater Diplomacy 5")
 
@@ -265,7 +266,8 @@ class Controller:
             "MULTIPLAYER_HUB": Multiplayer_Hub(),
             "MULTIPLAYER_HOST": Multiplayer_Host(),
             "MULTIPLAYER_JOIN": Multiplayer_Join(),
-            "MULTIPLAYER_NEW": Multiplayer_New()
+            "MULTIPLAYER_NEW": Multiplayer_New(),
+            "AI_SETTINGS": AI_Settings()
         }
         self.active_state = self.states["MENU"]
 

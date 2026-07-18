@@ -358,7 +358,8 @@ def process_basic_proactive_ai(map_screen):
         # --- 4. Declare War for Cores & Claims Logic ---
         if not (my_master and my_type == c.PUPPET_TYPE_INTEGRATED):
             current_turn = queries.get_total_turns(map_screen.time_manager)
-            if current_turn >= c.TURNS_TO_WAIT_BEFORE_WAR:
+            turns_to_wait = int(map_screen.scenario_settings.get("turns_to_wait_before_war", c.TURNS_TO_WAIT_BEFORE_WAR))
+            if current_turn >= turns_to_wait:
                 valid_war_targets = queries.get_nations_holding_our_cores_or_claims(ai_name, map_screen.map_data, map_screen.nation_data)
                 
                 if valid_war_targets:
@@ -406,7 +407,8 @@ def process_basic_proactive_ai(map_screen):
                         if queries.ai_thinks_it_can_win(ai_name, target, map_screen.map_data, map_screen.nation_data, map_screen.id_to_province):
                             
                             # Random chance to actually declare war
-                            if random.random() <= c.AI_WAR_DECLARATION_CHANCE:
+                            war_chance = float(map_screen.scenario_settings.get("ai_war_declaration_chance", c.AI_WAR_DECLARATION_CHANCE))
+                            if random.random() <= war_chance:
                                 has_wargoal = queries.has_wargoal(ai_name, target, map_screen.nation_data, map_screen.map_data)
                                 if has_wargoal:
                                     if not queries.is_ai_diplo_on_cooldown(ai_name, target, "WAR_DECLARATION", map_screen.nation_data):
@@ -488,7 +490,8 @@ def process_basic_proactive_ai(map_screen):
         # --- 5. Fabricate Claims on Weaker Neighbors ---
         if not is_already_at_war and not (my_master and my_type == c.PUPPET_TYPE_INTEGRATED):
             current_turn = queries.get_total_turns(map_screen.time_manager)
-            if current_turn >= c.TURNS_TO_WAIT_BEFORE_WAR:
+            turns_to_wait = int(map_screen.scenario_settings.get("turns_to_wait_before_war", c.TURNS_TO_WAIT_BEFORE_WAR))
+            if current_turn >= turns_to_wait:
                 my_neighbors = queries.get_neighboring_nations(ai_name, map_screen.map_data, map_screen.id_to_province)
                 
                 for neighbor in my_neighbors:

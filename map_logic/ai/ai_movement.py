@@ -128,7 +128,21 @@ def process_ai_unit_orders(map_screen):
             if queries.can_land_units_enter(ai_name, p, map_screen.nation_data):
                 allowed_prov_ids.add(p["id"])
         
-        enemies = map_screen.nation_data[ai_name].get("at_war_with", [])
+        enemies = list(map_screen.nation_data[ai_name].get("at_war_with", []))
+        
+        # --- NEW: INSTANT BETRAYAL AI INTEGRATION ---
+        scenario_settings = queries.get_scenario_settings()
+        if str(scenario_settings.get("instant_betrayal", c.DEFAULT_INSTANT_BETRAYAL)).lower() == "true":
+            queued = map_screen.nation_data[ai_name].get("queued_ai_actions", [])
+            pending_wars = [q["target"] for q in queued if q.get("action") == "WAR_DECLARATION"]
+            
+            pending = map_screen.nation_data[ai_name].get("pending_diplomacy", {})
+            for target, info in pending.items():
+                if isinstance(info, dict) and info.get("action") == "WAR_DECLARATION":
+                    pending_wars.append(target)
+                    
+            if pending_wars:
+                enemies = list(set(enemies + pending_wars))
 
         # --- NEW: IDENTIFY UNSAFE WATERS FOR NAVAL SURVIVAL ---
         # Pre-calculates areas heavily patrolled by enemies so Convoys and weak ships don't suicide

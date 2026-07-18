@@ -516,7 +516,21 @@ def can_ships_enter(moving_nation, target_province, nation_data):
     if not target_province.get("is_coastal", False): return False
         
     target_owner = target_province.get("owner", "Unclaimed")
-    return target_owner == "Unclaimed" or target_owner in get_all_friendly_nations(moving_nation, nation_data)
+    if target_owner == "Unclaimed": return True
+    
+    scenario_settings = get_scenario_settings()
+    if str(scenario_settings.get("instant_betrayal", c.DEFAULT_INSTANT_BETRAYAL)).lower() == "true":
+        pending = nation_data.get(moving_nation, {}).get("pending_diplomacy", {})
+        info = pending.get(target_owner, {})
+        if isinstance(info, dict) and info.get("action") == "WAR_DECLARATION":
+            return True
+            
+        queued = nation_data.get(moving_nation, {}).get("queued_ai_actions", [])
+        for q in queued:
+            if q.get("target") == target_owner and q.get("action") == "WAR_DECLARATION":
+                return True
+                
+    return target_owner in get_all_friendly_nations(moving_nation, nation_data)
 
 def can_land_units_enter(moving_nation, target_province, nation_data):
     """Centralized rules for land movement."""
@@ -526,6 +540,18 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
     if target_owner in ["Unclaimed", "None", "Ocean", "Lakes"]: return True
     if are_at_war(moving_nation, target_owner, nation_data): return True
     
+    scenario_settings = get_scenario_settings()
+    if str(scenario_settings.get("instant_betrayal", c.DEFAULT_INSTANT_BETRAYAL)).lower() == "true":
+        pending = nation_data.get(moving_nation, {}).get("pending_diplomacy", {})
+        info = pending.get(target_owner, {})
+        if isinstance(info, dict) and info.get("action") == "WAR_DECLARATION":
+            return True
+            
+        queued = nation_data.get(moving_nation, {}).get("queued_ai_actions", [])
+        for q in queued:
+            if q.get("target") == target_owner and q.get("action") == "WAR_DECLARATION":
+                return True
+                
     return target_owner in get_all_friendly_nations(moving_nation, nation_data)
 
 def get_tactical_speed(unit, unit_library):

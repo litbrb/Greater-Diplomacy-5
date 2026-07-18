@@ -16,6 +16,7 @@ class Scenario_Settings(GameState):
             self.settings = {
                 "fog_of_war": c.DEFAULT_FOG_OF_WAR,
                 "casus_belli_required": c.DEFAULT_CASUS_BELLI,
+                "instant_betrayal": c.DEFAULT_INSTANT_BETRAYAL,
                 "use_scripted_events": c.DEFAULT_USE_SCRIPTED_EVENTS,
                 "ai_disabled": c.DEFAULT_AI_DISABLED,
                 "battle_royale": c.DEFAULT_BATTLE_ROYALE
@@ -73,9 +74,18 @@ class Scenario_Settings(GameState):
             Button("centered", 240, "medium", cb_color, cb_text, self.toggle_casus_belli)
         )
 
+        # Toggle Button - Instant Betrayal
+        ib_val = str(self.settings.get("instant_betrayal", c.DEFAULT_INSTANT_BETRAYAL)).lower() == "true"
+        ib_color = "green" if ib_val else "red"
+        ib_text = "Instant Betrayal: ON" if ib_val else "Instant Betrayal: OFF"
+
+        self.elements.append(
+            Button("centered", 300, "medium", ib_color, ib_text, self.toggle_instant_betrayal)
+        )
+
         # Button to open AI Settings
         self.elements.append(
-            Button(80, 320, "medium", "blue", "AI Specific Settings", self.open_ai_settings)
+            Button(80, 360, "medium", "blue", "AI Specific Settings", self.open_ai_settings)
         )
 
         # Toggle Button - Battle Royale
@@ -84,7 +94,7 @@ class Scenario_Settings(GameState):
         br_text = "Battle Royale: ON" if br_val else "Battle Royale: OFF"
 
         self.elements.append(
-            Button("centered", 400, "medium", br_color, br_text, self.toggle_battle_royale)
+            Button("centered", 420, "medium", br_color, br_text, self.toggle_battle_royale)
         )
 
         dpt_val = self.settings.get("days_per_turn", "Default")
@@ -94,7 +104,7 @@ class Scenario_Settings(GameState):
 
         # Reset Defaults Button
         self.elements.append(
-            Button("centered", 560, "medium", "grey", "Reset to Defaults", self.reset_defaults)
+            Button("centered", 540, "medium", "grey", "Reset to Defaults", self.reset_defaults)
         )
 
     def toggle_fog(self):
@@ -106,6 +116,12 @@ class Scenario_Settings(GameState):
     def toggle_casus_belli(self):
         current = str(self.settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
         self.settings["casus_belli_required"] = not current
+        queries.save_scenario_settings(self.settings)
+        self.refresh_ui()
+
+    def toggle_instant_betrayal(self):
+        current = str(self.settings.get("instant_betrayal", c.DEFAULT_INSTANT_BETRAYAL)).lower() == "true"
+        self.settings["instant_betrayal"] = not current
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
@@ -134,6 +150,7 @@ class Scenario_Settings(GameState):
     def reset_defaults(self):
         self.settings["fog_of_war"] = c.DEFAULT_FOG_OF_WAR
         self.settings["casus_belli_required"] = c.DEFAULT_CASUS_BELLI
+        self.settings["instant_betrayal"] = c.DEFAULT_INSTANT_BETRAYAL
         self.settings["days_per_turn"] = "Default"
         self.settings["use_scripted_events"] = c.DEFAULT_USE_SCRIPTED_EVENTS
         self.settings["battle_royale"] = c.DEFAULT_BATTLE_ROYALE

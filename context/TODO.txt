@@ -11,9 +11,13 @@ Immediate concerns:
 
 - check if countries having custom names is implemented correctly, especially for puppet names
 
-- setting to make the ai more difficult (how so?)
+- custom times to construct units?
+- make terrain ACTUALLY DO STUFF when in combat / moving troops across
+- option to allow construction in non-core territories (non-core construction)
+- option to disable factions completely
 - option to prevent core removal
 - option to disable revolts from spawning when removing cores
+- setting to make the ai more difficult (how so?)
 
 - add in help button for tournaments
 
@@ -43,13 +47,9 @@ Vague content ideas NOT THAT IMPORTANT BUT COULD PROBABLY BE LOOKED AT:
 
 - opinion modifier should maybe do more than just affect ai attitudes? (more likely to declare war, less likely to accept peace for example?)
 
-- new scenario option, instead of making the ai have a 50% chance to declare war if it can declare war make that a 100% chance
-
 for random scenarios:
 add how valuable the resources are (rn this is between 20 - 80)
 so there could be 1 slider for minimum and 1 slider for maximum
-
-- make terrain ACTUALLY DO STUFF when in combat / moving troops across
 
 - make the combat zone look less awful
 

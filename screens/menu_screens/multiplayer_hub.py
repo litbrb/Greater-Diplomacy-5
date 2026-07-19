@@ -11,8 +11,24 @@ class Multiplayer_Hub(GameState):
         self.elements = [
             Button("centered", 250, "medium", "green", "Host Game", self.host_game),
             Button("centered", 350, "medium", "blue", "Join Game", self.join_game),
-            Button(20, 20, "small", "red", "Back", self.go_back)
+            Button(20, 20, "small", "red", "Back", self.go_back),
+            Button(c.SCREEN_WIDTH - 120, 20, "small", "blue", "Help", self.show_help)
         ]
+
+    def show_help(self):
+        import tkinter as tk
+        from tkinter import messagebox
+        root = tk.Tk()
+        root.withdraw()
+        help_text = (
+            "Tournaments allow for asynchronous multiplayer gameplay.\n\n"
+            "Host: Create a new tournament, distribute the generated .gd5tour file and the player keys to your friends. "
+            "When they send back their .gd5move files, load the tournament and load their moves in the Manage Players panel. "
+            "Then process the turn and send the updated .gd5tour file back to them.\n\n"
+            "Player: Use 'Join Game' to load the .gd5tour file using your player key. "
+            "Submit your orders and click 'Export Turn' to generate a .gd5move file, and send it to the host."
+        )
+        messagebox.showinfo("Tournament Help", help_text)
 
     def additional_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:

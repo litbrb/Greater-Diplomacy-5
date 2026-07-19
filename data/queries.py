@@ -1853,37 +1853,67 @@ def decode_b64_to_surf(b64_str, size, is_portrait=False, country_name=None):
 # ==========================================
 
 def is_nation_reachable(nation_a, target_nation, map_data, id_to_province, nation_data):
-    """Determines if a nation can physically reach another via land borders (including faction borders) or sea."""
-    friendly_nations = get_all_friendly_nations(nation_a, nation_data)
-        
+    """Determines if a nation can physically reach another via land borders (including passable nations) or connected water."""
+    import data.constants as c
+    
+    friendly_a = get_all_friendly_nations(nation_a, nation_data)
+    at_war_a = set(nation_data.get(nation_a, {}).get("at_war_with", []))
+    
+    friendly_b = get_all_friendly_nations(target_nation, nation_data)
+    at_war_b = set(nation_data.get(target_nation, {}).get("at_war_with", []))
+    
     target_faction = nation_data.get(target_nation, {}).get("faction", "")
     enemy_nations = {target_nation}
     if target_faction:
         enemy_nations.update(get_faction_members(target_faction, nation_data))
         
-    friendly_has_coast = False
-    target_has_coast = False
+    passable_nations = set(friendly_a) | at_war_a | set(friendly_b) | at_war_b | enemy_nations
     
-    for prov in map_data.values():
+    borders = {}
+    def add_edge(u, v):
+        if u not in borders: borders[u] = set()
+        if v not in borders: borders[v] = set()
+        borders[u].add(v)
+        borders[v].add(u)
+        
+    for prov_id, prov in map_data.items():
+        is_water = prov.get("terrain") in c.WATER_TERRAINS
         owner = prov.get("owner")
         
-        # Check if any friendly nation touches any enemy nation
-        if owner in friendly_nations:
-            if prov.get("is_coastal", False):
-                friendly_has_coast = True
-                
-            for n_id in prov.get("neighbors", []):
-                n_prov = id_to_province.get(n_id)
-                if n_prov and n_prov.get("owner") in enemy_nations:
-                    return True 
-                    
-        # Keep an eye out for enemy coasts globally too
-        if owner in enemy_nations and prov.get("is_coastal", False):
-            target_has_coast = True
-            
-    if friendly_has_coast and target_has_coast:
-        return True 
+        node_u = f"WATER_{prov_id}" if is_water else owner
+        if not node_u: continue
         
+        for n_id in prov.get("neighbors", []):
+            n_prov = id_to_province.get(n_id)
+            if not n_prov: continue
+            
+            n_is_water = n_prov.get("terrain") in c.WATER_TERRAINS
+            n_owner = n_prov.get("owner")
+            
+            node_v = f"WATER_{n_id}" if n_is_water else n_owner
+            if not node_v: continue
+            
+            if node_u != node_v:
+                add_edge(node_u, node_v)
+                
+    visited = set(friendly_a)
+    queue = list(friendly_a)
+    
+    while queue:
+        curr = queue.pop(0)
+        
+        if curr in enemy_nations:
+            return True
+            
+        for neighbor in borders.get(curr, []):
+            if neighbor not in visited:
+                is_water_node = str(neighbor).startswith("WATER_")
+                if neighbor in enemy_nations:
+                    return True
+                if is_water_node or neighbor in passable_nations:
+                    visited.add(neighbor)
+                    queue.append(neighbor)
+                    
     return False
 
 def is_ai_diplo_on_cooldown(sender, target, action, nation_data):

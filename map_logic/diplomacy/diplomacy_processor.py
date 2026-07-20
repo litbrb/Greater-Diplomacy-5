@@ -26,7 +26,10 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
             params = info.get("parameters", {})
             queries.cancel_trade_escrow(nation_data[player_name], params)
             
-        del pending[target_name]
+        if isinstance(info, dict) and "_suspended_action" in info:
+            pending[target_name] = info["_suspended_action"]
+        else:
+            del pending[target_name]
         return f"Undo {action_type.replace('_', ' ').title()}"
         
     elif current_action is not None:
@@ -40,6 +43,8 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
                 custom_msg = info.get("action")[4:]
         elif is_unilateral and isinstance(info, dict) and info.get("turns", 0) > 0:
             pass # Safe to overwrite an executed unilateral action
+        elif action_type.startswith("ACCEPT_") or action_type.startswith("REJECT_"):
+            pass # NEW: Allow responses to suspend the active action
         else:
             # Prevents declaring war while an alliance request is pending, etc.
             return "A diplomatic action is already pending with this nation!"
@@ -56,7 +61,13 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
                 return "You already have a pending faction request!"
     # ------------------------------------------------
         
+    pending_orig_info = None
+    if current_action is not None and (action_type.startswith("ACCEPT_") or action_type.startswith("REJECT_")):
+        pending_orig_info = pending.get(target_name)
+        
     pending[target_name] = {"action": action_type, "turns": 0, "timer": timer, "message": custom_msg}
+    if pending_orig_info:
+        pending[target_name]["_suspended_action"] = pending_orig_info
     return "Message drafted. Will send at end of turn."
 
 def process_diplomacy_turn(self):
@@ -706,7 +717,10 @@ def process_diplomacy_turn(self):
 
         for t in actions_to_clear:
             if t in pending:
-                del pending[t]
+                if isinstance(pending[t], dict) and "_suspended_action" in pending[t]:
+                    pending[t] = pending[t]["_suspended_action"]
+                else:
+                    del pending[t]
 
     # PASS 2: DELAYED / LLM ACTIONS (Turns >= 1)
     for country_name, data in list(self.nation_data.items()):
@@ -864,7 +878,10 @@ def process_diplomacy_turn(self):
 
         for t in actions_to_clear:
             if t in pending:
-                del pending[t]
+                if isinstance(pending[t], dict) and "_suspended_action" in pending[t]:
+                    pending[t] = pending[t]["_suspended_action"]
+                else:
+                    del pending[t]
 
     # Process delayed AI responses (like war declarations) converting them to normal queued diplomacy actions
     for sender, receiver, act, tns, msg in delayed_responses:

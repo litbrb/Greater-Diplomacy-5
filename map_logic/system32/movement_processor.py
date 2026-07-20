@@ -252,6 +252,7 @@ def process_movement(self):
                         continue
                 # ---------------------------------
 
+                unit["_previous_province_id"] = unit["_current_province_id"]
                 unit["_current_province_id"] = target_id
                 order["path"].pop(0)
 

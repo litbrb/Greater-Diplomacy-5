@@ -537,6 +537,14 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
     if target_province.get("terrain") in c.WATER_TERRAINS: return False
 
     target_owner = target_province.get("owner", "Unclaimed")
+    turn_start_owner = target_province.get("_turn_start_owner", target_owner)
+    
+    # If the tile was captured THIS TURN, we evaluate entry based on the original owner
+    # to prevent movement execution order from blocking units moving on the exact same turn.
+    if current_owner := target_owner:
+        if turn_start_owner != current_owner:
+            target_owner = turn_start_owner
+
     if target_owner in ["Unclaimed", "None", "Ocean", "Lakes"]: return True
     if are_at_war(moving_nation, target_owner, nation_data): return True
     

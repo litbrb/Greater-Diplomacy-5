@@ -126,6 +126,7 @@ DEFAULT_AI_DISABLED = False
 # --- BATTLE ROYALE ---
 BATTLE_ROYALE_MODE = False
 DEFAULT_BATTLE_ROYALE = False
+DEFAULT_BOUNCE_TIEBREAKER = False
 
 # ==========================================
 # DIPLOMATIC POPUPS

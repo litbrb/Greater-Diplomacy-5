@@ -274,7 +274,11 @@ def check_for_post_combat_captures(self):
         valid_capturer_units = []
         for u in units:
             # You can't steal land from someone you are at peace with!
-            if current_owner in ["Unclaimed", "None", "Ocean", "Lakes"] or queries.are_at_war(u["owner"], current_owner, self.nation_data):
+            # However, if the land was captured THIS TURN, we evaluate based on the original owner
+            # to prevent order-of-execution advantages in movement processing.
+            eval_owner = turn_start_owner if current_owner != turn_start_owner else current_owner
+            
+            if eval_owner in ["Unclaimed", "None", "Ocean", "Lakes"] or queries.are_at_war(u["owner"], eval_owner, self.nation_data):
                 valid_capturer_units.append(u)
 
         if not valid_capturer_units:
@@ -319,8 +323,25 @@ def check_for_post_combat_captures(self):
                 if len(tied_by_spd) == 1:
                     capturer = tied_by_spd[0]
                 else:
-                    # Tiebreaker 3: Let fate decide
-                    capturer = random.choice(tied_by_spd)
+                    # Tiebreaker 3: Let fate decide, or bounce
+                    if str(self.scenario_settings.get("bounce_tiebreaker", c.DEFAULT_BOUNCE_TIEBREAKER)).lower() == "true":
+                        capturer = None
+                        
+                        # Bounce all valid capturer units back to where they came from
+                        for u in valid_capturer_units:
+                            if "_previous_province_id" in u:
+                                prev_prov_id = u.pop("_previous_province_id")
+                                prev_prov = self.id_to_province.get(prev_prov_id)
+                                if prev_prov:
+                                    if u in units:
+                                        units.remove(u)
+                                    u["_current_province_id"] = prev_prov_id
+                                    if u not in prev_prov.get("units", []):
+                                        prev_prov.setdefault("units", []).append(u)
+                                    if "order" in u and "path" in u["order"]:
+                                        u["order"]["path"] = []
+                    else:
+                        capturer = random.choice(tied_by_spd)
             
         # Finalize Capture Logic
         if capturer:
@@ -338,3 +359,7 @@ def check_for_post_combat_captures(self):
                         if queries.is_hostile_territory(capturer, u["owner"], self.nation_data):
                             u["health"] = 0
                 province["units"] = [u for u in units if u.get("health", 0) > 0]
+        else:
+            # If no capturer (e.g., bounce tiebreaker triggered), revert any order-of-execution captures
+            if current_owner != turn_start_owner:
+                edit_province_ownership.conquer_province(self, province, turn_start_owner)

@@ -19,7 +19,8 @@ class Scenario_Settings(GameState):
                 "surprise_attack": c.DEFAULT_SURPRISE_ATTACK,
                 "use_scripted_events": c.DEFAULT_USE_SCRIPTED_EVENTS,
                 "ai_disabled": c.DEFAULT_AI_DISABLED,
-                "battle_royale": c.DEFAULT_BATTLE_ROYALE
+                "battle_royale": c.DEFAULT_BATTLE_ROYALE,
+                "bounce_tiebreaker": c.DEFAULT_BOUNCE_TIEBREAKER
             }
         self.refresh_ui()
 
@@ -102,10 +103,25 @@ class Scenario_Settings(GameState):
             Button("centered", 480, "medium", "blue", f"Days Per Turn: {dpt_val}", self.cycle_days_per_turn)
         )
 
+        # Toggle Button - Bounce Tiebreaker
+        bt_val = str(self.settings.get("bounce_tiebreaker", c.DEFAULT_BOUNCE_TIEBREAKER)).lower() == "true"
+        bt_color = "green" if bt_val else "red"
+        bt_text = "Bounce Tiebreaker: ON" if bt_val else "Bounce Tiebreaker: OFF"
+
+        self.elements.append(
+            Button("centered", 540, "medium", bt_color, bt_text, self.toggle_bounce_tiebreaker)
+        )
+
         # Reset Defaults Button
         self.elements.append(
-            Button("centered", 540, "medium", "grey", "Reset to Defaults", self.reset_defaults)
+            Button("centered", 600, "medium", "grey", "Reset to Defaults", self.reset_defaults)
         )
+
+    def toggle_bounce_tiebreaker(self):
+        current = str(self.settings.get("bounce_tiebreaker", c.DEFAULT_BOUNCE_TIEBREAKER)).lower() == "true"
+        self.settings["bounce_tiebreaker"] = not current
+        queries.save_scenario_settings(self.settings)
+        self.refresh_ui()
 
     def toggle_fog(self):
         current = str(self.settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"

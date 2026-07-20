@@ -132,6 +132,8 @@ def get_bilateral_receive_context(action_type, sender_nation, custom_msg=""):
         context = f"{sender_nation} is requesting to join YOUR faction."
     elif action_type == "TRADE":
         context = f"{sender_nation} has proposed a Trade Agreement. Terms: {custom_msg}"
+    elif action_type == "REQ_MILITARY_ACCESS":
+        context = f"{sender_nation} is requesting military access to move their troops through your territory."
     else:
         context = f"{sender_nation} has proposed a {action_type.replace('_', ' ').title()}."
 

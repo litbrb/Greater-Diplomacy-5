@@ -136,6 +136,9 @@ def render_buttons(self):
     self.btn_fac_join_req = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 6, "diplomatic", "green", "Req. Join Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "JOIN_FACTION_REQ"))
     self.btn_fac_kick = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 7, "diplomatic", "red", "Kick from Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "KICK_FACTION_MEMBER"))
     self.btn_fac_create = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 8, "diplomatic", "blue", "Create Faction", lambda: player_diplomacy_actions.handle_specific_action(self, "CREATE_FACTION"))
+    self.btn_req_mil_access = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 1, "diplomatic", "blue", "Request Mil. Access", lambda: player_diplomacy_actions.handle_specific_action(self, "REQ_MILITARY_ACCESS"))
+    self.btn_cancel_mil_access = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 1, "diplomatic", "orange", "Cancel Mil. Access", lambda: player_diplomacy_actions.handle_specific_action(self, "CANCEL_MILITARY_ACCESS"))
+    self.btn_revoke_mil_access = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y * 2, "diplomatic", "red", "Revoke Mil. Access", lambda: player_diplomacy_actions.handle_specific_action(self, "REVOKE_MILITARY_ACCESS"))
     self.btn_accept_req = Button(diplo_x, c.ACTION_BTN_START_Y, "diplomatic", "green", "Accept Request", lambda: player_diplomacy_actions.handle_accept_req(self))
     self.btn_reject_req = Button(diplo_x, c.ACTION_BTN_START_Y + c.ACTION_BTN_STEP_Y, "diplomatic", "red", "Reject Request", lambda: player_diplomacy_actions.handle_reject_req(self))
 
@@ -192,6 +195,7 @@ def render_buttons(self):
         self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_gp_claims, self.btn_gp_puppets, self.btn_go_orders, self.btn_go_production,
         self.btn_declare_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
         self.btn_fac_join_req, self.btn_fac_kick, self.btn_fac_create,
+        self.btn_req_mil_access, self.btn_cancel_mil_access, self.btn_revoke_mil_access,
         self.btn_accept_req, self.btn_reject_req, self.btn_force_war, self.btn_force_peace,
         self.btn_spec_create_fac, self.btn_spec_join_fac, self.btn_spec_invite_fac, self.btn_spec_leave_fac,
         self.btn_spec_disband_fac, self.btn_spectator, self.btn_tactical, self.btn_close_info, self.btn_exit_to_menu,
@@ -437,6 +441,9 @@ def update_button_states(map_screen):
                     set_btn(map_screen.btn_fac_join_req, True, False, "Tactical: Disabled", "grey")
                     set_btn(map_screen.btn_fac_kick, True, False, "Tactical: Disabled", "grey")
                     set_btn(map_screen.btn_fac_create, True, False, "Tactical: Disabled", "grey")
+                    set_btn(map_screen.btn_req_mil_access, True, False, "Tactical: Disabled", "grey")
+                    set_btn(map_screen.btn_cancel_mil_access, True, False, "Tactical: Disabled", "grey")
+                    set_btn(map_screen.btn_revoke_mil_access, True, False, "Tactical: Disabled", "grey")
                     return
 
                 incoming_action, incoming_turns = queries.get_diplomatic_status(owner, map_screen.player_country, map_screen.nation_data)
@@ -527,6 +534,26 @@ def update_button_states(map_screen):
                 create_text = get_status_text("CREATE") if pending_action == "CREATE_FACTION" else "Create Faction"
                 set_btn(map_screen.btn_fac_create, True, can_create_fac or pending_action == "CREATE_FACTION", create_text, "blue")
 
+                has_access_to_them = queries.has_military_access(map_screen.player_country, owner, map_screen.nation_data)
+                they_have_access_to_me = queries.has_military_access(owner, map_screen.player_country, map_screen.nation_data)
+                
+                can_req_access = not has_access_to_them and not at_war and not in_same_faction
+                req_acc_text = get_status_text("REQ ACCESS") if pending_action == "REQ_MILITARY_ACCESS" else "Request Mil. Access"
+                
+                if has_access_to_them:
+                    cancel_acc_text = get_status_text("CANCEL ACCESS") if pending_action == "CANCEL_MILITARY_ACCESS" else "Cancel Mil. Access"
+                    set_btn(map_screen.btn_cancel_mil_access, True, True, cancel_acc_text, "orange")
+                    set_btn(map_screen.btn_req_mil_access, False, False, "", "blue")
+                else:
+                    set_btn(map_screen.btn_cancel_mil_access, False, False, "", "orange")
+                    set_btn(map_screen.btn_req_mil_access, True, can_req_access or pending_action == "REQ_MILITARY_ACCESS", req_acc_text, "blue")
+                    
+                if they_have_access_to_me:
+                    revoke_acc_text = get_status_text("REVOKE ACCESS") if pending_action == "REVOKE_MILITARY_ACCESS" else "Revoke Mil. Access"
+                    set_btn(map_screen.btn_revoke_mil_access, True, True, revoke_acc_text, "red")
+                else:
+                    set_btn(map_screen.btn_revoke_mil_access, False, False, "", "red")
+
                 # HIDE ALLIANCE/FACTION BUTTONS IN BATTLE ROYALE
                 if c.BATTLE_ROYALE_MODE:
                     map_screen.btn_join_wars.visible = False
@@ -535,6 +562,9 @@ def update_button_states(map_screen):
                     map_screen.btn_fac_join_req.visible = False
                     map_screen.btn_fac_kick.visible = False
                     map_screen.btn_fac_create.visible = False
+                    map_screen.btn_req_mil_access.visible = False
+                    map_screen.btn_cancel_mil_access.visible = False
+                    map_screen.btn_revoke_mil_access.visible = False
 
             else:
                 set_btn(map_screen.btn_go_orders, True, has_player_units, "Give Orders", "blue")

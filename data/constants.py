@@ -723,7 +723,9 @@ UNILATERAL_ACTIONS = [
     "JUSTIFY_WARGOAL",
     "ANNEX_PUPPET",
     "RELEASE_PUPPET",
-    "TAKE_PUPPETS"
+    "TAKE_PUPPETS",
+    "CANCEL_MILITARY_ACCESS",
+    "REVOKE_MILITARY_ACCESS"
 ]
 
 # Proposals that require the target to explicitly Accept or Reject
@@ -735,7 +737,8 @@ BILATERAL_ACTIONS = [
     "CALL_TO_ARMS",
     "CREATE_FACTION",
     "PEACE_TREATY",
-    "TRADE"
+    "TRADE",
+    "REQ_MILITARY_ACCESS"
 ]
 
 # ==========================================

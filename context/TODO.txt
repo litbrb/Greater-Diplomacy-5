@@ -12,11 +12,7 @@ Immediate concerns:
 - check if countries having custom names is implemented correctly, especially for puppet names
 
 - custom times to construct units?
-- request millitary access / revoke millitary access
-- lets a country move troops through another countries territory without actually putting them in a faction
 - fix glitch where reseting scenario settings doesn't set the fog of war level back to normal
-
-- determine situation if 2 equally strong armies meet on a tile that they both want to take for themselves
 
 - make terrain ACTUALLY DO STUFF when in combat / moving troops across
 - option to allow construction in non-core territories (non-core construction)

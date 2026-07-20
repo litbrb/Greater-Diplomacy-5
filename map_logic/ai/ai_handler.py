@@ -263,6 +263,10 @@ def evaluate_diplomatic_proposal(nation_data, map_data, active_nations, ai_natio
         if queries.are_in_same_faction(ai_nation, sender_nation, nation_data):
             accepted = True
             
+    # Always decline Military Access
+    if action_type == "REQ_MILITARY_ACCESS":
+        accepted = False
+            
     # NEW: AI Master-Puppet Faction Acceptance
     my_master = ai_stats.get("master", "")
     if my_master == sender_nation and action_type in ["FACTION_INVITE", "CREATE_FACTION", "JOIN_FACTION_REQ"]:

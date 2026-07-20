@@ -496,6 +496,11 @@ def clear_faction_pre_war_map_if_peace(faction_name, nation_data):
 # MOVEMENT QUERIES
 # ==========================================
 
+def has_military_access(moving_nation, target_owner, nation_data):
+    """Returns True if the target_owner has granted military access to the moving_nation."""
+    return moving_nation in nation_data.get(target_owner, {}).get("military_access", [])
+
+
 def can_convoy_enter(current_province, target_province):
     """Convoys on a land tile can only move into water tiles."""
     curr_is_water = is_water_province(current_province)
@@ -530,6 +535,9 @@ def can_ships_enter(moving_nation, target_province, nation_data):
             if q.get("target") == target_owner and q.get("action") == "WAR_DECLARATION":
                 return True
                 
+    if has_military_access(moving_nation, target_owner, nation_data):
+        return True
+                
     return target_owner in get_all_friendly_nations(moving_nation, nation_data)
 
 def can_land_units_enter(moving_nation, target_province, nation_data):
@@ -559,6 +567,9 @@ def can_land_units_enter(moving_nation, target_province, nation_data):
         for q in queued:
             if q.get("target") == target_owner and q.get("action") == "WAR_DECLARATION":
                 return True
+                
+    if has_military_access(moving_nation, target_owner, nation_data):
+        return True
                 
     return target_owner in get_all_friendly_nations(moving_nation, nation_data)
 

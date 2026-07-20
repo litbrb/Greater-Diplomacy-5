@@ -287,6 +287,10 @@ def finalize_war(map_data, nation_data, a, b):
             # NEW: Track war duration for ceasefire cooldowns
             nation_data[country].setdefault("war_durations", {})[other] = 0
 
+        # Clear military access when going to war
+        if "military_access" in nation_data[country] and other in nation_data[country]["military_access"]:
+            nation_data[country]["military_access"].remove(other)
+
         # Clear faction war cooldowns so allies can be called in
         faction = nation_data[country].get("faction", "")
         if faction:
@@ -432,6 +436,12 @@ def finalize_faction_join(map_data, nation_data, host, joiner):
                     finalize_neutral(nation_data, joiner, member)
                 nation_data[joiner].setdefault("relations", {})[member] = 100
                 nation_data[member].setdefault("relations", {})[joiner] = 100
+                
+                # Clear military access since they are now in the same faction
+                if "military_access" in nation_data[joiner] and member in nation_data[joiner]["military_access"]:
+                    nation_data[joiner]["military_access"].remove(member)
+                if "military_access" in nation_data[member] and joiner in nation_data[member]["military_access"]:
+                    nation_data[member]["military_access"].remove(joiner)
 
         if queries.is_faction_at_war(fac, nation_data):
             queries.add_member_to_pre_war_map(joiner, fac, map_data, nation_data)

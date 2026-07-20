@@ -520,6 +520,27 @@ def process_diplomacy_turn(self):
                     finalize_take_puppets(self.map_data, self.nation_data, country_name, target)
                     self.show_feedback(f"Assumed control of {target}'s puppets.")
                     actions_to_clear.append(target)
+                    
+                elif action == "CANCEL_MILITARY_ACCESS":
+                    # We are cancelling our access to their country (target's list)
+                    target_list = self.nation_data.get(target, {}).setdefault("military_access", [])
+                    if country_name in target_list:
+                        target_list.remove(country_name)
+                    log_global_event(self.nation_data, f"{country_name} cancelled their military access to {target}.")
+                    msg_text = custom_msg if custom_msg else "We no longer require military access through your territory."
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
+                    actions_to_clear.append(target)
+                    
+                elif action == "REVOKE_MILITARY_ACCESS":
+                    # We are revoking their access to our country (our list)
+                    our_list = self.nation_data.get(country_name, {}).setdefault("military_access", [])
+                    if target in our_list:
+                        our_list.remove(target)
+                    log_global_event(self.nation_data, f"{country_name} revoked {target}'s military access.")
+                    msg_text = custom_msg if custom_msg else "Your military access through our territory has been revoked."
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
+                    actions_to_clear.append(target)
+
                 
                 # DELIVER messages to inbox on Turn 0
                 elif action.startswith("MSG:"):
@@ -579,6 +600,13 @@ def process_diplomacy_turn(self):
                         elif orig_action == "JOIN_WARS":
                             join_faction_wars(self.map_data, self.nation_data, target, country_name)
                             log_global_event(self.nation_data, f"ESCALATION: {target} has joined the wars of {country_name}!")
+                        elif orig_action == "REQ_MILITARY_ACCESS":
+                            # Target is granting access to country_name
+                            target_list = self.nation_data.get(country_name, {}).setdefault("military_access", [])
+                            if target not in target_list:
+                                target_list.append(target)
+                            msg_text = custom_msg if custom_msg else "We accept your request for military access."
+
                         
                         send_message(self, country_name, target, msg_text, "DIPLOMACY")
                         if msg_text == custom_msg or "accepted" in msg_text.lower():
@@ -615,6 +643,10 @@ def process_diplomacy_turn(self):
                 
                 elif action == "FACTION_INVITE":
                     msg_text = custom_msg if custom_msg else "We invite your nation to join our faction."
+                    send_message(self, country_name, target, msg_text, "DIPLOMACY")
+                    
+                elif action == "REQ_MILITARY_ACCESS":
+                    msg_text = custom_msg if custom_msg else "We formally request military access to move our troops through your territory."
                     send_message(self, country_name, target, msg_text, "DIPLOMACY")
                 
                 elif action == "CEASEFIRE":

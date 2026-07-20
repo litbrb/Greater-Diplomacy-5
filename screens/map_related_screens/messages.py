@@ -252,8 +252,8 @@ class Messages_Screen(GameState):
                 
         # --- Text Input Logic ---
         if self.selected_recipient:
-            is_tactical = getattr(self.map_screen, 'tactical_mode', False)
-            if not is_tactical:
+            locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
+            if not locked and not is_tactical:
                 self.compose_text, status = process_text_input(event, self.compose_text, max_length=c.MAX_MESSAGE_LENGTH)
                 if status == "SUBMIT":
                     self.send_message()
@@ -332,12 +332,15 @@ class Messages_Screen(GameState):
         self.max_contact_scroll = min(0, c.SCREEN_HEIGHT - absolute_height - 20)
 
         if self.selected_recipient:
+            locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
             is_tactical = getattr(self.map_screen, 'tactical_mode', False)
             btn_x = c.SCREEN_WIDTH - 150
             btn_y = c.SCREEN_HEIGHT - c.MSG_INPUT_H + 15
             
             if is_tactical:
                 self.elements.append(Button(btn_x, btn_y, "small", "grey", "Tactical: Read Only", lambda: None))
+            elif locked:
+                self.elements.append(Button(btn_x, btn_y, "small", "grey", "Diplomat Busy", lambda: None))
             else:
                 self.elements.append(Button(btn_x, btn_y, "small", "blue", "Queue", self.send_message))
                 
@@ -388,8 +391,8 @@ class Messages_Screen(GameState):
                 elif pending_action == f"REJECT_{incoming_action}":
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "red", "Undo Reject", lambda: self.reject_proposal(self.selected_recipient)))
                 else:
-                    # Responses can now suspend active formal actions, so we no longer block them
-                    is_busy = False
+                    # Check if the player is busy doing something else (e.g., WAR_DECLARATION)
+                    is_busy = bool(pending_action and not pending_action.startswith("MSG:"))
                     
                     if is_busy:
                         self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "grey", f"Accept {action_name}", lambda: None))

@@ -372,7 +372,7 @@ class Messages_Screen(GameState):
             incoming_action, incoming_turns = queries.get_diplomatic_status(self.selected_recipient, self.map_screen.player_country, self.map_screen.nation_data)
             pending_action, pending_turns = queries.get_diplomatic_status(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
             
-            orig_incoming = incoming_action.replace("ACCEPT_", "") if incoming_action.startswith("ACCEPT_") else incoming_action
+            orig_incoming = incoming_action.replace("ACCEPT_", "").replace("REJECT_", "") if (incoming_action.startswith("ACCEPT_") or incoming_action.startswith("REJECT_")) else incoming_action
             
             show_buttons = incoming_turns > 0
             # If they accepted our mutual request on the same turn (hotseat), we should still show buttons

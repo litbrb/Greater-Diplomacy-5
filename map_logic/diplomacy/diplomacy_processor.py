@@ -12,7 +12,7 @@ from map_logic.diplomacy.diplomacy_agreements import (
     join_faction_wars, finalize_faction_kick, finalize_annexation, finalize_release, finalize_take_puppets
 )
 
-def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, custom_msg="", timer=0):
+def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, custom_msg="", timer=0, parameters=None):
     pending = nation_data[player_name].setdefault("pending_diplomacy", {})
     current_action = get_pending_action(nation_data, player_name, target_name)
     
@@ -61,7 +61,14 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
                 return "You already have a pending faction request!"
     # ------------------------------------------------
         
-    pending[target_name] = {"action": action_type, "turns": 0, "timer": timer, "message": custom_msg}
+    pending[target_name] = {
+        "action": action_type,
+        "turns": 0,
+        "timer": timer,
+        "message": custom_msg
+    }
+    if parameters:
+        pending[target_name]["parameters"] = parameters
     return "Message drafted. Will send at end of turn."
 
 def process_diplomacy_turn(self):
@@ -556,7 +563,8 @@ def process_diplomacy_turn(self):
                     orig_action = action.replace("ACCEPT_", "")
                     other_pending = self.nation_data.get(target, {}).get("pending_diplomacy", {}).get(country_name, {})
                     
-                    if isinstance(other_pending, dict) and other_pending.get("action") in (orig_action, action):
+                    # Always execute ACCEPT_. The other person's action might have been cleared if they were processed first.
+                    if True:
                         fallback_msg = ai_prompts.AI_FALLBACK_RESPONSES.get("ACCEPT_GENERIC").format(action=orig_action.replace('_', ' ').lower())
                         msg_text = custom_msg if custom_msg else fallback_msg
                         
@@ -579,13 +587,13 @@ def process_diplomacy_turn(self):
                         elif orig_action == "CEASEFIRE":
                             finalize_neutral(self.nation_data, country_name, target)
                         elif orig_action == "PEACE_TREATY":
-                            treaty_type = other_pending.get("parameters", other_pending.get("message", c.PEACE_WHITE_PEACE))
+                            treaty_type = info.get("parameters", info.get("message", c.PEACE_WHITE_PEACE))
                             execute_peace_treaty(self.map_data, self.nation_data, target, country_name, treaty_type, self)
                             msg_text = ai_prompts.AI_FALLBACK_RESPONSES.get("ACCEPT_PEACE")
                             
                         # --- NEW: EXECUTE APPROVED TRADE ---
                         elif orig_action == "TRADE":
-                            params = other_pending.get("parameters", {})
+                            params = info.get("parameters", {})
                             c_data = self.nation_data[country_name]
                             t_data = self.nation_data[target]
 
@@ -621,12 +629,15 @@ def process_diplomacy_turn(self):
 
                         
                         send_message(self, country_name, target, msg_text, "DIPLOMACY")
+                        if other_pending.get("action") == action:
+                            send_message(self, target, country_name, msg_text, "DIPLOMACY")
+                            
                         if msg_text == custom_msg or "accepted" in msg_text.lower():
                             log_global_event(self.nation_data, f"Diplomatic agreement reached between {country_name} and {target}.")
                         
                         # Clear the original request from the sender
                         if target in self.nation_data and "pending_diplomacy" in self.nation_data[target]:
-                            if country_name in self.nation_data[target]["pending_diplomacy"]:
+                            if self.nation_data[target]["pending_diplomacy"].get(country_name, {}).get("action") == orig_action:
                                 del self.nation_data[target]["pending_diplomacy"][country_name]
                     
                     actions_to_clear.append(target)
@@ -651,10 +662,12 @@ def process_diplomacy_turn(self):
                                 queries.cancel_trade_escrow(self.nation_data[country_name], my_params)
                             
                         send_message(self, country_name, target, msg_text, "DIPLOMACY")
-                        
+                        if other_pending.get("action") == action:
+                            send_message(self, target, country_name, msg_text, "DIPLOMACY")
+                            
                         # Clear the original request from the sender
                         if target in self.nation_data and "pending_diplomacy" in self.nation_data[target]:
-                            if country_name in self.nation_data[target]["pending_diplomacy"]:
+                            if self.nation_data[target]["pending_diplomacy"].get(country_name, {}).get("action") == orig_action:
                                 del self.nation_data[target]["pending_diplomacy"][country_name]
                                 
                     actions_to_clear.append(target)

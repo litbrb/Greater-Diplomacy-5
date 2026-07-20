@@ -130,7 +130,7 @@ def handle_accept_req(map_screen, target=None, custom_msg=None):
         
     action, incoming_turns = queries.get_diplomatic_status(target, map_screen.player_country, map_screen.nation_data)
     
-    orig_action = action.replace("ACCEPT_", "") if action.startswith("ACCEPT_") else action
+    orig_action = action.replace("ACCEPT_", "").replace("REJECT_", "") if (action.startswith("ACCEPT_") or action.startswith("REJECT_")) else action
     
     # If we are UNDOING the acceptance:
     pending_action, pending_turns = queries.get_diplomatic_status(map_screen.player_country, target, map_screen.nation_data)
@@ -163,7 +163,7 @@ def handle_accept_req(map_screen, target=None, custom_msg=None):
         if custom_msg is None:
             custom_msg = map_screen.mail_draft_text.strip()
             
-        msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"ACCEPT_{orig_action}", custom_msg)
+        diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"ACCEPT_{orig_action}", custom_msg)
         
         map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
@@ -191,10 +191,17 @@ def handle_reject_req(map_screen, target=None, custom_msg=None):
         if custom_msg is None:
             custom_msg = map_screen.mail_draft_text.strip()
             
-        msg = diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"REJECT_{orig_action}", custom_msg)
+        orig_action = action.replace("ACCEPT_", "").replace("REJECT_", "") if (action.startswith("ACCEPT_") or action.startswith("REJECT_")) else action
+            
+        # Copy parameters from their original request so we don't lose them if they overwrite it
+        their_pending = map_screen.nation_data.get(target, {}).get("pending_diplomacy", {}).get(map_screen.player_country, {})
+        params = their_pending.get("parameters") if isinstance(their_pending, dict) else None
+        
+        diplomacy_logic.toggle_diplomacy_action(map_screen.nation_data, map_screen.player_country, target, f"REJECT_{orig_action}", custom_msg, parameters=params)
         
         map_screen.mail_draft_text = ""
         map_screen.mail_input_active = False
+        map_screen.refresh_diplomacy_maps()
         map_screen.show_feedback(f"Rejection queued: {orig_action.replace('_', ' ').title()}")
 
 def handle_join_wars(map_screen):

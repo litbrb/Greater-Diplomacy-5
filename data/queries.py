@@ -1406,10 +1406,22 @@ def get_unread_message_count(nation, nation_data):
                 for other_nation, other_data in list(nation_data.items()):
                     if other_nation == n_name: continue
                     req = other_data.get("pending_diplomacy", {}).get(n_name)
-                    if isinstance(req, dict) and req.get("turns", 0) > 0 and req.get("action") in c.BILATERAL_ACTIONS:
-                        my_response = my_pending.get(other_nation)
-                        if not (isinstance(my_response, dict) and (my_response.get("action", "").startswith("ACCEPT_") or my_response.get("action", "").startswith("REJECT_"))):
-                            total_unread += 1
+                    if isinstance(req, dict):
+                        req_action = req.get("action", "")
+                        orig_req_action = req_action.replace("ACCEPT_", "").replace("REJECT_", "")
+                        
+                        show_notification = False
+                        if req.get("turns", 0) > 0 and orig_req_action in c.BILATERAL_ACTIONS:
+                            show_notification = True
+                        elif (req_action.startswith("ACCEPT_") or req_action.startswith("REJECT_")):
+                            my_action = my_pending.get(other_nation, {}).get("action", "")
+                            if my_action == orig_req_action:
+                                show_notification = True
+                                
+                        if show_notification:
+                            my_response = my_pending.get(other_nation)
+                            if not (isinstance(my_response, dict) and (my_response.get("action", "").startswith("ACCEPT_") or my_response.get("action", "").startswith("REJECT_"))):
+                                total_unread += 1
         return total_unread
         
     # Standard logic for normal players
@@ -1421,10 +1433,22 @@ def get_unread_message_count(nation, nation_data):
     for other_nation, other_data in list(nation_data.items()):
         if other_nation == nation: continue
         req = other_data.get("pending_diplomacy", {}).get(nation)
-        if isinstance(req, dict) and req.get("turns", 0) > 0 and req.get("action") in c.BILATERAL_ACTIONS:
-            my_response = my_pending.get(other_nation)
-            if not (isinstance(my_response, dict) and (my_response.get("action", "").startswith("ACCEPT_") or my_response.get("action", "").startswith("REJECT_"))):
-                unread_count += 1
+        if isinstance(req, dict):
+            req_action = req.get("action", "")
+            orig_req_action = req_action.replace("ACCEPT_", "").replace("REJECT_", "")
+            
+            show_notification = False
+            if req.get("turns", 0) > 0 and orig_req_action in c.BILATERAL_ACTIONS:
+                show_notification = True
+            elif (req_action.startswith("ACCEPT_") or req_action.startswith("REJECT_")):
+                my_action = my_pending.get(other_nation, {}).get("action", "")
+                if my_action == orig_req_action:
+                    show_notification = True
+                    
+            if show_notification:
+                my_response = my_pending.get(other_nation)
+                if not (isinstance(my_response, dict) and (my_response.get("action", "").startswith("ACCEPT_") or my_response.get("action", "").startswith("REJECT_"))):
+                    unread_count += 1
                 
     return unread_count
 

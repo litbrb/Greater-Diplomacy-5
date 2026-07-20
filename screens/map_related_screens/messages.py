@@ -332,15 +332,12 @@ class Messages_Screen(GameState):
         self.max_contact_scroll = min(0, c.SCREEN_HEIGHT - absolute_height - 20)
 
         if self.selected_recipient:
-            locked = queries.is_diplomat_busy(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
             is_tactical = getattr(self.map_screen, 'tactical_mode', False)
             btn_x = c.SCREEN_WIDTH - 150
             btn_y = c.SCREEN_HEIGHT - c.MSG_INPUT_H + 15
             
             if is_tactical:
                 self.elements.append(Button(btn_x, btn_y, "small", "grey", "Tactical: Read Only", lambda: None))
-            elif locked:
-                self.elements.append(Button(btn_x, btn_y, "small", "grey", "Diplomat Busy", lambda: None))
             else:
                 self.elements.append(Button(btn_x, btn_y, "small", "blue", "Queue", self.send_message))
                 
@@ -375,24 +372,41 @@ class Messages_Screen(GameState):
             incoming_action, incoming_turns = queries.get_diplomatic_status(self.selected_recipient, self.map_screen.player_country, self.map_screen.nation_data)
             pending_action, pending_turns = queries.get_diplomatic_status(self.map_screen.player_country, self.selected_recipient, self.map_screen.nation_data)
             
-            if incoming_turns > 0 and incoming_action in c.BILATERAL_ACTIONS:
-                action_name = incoming_action.replace("_", " ").title()
+            orig_incoming = incoming_action.replace("ACCEPT_", "") if incoming_action.startswith("ACCEPT_") else incoming_action
+            
+            show_buttons = incoming_turns > 0
+            # If they accepted our mutual request on the same turn (hotseat), we should still show buttons
+            if (incoming_action.startswith("ACCEPT_") or incoming_action.startswith("REJECT_")):
+                if pending_action in (orig_incoming, f"ACCEPT_{orig_incoming}", f"REJECT_{orig_incoming}"):
+                    show_buttons = True
+                
+            if show_buttons and orig_incoming in c.BILATERAL_ACTIONS:
+                action_name = orig_incoming.replace("_", " ").title()
                 btn_y_diplo = c.SCREEN_HEIGHT - c.MSG_INPUT_H - 60
                 
-                is_peace = incoming_action in ["PEACE_TREATY", "CEASEFIRE"]
+                is_peace = orig_incoming in ["PEACE_TREATY", "CEASEFIRE"]
                 
                 if is_tactical:
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "grey", "Tactical: Read Only", lambda: None))
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 240, btn_y_diplo, "medium", "grey", "Tactical: Read Only", lambda: None))
                     if is_peace:
                         self.elements.append(Button(c.MSG_LEFT_PANE_W + 460, btn_y_diplo, "medium", "yellow", "View Peace Treaty", lambda: self.view_peace_treaty(self.selected_recipient)))
-                elif pending_action == f"ACCEPT_{incoming_action}":
+                elif pending_action == f"ACCEPT_{orig_incoming}":
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "green", "Undo Accept", lambda: self.accept_proposal(self.selected_recipient)))
-                elif pending_action == f"REJECT_{incoming_action}":
+                elif pending_action == f"REJECT_{orig_incoming}":
                     self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "red", "Undo Reject", lambda: self.reject_proposal(self.selected_recipient)))
                 else:
                     # Check if the player is busy doing something else (e.g., WAR_DECLARATION)
-                    is_busy = bool(pending_action and not pending_action.startswith("MSG:"))
+                    is_busy = False
+                    if pending_action:
+                        if pending_action.startswith("MSG:"):
+                            is_busy = False
+                        elif pending_action == orig_incoming:
+                            is_busy = False
+                        elif pending_action in c.BILATERAL_ACTIONS and orig_incoming in c.BILATERAL_ACTIONS:
+                            is_busy = False
+                        else:
+                            is_busy = True
                     
                     if is_busy:
                         self.elements.append(Button(c.MSG_LEFT_PANE_W + 20, btn_y_diplo, "medium", "grey", f"Accept {action_name}", lambda: None))

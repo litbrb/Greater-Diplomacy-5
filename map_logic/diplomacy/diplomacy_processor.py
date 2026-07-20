@@ -40,6 +40,11 @@ def toggle_diplomacy_action(nation_data, player_name, target_name, action_type, 
                 custom_msg = info.get("action")[4:]
         elif is_unilateral and isinstance(info, dict) and info.get("turns", 0) > 0:
             pass # Safe to overwrite an executed unilateral action
+        elif action_type.startswith("ACCEPT_") or action_type.startswith("REJECT_"):
+            if current_action == "TRADE":
+                params = info.get("parameters", {})
+                queries.cancel_trade_escrow(nation_data[player_name], params)
+            pass # Allow accepting/rejecting incoming requests even if we have an outgoing one
         else:
             # Prevents declaring war while an alliance request is pending, etc.
             return "A diplomatic action is already pending with this nation!"
@@ -551,7 +556,7 @@ def process_diplomacy_turn(self):
                     orig_action = action.replace("ACCEPT_", "")
                     other_pending = self.nation_data.get(target, {}).get("pending_diplomacy", {}).get(country_name, {})
                     
-                    if isinstance(other_pending, dict) and other_pending.get("action") == orig_action:
+                    if isinstance(other_pending, dict) and other_pending.get("action") in (orig_action, action):
                         fallback_msg = ai_prompts.AI_FALLBACK_RESPONSES.get("ACCEPT_GENERIC").format(action=orig_action.replace('_', ' ').lower())
                         msg_text = custom_msg if custom_msg else fallback_msg
                         
@@ -605,6 +610,13 @@ def process_diplomacy_turn(self):
                             target_list = self.nation_data.get(country_name, {}).setdefault("military_access", [])
                             if target not in target_list:
                                 target_list.append(target)
+                            
+                            # If they ALSO accepted our request, grant them access to us too!
+                            if other_pending.get("action") == action:
+                                my_list = self.nation_data.get(target, {}).setdefault("military_access", [])
+                                if country_name not in my_list:
+                                    my_list.append(country_name)
+                                    
                             msg_text = custom_msg if custom_msg else "We accept your request for military access."
 
                         
@@ -623,7 +635,7 @@ def process_diplomacy_turn(self):
                     orig_action = action.replace("REJECT_", "")
                     other_pending = self.nation_data.get(target, {}).get("pending_diplomacy", {}).get(country_name, {})
                     
-                    if isinstance(other_pending, dict) and other_pending.get("action") == orig_action:
+                    if isinstance(other_pending, dict) and other_pending.get("action") in (orig_action, f"ACCEPT_{orig_action}", action):
                         fallback_msg = ai_prompts.AI_FALLBACK_RESPONSES.get("REJECT_GENERIC").format(action=orig_action.replace('_', ' ').lower())
                         msg_text = custom_msg if custom_msg else fallback_msg
                         
@@ -631,6 +643,12 @@ def process_diplomacy_turn(self):
                         if orig_action == "TRADE":
                             params = other_pending.get("parameters", {})
                             queries.cancel_trade_escrow(self.nation_data[target], params)
+                            
+                            # If they ALSO rejected our trade, refund our escrow too!
+                            if other_pending.get("action") == action:
+                                my_pending = self.nation_data.get(country_name, {}).get("pending_diplomacy", {}).get(target, {})
+                                my_params = my_pending.get("parameters", {})
+                                queries.cancel_trade_escrow(self.nation_data[country_name], my_params)
                             
                         send_message(self, country_name, target, msg_text, "DIPLOMACY")
                         

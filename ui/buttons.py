@@ -68,7 +68,7 @@ def render_buttons(self):
             turn = self.time_manager.total_turns if hasattr(self, 'time_manager') else 1
             cid = getattr(self, 'player_country', 'Unknown')
             save_name = f"Turn_{turn}_{cid}.gd5move"
-            export_path = os.path.join(c.MULTIPLAYER_SAVES_DIR, save_name)
+            export_path = os.path.join(c.TOURNAMENT_SAVES_DIR, save_name)
             player_key = getattr(self, 'multiplayer_player_key', '')
             export_move_file(self, export_path, player_key)
             self.show_feedback(f"Move exported to {export_path}")
@@ -722,6 +722,6 @@ def render_settings_buttons(settings_screen):
         Button(dir_box_x - 110, 175, "small", "red", "Reset", settings_screen.reset_ocean_light_color),
         Button(dir_box_x - 220, 230, "small", "blue", "Edit", settings_screen.edit_ocean_dark_color),
         Button(dir_box_x - 110, 230, "small", "red", "Reset", settings_screen.reset_ocean_dark_color),
-        Button(dir_box_x - 220, 285, "small", "blue", "Edit", settings_screen.edit_multiplayer_saves_dir),
-        Button(dir_box_x - 110, 285, "small", "red", "Reset", settings_screen.reset_multiplayer_saves_dir)
+        Button(dir_box_x - 220, 285, "small", "blue", "Edit", settings_screen.edit_tournament_saves_dir),
+        Button(dir_box_x - 110, 285, "small", "red", "Reset", settings_screen.reset_tournament_saves_dir)
     ])

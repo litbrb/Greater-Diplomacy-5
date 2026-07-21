@@ -13,7 +13,7 @@ def load_multiplayer_moves(map_ref):
     root.withdraw()
     
     files = filedialog.askopenfilenames(
-        initialdir=c.MULTIPLAYER_SAVES_DIR,
+        initialdir=c.TOURNAMENT_SAVES_DIR,
         title="Select Move Files",
         filetypes=[("Move Files", "*.gd5move")]
     )
@@ -23,7 +23,7 @@ def load_multiplayer_moves(map_ref):
 
 def export_next_turn(map_ref):
     turn = map_ref.time_manager.total_turns
-    export_path = os.path.join(c.MULTIPLAYER_SAVES_DIR, f"Turn_{turn}_Host.gd5tour")
+    export_path = os.path.join(c.TOURNAMENT_SAVES_DIR, f"Turn_{turn}_Host.gd5tour")
     master_key = getattr(map_ref, 'multiplayer_master_key', '')
     keys_dict = getattr(map_ref, 'multiplayer_keys_dict', {})
     
@@ -59,7 +59,7 @@ def manage_players_panel(map_ref):
     def on_load_moves():
         files = filedialog.askopenfilenames(
             parent=root,
-            initialdir=c.MULTIPLAYER_SAVES_DIR,
+            initialdir=c.TOURNAMENT_SAVES_DIR,
             title="Select Move Files",
             filetypes=[("Move Files", "*.gd5move")]
         )

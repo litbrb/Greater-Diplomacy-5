@@ -27,7 +27,7 @@ class Multiplayer_Join(GameState):
         root.withdraw()
         
         file_path = filedialog.askopenfilename(
-            initialdir=c.MULTIPLAYER_SAVES_DIR,
+            initialdir=c.TOURNAMENT_SAVES_DIR,
             title="Select Tournament File",
             filetypes=[("Tournament Files", "*.gd5tour")]
         )

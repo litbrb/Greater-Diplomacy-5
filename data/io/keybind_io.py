@@ -12,7 +12,7 @@ def save_settings(keybind_dict, sfx_volume, music_volume, num_players=1, ai_mode
                   ai_threads=1, show_fps=True, drag_mouse_toggle="RIGHT",
                   saves_dir="saves", custom_scenarios_dir="scenarios/map_editor",
                   ocean_light_color=c.DEFAULT_OCEAN_LIGHT_BLUE, ocean_dark_color=c.DEFAULT_OCEAN_DARK_BLUE,
-                  multiplayer_saves_dir="multiplayer_saves"):
+                  tournament_saves_dir="tournament_saves"):
     """Converts key codes to strings and saves all config data to JSON."""
     readable_binds = {}
     for action, key_code in keybind_dict.items():
@@ -40,7 +40,7 @@ def save_settings(keybind_dict, sfx_volume, music_volume, num_players=1, ai_mode
         "show_fps": show_fps,
         "drag_mouse_toggle": drag_mouse_toggle,
         "saves_dir": saves_dir,
-        "multiplayer_saves_dir": multiplayer_saves_dir,
+        "tournament_saves_dir": tournament_saves_dir,
         "custom_scenarios_dir": custom_scenarios_dir,
         "ocean_light_color": ocean_light_color,
         "ocean_dark_color": ocean_dark_color
@@ -61,7 +61,7 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
                 c.DEFAULT_OLLAMA_MODEL, 
                 "LITE", default_pitch, default_pitch, c.TARGET_FPS, c.DEFAULT_AI_THREADS, True,
                 c.DRAG_MOUSE_BUTTON_TOGGLE, "saves", "scenarios/map_editor",
-                c.DEFAULT_OCEAN_LIGHT_BLUE, c.DEFAULT_OCEAN_DARK_BLUE, "multiplayer_saves")
+                c.DEFAULT_OCEAN_LIGHT_BLUE, c.DEFAULT_OCEAN_DARK_BLUE, "tournament_saves")
     
     try:
         # Utilize the caching manager
@@ -114,7 +114,7 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
             s.get("custom_scenarios_dir", "scenarios/map_editor"),
             tuple(s.get("ocean_light_color", c.DEFAULT_OCEAN_LIGHT_BLUE)),
             tuple(s.get("ocean_dark_color", c.DEFAULT_OCEAN_DARK_BLUE)),
-            s.get("multiplayer_saves_dir", "multiplayer_saves")
+            s.get("tournament_saves_dir", "tournament_saves")
         )
     except Exception as e:
         print(f"Error loading settings: {e}")
@@ -126,4 +126,4 @@ def load_settings(default_binds, default_volume=0.5, default_music_volume=0.5):
                 c.DEFAULT_OLLAMA_MODEL, 
                 "LITE", default_pitch, default_pitch, c.TARGET_FPS, c.DEFAULT_AI_THREADS, True,
                 c.DRAG_MOUSE_BUTTON_TOGGLE, "saves", "scenarios/map_editor",
-                c.DEFAULT_OCEAN_LIGHT_BLUE, c.DEFAULT_OCEAN_DARK_BLUE, "multiplayer_saves")
+                c.DEFAULT_OCEAN_LIGHT_BLUE, c.DEFAULT_OCEAN_DARK_BLUE, "tournament_saves")

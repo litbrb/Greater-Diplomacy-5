@@ -56,7 +56,7 @@ class Settings(GameState):
         self.ocean_light_color = self.controller.ocean_light_color
         self.ocean_dark_color = self.controller.ocean_dark_color
         
-        self.multiplayer_saves_dir = self.controller.multiplayer_saves_dir
+        self.tournament_saves_dir = self.controller.tournament_saves_dir
         
         self.refresh_ui()
 
@@ -171,14 +171,14 @@ class Settings(GameState):
             queries.save_global_settings(self.controller)
             self.refresh_ui()
 
-    def edit_multiplayer_saves_dir(self):
+    def edit_tournament_saves_dir(self):
         root = tk.Tk()
         root.withdraw()
-        folder_selected = filedialog.askdirectory(initialdir=self.multiplayer_saves_dir, title="Select Multiplayer Saves Directory")
+        folder_selected = filedialog.askdirectory(initialdir=self.tournament_saves_dir, title="Select Tournament Saves Directory")
         if folder_selected:
-            self.multiplayer_saves_dir = folder_selected
-            self.controller.multiplayer_saves_dir = folder_selected
-            c.MULTIPLAYER_SAVES_DIR = folder_selected
+            self.tournament_saves_dir = folder_selected
+            self.controller.tournament_saves_dir = folder_selected
+            c.TOURNAMENT_SAVES_DIR = folder_selected
             queries.save_global_settings(self.controller)
             self.refresh_ui()
 
@@ -200,10 +200,10 @@ class Settings(GameState):
         queries.save_global_settings(self.controller)
         self.refresh_ui()
 
-    def reset_multiplayer_saves_dir(self):
-        self.multiplayer_saves_dir = "multiplayer_saves"
-        self.controller.multiplayer_saves_dir = "multiplayer_saves"
-        c.MULTIPLAYER_SAVES_DIR = "multiplayer_saves"
+    def reset_tournament_saves_dir(self):
+        self.tournament_saves_dir = "tournament_saves"
+        self.controller.tournament_saves_dir = "tournament_saves"
+        c.TOURNAMENT_SAVES_DIR = "tournament_saves"
         queries.save_global_settings(self.controller)
         self.refresh_ui()
 
@@ -385,14 +385,14 @@ class Settings(GameState):
         pygame.draw.rect(surface, self.ocean_dark_color, dark_rect)
         pygame.draw.rect(surface, (150, 150, 150), dark_rect, 1)
 
-        # Multiplayer Saves Box
+        # Tournament Saves Box
         mp_saves_y = 285
-        surface.blit(font.render("Multiplayer Saves Path:", True, (100, 100, 100)), (dir_box_x, mp_saves_y - 20))
+        surface.blit(font.render("Tournament Saves Path:", True, (100, 100, 100)), (dir_box_x, mp_saves_y - 20))
         mp_saves_rect = pygame.Rect(dir_box_x, mp_saves_y, dir_box_w, dir_box_h)
         pygame.draw.rect(surface, (20, 20, 30), mp_saves_rect)
         pygame.draw.rect(surface, (150, 150, 150), mp_saves_rect, 1)
         surface.set_clip(mp_saves_rect.inflate(-10, -10))
-        surface.blit(font.render(self.multiplayer_saves_dir, True, (255, 255, 255)), (mp_saves_rect.x + 5, mp_saves_rect.y + 10))
+        surface.blit(font.render(self.tournament_saves_dir, True, (255, 255, 255)), (mp_saves_rect.x + 5, mp_saves_rect.y + 10))
         surface.set_clip(None)
         
         if self.ai_mode in ["GEMINI", "CHATGPT", "CLAUDE", "OLLAMA"]:

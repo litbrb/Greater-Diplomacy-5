@@ -228,8 +228,8 @@ class Controller:
         self.ocean_dark_color = loaded_data[23] if len(loaded_data) > 23 else c.DEFAULT_OCEAN_DARK_BLUE
         c.OCEAN_DARK_BLUE = self.ocean_dark_color
 
-        self.multiplayer_saves_dir = loaded_data[24] if len(loaded_data) > 24 else c.MULTIPLAYER_SAVES_DIR
-        c.MULTIPLAYER_SAVES_DIR = self.multiplayer_saves_dir
+        self.tournament_saves_dir = loaded_data[24] if len(loaded_data) > 24 else c.TOURNAMENT_SAVES_DIR
+        c.TOURNAMENT_SAVES_DIR = self.tournament_saves_dir
 
         # 3. Apply volume to global sounds on boot
         ui_elements.global_sfx_volume = self.sfx_volume

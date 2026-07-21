@@ -21,7 +21,7 @@ context/combined_scripts.txt
 
 build
 dist
-multiplayer_saves
+tournament_saves
 scenarios/map_editor
 main.spec
 

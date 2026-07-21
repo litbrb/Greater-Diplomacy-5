@@ -66,7 +66,7 @@ def export_tournament(map_ref, file_path, master_key, keys_dict):
         save_dict["_raw_map_data"] = map_ref.raw_json_data
         
     import pygame
-    temp_img_dir = os.path.join(c.MULTIPLAYER_SAVES_DIR, "temp_img_export")
+    temp_img_dir = os.path.join(c.TOURNAMENT_SAVES_DIR, "temp_img_export")
     os.makedirs(temp_img_dir, exist_ok=True)
     images = {}
     
@@ -155,7 +155,7 @@ def load_tournament(file_path, key):
     if not game_data:
         return False, None, None, None, None, "Failed to decrypt game data"
         
-    temp_dir = os.path.join(c.MULTIPLAYER_SAVES_DIR, "temp_load")
+    temp_dir = os.path.join(c.TOURNAMENT_SAVES_DIR, "temp_load")
     os.makedirs(temp_dir, exist_ok=True)
     
     # Extract raw geometry if present

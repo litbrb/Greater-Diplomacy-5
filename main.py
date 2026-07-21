@@ -325,6 +325,7 @@ class Controller:
                         self.states["MAP"].multiplayer_player_key = key
                         multiplayer_io.strip_sensitive_data_for_player(self.states["MAP"], cid)
                         
+                    self.states["MAP"].refresh_all_maps()
                     import ui.buttons as buttons
                     buttons.render_buttons(self.states["MAP"])
                 else:

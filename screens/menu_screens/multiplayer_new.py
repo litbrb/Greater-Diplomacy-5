@@ -44,7 +44,7 @@ class Multiplayer_New(GameState):
 
             self.elements.append(
                 Button("centered", btn_y, "large", "blue", name, 
-                       lambda n=name, d=scenario_dir: self.start_scenario(n, d))
+                       lambda n=name, d=scenario_dir: self.start_host_setup(n, d))
             )
 
     def scenario_settings(self):
@@ -67,7 +67,10 @@ class Multiplayer_New(GameState):
         master_key = simpledialog.askstring("Host Key", "Enter a Master Key for this tournament:", parent=root)
         if not master_key: return
         
-        temp_map = Map(load_path=os.path.join(directory, scenario_name), is_scenario=True)
+        from data import queries
+        map_settings = queries.get_scenario_settings()
+        
+        temp_map = Map(load_path=os.path.join(directory, scenario_name), is_scenario=True, map_settings=map_settings)
         temp_map.multiplayer_host_mode = True
         temp_map.multiplayer_master_key = master_key
         

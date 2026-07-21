@@ -40,6 +40,7 @@ def load_map_assets(self, load_path):
     c.USE_FOG_OF_WAR = str(self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
     c.CASUS_BELLI_REQUIRED = str(self.scenario_settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
     c.BATTLE_ROYALE_MODE = str(self.scenario_settings.get("battle_royale", c.DEFAULT_BATTLE_ROYALE)).lower() == "true"
+    c.DISABLE_FACTIONS = str(self.scenario_settings.get("disable_factions", c.DEFAULT_DISABLE_FACTIONS)).lower() == "true"
     print(f"[SYSTEM] Fog of War set to: {c.USE_FOG_OF_WAR}")
 
     # --- PROCEDURAL INTERCEPT ---
@@ -112,6 +113,7 @@ def load_map_assets(self, load_path):
             c.USE_FOG_OF_WAR = str(self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"
             c.CASUS_BELLI_REQUIRED = str(self.scenario_settings.get("casus_belli_required", c.DEFAULT_CASUS_BELLI)).lower() == "true"
             c.BATTLE_ROYALE_MODE = str(self.scenario_settings.get("battle_royale", c.DEFAULT_BATTLE_ROYALE)).lower() == "true"
+            c.DISABLE_FACTIONS = str(self.scenario_settings.get("disable_factions", c.DEFAULT_DISABLE_FACTIONS)).lower() == "true"
         else:
             # Inject built-in scenario constants that shouldn't be wiped by the user's UI settings
             if "base_days_per_turn" in save_meta["scenario_settings"]:
@@ -179,6 +181,11 @@ def load_map_assets(self, load_path):
         self.nation_data = base_nation_data
 
     # INITIALIZE RELATIONS FOR STARTING WARS & FACTIONS
+    if c.DISABLE_FACTIONS:
+        for c_name, c_data in self.nation_data.items():
+            c_data["faction"] = ""
+            c_data["allied_with"] = []
+
     if c.BATTLE_ROYALE_MODE:
         playable_nations = [n for n in self.nation_data.keys() if queries.is_playable(n, self.nation_data)]
         for c_name in playable_nations:

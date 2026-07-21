@@ -16,14 +16,14 @@ Immediate concerns:
 
 - make terrain ACTUALLY DO STUFF when in combat / moving troops across
 - option to allow construction in non-core territories (non-core construction)
-- option to disable factions completely
+
 - option to prevent core removal
 - option to disable revolts from spawning when removing cores
 - setting to make the ai more difficult (how so?)
 
-- oh interesting, if 2 players attempt to send each other a request of some kind it just doesn't work
-it says the diplomat is busy so you're unable to accept or decline the offer nor can you send a message
-- maybe factions could have no leader by default and you have to vote on who becomes the leader (this would fix the issue where if 2 countries propose something simultaneously it just doesn't work)
+- doing multiturn doesn't save certain turns in history, make it do this please
+
+- send millitary access... then declare war while awaiting response... that would be so fucked up
 
 - port building to make naval units take less time to build
 - add in a way to make a timelapse of a saved game from the history

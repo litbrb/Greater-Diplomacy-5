@@ -392,6 +392,10 @@ def execute_peace_treaty(map_data, nation_data, proposer, target, peace_type, ma
     finalize_neutral(nation_data, proposer, target)
 
 def finalize_create_faction(map_data, nation_data, creator):
+    import data.constants as c
+    if getattr(c, "DISABLE_FACTIONS", False):
+        return
+
     master = nation_data.get(creator, {}).get("master", "")
     leader = master if master else creator
     

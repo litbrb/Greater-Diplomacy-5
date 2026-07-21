@@ -518,19 +518,21 @@ def update_button_states(map_screen):
                 ca_text = get_status_text("CALL TO ARMS") if pending_action == "CALL_TO_ARMS" else "Call to Arms"
                 set_btn(map_screen.btn_call_to_arms, True, can_call_to_arms or pending_action == "CALL_TO_ARMS", ca_text, "red")
 
-                can_invite = bool(my_faction and not target_faction and not at_war)
+                factions_disabled = getattr(c, 'DISABLE_FACTIONS', False)
+
+                can_invite = bool(not factions_disabled and my_faction and not target_faction and not at_war)
                 inv_text = get_status_text("INVITE") if pending_action == "FACTION_INVITE" else "Invite to Faction"
                 set_btn(map_screen.btn_fac_invite, True, can_invite or pending_action == "FACTION_INVITE", inv_text, "green")
 
-                can_req_join = bool(not my_faction and target_faction and not at_war)
+                can_req_join = bool(not factions_disabled and not my_faction and target_faction and not at_war)
                 req_text = get_status_text("JOIN REQ") if pending_action == "JOIN_FACTION_REQ" else "Req. Join Faction"
                 set_btn(map_screen.btn_fac_join_req, True, can_req_join or pending_action == "JOIN_FACTION_REQ", req_text, "green")
 
-                can_kick = bool(in_same_faction and i_am_leader)
+                can_kick = bool(not factions_disabled and in_same_faction and i_am_leader)
                 kick_text = get_status_text("KICK") if pending_action == "KICK_FACTION_MEMBER" else "Kick from Faction"
                 set_btn(map_screen.btn_fac_kick, True, can_kick or pending_action == "KICK_FACTION_MEMBER", kick_text, "red")
 
-                can_create_fac = bool(not my_faction and not target_faction and not at_war)
+                can_create_fac = bool(not factions_disabled and not my_faction and not target_faction and not at_war)
                 create_text = get_status_text("CREATE") if pending_action == "CREATE_FACTION" else "Create Faction"
                 set_btn(map_screen.btn_fac_create, True, can_create_fac or pending_action == "CREATE_FACTION", create_text, "blue")
 

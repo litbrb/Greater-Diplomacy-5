@@ -89,6 +89,15 @@ class Scenario_Settings(GameState):
             Button(80, 360, "medium", "blue", "AI Specific Settings", self.open_ai_settings)
         )
 
+        # Toggle Button - Disable Factions
+        df_val = str(self.settings.get("disable_factions", c.DEFAULT_DISABLE_FACTIONS)).lower() == "true"
+        df_color = "green" if df_val else "red"
+        df_text = "Disable Factions: ON" if df_val else "Disable Factions: OFF"
+
+        self.elements.append(
+            Button("centered", 360, "medium", df_color, df_text, self.toggle_disable_factions)
+        )
+
         # Toggle Button - Battle Royale
         br_val = str(self.settings.get("battle_royale", c.DEFAULT_BATTLE_ROYALE)).lower() == "true"
         br_color = "green" if br_val else "red"
@@ -163,6 +172,12 @@ class Scenario_Settings(GameState):
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 
+    def toggle_disable_factions(self):
+        current = str(self.settings.get("disable_factions", c.DEFAULT_DISABLE_FACTIONS)).lower() == "true"
+        self.settings["disable_factions"] = not current
+        queries.save_scenario_settings(self.settings)
+        self.refresh_ui()
+
     def reset_defaults(self):
         self.settings["fog_of_war"] = c.DEFAULT_FOG_OF_WAR
         self.settings["casus_belli_required"] = c.DEFAULT_CASUS_BELLI
@@ -170,6 +185,8 @@ class Scenario_Settings(GameState):
         self.settings["days_per_turn"] = "Default"
         self.settings["use_scripted_events"] = c.DEFAULT_USE_SCRIPTED_EVENTS
         self.settings["battle_royale"] = c.DEFAULT_BATTLE_ROYALE
+        self.settings["bounce_tiebreaker"] = c.DEFAULT_BOUNCE_TIEBREAKER
+        self.settings["disable_factions"] = c.DEFAULT_DISABLE_FACTIONS
         queries.save_scenario_settings(self.settings)
         self.refresh_ui()
 

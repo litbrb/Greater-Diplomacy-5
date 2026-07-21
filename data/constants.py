@@ -128,6 +128,10 @@ BATTLE_ROYALE_MODE = False
 DEFAULT_BATTLE_ROYALE = False
 DEFAULT_BOUNCE_TIEBREAKER = False
 
+# --- FACTIONS ---
+DISABLE_FACTIONS = False
+DEFAULT_DISABLE_FACTIONS = False
+
 # ==========================================
 # DIPLOMATIC POPUPS
 # ==========================================

@@ -195,7 +195,7 @@ def process_basic_proactive_ai(map_screen):
                             break # Act once per turn to avoid conflicts
 
         # --- 1.5. Defensive Faction Seeking Logic ---
-        if is_already_at_war and not my_faction:
+        if is_already_at_war and not my_faction and not getattr(c, "DISABLE_FACTIONS", False):
             # Prevent sending multiple faction requests
             has_pending_faction_req = False
             for target_nation, info in pending.items():

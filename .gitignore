@@ -9,6 +9,7 @@ __pycache__/
 !scenarios/**
 !context/**
 !version.txt
+.DS_Store
 
 assets/music/*
 !assets/music/Greater Diplomacy 1/

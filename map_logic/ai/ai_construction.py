@@ -219,15 +219,17 @@ def process_ai_economy_decisions(map_screen):
                         if not is_naval and turns <= 1:
                             safe_to_panic = False # Let the ground unit finish!
                     
-                    if safe_to_panic and (not queue or queries.get_base_unit_name(queue[0].get("unit_type", "")) != "Militia"):
+                    militia_name = queries.get_best_preferred_unit(data.get("research", {}), unit_library, ["Militia"]) or "Militia I"
+                    militia_stats = unit_library.get(militia_name, {})
+                    militia_time = militia_stats.get("production_time", 1)
+                    
+                    if safe_to_panic and militia_time == 1 and (not queue or queries.get_base_unit_name(queue[0].get("unit_type", "")) != "Militia"):
                         # Cancel existing queue
                         while queue:
                             item = queue.pop(0)
                             if "refund" in item: queries.refund_resources(data, item["refund"])
                         
                         # Queue Militia
-                        militia_name = queries.get_best_preferred_unit(data.get("research", {}), unit_library, ["Militia"]) or "Militia I"
-                        militia_stats = unit_library.get(militia_name, {})
                         c_mat = militia_stats.get("cost_materials", 0)
                         c_man = militia_stats.get("cost_manpower", 0)
                         c_fuel = militia_stats.get("cost_fuel", 0)

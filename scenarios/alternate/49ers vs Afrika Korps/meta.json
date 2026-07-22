@@ -35878,7 +35878,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "French Guiana": {
             "name": "French Guiana",
@@ -35925,7 +35926,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "Patagonian Workers Front": {
             "name": "Patagonian Workers Front",
@@ -35972,7 +35974,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         },
         "East Timor": {
             "name": "East Timor",
@@ -36019,7 +36022,8 @@
             "leader_title": "",
             "flag_data": "DEFAULT",
             "portrait_data": "DEFAULT",
-            "pending_diplomacy": {}
+            "pending_diplomacy": {},
+            "relations": {}
         }
     },
     "provinces": {

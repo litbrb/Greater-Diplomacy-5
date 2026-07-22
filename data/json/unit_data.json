@@ -40,7 +40,6 @@
     "Infantry Type 1948": {"health": 2900, "attack": 480, "defense": 0, "speed": 1, "cost_materials": 500, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 2, "naval_unit": false, "order": {}},
     "Infantry Type 1949": {"health": 2950, "attack": 490, "defense": 0, "speed": 1, "cost_materials": 500, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 2, "naval_unit": false, "order": {}},
     "Infantry Type 1950": {"health": 3000, "attack": 500, "defense": 0, "speed": 1, "cost_materials": 500, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 2, "naval_unit": false, "order": {}},
-
     "Motorized Infantry Type 1930": {"health": 2000, "attack": 300, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 2, "naval_unit": false, "order": {}},
     "Motorized Infantry Type 1931": {"health": 2050, "attack": 310, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 2, "naval_unit": false, "order": {}},
     "Motorized Infantry Type 1932": {"health": 2100, "attack": 320, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 2, "naval_unit": false, "order": {}},
@@ -62,7 +61,6 @@
     "Motorized Infantry Type 1948": {"health": 2900, "attack": 480, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 2, "naval_unit": false, "order": {}},
     "Motorized Infantry Type 1949": {"health": 2950, "attack": 490, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 2, "naval_unit": false, "order": {}},
     "Motorized Infantry Type 1950": {"health": 3000, "attack": 500, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 2, "naval_unit": false, "order": {}},
-
     "Mechanized Infantry Type 1940": {"health": 2500, "attack": 400, "defense": 100, "speed": 2, "cost_materials": 2000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 3, "naval_unit": false, "order": {}},
     "Mechanized Infantry Type 1941": {"health": 2550, "attack": 410, "defense": 105, "speed": 2, "cost_materials": 2000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 3, "naval_unit": false, "order": {}},
     "Mechanized Infantry Type 1942": {"health": 2600, "attack": 420, "defense": 110, "speed": 2, "cost_materials": 2000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 3, "naval_unit": false, "order": {}},
@@ -74,24 +72,19 @@
     "Mechanized Infantry Type 1948": {"health": 2900, "attack": 480, "defense": 140, "speed": 2, "cost_materials": 2000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 3, "naval_unit": false, "order": {}},
     "Mechanized Infantry Type 1949": {"health": 2950, "attack": 490, "defense": 145, "speed": 2, "cost_materials": 2000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 3, "naval_unit": false, "order": {}},
     "Mechanized Infantry Type 1950": {"health": 3000, "attack": 500, "defense": 150, "speed": 2, "cost_materials": 2000, "cost_manpower": 1000, "cost_fuel": 50, "production_time": 3, "naval_unit": false, "order": {}},
-
     "Cavalry I": {"health": 600, "attack": 300, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 2000, "cost_fuel": 0, "production_time": 3, "naval_unit": false, "order": {}},
     "Cavalry II": {"health": 700, "attack": 300, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 2000, "cost_fuel": 0, "production_time": 3, "naval_unit": false, "order": {}},
     "Cavalry III": {"health": 800, "attack": 300, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 2000, "cost_fuel": 0, "production_time": 3, "naval_unit": false, "order": {}},
     "Cavalry IV": {"health": 900, "attack": 300, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 2000, "cost_fuel": 0, "production_time": 3, "naval_unit": false, "order": {}},
     "Cavalry V": {"health": 1000, "attack": 300, "defense": 0, "speed": 2, "cost_materials": 1000, "cost_manpower": 2000, "cost_fuel": 0, "production_time": 3, "naval_unit": false, "order": {}},
-
     "Militia I": {"health": 500, "attack": 50, "defense": 0, "speed": 1, "cost_materials": 300, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 1, "naval_unit": false, "order": {}},
     "Militia II": {"health": 600, "attack": 60, "defense": 0, "speed": 1, "cost_materials": 300, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 1, "naval_unit": false, "order": {}},
     "Militia III": {"health": 700, "attack": 70, "defense": 0, "speed": 1, "cost_materials": 300, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 1, "naval_unit": false, "order": {}},
     "Militia IV": {"health": 800, "attack": 80, "defense": 0, "speed": 1, "cost_materials": 300, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 1, "naval_unit": false, "order": {}},
     "Militia V": {"health": 900, "attack": 90, "defense": 0, "speed": 1, "cost_materials": 300, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 1, "naval_unit": false, "order": {}},
     "Militia VI": {"health": 1000, "attack": 100, "defense": 0, "speed": 1, "cost_materials": 300, "cost_manpower": 1000, "cost_fuel": 0, "production_time": 1, "naval_unit": false, "order": {}},
-
     "WW1 Tank": {"health": 3000, "attack": 1500, "defense": 100, "speed": 1, "cost_materials": 6000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 6, "naval_unit": false, "order": {}},
-    
     "WW1 Armored Car": {"health": 1000, "attack": 500, "defense": 50, "speed": 2, "cost_materials": 3000, "cost_manpower": 1000, "cost_fuel": 100, "production_time": 4, "naval_unit": false, "order": {}},
-    
     "Armored Car I": {"health": 1000, "attack": 600, "defense": 60, "speed": 2, "cost_materials": 3000, "cost_manpower": 1000, "cost_fuel": 100, "production_time": 4, "naval_unit": false, "order": {}},
     "Armored Car II": {"health": 1100, "attack": 700, "defense": 70, "speed": 3, "cost_materials": 3000, "cost_manpower": 1000, "cost_fuel": 100, "production_time": 4, "naval_unit": false, "order": {}},
     "Armored Car III": {"health": 1200, "attack": 800, "defense": 80, "speed": 3, "cost_materials": 3000, "cost_manpower": 1000, "cost_fuel": 100, "production_time": 4, "naval_unit": false, "order": {}},
@@ -99,7 +92,6 @@
     "Armored Car V": {"health": 1400, "attack": 1000, "defense": 100, "speed": 4, "cost_materials": 3000, "cost_manpower": 1000, "cost_fuel": 100, "production_time": 4, "naval_unit": false, "order": {}},
     "Armored Car VI": {"health": 1500, "attack": 1100, "defense": 110, "speed": 4, "cost_materials": 3000, "cost_manpower": 1000, "cost_fuel": 100, "production_time": 4, "naval_unit": false, "order": {}},
     "Armored Car VII": {"health": 1600, "attack": 1200, "defense": 120, "speed": 4, "cost_materials": 3000, "cost_manpower": 1000, "cost_fuel": 100, "production_time": 4, "naval_unit": false, "order": {}},
-    
     "Light Tank I": {"health": 1800, "attack": 1200, "defense": 80, "speed": 2, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 150, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank II": {"health": 2000, "attack": 1500, "defense": 90, "speed": 2, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 150, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank III": {"health": 2200, "attack": 1800, "defense": 100, "speed": 2, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 150, "production_time": 5, "naval_unit": false, "order": {}},
@@ -107,23 +99,17 @@
     "Light Tank V": {"health": 2600, "attack": 2400, "defense": 120, "speed": 3, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 150, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank VI": {"health": 2800, "attack": 2700, "defense": 130, "speed": 3, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 150, "production_time": 5, "naval_unit": false, "order": {}},
     "Light Tank VII": {"health": 3000, "attack": 3000, "defense": 140, "speed": 3, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 150, "production_time": 5, "naval_unit": false, "order": {}},
-    
     "Medium Tank I": {"health": 2500, "attack": 2400, "defense": 150, "speed": 2, "cost_materials": 12000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
     "Medium Tank II": {"health": 3000, "attack": 3000, "defense": 175, "speed": 2, "cost_materials": 12000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
     "Medium Tank III": {"health": 3500, "attack": 3600, "defense": 200, "speed": 2, "cost_materials": 12000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
-    
     "Heavy Tank I": {"health": 3000, "attack": 3000, "defense": 300, "speed": 1, "cost_materials": 15000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
     "Heavy Tank II": {"health": 3500, "attack": 3500, "defense": 350, "speed": 1, "cost_materials": 15000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
     "Heavy Tank III": {"health": 4000, "attack": 4000, "defense": 400, "speed": 1, "cost_materials": 15000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
-    
     "Main Battle Tank I": {"health": 4000, "attack": 4000, "defense": 250, "speed": 2, "cost_materials": 15000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
     "Main Battle Tank II": {"health": 4500, "attack": 4500, "defense": 275, "speed": 2, "cost_materials": 15000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
     "Main Battle Tank III": {"health": 5000, "attack": 5000, "defense": 300, "speed": 2, "cost_materials": 15000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": false, "order": {}},
-    
     "Dreadnought": {"health": 10000, "attack": 6000, "defense": 1000, "speed": 1, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 10, "naval_unit": true, "order": {}},
-    
     "Battleship": {"health": 15000, "attack": 10000, "defense": 1500, "speed": 1, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 400, "production_time": 10, "naval_unit": true, "order": {}},
-
     "Destroyer I": {"health": 6000, "attack": 3000, "defense": 600, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 8, "naval_unit": true, "order": {}},
     "Destroyer II": {"health": 7000, "attack": 4000, "defense": 700, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 8, "naval_unit": true, "order": {}},
     "Destroyer III": {"health": 8000, "attack": 5000, "defense": 800, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 8, "naval_unit": true, "order": {}},
@@ -134,7 +120,6 @@
     "Destroyer VIII": {"health": 13000, "attack": 10000, "defense": 1300, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 8, "naval_unit": true, "order": {}},
     "Destroyer IX": {"health": 14000, "attack": 11000, "defense": 1400, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 8, "naval_unit": true, "order": {}},
     "Destroyer X": {"health": 15000, "attack": 12000, "defense": 1500, "speed": 1, "cost_materials": 10000, "cost_manpower": 1000, "cost_fuel": 300, "production_time": 8, "naval_unit": true, "order": {}},
-
     "Submarine I": {"health": 3000, "attack": 6000, "defense": 300, "speed": 1, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": true, "order": {}},
     "Submarine II": {"health": 3500, "attack": 7500, "defense": 350, "speed": 1, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": true, "order": {}},
     "Submarine III": {"health": 4000, "attack": 9000, "defense": 400, "speed": 1, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": true, "order": {}},
@@ -145,7 +130,6 @@
     "Submarine VIII": {"health": 6500, "attack": 16500, "defense": 650, "speed": 1, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": true, "order": {}},
     "Submarine IX": {"health": 7000, "attack": 18000, "defense": 700, "speed": 1, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": true, "order": {}},
     "Submarine X": {"health": 7500, "attack": 20000, "defense": 750, "speed": 1, "cost_materials": 8000, "cost_manpower": 1000, "cost_fuel": 200, "production_time": 6, "naval_unit": true, "order": {}},
-    
     "Aircraft Carrier I": {"health": 2000, "attack": 20000, "defense": 2000, "speed": 1, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 500, "production_time": 10, "naval_unit": true, "order": {}},
     "Aircraft Carrier II": {"health": 3000, "attack": 30000, "defense": 2500, "speed": 1, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 500, "production_time": 10, "naval_unit": true, "order": {}},
     "Aircraft Carrier III": {"health": 4000, "attack": 40000, "defense": 3000, "speed": 1, "cost_materials": 20000, "cost_manpower": 1000, "cost_fuel": 500, "production_time": 10, "naval_unit": true, "order": {}},

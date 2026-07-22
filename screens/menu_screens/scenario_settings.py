@@ -126,6 +126,18 @@ class Scenario_Settings(GameState):
             Button("centered", 600, "medium", "grey", "Reset to Defaults", self.reset_defaults)
         )
 
+        # Edit Construction Turns
+        self.elements.append(
+            Button(80, 420, "medium", "purple", "Edit Construction Turns", self.open_turn_editor)
+        )
+
+    def open_turn_editor(self):
+        try:
+            from ui.turn_editor import open_turn_editor
+            open_turn_editor()
+        except ImportError as e:
+            print(f"Error importing turn editor: {e}")
+
     def toggle_bounce_tiebreaker(self):
         current = str(self.settings.get("bounce_tiebreaker", c.DEFAULT_BOUNCE_TIEBREAKER)).lower() == "true"
         self.settings["bounce_tiebreaker"] = not current

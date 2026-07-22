@@ -121,6 +121,42 @@ def load_map_assets(self, load_path):
             if "use_scripted_events" in save_meta["scenario_settings"]:
                 self.scenario_settings["use_scripted_events"] = save_meta["scenario_settings"]["use_scripted_events"]
 
+    # --- APPLY TURN OVERRIDES ---
+    # Clear and reload libraries to ensure a clean slate before applying overrides
+    # We MUST mutate the dictionaries inplace because UI screens hold pointers to them!
+    unit_lib = queries.get_unit_library()
+    building_lib = queries.get_building_library()
+    
+    with open(c.UNIT_DATA_PATH, "r") as f:
+        unit_lib.clear()
+        unit_lib.update(json.load(f))
+        
+    with open(c.BUILDING_DATA_PATH, "r") as f:
+        building_lib.clear()
+        building_lib.update(json.load(f))
+    
+    def get_base_type(name):
+        if " Type " in name: return name.split(" Type ")[0]
+        if " Lvl " in name: return name.split(" Lvl ")[0]
+        parts = name.split(" ")
+        if parts[-1] in ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]: return " ".join(parts[:-1])
+        return name
+        
+    unit_overrides = self.scenario_settings.get("unit_turn_overrides", {})
+    building_overrides = self.scenario_settings.get("building_turn_overrides", {})
+    
+    if unit_overrides:
+        for name, data in unit_lib.items():
+            btype = get_base_type(name)
+            if btype in unit_overrides:
+                data["production_time"] = unit_overrides[btype]
+                
+    if building_overrides:
+        for name, data in building_lib.items():
+            btype = get_base_type(name)
+            if btype in building_overrides:
+                data["time"] = building_overrides[btype]
+
     if load_path:
         history_path = os.path.join(load_path, "history.json")
         if os.path.exists(history_path):

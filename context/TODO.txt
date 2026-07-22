@@ -9,6 +9,8 @@ Immediate concerns:
 
 - add in a seperate queue for naval units specifically
 
+- Use of a broken or weak cryptographic hashing algorithm on sensitive data (check github)
+
 - check if countries having custom names is implemented correctly, especially for puppet names
 
 - fix glitch where reseting scenario settings doesn't set the fog of war level back to normal

@@ -74,8 +74,45 @@ def render_buttons(self):
             self.show_feedback(f"Move exported to {export_path}")
             
         self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Export Turn", m_export)
+        
+        def m_import():
+            import tkinter as tk
+            from tkinter import filedialog
+            from data.io.multiplayer_io import load_move_files
+            import os
+            
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes('-topmost', True)
+            file_path = filedialog.askopenfilename(
+                initialdir=c.TOURNAMENT_SAVES_DIR,
+                title="Select Move File",
+                filetypes=(("Greater Diplomacy 5 Move", "*.gd5move"), ("All files", "*.*"))
+            )
+            root.destroy()
+            
+            if file_path:
+                cid = getattr(self, 'player_country', 'Unknown')
+                player_key = getattr(self, 'multiplayer_player_key', '')
+                keys_dict = {cid: player_key}
+                
+                load_move_files(self, [file_path], keys_dict)
+                self.show_feedback(f"Move imported from {os.path.basename(file_path)}")
+                
+                self.refresh_political_map()
+                self.refresh_factions_map()
+                self.refresh_relations_map()
+                # If economy map refresh is needed we can do it, but Map doesn't have refresh_economy_map so we skip or call refresh_all_maps()
+                self.refresh_cores_map()
+                self.refresh_faction_territories_map()
+                if hasattr(self, 'sync_units_to_data'):
+                    self.sync_units_to_data()
+
+        self.btn_import_turn = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Import Turn", m_import)
     else:
         self.btn_next_turn = Button(c.EDITOR_BOT_BTN_START_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "purple", "Next Turn", lambda: turn_manager.advance_time(self))
+        self.btn_import_turn = Button(-1000, -1000, "small", "grey", "Import Turn", lambda: None)
+        
     self.btn_skip_ai = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X, c.BOTTOM_BAR_UI_CENTER_Y, "small", "grey", "Skip AI", self.toggle_skip_ai, font_preset="normal")
     self.btn_multi_turn = Button(c.EDITOR_BOT_BTN_START_X - c.EDITOR_BOT_BTN_STEP_X * 2, c.BOTTOM_BAR_UI_CENTER_Y, "small", "blue", "Multi-Turn", self.trigger_multi_turn)
     
@@ -191,7 +228,7 @@ def render_buttons(self):
         self.btn_ed_load, self.btn_ed_nation,
         self.btn_ed_core, self.btn_ed_claim, self.btn_ed_autocore, self.btn_ed_clear, self.btn_ed_resource, self.btn_ed_building,
         self.btn_ed_unit, self.btn_ed_refresh, self.btn_ed_edited, self.btn_ed_date, self.btn_ed_diplo, self.btn_ed_scripts,
-        self.btn_next_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_declare_indep, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
+        self.btn_next_turn, self.btn_import_turn, self.btn_skip_ai, self.btn_multi_turn, self.btn_declare_indep, self.btn_gp_edit, self.btn_gp_econ, self.btn_gp_rd, self.btn_gp_msgs,
         self.btn_gp_save, self.btn_gp_settings, self.btn_gp_music, self.btn_gp_faction, self.btn_gp_claims, self.btn_gp_puppets, self.btn_go_orders, self.btn_go_production,
         self.btn_declare_war, self.btn_join_wars, self.btn_call_to_arms, self.btn_fac_invite,
         self.btn_fac_join_req, self.btn_fac_kick, self.btn_fac_create,
@@ -326,10 +363,15 @@ def update_button_states(map_screen):
         map_screen.btn_next_turn.color, map_screen.btn_next_turn.hover_color = c.UI_COLORS["red" if viewing_ai else "purple"]
 
         # Visibility and active color swapping for the skip toggle
-        map_screen.btn_skip_ai.visible = not is_sel and not is_thinking
-        skip_on = map_screen.skip_ai_view
-        map_screen.btn_skip_ai.text = "Skip AI: ON" if skip_on else "Skip AI: OFF"
-        map_screen.btn_skip_ai.color, map_screen.btn_skip_ai.hover_color = c.UI_COLORS["green" if skip_on else "red"]
+        if getattr(map_screen, 'multiplayer_mode', False):
+            map_screen.btn_skip_ai.visible = False
+            map_screen.btn_import_turn.visible = not is_sel and not is_thinking
+        else:
+            map_screen.btn_import_turn.visible = False
+            map_screen.btn_skip_ai.visible = not is_sel and not is_thinking
+            skip_on = map_screen.skip_ai_view
+            map_screen.btn_skip_ai.text = "Skip AI: ON" if skip_on else "Skip AI: OFF"
+            map_screen.btn_skip_ai.color, map_screen.btn_skip_ai.hover_color = c.UI_COLORS["green" if skip_on else "red"]
 
         is_spec = map_screen.player_country == "Spectator"
         map_screen.btn_multi_turn.visible = not is_sel and not is_thinking and is_spec

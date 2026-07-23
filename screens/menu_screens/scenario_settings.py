@@ -15,6 +15,7 @@ class Scenario_Settings(GameState):
         if not self.settings:
             self.settings = {
                 "fog_of_war": c.DEFAULT_FOG_OF_WAR,
+                "fog_of_war_strength": c.DEFAULT_FOG_OF_WAR_STRENGTH,
                 "casus_belli_required": c.DEFAULT_CASUS_BELLI,
                 "surprise_attack": c.DEFAULT_SURPRISE_ATTACK,
                 "use_scripted_events": c.DEFAULT_USE_SCRIPTED_EVENTS,
@@ -192,6 +193,7 @@ class Scenario_Settings(GameState):
 
     def reset_defaults(self):
         self.settings["fog_of_war"] = c.DEFAULT_FOG_OF_WAR
+        self.settings["fog_of_war_strength"] = c.DEFAULT_FOG_OF_WAR_STRENGTH
         self.settings["casus_belli_required"] = c.DEFAULT_CASUS_BELLI
         self.settings["surprise_attack"] = c.DEFAULT_SURPRISE_ATTACK
         self.settings["days_per_turn"] = "Default"

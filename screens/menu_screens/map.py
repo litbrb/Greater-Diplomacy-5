@@ -132,6 +132,7 @@ class Map(GameState):
         elif not hasattr(self, 'scenario_settings'):
             self.scenario_settings = {
                 "fog_of_war": c.DEFAULT_FOG_OF_WAR,
+                "fog_of_war_strength": c.DEFAULT_FOG_OF_WAR_STRENGTH,
                 "casus_belli_required": c.DEFAULT_CASUS_BELLI
             }
 

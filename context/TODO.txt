@@ -10,8 +10,6 @@ Immediate concerns:
 
 - check if countries having custom names is implemented correctly, especially for puppet names
 
-- fix glitch where reseting scenario settings doesn't set the fog of war level back to normal
-
 - make terrain ACTUALLY DO STUFF when in combat / moving troops across
 - option to allow construction in non-core territories (non-core construction)
 

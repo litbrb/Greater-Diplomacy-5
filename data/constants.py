@@ -120,6 +120,7 @@ TACTICAL_DEFAULT_YEAR = 1910
 # --- FOG OF WAR ---
 USE_FOG_OF_WAR = True # Toggle Fog of War mechanics on or off
 DEFAULT_FOG_OF_WAR = True
+DEFAULT_FOG_OF_WAR_STRENGTH = "normal"
 FOG_OF_WAR_ALPHA = 160 # How dark unseen provinces get (0-255)
 
 # --- CASUS BELLI ---

@@ -35,6 +35,7 @@ def load_map_assets(self, load_path):
     # Ensure we always have a dictionary to reference
     self.scenario_settings = copy.deepcopy(scenario_settings) if scenario_settings is not None else {
         "fog_of_war": c.DEFAULT_FOG_OF_WAR,
+        "fog_of_war_strength": c.DEFAULT_FOG_OF_WAR_STRENGTH,
         "casus_belli_required": c.DEFAULT_CASUS_BELLI
     }
     c.USE_FOG_OF_WAR = str(self.scenario_settings.get("fog_of_war", c.DEFAULT_FOG_OF_WAR)).lower() == "true"

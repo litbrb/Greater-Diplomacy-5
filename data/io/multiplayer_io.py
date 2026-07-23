@@ -10,21 +10,31 @@ from data import queries
 def hash_key(key):
     return hashlib.sha256(key.encode('utf-8')).hexdigest()
 
-def generate_fernet_key_from_password(password):
-    hasher = hashlib.sha256(password.encode('utf-8'))
-    return base64.urlsafe_b64encode(hasher.digest())
+def generate_fernet_key_from_password(password, salt):
+    derived_key = hashlib.pbkdf2_hmac(
+        'sha256',
+        password.encode('utf-8'),
+        salt,
+        200_000
+    )
+    return base64.urlsafe_b64encode(derived_key)
 
 def encrypt_dict(data_dict, password):
-    key = generate_fernet_key_from_password(password)
+    salt = secrets.token_bytes(16)
+    key = generate_fernet_key_from_password(password, salt)
     f = Fernet(key)
     json_bytes = json.dumps(data_dict).encode('utf-8')
-    return f.encrypt(json_bytes).decode('utf-8')
+    encrypted_token = f.encrypt(json_bytes).decode('utf-8')
+    salt_b64 = base64.urlsafe_b64encode(salt).decode('utf-8')
+    return f"{salt_b64}:{encrypted_token}"
 
 def decrypt_dict(encrypted_str, password):
-    key = generate_fernet_key_from_password(password)
-    f = Fernet(key)
     try:
-        json_bytes = f.decrypt(encrypted_str.encode('utf-8'))
+        salt_b64, encrypted_token = encrypted_str.split(":", 1)
+        salt = base64.urlsafe_b64decode(salt_b64.encode('utf-8'))
+        key = generate_fernet_key_from_password(password, salt)
+        f = Fernet(key)
+        json_bytes = f.decrypt(encrypted_token.encode('utf-8'))
         return json.loads(json_bytes.decode('utf-8'))
     except Exception:
         return None

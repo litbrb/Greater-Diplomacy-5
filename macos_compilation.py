@@ -2,23 +2,35 @@ import os
 import subprocess
 import shutil
 import sys
+import time
 import data.constants as c
+
+def remove_dir_safely(dir_path, retries=5, delay=0.2):
+    """Safely remove a directory tree, handling macOS APFS/Finder file lock race conditions."""
+    if not os.path.exists(dir_path):
+        return
+    for i in range(retries):
+        try:
+            shutil.rmtree(dir_path)
+            return
+        except OSError:
+            if i == retries - 1:
+                shutil.rmtree(dir_path, ignore_errors=True)
+            else:
+                time.sleep(delay)
 
 def main():
     build_dir = "build"
     dist_dir = "dist"
-    
-    # TODO: there seems to be a bit of an issue where this has to be run twice for some reason
-    # not game breaking by any means, could probably be easily fixed by just running the remove command twice 
 
     # 1. Clean old build
     if os.path.exists(build_dir):
         print(f"Cleaning {build_dir} folder...")
-        shutil.rmtree(build_dir)
+        remove_dir_safely(build_dir)
         
     if os.path.exists(dist_dir):
         print(f"Cleaning {dist_dir} folder...")
-        shutil.rmtree(dist_dir)
+        remove_dir_safely(dist_dir)
     
     # 2. Rebuild
     print("Running py2app...")

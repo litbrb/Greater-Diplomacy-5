@@ -1,0 +1,5 @@
+Instruct Intel/macOS players to clear the download quarantine flag after unzipping:
+
+1. Open Terminal.
+2. Run: xattr -cr /path/to/dist/main.app
+3. Or right-click main.app in Finder -> select Open -> click Open.

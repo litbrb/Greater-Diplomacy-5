@@ -107,14 +107,25 @@ def export_tournament(map_ref, file_path, master_key, keys_dict):
         "enc_session": encrypt_dict({"sk": session_key, "keys_dict": keys_dict}, master_key)
     }
     
-    for cid, ckey in keys_dict.items():
-        if ckey:
-            c_hash = hash_key(ckey)
-            verification_table[c_hash] = {
-                "role": "PLAYER",
-                "country_id": cid,
-                "enc_session": encrypt_dict({"sk": session_key}, ckey)
-            }
+    import concurrent.futures
+    import pygame
+    
+    def _encrypt_player(cid, ckey):
+        if not ckey: return None
+        return cid, hash_key(ckey), encrypt_dict({"sk": session_key}, ckey)
+        
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(_encrypt_player, cid, ckey) for cid, ckey in keys_dict.items()]
+        for future in concurrent.futures.as_completed(futures):
+            pygame.event.pump()
+            res = future.result()
+            if res:
+                r_cid, r_hash, r_enc = res
+                verification_table[r_hash] = {
+                    "role": "PLAYER",
+                    "country_id": r_cid,
+                    "enc_session": r_enc
+                }
             
     game_data_enc = encrypt_dict(save_dict, session_key)
     history_enc = encrypt_dict(map_ref.history, session_key) if c.RECORD_HISTORY else None
@@ -238,26 +249,46 @@ def load_move_files(map_ref, move_file_paths, keys_dict):
     """
     processed_cids = set()
     
-    for file_path in move_file_paths:
+    import concurrent.futures
+    import pygame
+    
+    def _decrypt_move(file_path):
         if not os.path.exists(file_path):
-            continue
+            return None
         with open(file_path, 'r') as f:
             try:
                 payload = json.load(f)
             except Exception:
-                continue
+                return None
         
         cid = payload.get("country_id")
         p_hash = payload.get("hash")
         
         if cid not in keys_dict:
-            continue
+            return None
             
         player_key = keys_dict[cid]
         if hash_key(player_key) != p_hash:
-            continue
+            return None
             
         player_data = decrypt_dict(payload.get("data"), player_key)
+        return file_path, cid, player_data
+        
+    valid_moves = {}
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(_decrypt_move, fp) for fp in move_file_paths]
+        for future in concurrent.futures.as_completed(futures):
+            pygame.event.pump()
+            res = future.result()
+            if res:
+                file_path, cid, player_data = res
+                valid_moves[file_path] = (cid, player_data)
+                
+    for file_path in move_file_paths:
+        if file_path not in valid_moves:
+            continue
+            
+        cid, player_data = valid_moves[file_path]
         if not player_data:
             continue
             

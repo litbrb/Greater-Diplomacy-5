@@ -7,8 +7,6 @@ import os
 import platform
 
 try:
-    # Get the absolute path to the directory containing this script
-    base_path = os.path.dirname(os.path.abspath(__file__))
     system = platform.system()
 
     # Dynamically choose the correct library file based on the OS
@@ -24,15 +22,39 @@ try:
     else:
         raise OSError(f"Unsupported operating system: {system}")
 
-    # Construct the final path and load the library
-    lib_path = os.path.join(base_path, lib_name)
+    # Candidate paths for locating the library across different frozen environments (py2app, PyInstaller, etc.)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = []
+    
+    if 'RESOURCEPATH' in os.environ:
+        candidates.append(os.path.join(os.environ['RESOURCEPATH'], lib_name))
+    if hasattr(sys, '_MEIPASS'):
+        candidates.append(os.path.join(sys._MEIPASS, lib_name))
+    if getattr(sys, 'frozen', False):
+        candidates.append(os.path.join(os.path.dirname(sys.executable), lib_name))
+        candidates.append(os.path.join(os.path.dirname(sys.executable), '..', 'Resources', lib_name))
+
+    candidates.append(os.path.join(script_dir, lib_name))
+    candidates.append(os.path.join(os.getcwd(), lib_name))
+
+    lib_path = None
+    for path in candidates:
+        norm_path = os.path.normpath(path)
+        if os.path.exists(norm_path):
+            lib_path = norm_path
+            break
+
+    if lib_path is None:
+        lib_path = os.path.join(script_dir, lib_name)
+
     soloud_dll = ctypes.CDLL(lib_path)
 
 except Exception as e:
     print("\n" + "="*50)
     print(f"CRITICAL DLL/DYLIB ERROR: {e}")
     print("="*50 + "\n")
-    sys.exit()
+    sys.exit(1)
+
 
 # Raw DLL functions
 Soloud_destroy = soloud_dll.Soloud_destroy

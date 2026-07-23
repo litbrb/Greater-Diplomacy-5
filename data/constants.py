@@ -86,8 +86,19 @@ CORE_CONSTRUCTION_TURNS = 24
 REMOVE_CORE_TURNS = 2
 
 CREDITS_DATA = [
-    {"main_text": "Lead Developer: ", "link_text": "GitGetGot415", "url": "https://github.com/GitGetGot415"},
-    {"main_text": "Contributors: ", "link_text": "litbrb", "url": "https://github.com/litbrb"},
+    {
+        "main_text": "Lead Developer: ", 
+        "people": [
+            {"link_text": "GitGetGot415", "url": "https://github.com/GitGetGot415"}
+        ]
+    },
+    {
+        "main_text": "Contributors: ", 
+        "people": [
+            {"link_text": "litbrb", "url": "https://github.com/litbrb"},
+            {"link_text": "github-advanced-security[bot]", "url": "https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security"}
+        ]
+    },
 ]
 
 SHOW_FPS = True

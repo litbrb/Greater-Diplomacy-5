@@ -1,5 +1,4 @@
 Immediate concerns:
-- allow for the credits tab to show more than just 1 person for contributors
 - newspaper events???
 - set newspaper events in seperate screen and then fire them from country actions???
 - in what order are puppets that you control shown when viewed through the puppets screen? could you make it so you can rearrange the order they're displayed in?

@@ -109,13 +109,19 @@ def export_tournament(map_ref, file_path, master_key, keys_dict):
     
     import concurrent.futures
     import pygame
+    from map_logic.system32 import loading_screen
     
     def _encrypt_player(cid, ckey):
         if not ckey: return None
         return cid, hash_key(ckey), encrypt_dict({"sk": session_key}, ckey)
         
+    surface = pygame.display.get_surface()
+    valid_tasks = [(cid, ckey) for cid, ckey in keys_dict.items() if ckey]
+    total_tasks = len(valid_tasks)
+    completed_tasks = 0
+        
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(_encrypt_player, cid, ckey) for cid, ckey in keys_dict.items()]
+        futures = [executor.submit(_encrypt_player, cid, ckey) for cid, ckey in valid_tasks]
         for future in concurrent.futures.as_completed(futures):
             pygame.event.pump()
             res = future.result()
@@ -126,6 +132,10 @@ def export_tournament(map_ref, file_path, master_key, keys_dict):
                     "country_id": r_cid,
                     "enc_session": r_enc
                 }
+            completed_tasks += 1
+            if surface:
+                loading_screen.draw_simple_refresh_bar(surface, "Encrypting Player Keys...", completed_tasks, total_tasks)
+                pygame.display.flip()
             
     game_data_enc = encrypt_dict(save_dict, session_key)
     history_enc = encrypt_dict(map_ref.history, session_key) if c.RECORD_HISTORY else None
@@ -275,6 +285,12 @@ def load_move_files(map_ref, move_file_paths, keys_dict):
         return file_path, cid, player_data
         
     valid_moves = {}
+    surface = pygame.display.get_surface()
+    total_tasks = len(move_file_paths)
+    completed_tasks = 0
+    
+    from map_logic.system32 import loading_screen
+    
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [executor.submit(_decrypt_move, fp) for fp in move_file_paths]
         for future in concurrent.futures.as_completed(futures):
@@ -283,6 +299,10 @@ def load_move_files(map_ref, move_file_paths, keys_dict):
             if res:
                 file_path, cid, player_data = res
                 valid_moves[file_path] = (cid, player_data)
+            completed_tasks += 1
+            if surface:
+                loading_screen.draw_simple_refresh_bar(surface, "Decrypting Move Files...", completed_tasks, total_tasks)
+                pygame.display.flip()
                 
     for file_path in move_file_paths:
         if file_path not in valid_moves:

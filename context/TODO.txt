@@ -22,8 +22,6 @@ Immediate concerns:
 - option to disable revolts from spawning when removing cores
 - setting to make the ai more difficult (how so?)
 
-- doing multiturn doesn't save certain turns in history, make it do this please
-
 - send millitary access... then declare war while awaiting response... that would be so fucked up
 
 - port building to make naval units take less time to build

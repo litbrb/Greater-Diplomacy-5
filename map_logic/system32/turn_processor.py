@@ -96,7 +96,7 @@ def snapshot_history(self):
     }
     
     # --- Manual copy of province data (avoids copy.deepcopy per-province) ---
-    _copy_list = lambda lst: [dict(item) if isinstance(item, dict) else item for item in lst]
+    _copy_list = lambda lst: [dict(item) if isinstance(item, dict) else item for item in lst] if lst else []
     
     for data in self.map_data.values():
         snapshot["provinces"][data["json_key"]] = {
@@ -173,8 +173,9 @@ def resolve_turn_logic(self): # Renamed from resolve_turn
         # --- MULTI-TURN OPTIMIZATION ---
         is_multi = getattr(self, 'multi_turns_total', 0) > 0
         is_last_multi = not is_multi or (getattr(self, 'multi_turns_completed', 0) >= getattr(self, 'multi_turns_total', 0) - 1)
+        is_spectator = getattr(self, "player_country", None) == "Spectator"
         
-        if is_multi and not is_last_multi:
+        if is_multi and not is_last_multi and not is_spectator:
             pass # Skip deepcopying thousands of dictionaries on skipped turns
         else:
             print("[SYSTEM] Saving Turn History Snapshot...")
